@@ -1,0 +1,316 @@
+// TEST: run
+// BACKENDS: c11, llvm, modest
+// EXPECT-EXIT: 0
+// EXPECT-OUT: passed: boolean literals
+// EXPECT-OUT: passed: integer literals
+// EXPECT-OUT: passed: hex literals
+// EXPECT-OUT: passed: large integer literals
+// EXPECT-OUT: passed: rational literals
+// EXPECT-OUT: passed: string literals
+// EXPECT-OUT: passed: array literals
+// EXPECT-OUT: passed: record literals
+// EXPECT-OUT: passed: nil literal
+// EXPECT-OUT: passed: literal
+//
+// Covers every literal kind of docs/lang/value/literal.md, in the order
+// that page lists them: boolean, integer (decimal, hex, large), rational,
+// string, array, record, nil.
+//
+// A rational needs digits on both sides of the dot — `0.5`, never `.5` or
+// `1.` — so what is checked here is the accepted spelling; the rejected
+// ones are a compile error and cannot live in a test that has to compile.
+
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+include "libc/string"
+
+
+type Point = {
+	x: Int32
+	y: Int32
+}
+
+
+func testBoolean () -> Bool {
+	var t = true
+	var f = false
+
+	if not t or f {
+		printf("t = %u, f = %u, expected 1 and 0\n", Word32 t, Word32 f)
+		return false
+	}
+
+	printf("passed: boolean literals\n")
+	return true
+}
+
+
+func testInteger () -> Bool {
+	var n: Int32 = 42
+	if n != 42 {
+		printf("n = %d, expected 42\n", n)
+		return false
+	}
+
+	// '_' separates digit groups and carries no value of its own.
+	var big: Int32 = 1_000_000
+	if big != 1000000 {
+		printf("big = %d, expected 1000000\n", big)
+		return false
+	}
+
+	// A leading zero is still decimal — there are no octal literals.
+	var lead: Int32 = 010
+	if lead != 10 {
+		printf("lead = %d, expected 10\n", lead)
+		return false
+	}
+
+	printf("passed: integer literals\n")
+	return true
+}
+
+
+func testHex () -> Bool {
+	var b: Nat32 = 0xFF
+	if b != 255 {
+		printf("b = %u, expected 255\n", b)
+		return false
+	}
+
+	// The digits are case-insensitive; the 'x' is not.
+	var lower: Nat32 = 0xff
+	if lower != b {
+		printf("lower = %u, expected 255\n", lower)
+		return false
+	}
+
+	var w: Nat32 = 0xFF_FF
+	if w != 65535 {
+		printf("w = %u, expected 65535\n", w)
+		return false
+	}
+
+	var zero: Nat32 = 0x0
+	if zero != 0 {
+		printf("zero = %u, expected 0\n", zero)
+		return false
+	}
+
+	printf("passed: hex literals\n")
+	return true
+}
+
+
+// A literal is an arbitrary-precision compile-time value, so it must reach
+// the target intact — no clamping to 32 bits, no detour through a float.
+func testLarge () -> Bool {
+	var imax: Int64 = 9_223_372_036_854_775_807
+	if imax - 1 != 9_223_372_036_854_775_806 {
+		printf("imax = %lld, expected 9223372036854775807\n", imax)
+		return false
+	}
+
+	var imin: Int64 = -9_223_372_036_854_775_808
+	if imin + 1 != -9_223_372_036_854_775_807 {
+		printf("imin = %lld, expected -9223372036854775808\n", imin)
+		return false
+	}
+
+	// The same value written in both bases must arrive as the same bits.
+	var nmax: Nat64 = 18_446_744_073_709_551_615
+	var hmax: Nat64 = 0xFFFF_FFFF_FFFF_FFFF
+	if nmax != hmax {
+		printf("nmax = %llu, hmax = %llu, expected equal\n", nmax, hmax)
+		return false
+	}
+
+	// 2^53 + 1 is the smallest integer a Float64 cannot represent: if a
+	// literal were ever routed through a double, these two would collide.
+	var exact: Int64 = 9_007_199_254_740_993
+	if exact == 9_007_199_254_740_992 {
+		printf("exact = %lld, expected 9007199254740993\n", exact)
+		return false
+	}
+	if exact - 1 != 9_007_199_254_740_992 {
+		printf("exact - 1 = %lld, expected 9007199254740992\n", exact - 1)
+		return false
+	}
+
+	// Folding a constant expression must not wrap at the width of its parts.
+	var wide: Nat64 = 4_294_967_295 + 1
+	if wide != 4_294_967_296 {
+		printf("wide = %llu, expected 4294967296\n", wide)
+		return false
+	}
+
+	printf("passed: large integer literals\n")
+	return true
+}
+
+
+func testRational () -> Bool {
+	var half: Float64 = 0.5
+	if half != 0.5 {
+		printf("half = %f, expected 0.5\n", half)
+		return false
+	}
+
+	// Separators work on both sides of the dot.
+	var mixed: Float64 = 1_024.062_5
+	if mixed != 1024.0625 {
+		printf("mixed = %f, expected 1024.0625\n", mixed)
+		return false
+	}
+
+	// A rational literal is compile-time generic: it adapts to FloatX.
+	const quarter = 0.25
+	var f32: Float32 = quarter
+	var f64: Float64 = quarter
+	if f32 != 0.25 {
+		printf("f32 = %f, expected 0.25\n", Float64 f32)
+		return false
+	}
+	if f64 != 0.25 {
+		printf("f64 = %f, expected 0.25\n", f64)
+		return false
+	}
+
+	// An integer literal converts to FloatX too, and keeps its value.
+	var whole: Float64 = 42
+	if whole != 42.0 {
+		printf("whole = %f, expected 42.0\n", whole)
+		return false
+	}
+
+	printf("passed: rational literals\n")
+	return true
+}
+
+
+func testString () -> Bool {
+	// Both quotes are the same literal.
+	var dq: *Str8 = "abc"
+	var sq: *Str8 = 'abc'
+	if strcmp(dq, sq) != 0 {
+		printf("'abc' and \"abc\" differ\n")
+		return false
+	}
+
+	"x"[0]
+
+	if strlen("hello") != 5 {
+		printf("strlen(\"hello\") = %zu, expected 5\n", strlen("hello"))
+		return false
+	}
+
+	// \xHH takes exactly two hex digits, \u{...} one code point as UTF-8.
+	var esc: *Str8 = "\x48\x69\u{21}"
+	if strcmp(esc, "Hi!") != 0 {
+		printf("esc = %s, expected Hi!\n", esc)
+		return false
+	}
+
+	// The value is an array of exactly the characters written.
+	var chars: [2]Char8 = "Hi"
+	if chars[0] != "H" or chars[1] != "i" {
+		printf("chars = %u %u, expected 72 105\n", Word32 chars[0], Word32 chars[1])
+		return false
+	}
+
+	// A char is a length-1 string converted to CharX.
+	var c: Char8 = "A"
+	if c != "A" {
+		printf("c = %u, expected 65\n", Word32 c)
+		return false
+	}
+
+	printf("passed: string literals\n")
+	return true
+}
+
+
+func testArray () -> Bool {
+	var a: [3]Int32 = [1, 2, 3]
+	if a[0] != 1 or a[1] != 2 or a[2] != 3 {
+		printf("a = [%d, %d, %d], expected [1, 2, 3]\n", a[0], a[1], a[2])
+		return false
+	}
+
+	var len: Nat32 = lengthof(a)
+	if len != 3 {
+		printf("lengthof(a) = %u, expected 3\n", len)
+		return false
+	}
+
+	// `[]` fills the whole array with default values.
+	var z: [3]Int32 = []
+	if z[0] != 0 or z[1] != 0 or z[2] != 0 {
+		printf("z = [%d, %d, %d], expected [0, 0, 0]\n", z[0], z[1], z[2])
+		return false
+	}
+
+	printf("passed: array literals\n")
+	return true
+}
+
+
+func testRecord () -> Bool {
+	var p: Point = {x = 10, y = 20}
+	if p.x != 10 or p.y != 20 {
+		printf("p = {%d, %d}, expected {10, 20}\n", p.x, p.y)
+		return false
+	}
+
+	// `{}` fills every field with its default value.
+	var e: Point = {}
+	if e.x != 0 or e.y != 0 {
+		printf("e = {%d, %d}, expected {0, 0}\n", e.x, e.y)
+		return false
+	}
+
+	printf("passed: record literals\n")
+	return true
+}
+
+
+func testNil () -> Bool {
+	var p: *Int32 = nil
+	if p != nil {
+		printf("p is not nil\n")
+		return false
+	}
+
+	var n: Int32 = 7
+	p = &n
+	if p == nil {
+		printf("p is nil after taking an address\n")
+		return false
+	}
+
+	printf("passed: nil literal\n")
+	return true
+}
+
+
+func main () -> Int {
+	var result = true
+	result = testBoolean() and result
+	result = testInteger() and result
+	result = testHex() and result
+	result = testLarge() and result
+	result = testRational() and result
+	result = testString() and result
+	result = testArray() and result
+	result = testRecord() and result
+	result = testNil() and result
+
+	if not result {
+		printf("failed: literal\n")
+		return exitFailure
+	}
+
+	printf("passed: literal\n")
+	return exitSuccess
+}

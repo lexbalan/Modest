@@ -102,7 +102,7 @@
 				},
 				{
 					"name": "storage.modifier.modest",
-					"match": "\\b(public|private|export|extern|unsafe)\\b"
+					"match": "\\b(public|private|unsafe)\\b"
 				},
 				{
 					"name": "keyword.control.import.modest",
@@ -110,7 +110,7 @@
 				},
 				{
 					"name": "keyword.other.modest",
-					"match": "\\b(pragma|asm|new)\\b"
+					"match": "\\b(pragma|__asm|new)\\b"
 				},
 				{
 					"name": "keyword.operator.logical.modest",
@@ -124,7 +124,7 @@
 		},
 		"builtins": {
 			"name": "support.function.builtin.modest",
-			"match": "\\b(sizeof|alignof|lengthof|offsetof|__va_arg|__va_start|__va_end|__va_copy|__defined|__compiler|__target)\\b"
+			"match": "\\b(sizeof|alignof|lengthof|offsetof|__va_arg|__va_start|__va_end|__va_copy|__defined)\\b"
 		},
 		"types": {
 			"name": "entity.name.type.modest",
@@ -139,8 +139,12 @@
 		"operators": {
 			"patterns": [
 				{
+					"name": "keyword.operator.variadic.modest",
+					"match": "\\.\\.\\."
+				},
+				{
 					"name": "keyword.operator.assignment.modest",
-					"match": "(<<=|>>=|\\+=|-=|\\*=|/=|%=|=(?![=>]))"
+					"match": "=(?![=>])"
 				},
 				{
 					"name": "keyword.operator.comparison.modest",

@@ -1,3 +1,6 @@
 .vscode/**
 .gitignore
 **/*.vsix
+install.sh
+install.bat
+register.py

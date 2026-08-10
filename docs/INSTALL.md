@@ -9,28 +9,51 @@ cd ~
 git clone https://github.com/lexbalan/Modest.git
 ```
 
-2. Set environment variables:
+2. Run the setup script.
+
+```
+# Unix
+cd ~/Modest
+./bootstrap.sh
+```
+
+```
+:: Windows
+cd %USERPROFILE%\Modest
+bootstrap.bat
+```
+
+It creates the Python virtual environment, installs the dependencies and
+sets the environment variables `MODEST_DIR`, `MODEST_LIB` and `PATH`.
+**Restart your terminal afterwards** — the variables only reach new shells.
+
+The script is safe to run again after `git pull`: it rewrites its own
+block in your shell rc files instead of appending a second copy.
+
+
+## Setting the variables by hand
+
+If you would rather not let the script touch your shell configuration,
+set these three variables yourself:
 
 ```
 export MODEST_DIR=~/Modest
+export MODEST_LIB=$MODEST_DIR/lib
 export PATH=$PATH:$MODEST_DIR
-export MODEST_LIB=$MODEST_DIR/lib/
 ```
 
-You can add this variables to your shell rc file
-```
-# for BASH
-echo "export MODEST_DIR=~/Modest" >> ~/.bashrc
-echo "export PATH=$PATH:$MODEST_DIR" >> ~/.bashrc
-echo "export MODEST_LIB=$MODEST_DIR/lib/" >> ~/.bashrc
-# Restart your terminal after...
+To make them permanent, add the lines to `~/.bashrc` or `~/.zshrc`.
+On Windows use `setx` (or *System Properties → Environment Variables*):
 
-# for ZSH
-echo "export MODEST_DIR=~/Modest" >> ~/.zshrc
-echo "export PATH=$PATH:$MODEST_DIR" >> ~/.zshrc
-echo "export MODEST_LIB=$MODEST_DIR/lib/" >> ~/.zshrc
-# Restart your terminal after...
 ```
+setx MODEST_DIR "%USERPROFILE%\Modest"
+setx MODEST_LIB "%USERPROFILE%\Modest\lib"
+```
+
+and append `%MODEST_DIR%` to your user `PATH`.
+
+
+## Check the installation
 
 Compile some example for compiler check
 

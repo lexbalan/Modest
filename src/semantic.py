@@ -1302,6 +1302,7 @@ def ct_call(fn, args, ti):
 
 def do_value_index(x):
 	left = do_value(x['left'])
+	ti=x['ti']
 
 	if left.is_bad():
 		return ValueBad(ti=x['ti'])
@@ -1316,33 +1317,61 @@ def do_value_index(x):
 	if via_pointer:
 		array_type = left_type.to
 
-	if not array_type.is_array():
-		error("expected array or pointer to array", left.ti)
-		return ValueBad(ti=x['ti'])
+	index = do_rvalue(x['index'])
+
+	if index.type.is_bad():
+		return ValueBad(ti=ti)
+
+	if not index.type.is_integral():
+		error("expected integral value", index.ti)
+		return ValueBad(ti=ti)
+
+	if index.is_immediate():
+		if index.asset < 0:
+			error("array index must be non-negative", index.ti)
+			return ValueBad(ti=ti)
+
+	if array_type.is_string():
+		if index.is_runtime():
+			error("cannot index string in runtime", ti)
+			return ValueBad(ti=ti)
+
+		char_code = 0
+		if len(left.asset) > index.asset:
+			char_code = ord(left.asset[index.asset])
+		else:
+			error("string index out of bounds", ti)
+			return ValueBad(ti=ti)
+
+		char_width = nbits_for_num(char_code)
+		from hlir.defs import type_char_create
+		_type = type_char_create(width=char_width, ti=ti)
+		nv = ValueIndex(_type, left, index, ti=ti)
+		nv.set_asset(char_code)
+		nv.stage = HLIR_VALUE_STAGE_COMPILETIME
+		return nv
+
+	
+	if index.type.is_generic():
+		index = value_cons_implicit_check(typeSysInt, index)
+
+	if not (array_type.is_array() or array_type.is_string()):
+		error("expected array, pointer to array, or string", left.ti)
+		return ValueBad(ti=ti)
 
 	# Can index *[]AnyNonArrayType
 	# Can't index *[][]AnyType
 	if array_type.is_array_of_unsized_array():
-		error("cannot index an array of unsized array", x['ti'])
-		return ValueBad(ti=x['ti'])
-
-	index = do_rvalue(x['index'])
+		error("cannot index an array of unsized array", ti)
+		return ValueBad(ti=ti)
 
 	if array_type.is_generic() and index.is_runtime():
-		error("cannot index array with generic type in runtime", x['ti'])
+		error("cannot index array with generic type in runtime", ti)
 
-	#if index.is_bad():
-	if index.type.is_bad():
-		return ValueBad(ti=x['ti'])
+	
+	item_type = array_type.of
 
-	if not (index.type.is_int() or index.type.is_nat() or index.type.is_integer()):
-		error("expected integral value", index.ti)
-		return ValueBad(ti=x['ti'])
-
-	if index.type.is_generic():
-		index = value_cons_implicit_check(typeSysInt, index)
-
-	nv = ValueIndex(array_type.of, left, index, ti=x['ti'])
+	nv = ValueIndex(item_type, left, index, ti=ti)
 
 	nv.stage = HLIR_VALUE_STAGE_RUNTIME
 	if not left.type.is_pointer():
@@ -1353,13 +1382,13 @@ def do_value_index(x):
 			index_imm = index.asset
 
 			if index_imm >= array_type.volume.asset:
-				error("array index out of bounds", x['ti'])
-				return ValueBad(ti=x['ti'])
+				error("array index out of bounds", ti)
+				return ValueBad(ti=ti)
 
 			if index_imm < len(left.asset):
 				item = left.asset[index_imm]
 			else:
-				item = create_default_value(array_type.of, ti=x['ti'])
+				item = create_default_value(array_type.of, ti=ti)
 
 			Value.cp_immediate(nv, item)
 			nv.stage = HLIR_VALUE_STAGE_COMPILETIME
@@ -1384,12 +1413,18 @@ def do_value_slice(x):
 		index_from = do_rvalue(x['index_from'])
 		if index_from.is_bad():
 			return ValueBad(ti=ti)
+		if not index_from.type.is_integral():
+			error("expected integral value", index_from.ti)
+			return ValueBad(ti=ti)
 	else:
 		index_from = value_integer_create(0, ti=x['ti'])
 
 	if x['index_to'] != None:
 		index_to = do_rvalue(x['index_to'])
 		if index_to.is_bad():
+			return ValueBad(ti=ti)
+		if not index_to.type.is_integral():
+			error("expected integral value", index_to.ti)
 			return ValueBad(ti=ti)
 
 	via_pointer = left.type.is_pointer()
@@ -2356,9 +2391,6 @@ def def_const_common(x):
 	cdef = definition
 
 	const_type, init_value = process_field_common(x, default_instead_of_undef=True)
-
-	if init_value.type.is_bad():
-		info("bsd", x['ti'])
 
 	if init_value.is_bad():
 		# осознанно пропускаем ошибку, чтобы не плодить кучу ошибок дальше; это ок

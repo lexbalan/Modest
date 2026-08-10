@@ -8,11 +8,12 @@ described in [README.md](./README.md).
 | File | Purpose |
 |------|---------|
 | `mcc` | Compiler entry point (bash wrapper around `src/main.py`) |
+| `mcc.bat` | Same, for Windows `cmd.exe` |
 | `README.md` | Project overview |
 | `LICENSE` | MIT License |
 | `requirements.txt` | Python dependencies |
-| `configure.sh` | Configuration script |
-| `install.sh` | Installation script |
+| `bootstrap.sh` | Setup: creates the `venv/`, installs deps, sets the environment variables (Unix) |
+| `bootstrap.bat` | Same, for Windows `cmd.exe` |
 | `check.sh` | Runs the test suite and builds all examples |
 
 
@@ -153,6 +154,14 @@ Each test is a directory with `src/main.m`, a `Makefile` (`make test`)
 and `out/{c,cm,llvm}/`. The active set is listed in `tests/run.sh`;
 crypto tests (`sha256`, `aes256`, `chacha20`, `crc32`) verify end-to-end
 semantics against known vectors.
+
+
+## `misc/` — Everything Around the Compiler
+
+`misc/editors/vscode/` — the VS Code extension: syntax highlighting for
+`.m` files, plus `install.sh` / `install.bat` that link it into the editor's
+extensions directory. See
+[misc/editors/vscode/README.md](../../misc/editors/vscode/README.md).
 
 
 ## Error Categories

@@ -228,6 +228,7 @@ class CmLexer(Lexer):
 
 		ishex = False
 		isfloat = False
+		isbad = False
 
 		if len(c) > 1:
 			ishex = c[1] == 'x'
@@ -246,15 +247,35 @@ class CmLexer(Lexer):
 				continue
 
 			if c == '.':
-				isfloat = True
-				s.append(c)
+				# A '.' is part of the number only in a decimal literal, only
+				# once, and only with digits on both sides (see 'dec' in the
+				# EBNF): 0.5 — yes, .5 / 1. / 1.2.3 — no.
+				if not (ishex or isfloat) and self.peep().isdigit():
+					isfloat = True
+					s.append(c)
+					continue
+
+				# Malformed: report once, then swallow the rest of the literal
+				# (the '.' and whatever follows it) so that the valid prefix is
+				# still a well-formed token and the parser gets no second,
+				# bogus error on the same spot.
+				if not isbad:
+					isbad = True
+					ti = self.getTokenInfoAt(sp)
+					if ishex:
+						error("hexadecimal literal cannot have a fractional part", TextInfo(start=ti, mid=ti, end=ti))
+					elif isfloat:
+						error("number literal has more than one '.'", TextInfo(start=ti, mid=ti, end=ti))
+					else:
+						error("expected digit after '.' in number literal", TextInfo(start=ti, mid=ti, end=ti))
 				continue
 
 			if not (c.isdigit() or (ishex and isHexDigit(c))):
 				self.setTextPosition(sp)
 				break
 
-			s.append(c)
+			if not isbad:
+				s.append(c)
 
 		return ('num', ''.join(s))
 
@@ -442,16 +463,21 @@ class CmLexer(Lexer):
 
 
 
-	def getLastTokenInfo(self):
+	# token info for an arbitrary saved text position (getTextPosition)
+	def getTokenInfoAt(self, tp, length=1):
 		return TokenInfo(
 			source = self.filename,
-			fpos = self.start['pos'],
-			line = self.start['line'],
+			fpos = tp['pos'],
+			line = tp['line'],
 			lpos = self.line_start_position,
-			spaces = self.start['nspaces'],
-			tabs = self.start['ntabs'],
-			length = self.pos - self.start['pos']
+			spaces = tp['nspaces'],
+			tabs = tp['ntabs'],
+			length = length
 		)
+
+
+	def getLastTokenInfo(self):
+		return self.getTokenInfoAt(self.start, length = self.pos - self.start['pos'])
 
 
 
