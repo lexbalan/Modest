@@ -160,3 +160,21 @@ def decimal_to_str(d: Decimal, max_frac=None):
 	return s[0:i]
 
 
+
+def return_functions_list():
+	import inspect
+	stack = inspect.stack()
+	stack.pop(0)  # Remove the current function from the stack
+	return [frame.function for frame in stack]
+
+# Возвращает строку с функциями в обратном порядке, начиная с текущей функции
+# Используется для отладки
+def trace():
+	x = return_functions_list()
+	x.pop(0)  # Remove the current function from the stack
+	x.reverse()
+	s = ""
+	for	 f in x:
+		s += f + " > "
+	return s
+

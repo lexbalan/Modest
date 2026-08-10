@@ -11,7 +11,7 @@ from unicode import chars_to_utf32
 from util import str_fractional, align_bits_up, nbits_for_num
 from common import features
 from cshape import *
-
+from util import trace
 
 
 ARRAY_AS_POINTER = True
@@ -534,7 +534,11 @@ def do_cvalue_literal_with_type(v, t, ctx):
 		return do_cvalue_literal_number(t, v, ctx)
 
 	elif t.is_string():
-		return do_cvalue_literal_string(v.asset, width=0)#v.type.width)
+		if t.is_concretic():
+			width = t.of.width
+		else:
+			width = t.width
+		return do_cvalue_literal_string(v.asset, width=width)
 
 	elif t.is_bool(): return do_cvalue_literal_bool(v, ctx)
 	elif t.is_rational(): return do_cvalue_literal_rational(v, ctx)
@@ -983,19 +987,15 @@ def do_cvalue_index(x, ctx):
 	lx = do_cvalue(left)
 	index = do_cvalue(x.index)
 
-	if left.storage_class == HLIR_VALUE_STORAGE_CLASS_GLOBAL and left.is_const(): #left.type.is_generic_array():
-		ts = do_ctype(left.type)
-		vs = do_cvalue(left, ctx=ctx)
-		lx = CValueCast(ts, vs)
-
-	elif value_is_generic_immediate_const(left):
-		ts = do_ctype(left.type)
-		vs = do_cvalue(left, ctx=ctx)
-		lx = CValueCast(ts, vs)
+	if left.is_const():
+		if left.type.is_generic() or left.is_global():
+			if not left.type.is_string():
+				ts = do_ctype(left.type)
+				lx = CValueCast(ts, lx)
 
 	if left.type.is_pointer_to_array():
 		if POINTER_TO_ARRAY_RELAX:
-			if left.storage_class == HLIR_VALUE_STORAGE_CLASS_PARAM:
+			if left.is_param():
 				if left.type.is_pointer_to_array():
 					return CValueIndex(lx, index)
 
@@ -1116,13 +1116,13 @@ def do_cvalue_const(x, ctx):
 		return do_cvalue_literal_with_type(x, x.type, ctx=ctx)
 
 	id_str = get_id_str(x)
-	if x.storage_class == HLIR_VALUE_STORAGE_CLASS_GLOBAL: #and not x.id.hasAttribute('nodecorate'):
+	if x.is_global(): #and not x.id.hasAttribute('nodecorate'):
 		if x.id.c_alias == None and x.id.common == None:
 			id_str = camel_to_upper_snake(id_str)
 
 	cv = CValueIdentifier(id_str)
 
-#	if x.storage_class == HLIR_VALUE_STORAGE_CLASS_GLOBAL and x.type.is_array() and not x.type.is_generic():
+#	if x.is_global() and x.type.is_array() and not x.type.is_generic():
 #		cv = CValueCast(do_ctype(x.type), cv)
 
 	return cv
@@ -1138,7 +1138,7 @@ def do_cvalue_lengthof(array_value):
 		return CValueInteger(array_value.type.length)
 	if array_value.is_immediate():
 		return do_cvalue(array_value.type.volume)
-	if array_value.is_const() and array_value.storage_class == HLIR_VALUE_STORAGE_CLASS_GLOBAL:
+	if array_value.is_const() and array_value.is_global():
 		return do_cvalue(array_value.type.volume)
 	elif array_value.is_slice():
 		return do_cvalue(array_value.type.volume)
@@ -1559,9 +1559,9 @@ def do_cstmt_var(x):
 
 
 def const_as_macro(v):
-	if v.storage_class == HLIR_VALUE_STORAGE_CLASS_GLOBAL:
+	if v.is_global():
 		return True
-	if v.storage_class == HLIR_VALUE_STORAGE_CLASS_LOCAL:
+	if v.is_local():
 		return value_is_generic_immediate(v)
 	return False
 

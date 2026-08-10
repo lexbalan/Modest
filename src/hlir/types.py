@@ -2025,6 +2025,18 @@ class Value(Entity):
 
 	def is_global(self):
 		return self.storage_class == HLIR_VALUE_STORAGE_CLASS_GLOBAL
+	
+	def is_local(self):
+		return self.storage_class == HLIR_VALUE_STORAGE_CLASS_LOCAL
+	
+	def is_param(self):
+		return self.storage_class == HLIR_VALUE_STORAGE_CLASS_PARAM
+	
+	def is_extern(self):
+		return self.storage_class == HLIR_VALUE_STORAGE_CLASS_EXTERN
+	
+	def is_register(self):
+		return self.storage_class == HLIR_VALUE_STORAGE_CLASS_REGISTER
 
 
 	def copy(self):
@@ -2288,7 +2300,7 @@ class ValueRef(Value):
 		super().__init__(type=type, ti=ti)
 		self.value = value
 
-		if value.storage_class == HLIR_VALUE_STORAGE_CLASS_GLOBAL:
+		if value.is_global():
 			self.stage = HLIR_VALUE_STAGE_COMPILETIME
 			# не можно поставить 0 тк иначе значение будет трактоваться как zero
 			# и LLVM printer его не всунет в композитный тип (пропустит insertelement)

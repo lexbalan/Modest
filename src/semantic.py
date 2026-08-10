@@ -962,7 +962,7 @@ def do_value_ref(x):
 	nv = ValueRef(v, ti=ti)
 
 	nv.stage = HLIR_VALUE_STAGE_RUNTIME
-	if v.storage_class == HLIR_VALUE_STORAGE_CLASS_GLOBAL:
+	if v.is_global():
 		nv.stage = HLIR_VALUE_STAGE_LINKTIME
 
 	return nv
@@ -1584,7 +1584,7 @@ def do_value_named(x):
 	# Если в теле функции происходит доступ к глобальной переменной
 	# значит она не "чистая"
 	if cfunc != None:
-		if v.is_var() and v.storage_class == HLIR_VALUE_STORAGE_CLASS_GLOBAL:
+		if v.is_var() and v.is_global():
 			cfunc.is_pure = False
 
 
