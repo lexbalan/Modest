@@ -237,3 +237,73 @@ AttributeError: 'StmtDefType' object has no attribute 'value'
   constant's value rather than its identifier"). The documentation and
   the code describe two different features.
 
+
+## 19. `-funsafe` is never consulted; only `pragma unsafe` grants permission
+
+```bash
+mcc -o out -mbackend=c11 -funsafe main.modest   # module has no pragma unsafe
+```
+
+```
+error: for use 'unsafe' operator required -funsafe option
+```
+
+- The diagnostic names the flag the user just passed. Permission is granted
+  solely by `pragma unsafe` in the module: `do_value_unsafe`
+  (`src/semantic.py:1783`) tests only `cmodule.hasAttribute('unsafe')`.
+- The `features` list that `-f<name>` fills in (`src/main.py:58`) is read in
+  exactly one place — `'paranoid' in features` (`src/error.py:142`, `:152`).
+  Nothing ever asks it about `unsafe`, so the flag is dead for this purpose.
+- The `-funsafe` in the example Makefiles (`examples/crc32`, `examples/sha256`,
+  `examples/xxh64`) is a no-op; those modules compile because of their pragma.
+- Open question, not just a wording fix: is the command line supposed to be a
+  second, independent way to opt in (then wire `features` into the check), or
+  is `pragma unsafe` the only intended door (then drop `-funsafe` and reword
+  the diagnostic to name the pragma)? Unsafe is expected to be reworked, so
+  settle this as part of that.
+- Docs updated to match the current behaviour: `docs/CHEATSHEET.md`
+  (construction rules), `docs/lang/value/cons.md`, `docs/USAGE.md`.
+
+## 20. Malformed expression in a call argument hangs the parser
+
+```modest
+let w = Word32 0x0F
+printf("%d\n", ~ Word64 w)   // mcc spins forever, no diagnostic
+printf("%d\n", - -x)         // same
+```
+
+- The same expressions outside a call report normally: `let r = ~ Word64 w`
+  gives `error: unexpected token1 'Word64'`, and `let r = (~ Word64 w)` too.
+  Only the argument list loops.
+- Cause: `parse_args` (`src/parser.py`) has no progress or end-of-input guard —
+  when `expr_value` stops without consuming the offending token, the loop keeps
+  re-parsing it. Same shape as #8 (unterminated record type).
+- Both triggers are unary operators applied to something above level 13 of the
+  precedence table, which is a syntax error by itself; the point is that the
+  compiler must say so instead of hanging.
+
+## 21. Uninitialized-value check is bypassed by index and field access
+
+```modest
+var buf: [4]Word8
+printf("%d\n", Nat32 buf[0])   // compiles; prints garbage
+
+var p: Point
+printf("%d\n", p.x)            // compiles; prints garbage
+```
+
+Reading the same locals as whole values is caught:
+
+```modest
+var x: Int32
+var q = p
+var b = buf                    // all three: error: attempt to use an uninitialized value
+```
+
+- So the check looks at the value itself but not at what an index or field
+  access reads out of it — the two most common ways to touch an array or a
+  record.
+- `docs/CHEATSHEET.md` states the rule without an exception ("local: must assign
+  before use (compile error otherwise)"), so the documentation currently
+  promises more than the compiler checks.
+- Verified for `[N]T` elements and record fields; both slip through.

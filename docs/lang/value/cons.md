@@ -4,7 +4,7 @@ Modest has no type casts. A value of one type is obtained from another by
 *construction*: the target type applied to a source value produces a new
 value. Construction is *implicit* (at assignment, initialization, call,
 return), *explicit* (written in code) or *unsafe* (explicit, requires the
-`unsafe` keyword and the `-f unsafe` feature).
+`unsafe` keyword at the use site and `pragma unsafe` in the module).
 
 ## Form
 

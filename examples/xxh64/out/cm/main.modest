@@ -1,0 +1,258 @@
+import "builtin"
+include "ctypes64"
+include "stdio"
+
+include "libc/ctypes64"
+include "libc/stdio"
+
+// thx: https://github.com/Cyan4973/xxHash
+//
+// Арифметика хэша — по модулю 2^64 (обёртка), поэтому значения живут
+// в Word64 (битовые операции), а сложение/умножение делаются через Nat64.
+
+const prime64_1 = Word64 0x9E3779B185EBCA87
+const prime64_2 = Word64 0xC2B2AE3D27D4EB4F
+const prime64_3 = Word64 0x165667B19E3779F9
+const prime64_4 = Word64 0x85EBCA77C2B2AE63
+const prime64_5 = Word64 0x27D4EB2F165667C5
+
+
+// wrapping-арифметика над Word64
+
+
+@inline
+func add (a: Word64, b: Word64) -> Word64 {
+	return Word64 (Nat64 a + Nat64 b)
+}
+
+
+
+@inline
+func sub (a: Word64, b: Word64) -> Word64 {
+	return Word64 (Nat64 a - Nat64 b)
+}
+
+
+
+@inline
+func mul (a: Word64, b: Word64) -> Word64 {
+	return Word64 (Nat64 a * Nat64 b)
+}
+
+
+// циклический сдвиг влево на amt бит
+
+@inline
+func rotl64 (value: Word64, amt: Nat32) -> Word64 {
+	return (value << (amt % 64)) | (value >> (64 - amt % 64))
+}
+
+
+// little-endian чтение 32 бит по смещению offset
+func read32 (data: *[]Word8, offset: SizeT) -> Word64 {
+	var v = Word64 0
+	var i = SizeT 0
+	while i < 4 {
+		v = v | (Word64 data[offset + i] << (i * 8))
+		++i
+	}
+	return v
+}
+
+
+// little-endian чтение 64 бит по смещению offset
+func read64 (data: *[]Word8, offset: SizeT) -> Word64 {
+	var v = Word64 0
+	var i = SizeT 0
+	while i < 8 {
+		v = v | (Word64 data[offset + i] << (i * 8))
+		++i
+	}
+	return v
+}
+
+
+// подмешивает input в acc — основной шаг главного цикла
+func round (acc: Word64, input: Word64) -> Word64 {
+	var a: Word64 = add(acc, mul(input, prime64_2))
+	a = rotl64(a, 31)
+	return mul(a, prime64_1)
+}
+
+
+// вливает аккумулятор acc в hash
+func mergeRound (hash: Word64, acc: Word64) -> Word64 {
+	var h: Word64 = hash ^ round(0, acc)
+	h = mul(h, prime64_1)
+	return add(h, prime64_4)
+}
+
+
+// финальное перемешивание всех бит
+func avalanche (hash: Word64) -> Word64 {
+	var h: Word64 = hash
+	h = h ^ (h >> 33)
+	h = mul(h, prime64_2)
+	h = h ^ (h >> 29)
+	h = mul(h, prime64_3)
+	h = h ^ (h >> 32)
+	return h
+}
+
+
+// XXH64
+//   input:  данные (nil — допустим, трактуется как пустой ввод)
+//   length: длина input в байтах
+//   seed:   64-битное зерно
+func xxh64 (input: *[]Word8, length: SizeT, seed: Word64) -> Word64 {
+	var hash = Word64 0
+	var remaining: SizeT = length
+	var offset = SizeT 0
+	if input == nil {
+		return avalanche(add(seed, prime64_5))
+	}
+
+	if remaining >= 32 {
+		var acc1: Word64 = add(add(seed, prime64_1), prime64_2)
+		var acc2: Word64 = add(seed, prime64_2)
+		var acc3: Word64 = seed
+		var acc4: Word64 = sub(seed, prime64_1)
+
+		while remaining >= 32 {
+			acc1 = round(acc1, read64(input, offset))
+			offset = offset + 8
+			acc2 = round(acc2, read64(input, offset))
+			offset = offset + 8
+			acc3 = round(acc3, read64(input, offset))
+			offset = offset + 8
+			acc4 = round(acc4, read64(input, offset))
+			offset = offset + 8
+
+			remaining = remaining - 32
+		}
+
+		hash = add(add(rotl64(acc1, 1), rotl64(acc2, 7)), add(rotl64(acc3, 12), rotl64(acc4, 18)))
+
+		hash = mergeRound(hash, acc1)
+		hash = mergeRound(hash, acc2)
+		hash = mergeRound(hash, acc3)
+		hash = mergeRound(hash, acc4)
+	} else {
+		hash = add(seed, prime64_5)
+	}
+
+	hash = add(hash, Word64 length)
+	while remaining >= 8 {
+		hash = hash ^ round(0, read64(input, offset))
+		hash = rotl64(hash, 27)
+		hash = mul(hash, prime64_1)
+		hash = add(hash, prime64_4)
+
+		offset = offset + 8
+		remaining = remaining - 8
+	}
+	if remaining >= 4 {
+		hash = hash ^ mul(read32(input, offset), prime64_1)
+		hash = rotl64(hash, 23)
+		hash = mul(hash, prime64_2)
+		hash = add(hash, prime64_3)
+
+		offset = offset + 4
+		remaining = remaining - 4
+	}
+	while remaining != 0 {
+		hash = hash ^ mul(Word64 input[offset], prime64_5)
+		hash = rotl64(hash, 11)
+		hash = mul(hash, prime64_1)
+
+		++offset
+		--remaining
+	}
+
+	return avalanche(hash)
+}
+
+
+// --- self test ---
+
+const testDataSize = 101
+const prime32_1 = Word32 0x9E3779B1
+
+var testNum = Int32 0
+
+
+
+@inline
+func hi32 (w: Word64) -> Nat32 {
+	return unsafe Nat32 (w >> 32)
+}
+
+
+
+@inline
+func lo32 (w: Word64) -> Nat32 {
+	return unsafe Nat32 (w & 0xFFFFFFFF)
+}
+
+
+func testSequence (data: *[]Word8, length: SizeT, seed: Word64, expected: Word64) -> Bool {
+	let result: Word64 = xxh64(data, length, seed)
+
+	++testNum
+
+	if result != expected {
+		printf("test #%d failed: expected 0x%08X%08X, got 0x%08X%08X\n"
+			testNum, hi32(expected), lo32(expected), hi32(result), lo32(result)
+		)
+		return false
+	}
+
+	printf("test #%d passed: 0x%08X%08X\n", testNum, hi32(result), lo32(result))
+	return true
+}
+
+
+@nonstatic
+func main () -> Int {
+	printf("test XXH64\n")
+	var testData: [testDataSize]Word8
+	var byteGen: Word32 = prime32_1
+
+	var i = SizeT 0
+	while i < testDataSize {
+		testData[i] = unsafe Word8 (byteGen >> 24)
+		byteGen = Word32 (Nat32 byteGen * Nat32 byteGen)
+		++i
+	}
+
+	let data = *[]Word8 &testData
+	let prime = Word64 prime32_1
+
+	var success: Bool = true
+
+	if not testSequence(nil, 0, 0, 0xEF46DB3751D8E999) {; success = false
+	}
+	if not testSequence(nil, 0, prime, 0xAC75FDA2929B17EF) {; success = false
+	}
+	if not testSequence(data, 1, 0, 0x4FCE394CC88952D8) {; success = false
+	}
+	if not testSequence(data, 1, prime, 0x739840CB819FA723) {; success = false
+	}
+	if not testSequence(data, 14, 0, 0xCFFA8DB881BC3A3D) {; success = false
+	}
+	if not testSequence(data, 14, prime, 0x5B9611585EFCC9CB) {; success = false
+	}
+	if not testSequence(data, testDataSize, 0, 0x0EAB543384F878AD) {; success = false
+	}
+	if not testSequence(data, testDataSize, prime, 0xCAA65939306F1E21) {; success = false
+	}
+
+	if not success {
+		printf("XXH64: FAILED\n")
+		return 1
+	}
+
+	printf("XXH64 reference implementation: OK\n")
+	return 0
+}
+

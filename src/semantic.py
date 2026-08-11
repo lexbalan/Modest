@@ -659,8 +659,8 @@ def do_value_shift(x):
 			return ValueBad(ti=x['ti'])
 
 
-	if right.type.is_signed():
-		error("expected natural value", x['right']['ti'])
+	if not (right.type.is_nat() or (right.type.is_integer() and right.asset >= 0)):
+		error("expected natural or non-negative integer value", x['right']['ti'])
 		return ValueBad(ti=x['ti'])
 
 	nv = None

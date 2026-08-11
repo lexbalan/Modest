@@ -255,6 +255,23 @@ return                             // for Unit functions
 
 ## Operators
 
+> **Both sides of a binary operation must be the same type.** There is no
+> implicit widening — even a narrower operand is rejected:
+>
+> ```modest
+> let a = Int32 1
+> let b = Int64 2
+> let c = a + b        // error: different types 'Int32' & 'Int64' in operation
+> let d = Int64 a + b  // this is how you mix widths
+> ```
+>
+> Holds for arithmetic, comparison (`==`, `<`, ...) and bitwise operators alike.
+> A literal is not affected — it has a compile-time type and adopts the type of
+> the other operand (`a + 5`, `w | 0xFF`).
+>
+> **Shifts are the exception**: `w << n` pairs a `WordX` left operand with a
+> `NatX` count of any width, or a non-negative integer literal.
+
 ### Arithmetic
 ```modest
 a + b, a - b, a * b, a / b, a % b
@@ -263,9 +280,22 @@ a + b, a - b, a * b, a / b, a % b
 
 ### Comparison
 ```modest
-a == b, a != b
-a < b, a > b, a <= b, a >= b
+a == b, a != b                     // any two values of the same type
+a < b, a > b, a <= b, a >= b       // ordering: IntX, NatX, FloatX, CharX only
 ```
+
+> `==` and `!=` are defined for **every** type, as long as both sides have the
+> same type — records, arrays, pointers, `Bool` and `Word*` included:
+>
+> ```modest
+> if a == b { ... }              // Point == Point — field by field
+> if hash == expected { ... }    // [32]Word8 == [32]Word8 — element by element
+> if p == nil { ... }            // pointer against nil
+> ```
+>
+> Ordering is the narrow one: `<` `>` `<=` `>=` need a type that has a natural
+> order. A record, array or pointer operand is rejected with
+> `unsuitable value type '...' for 'lt' operation`, and so is `Word*`.
 
 ### Logical
 ```modest
@@ -278,7 +308,7 @@ not a
 ```modest
 w & m, w | m, w ^ m                // and, or, xor — both operands WordX
 ~w                                 // bitwise not
-w << n, w >> n                     // shifts: left WordX; right unsigned (NatX/WordX/literal)
+w << n, w >> n                     // shifts: left WordX; right NatX or a non-negative literal
 ```
 
 > Bit manipulation is only defined for `Word*` types — this is a deliberate split:
@@ -287,7 +317,9 @@ w << n, w >> n                     // shifts: left WordX; right unsigned (NatX/W
 >
 > To mix, convert explicitly via value construction: `Word32 i`, `Int32 w`.
 > There is no `xor` keyword — exclusive-or is `^` (`and`/`or` are Bool-only).
-> A signed shift count is a compile error (`expected natural value`).
+> The shift count must be `NatX` or a non-negative integer literal — `WordX`,
+> `IntX` and negative literals are all rejected with
+> `expected natural or non-negative integer value`.
 
 ### Unary / Special
 ```modest
@@ -308,6 +340,45 @@ ptr.field                          // auto-deref field access (no -> needed)
 func(args)                         // call
 ```
 
+### Precedence
+
+Loosest to tightest — each level binds tighter than the one above it.
+Levels 3 and 7-10 are left-associative (`10 - 3 - 2` is `5`); `or`, `and`,
+<code>&#124;</code>, `^` and `&` group to the right, which for these operators
+makes no difference to the result.
+
+| # | Operators | |
+|---|---|---|
+| 1 | `or` | loosest |
+| 2 | `and` | |
+| 3 | `==` `!=` | |
+| 4 | <code>&#124;</code> | |
+| 5 | `^` | |
+| 6 | `&` | |
+| 7 | `<` `>` `<=` `>=` | |
+| 8 | `<<` `>>` | |
+| 9 | `+` `-` | |
+| 10 | `*` `/` `%` | |
+| 11 | `Type value` (construction), `unsafe Type value` | |
+| 12 | unary `-` `+` `not` `~` `&x` `*p`, `sizeof` `alignof` `lengthof` `offsetof` | |
+| 13 | `f(args)` `x.field` `a[i]` `a[i:j]` | tightest |
+
+> **Equality is looser than the bitwise operators, ordering is tighter.**
+> `==`/`!=` sit above <code>&#124;</code> `^` `&` (level 3), so the classic C
+> parenthesis trap is gone — `crc & 1 != 0` means `(crc & 1) != 0`, as it reads.
+> But `<` `>` `<=` `>=` sit *below* them (level 7), so `w & x < y` parses as
+> `w & (x < y)` and fails with `different types 'Word32' & 'Bool'`. Parenthesize
+> ordering comparisons when mixing them with bitwise operators.
+
+> **Construction binds tighter than every binary operator** (level 11):
+> `Word64 b << 8` is `(Word64 b) << 8`, not `Word64 (b << 8)`.
+
+> **A unary operator takes only a level-13 operand** — a name, literal, call,
+> field, index or a parenthesized expression. `-x`, `~w`, `&arr[0]`, `not f()`
+> are fine; `- -x`, `~ ~w` and `~ Word64 w` are syntax errors — parenthesize:
+> `~ (Word64 w)`. Two exceptions: `*` (dereference) chains freely (`**pp`), and
+> `unsafe` takes a whole expression (`unsafe Nat64 &x`).
+
 ## Value Construction
 
 Explicit type construction — not a cast. Takes a value of type A and produces a new value of type B.
@@ -317,7 +388,7 @@ Syntax: `TargetType sourceValue`
 Int32 10                           // integer literal → Int32
 Float64 3.14                       // rational literal → Float64
 Nat8 0xFF                          // integer literal → Nat8
-*Int32 ptr                         // pointer reinterpretation (unsafe)
+unsafe *Int32 ptr                  // pointer reinterpretation (needs pragma unsafe)
 Point {x = 1, y = 2}               // record construction
 [4]Int32 [1, 2, 3]                 // explicit array (fills remaining with 0)
 Unit value                         // discard a value (suppress warnings)
@@ -325,8 +396,11 @@ Unit value                         // discard a value (suppress warnings)
 
 ### Construction rules
 
-> **Safe** — no special flag required.
-> **Unsafe** — requires `-funsafe` compiler flag and `unsafe { }` block at the call site.
+> **Safe** — written as plain construction: `Nat8 x`.
+> **Unsafe** — needs `pragma unsafe` in the module *and* the `unsafe` operator
+> at the use site: `unsafe Nat8 x`. Permission lives in the source, not on the
+> command line — the `-funsafe` flag is currently ignored (see
+> [BUGS.md](BUGS.md) #19).
 > Width notation: `Y≤X` means source width is narrower or equal; `Y>X` means wider.
 
 | Target | Safe sources | Unsafe sources | Comment |
@@ -454,6 +528,7 @@ type Color = @layout("union") {
 
 - Between semantically distinct top-level blocks (includes, type definitions, constants) — **one empty line**
 - Between function definitions — **two empty lines**
+- At the end of a file — **two empty lines** as well (the file ends with `}\n\n\n`)
 - Inline comments (to the right of a line of code) are separated from the code by **two spaces**
 
 ```modest
@@ -675,5 +750,4 @@ mcc -o main -mbackend=llvm main.modest      # translate to LLVM IR (main.ll)
 mcc -o main -mbackend=modest main.modest    # re-emit Modest source (main.modest, pretty-printed)
 
 mcc -o main -mbackend=c11 -fparanoid main.modest   # warnings as errors
-mcc -o main -mbackend=c11 -funsafe main.modest     # enable unsafe pointer ops
 ```
