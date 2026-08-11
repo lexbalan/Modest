@@ -307,3 +307,52 @@ var b = buf                    // all three: error: attempt to use an uninitiali
   before use (compile error otherwise)"), so the documentation currently
   promises more than the compiler checks.
 - Verified for `[N]T` elements and record fields; both slip through.
+
+## 22. An inline comment after a trailing operator breaks line continuation
+
+```modest
+let v = a |   // low bits
+	(a << 8)
+```
+
+```
+error: unexpected token1 ' low bits'
+```
+
+- A line ending in a binary operator continues on the next line (the operator is
+  the continuation mark); the parser does this by skipping newlines after the
+  operator — `self.skipn("\n")` in `expr_value_1` … `expr_value_8`
+  (`src/parser.py`). Comments are not skipped there, so the comment token lands
+  where the right operand is expected.
+- Without the comment the same code compiles, and a blank line after the
+  operator is tolerated:
+  ```modest
+  let v = a |
+
+  	(a << 8)      // fine
+  ```
+- Hits exactly where inline comments are most useful — annotating the terms of a
+  long multi-line expression — and the project's own style guide encourages
+  comments to the right of code (`docs/CHEATSHEET.md`, Code Style).
+- Fix belongs next to the newline skip: skip comment tokens the same way.
+
+## 23. Breaking the line-continuation rule gives a diagnostic that does not teach it
+
+```modest
+let v = a
+	| (a << 8)      // error: unexpected token1 '|'
+```
+
+```modest
+let v = a |
+return 0            // error: undefined value 'return'
+```
+
+- Both messages are technically true and practically useless: neither mentions
+  that a continued expression must end the line with its operator.
+- Wanted: for a binary operator at the start of a line — "binary operator at
+  start of line; to continue an expression, put it at the end of the previous
+  line". For a trailing operator with nothing to continue into — point at the
+  operator, not at the innocent token on the next line that got swallowed.
+- `unexpected token1` leaks an internal name into user-facing output; it appears
+  in many other diagnostics too and deserves a separate pass.

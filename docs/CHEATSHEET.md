@@ -207,6 +207,30 @@ include "libc/unistd"     // read, write, close
 
 ## Statements
 
+### Line breaks
+
+A statement ends at the end of the line — there are no semicolons. An expression
+continues on the next line when the line ends with a token that cannot finish it:
+a binary operator (`+`, `|`, `and`, `==`, ...), `=`, `,`, `(` or `[`.
+
+```modest
+let v = a |
+	(a << 8) |
+	(a << 16)
+
+printf("%d %d\n",
+	first,
+	second)
+```
+
+> **The operator goes at the end of the line, not at the start of the next one.**
+> It is the mark that the expression continues — the parser decides at the line
+> break, using what it has already read. Starting a line with `|` gives
+> `unexpected token1 '|'`.
+>
+> A blank line after the trailing operator is fine; an inline comment after it is
+> not — that is a known bug, see [BUGS.md](BUGS.md) #22.
+
 ### If/Else
 ```modest
 if condition {
