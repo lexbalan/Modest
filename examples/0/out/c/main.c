@@ -16,9 +16,17 @@ typedef uint32_t char32_t;
 #define _STR32(x) __STR32(x)
 #endif
 #define RAT_SYMBOL U"🐀"
+static char a[10];
+
+static char *foo(void) {
+	return NULL;
+}
 
 int main(void) {
 	printf("Hello World!\n");
+	int i = 10;
+	char *slice = &a[0];
+	slice = foo();
 	char32_t c32 = RAT_SYMBOL[0];
 	printf("c32 = {0x%x}\n", c32);
 	char a = "é"[0];

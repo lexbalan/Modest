@@ -16,7 +16,8 @@ include <#"path"#>
   `as x` renames the namespace to `x`.
 - `include "m"` — public definitions enter the current namespace and
   are used unqualified. Idiomatic for C bindings (`libc/*`).
-- Path resolution (`.m` appended automatically):
+- Path resolution (`.modest` appended automatically; a legacy `.m` file
+  is tried next, so unrenamed modules still resolve):
   1. paths starting with `./` or `../` — relative to the importing file;
   2. otherwise, the importing file's directory;
   3. otherwise, the library directory (`MODEST_LIB` / `-L`).

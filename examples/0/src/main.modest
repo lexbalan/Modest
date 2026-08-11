@@ -1,12 +1,23 @@
-// examples/0/src/main.m
+// examples/0/src/main.modest
 
 include "libc/ctypes64"
 include "libc/stdio"
 
+
 const ratSymbol = "🐀"
+
+var a: [10]Char8
+
+func foo () -> *[]Char8 {
+	return nil
+}
 
 func main () -> Int {
 	printf("Hello World!\n")
+
+	var i: Int = 10
+	var slice: *[]Char8 = &a[0:i]
+	slice = foo()
 
 	//var c8: Char8 = ratSymbol[0]
 	//var c16: Char16 = ratSymbol[0]

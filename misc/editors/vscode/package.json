@@ -31,6 +31,7 @@
 					"modest"
 				],
 				"extensions": [
+					".modest",
 					".m"
 				],
 				"configuration": "./language-configuration.json"

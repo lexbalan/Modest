@@ -1,4 +1,4 @@
-// libc/termios.m
+// libc/termios.modest
 
 pragma do_not_include
 pragma prefix ""

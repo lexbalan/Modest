@@ -1,4 +1,4 @@
-// libc/fcntl.m
+// libc/fcntl.modest
 
 pragma prefix ""
 

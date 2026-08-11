@@ -1,4 +1,4 @@
-// libc/ctypes.m
+// libc/ctypes.modest
 
 pragma do_not_include
 pragma prefix ""

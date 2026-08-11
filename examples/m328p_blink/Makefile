@@ -9,10 +9,10 @@ ALL_LFLAGS = -g -mmcu=$(MCU)
 BIN=bin/
 
 all:
-	mcc -o out/llvm/main -funsafe -mbackend=llvm src/main.m
-	mcc -o out/llvm/avr -funsafe -mbackend=llvm src/avr/avr.m
-	mcc -o out/llvm/m328p -funsafe -mbackend=llvm src/avr/m328p.m
-	mcc -o out/llvm/delay -funsafe -mbackend=llvm src/avr/delay.m
+	mcc -o out/llvm/main -funsafe -mbackend=llvm src/main.modest
+	mcc -o out/llvm/avr -funsafe -mbackend=llvm src/avr/avr.modest
+	mcc -o out/llvm/m328p -funsafe -mbackend=llvm src/avr/m328p.modest
+	mcc -o out/llvm/delay -funsafe -mbackend=llvm src/avr/delay.modest
 
 	llc -march=avr out/llvm/main.ll -o $(BIN)/S/main.s
 	llc -march=avr out/llvm/avr.ll -o $(BIN)/S/avr.s
@@ -24,10 +24,10 @@ all:
 
 
 C:
-	mcc -o out/c/main -funsafe -mbackend=c11 src/main.m
-	mcc -o out/c/avr -funsafe -mbackend=c11 src/avr/avr.m
-	mcc -o out/c/delay -funsafe -mbackend=c11 src/avr/delay.m
-	mcc -o out/c/m328p -funsafe -mbackend=c11 src/avr/m328p.m
+	mcc -o out/c/main -funsafe -mbackend=c11 src/main.modest
+	mcc -o out/c/avr -funsafe -mbackend=c11 src/avr/avr.modest
+	mcc -o out/c/delay -funsafe -mbackend=c11 src/avr/delay.modest
+	mcc -o out/c/m328p -funsafe -mbackend=c11 src/avr/m328p.modest
 	avr-gcc $(ALL_CFLAGS) -o $(BIN)/main.o out/c/main.c
 	avr-gcc $(ALL_CFLAGS) -o $(BIN)/avr.o out/c/avr.c
 	avr-gcc $(ALL_CFLAGS) -o $(BIN)/m328p.o out/c/m328p.c
@@ -37,10 +37,10 @@ C:
 
 
 CM:
-	mcc -o out/cm/main -funsafe -mbackend=modest src/main.m
-	mcc -o out/cm/avr -funsafe -mbackend=modest src/avr/avr.m
-	mcc -o out/cm/m328p -funsafe -mbackend=modest src/avr/m328p.m
-	mcc -o out/cm/delay -funsafe -mbackend=modest src/avr/delay.m
+	mcc -o out/cm/main -funsafe -mbackend=modest src/main.modest
+	mcc -o out/cm/avr -funsafe -mbackend=modest src/avr/avr.modest
+	mcc -o out/cm/m328p -funsafe -mbackend=modest src/avr/m328p.modest
+	mcc -o out/cm/delay -funsafe -mbackend=modest src/avr/delay.modest
 
 
 PORT = /dev/tty.usbmodem11301

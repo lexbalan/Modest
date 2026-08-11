@@ -12,8 +12,13 @@ def array_can2(a, b):
 
 	return Type.eq(a, b)
 
-
 def value_pointer_can(to, from_type, method, ti):
+	res = value_pointer_can2(to, from_type, method, ti)
+	if res == False:
+		info("Cannot cons pointer!! from %s to %s" % (from_type, to), ti)
+	return res
+
+def value_pointer_can2(to, from_type, method, ti):
 	assert(to.is_pointer())
 
 	# implicit region
@@ -41,8 +46,6 @@ def value_pointer_can(to, from_type, method, ti):
 		# cons *[]X from *[n]X +
 		if to.to.is_unsized_array() and from_type.to.is_sized_array():
 			return array_can2(to.to, from_type.to)
-
-
 
 	if method == 'implicit':
 		return False

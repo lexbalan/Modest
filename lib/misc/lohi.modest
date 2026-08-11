@@ -1,4 +1,4 @@
-// lohi.m
+// lohi.modest
 
 
 public func lo16 (x: Word16) -> Word8 {

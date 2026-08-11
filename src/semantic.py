@@ -2,6 +2,7 @@
 import os
 import copy
 import decimal
+import pathlib
 
 from hlir import *
 from error import *
@@ -1347,6 +1348,7 @@ def do_value_index(x):
 		from hlir.defs import type_char_create
 		_type = type_char_create(width=char_width, ti=ti)
 		nv = ValueIndex(_type, left, index, ti=ti)
+		print("CC = %x" % char_code)
 		nv.set_asset(char_code)
 		nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 		return nv
@@ -2674,10 +2676,13 @@ def do_import(x):
 	if x['as'] != None:
 		_as = x['as']['str']
 	else:
-		_as = impline.split("/")[-1]
+		_as = os.path.basename(impline)
 
 
-	abspath = get_import_abspath(impline, ext='.m')
+	abspath = get_import_abspath(impline, ext='.modest')
+	if abspath == None:
+		abspath = get_import_abspath(impline, ext='.m')
+
 	if abspath == None:
 		error("module %s not found" % impline, import_expr.ti)
 		return None
@@ -2715,8 +2720,6 @@ def do_import(x):
 	if m == None:
 		m = translate(abspath)
 		modules[abspath] = m
-
-		mid = impline.split("/")[-1]
 
 		if m == None:
 			fatal("cannot import module")
@@ -2831,7 +2834,7 @@ def translate(abspath):
 
 	m = None
 	if ast != None:
-		idStr = abspath.split('/')[-1][:-2]
+		idStr = pathlib.Path(abspath).stem
 		m = process_module(idStr, abspath, ast)
 		#m.prefix = m.id
 		m.source_abspath = abspath
@@ -3072,7 +3075,7 @@ def def_phase2(ast):
 
 # получает строку импорта (и неявно глобальный контекст)
 # и возвращает полный путь к модулю
-def get_import_abspath(s, ext='.m'):
+def get_import_abspath(s, ext='.modest'):
 	fname = s + ext
 
 	local_name = fname
@@ -3081,7 +3084,7 @@ def get_import_abspath(s, ext='.m'):
 
 	full_name = ''
 
-	is_local = fname[0:2] == './' or fname[0:3] == '../'
+	is_local = fname[0] == '.'
 	if is_local:
 		full_name = local_name
 	elif os.path.exists(local_name):

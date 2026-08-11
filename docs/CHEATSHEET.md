@@ -593,7 +593,7 @@ Use `Nat8` for up to 256 variants, or `Nat16`/`Nat32` for larger enumerations.
 
 ### Multi-source Module
 ```modest
-// main.m
+// main.modest
 include "libc/ctypes64"
 include "libc/stdio"
 import "utils"
@@ -603,7 +603,7 @@ func main () -> Int {
     return 0
 }
 
-// utils.m
+// utils.modest
 include "libc/stdio"
 
 func greet () -> Unit {
@@ -670,10 +670,10 @@ public func myPrint (s: Str8) -> Unit  // emitted as: printf
 ## Compilation
 
 ```bash
-mcc -o main -mbackend=c11 main.m       # translate to C (main.c)
-mcc -o main -mbackend=llvm main.m      # translate to LLVM IR (main.ll)
-mcc -o main -mbackend=modest main.m    # re-emit Modest source (main.m, pretty-printed)
+mcc -o main -mbackend=c11 main.modest       # translate to C (main.c)
+mcc -o main -mbackend=llvm main.modest      # translate to LLVM IR (main.ll)
+mcc -o main -mbackend=modest main.modest    # re-emit Modest source (main.modest, pretty-printed)
 
-mcc -o main -mbackend=c11 -fparanoid main.m   # warnings as errors
-mcc -o main -mbackend=c11 -funsafe main.m     # enable unsafe pointer ops
+mcc -o main -mbackend=c11 -fparanoid main.modest   # warnings as errors
+mcc -o main -mbackend=c11 -funsafe main.modest     # enable unsafe pointer ops
 ```

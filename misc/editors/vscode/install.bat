@@ -41,8 +41,9 @@ echo.
 echo Reload VS Code: Ctrl+Shift+P -^> "Developer: Reload Window".
 echo If the extension still does not show up, quit VS Code and start it again.
 echo.
-echo Objective-C and MATLAB also claim the .m extension. If your files open
-echo as one of those, add to your VS Code settings.json:
+echo Sources use the .modest extension. Legacy .m files are recognised too,
+echo but Objective-C and MATLAB claim .m as well and usually win; if such a
+echo file opens as one of those, add to your VS Code settings.json:
 echo     "files.associations": {"*.m": "modest"}
 goto :end
 

@@ -46,7 +46,7 @@ Quick orientation for working on this codebase without re-reading everything.
 ## Pipeline flow
 
 ```
-source.m
+source.modest
   └─ lexer.py        → token list
   └─ parser.py       → AST (nested Python dicts)
   └─ semantic.py     → HLIR (typed Python objects: Stmt*, Value*, Type*)

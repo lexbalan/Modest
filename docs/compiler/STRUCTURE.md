@@ -96,48 +96,48 @@ Key settings: target name/machine, endianness, ABI, word/pointer/integer/float/c
 
 | File | Wraps |
 |------|-------|
-| `libc.m` | Main libc aggregator |
-| `stdio.m` | Standard I/O (`printf`, `scanf`, `fopen`, `fclose`, …) |
-| `stdlib.m` | Standard utilities (`malloc`, `free`, `exit`, …) |
-| `string.m` | String functions (`strcpy`, `strlen`, `memcpy`, …) |
-| `math.m` | Math functions (`sin`, `cos`, `sqrt`, `pow`, …) |
-| `ctype.m` | Character classification |
-| `ctypes.m` / `ctypes32.m` / `ctypes64.m` | C type aliases (arch variants) |
-| `errno.m` / `errno_abi.m` | Error codes |
-| `assert.m` | Assertions |
-| `fcntl.m` | File control |
-| `stat.m` | File status |
-| `time.m` | Time functions |
-| `unistd.m` | POSIX API (`read`, `write`, `close`, …) |
-| `socket.m` | Network sockets |
-| `arpa/inet.m` | TCP/IP protocol definitions |
+| `libc.modest` | Main libc aggregator |
+| `stdio.modest` | Standard I/O (`printf`, `scanf`, `fopen`, `fclose`, …) |
+| `stdlib.modest` | Standard utilities (`malloc`, `free`, `exit`, …) |
+| `string.modest` | String functions (`strcpy`, `strlen`, `memcpy`, …) |
+| `math.modest` | Math functions (`sin`, `cos`, `sqrt`, `pow`, …) |
+| `ctype.modest` | Character classification |
+| `ctypes.modest` / `ctypes32.modest` / `ctypes64.modest` | C type aliases (arch variants) |
+| `errno.modest` / `errno_abi.modest` | Error codes |
+| `assert.modest` | Assertions |
+| `fcntl.modest` | File control |
+| `stat.modest` | File status |
+| `time.modest` | Time functions |
+| `unistd.modest` | POSIX API (`read`, `write`, `close`, …) |
+| `socket.modest` | Network sockets |
+| `arpa/inet.modest` | TCP/IP protocol definitions |
 
 ### `lib/lightfood/` — Higher-Level Libraries
 
 | File | Purpose |
 |------|---------|
-| `console.m` | Console I/O |
-| `memory.m` | Memory management helpers |
-| `str.m` | String utilities |
-| `datetime.m` | Date/time utilities |
-| `delay.m` | Delay/sleep operations |
+| `console.modest` | Console I/O |
+| `memory.modest` | Memory management helpers |
+| `str.modest` | String utilities |
+| `datetime.modest` | Date/time utilities |
+| `delay.modest` | Delay/sleep operations |
 
 ### `lib/misc/` — Miscellaneous
 
 | File | Purpose |
 |------|---------|
-| `sha256.m` | SHA-256 hashing |
-| `aes256.m` | AES-256 encryption |
-| `chacha20.m` | ChaCha20 stream cipher |
-| `crc32.m` | CRC32 checksum |
-| `bit.m` | Bit manipulation utilities |
-| `lohi.m` | Low/high word operations |
-| `minmax.m` | Min/max utilities |
-| `pthread.m` | POSIX threads |
-| `queue.m` | Generic queue |
-| `queueWord8.m` | Byte queue |
-| `termios.m` | Terminal I/O control |
-| `utf.m` | UTF encoding utilities |
+| `sha256.modest` | SHA-256 hashing |
+| `aes256.modest` | AES-256 encryption |
+| `chacha20.modest` | ChaCha20 stream cipher |
+| `crc32.modest` | CRC32 checksum |
+| `bit.modest` | Bit manipulation utilities |
+| `lohi.modest` | Low/high word operations |
+| `minmax.modest` | Min/max utilities |
+| `pthread.modest` | POSIX threads |
+| `queue.modest` | Generic queue |
+| `queueWord8.modest` | Byte queue |
+| `termios.modest` | Terminal I/O control |
+| `utf.modest` | UTF encoding utilities |
 
 
 ## `examples/` — Example Programs
@@ -150,7 +150,7 @@ See [examples/README.md](../../examples/README.md).
 
 ## `tests/` — Test Suite
 
-Each test is a directory with `src/main.m`, a `Makefile` (`make test`)
+Each test is a directory with `src/main.modest`, a `Makefile` (`make test`)
 and `out/{c,cm,llvm}/`. The active set is listed in `tests/run.sh`;
 crypto tests (`sha256`, `aes256`, `chacha20`, `crc32`) verify end-to-end
 semantics against known vectors.
@@ -159,7 +159,7 @@ semantics against known vectors.
 ## `misc/` — Everything Around the Compiler
 
 `misc/editors/vscode/` — the VS Code extension: syntax highlighting for
-`.m` files, plus `install.sh` / `install.bat` that link it into the editor's
+`.modest` files, plus `install.sh` / `install.bat` that link it into the editor's
 extensions directory. See
 [misc/editors/vscode/README.md](../../misc/editors/vscode/README.md).
 

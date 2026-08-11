@@ -23,7 +23,7 @@ at the one check site. Everywhere else that touches immutability has to
 remember both exist.
 
 - Symptom: the self-print backend (`-mbackend=modest`) silently drops
-  `@immutable` when reprinting — see `tests/in_y_minutes/out/cm/main.m`,
+  `@immutable` when reprinting — see `tests/in_y_minutes/out/cm/main.modest`,
   where `@immutable var locked: Int32 = 40` comes back out as plain
   `var locked: Int32 = 40` merged onto the previous `let` line, no
   diagnostic. Generic attributes clearly aren't being carried through the

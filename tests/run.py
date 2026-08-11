@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Modest test runner — positive tests.
 
-A test is a single .m file whose leading comment block declares what is
+A test is a single .modest file whose leading comment block declares what is
 expected of it.  The runner compiles it with each requested backend, links
 the result with clang, runs the binary and checks the outcome.
 
@@ -43,7 +43,7 @@ CLANG_C_FLAGS = [
 
 # Backends that emit source we can hand to clang, and the extension they use.
 COMPILABLE = {'c11': '.c', 'llvm': '.ll'}
-GENERATE_ONLY = {'modest': '.m'}
+GENERATE_ONLY = {'modest': '.modest'}
 ALL_BACKENDS = list(COMPILABLE) + list(GENERATE_ONLY)
 
 DEFAULT_BACKENDS = ['c11', 'llvm']
@@ -56,13 +56,13 @@ PASS, FAIL, XFAIL, XPASS, SKIP = 'pass', 'fail', 'xfail', 'xpass', 'skip'
 
 @dataclass
 class Test:
-	path: str                             # absolute path to the .m file
+	path: str                             # absolute path to the .modest file
 	name: str                             # path relative to tests/, for display
 	mode: str = 'run'                     # run | build
 	backends: list = field(default_factory=lambda: list(DEFAULT_BACKENDS))
 	expect_exit: int = 0
 	expect_out: list = field(default_factory=list)
-	link: list = field(default_factory=list)   # extra .m sources to link in
+	link: list = field(default_factory=list)   # extra .modest sources to link in
 	flags: list = field(default_factory=list)  # extra mcc flags
 	xfail: dict = field(default_factory=dict)  # backend (or '*') -> reason
 
@@ -89,7 +89,7 @@ DIRECTIVE = re.compile(r'^//\s*([A-Z][A-Z-]*)\s*(?:\(([^)]*)\))?\s*:\s*(.*)$')
 
 
 def parse_test(path):
-	"""Read the leading comment block of a .m file into a Test."""
+	"""Read the leading comment block of a .modest file into a Test."""
 	name = os.path.relpath(path, TESTS_DIR)
 	t = Test(path=path, name=name)
 
@@ -337,7 +337,7 @@ def discover(filt):
 	for dirpath, dirnames, filenames in os.walk(TESTS_DIR):
 		dirnames[:] = sorted(d for d in dirnames if not d.startswith(('_', '.')))
 		for fn in sorted(filenames):
-			if not fn.endswith('.m'):
+			if not fn.endswith('.modest'):
 				continue
 			path = os.path.join(dirpath, fn)
 			if filt and filt not in os.path.relpath(path, TESTS_DIR):

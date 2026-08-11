@@ -1,4 +1,4 @@
-// sha256.m
+// sha256.modest
 
 pragma do_not_include
 pragma unsafe

@@ -12,19 +12,19 @@ test: CM LLVM C
 
 
 CM:
-	mcc -o $(CMPREFIX)/main -mbackend=modest -funsafe $(INDIR)/main.m
-	mcc -o $(CMPREFIX)/sha256 -mbackend=modest -funsafe ${MODEST_LIB}/misc/sha256.m
+	mcc -o $(CMPREFIX)/main -mbackend=modest -funsafe $(INDIR)/main.modest
+	mcc -o $(CMPREFIX)/sha256 -mbackend=modest -funsafe ${MODEST_LIB}/misc/sha256.modest
 
 
 LLVM:
-	mcc -o $(LLVMPREFIX)/sha256 -mbackend=llvm -funsafe ${MODEST_LIB}/misc/sha256.m
-	mcc -o $(LLVMPREFIX)/main -mbackend=llvm -funsafe $(INDIR)/main.m
+	mcc -o $(LLVMPREFIX)/sha256 -mbackend=llvm -funsafe ${MODEST_LIB}/misc/sha256.modest
+	mcc -o $(LLVMPREFIX)/main -mbackend=llvm -funsafe $(INDIR)/main.modest
 	clang $(LLVMPREFIX)/main.ll $(LLVMPREFIX)/sha256.ll
 
 
 C:
-	mcc -o $(CPREFIX)/main -mbackend=c11 -funsafe $(INDIR)/main.m
-	mcc -o $(CPREFIX)/sha256 -mbackend=c11 -funsafe ${MODEST_LIB}/misc/sha256.m
+	mcc -o $(CPREFIX)/main -mbackend=c11 -funsafe $(INDIR)/main.modest
+	mcc -o $(CPREFIX)/sha256 -mbackend=c11 -funsafe ${MODEST_LIB}/misc/sha256.modest
 	clang $(C_OPTIONS) $(CPREFIX)/main.c $(CPREFIX)/sha256.c
 
 

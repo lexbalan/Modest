@@ -1,4 +1,4 @@
-// libc/time.m
+// libc/time.modest
 
 pragma do_not_include
 pragma prefix ""

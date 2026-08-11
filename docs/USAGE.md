@@ -4,9 +4,9 @@
 export MODEST_DIR=/path/to/Modest      # compiler root
 export MODEST_LIB=$MODEST_DIR/lib      # library search path
 
-mcc -o main -mbackend=c11 main.m       # → main.c + main.h
-mcc -o main -mbackend=llvm main.m      # → main.ll
-mcc -o main -mbackend=modest main.m    # → main.m (pretty-printed)
+mcc -o main -mbackend=c11 main.modest       # → main.c + main.h
+mcc -o main -mbackend=llvm main.modest      # → main.ll
+mcc -o main -mbackend=modest main.modest    # → main.modest (pretty-printed)
 ```
 
 ## Flags

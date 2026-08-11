@@ -9,7 +9,7 @@
 export MODEST_DIR=/path/to/Modest      # compiler root
 export MODEST_LIB=$MODEST_DIR/lib      # library search path
 
-mcc -o <out> [options] <files.m>
+mcc -o <out> [options] <files.modest>
 ```
 
 | Option | Meaning |
@@ -36,7 +36,7 @@ cd tests && ./run.sh        # build + run the test suite
 ./check.sh                  # tests + build all examples
 ```
 
-Tests are directories with `src/main.m` and a `Makefile` (`make test`).
+Tests are directories with `src/main.modest` and a `Makefile` (`make test`).
 The crypto tests (`sha256`, `aes256`, `chacha20`, `crc32`) double as
 end-to-end semantic checks against known vectors. Known compiler bugs
 are tracked in [../BUGS.md](../BUGS.md), design plans in

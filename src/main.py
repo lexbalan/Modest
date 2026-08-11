@@ -87,11 +87,6 @@ def do_file(src_name, outname, settings):
 	if not os.path.isfile(src_name):
 		error.fatal("file \"%s\" not found" % src_name)
 
-#	file_base_name = os.path.basename(src_name)
-#	root_name = file_base_name.split(".")[0]
-#	src_abspath = os.path.abspath(src_name)
-#	src_dirname = os.path.dirname(src_abspath)
-
 	semantic.init()
 	module = semantic.translate(src_name)
 

@@ -1,4 +1,4 @@
-// libc/stat.m
+// libc/stat.modest
 
 pragma do_not_include
 pragma prefix ""

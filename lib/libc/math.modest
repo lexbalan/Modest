@@ -1,4 +1,4 @@
-// libc/math.m
+// libc/math.modest
 
 pragma do_not_include
 pragma prefix ""

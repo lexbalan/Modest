@@ -1,4 +1,4 @@
-// examples/annotations/src/main.m
+// examples/annotations/src/main.modest
 
 include "libc/ctypes64"
 include "libc/stdio"

@@ -13,14 +13,14 @@ test: CM LLVM C
 
 
 CM:
-	mcc -o $(CMPREFIX)/main -mbackend=modest -funsafe -mint=64 $(INDIR)/main.m
-	mcc -o $(CMPREFIX)/list -mbackend=modest -mint=64 $(INDIR)/list.m
+	mcc -o $(CMPREFIX)/main -mbackend=modest -funsafe -mint=64 $(INDIR)/main.modest
+	mcc -o $(CMPREFIX)/list -mbackend=modest -mint=64 $(INDIR)/list.modest
 
 
 LLVM:
   # 1. CM -> LLVM/IR
-	mcc -o $(LLVMPREFIX)/main -mbackend=llvm -funsafe -mint=64 $(INDIR)/main.m
-	mcc -o $(LLVMPREFIX)/list -mbackend=llvm -mint=64 $(INDIR)/list.m
+	mcc -o $(LLVMPREFIX)/main -mbackend=llvm -funsafe -mint=64 $(INDIR)/main.modest
+	mcc -o $(LLVMPREFIX)/list -mbackend=llvm -mint=64 $(INDIR)/list.modest
 
 	# 2. LLVM/IR -> *.o
 	#clang -c $(LLVMPREFIX)/main.ll $(LLVMPREFIX)/linked_list.ll
@@ -32,8 +32,8 @@ LLVM:
 
 
 C:
-	mcc -o $(CPREFIX)/main -mbackend=c11 -funsafe -mint=64 $(INDIR)/main.m
-	mcc -o $(CPREFIX)/list -mbackend=c11 -mint=64 $(INDIR)/list.m
+	mcc -o $(CPREFIX)/main -mbackend=c11 -funsafe -mint=64 $(INDIR)/main.modest
+	mcc -o $(CPREFIX)/list -mbackend=c11 -mint=64 $(INDIR)/list.modest
 	clang $(C_OPTIONS) $(CPREFIX)/main.c $(CPREFIX)/list.c
 
 

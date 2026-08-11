@@ -1,2 +1,3 @@
+*.modest linguist-language=Swift
 *.m linguist-language=Swift
 *.bat text eol=crlf

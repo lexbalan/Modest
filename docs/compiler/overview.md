@@ -1,9 +1,9 @@
 # Compiler Overview
 
-How a `.m` file becomes C, LLVM IR or pretty-printed Modest.
+How a `.modest` file becomes C, LLVM IR or pretty-printed Modest.
 
 ```
-source.m → Lexer → Parser → Translator → Backend → out.c / out.ll / out.m
+source.modest → Lexer → Parser → Translator → Backend → out.c / out.ll / out.modest
            tokens   AST       HLIR
 ```
 
@@ -56,7 +56,7 @@ Each backend walks HLIR modules and prints output:
 | :-- | :-- | :-- |
 | `c11.py` (+ `cshape` package) | `.c` + `.h` | primary backend; readable C11 |
 | `llvm.py` | `.ll` | LLVM IR, compiled with clang |
-| `modest.py` | `.m` | pretty-printer (self-output) |
+| `modest.py` | `.modest` | pretty-printer (self-output) |
 
 `c11_old.py` and `c11_old_backend_test.py` are legacy, not in the
 pipeline.

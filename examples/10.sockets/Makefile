@@ -15,20 +15,20 @@ test: CM LLVM C
 
 
 CM:
-	mcc -o $(CMPREFIX)/client -mbackend=modest $(INDIR)/client.m
-	mcc -o $(CMPREFIX)/server -mbackend=modest $(INDIR)/server.m
+	mcc -o $(CMPREFIX)/client -mbackend=modest $(INDIR)/client.modest
+	mcc -o $(CMPREFIX)/server -mbackend=modest $(INDIR)/server.modest
 
 
 LLVM:
-	mcc -o $(LLVMPREFIX)/client -funsafe -mbackend=llvm $(INDIR)/client.m
-	mcc -o $(LLVMPREFIX)/server -funsafe -mbackend=llvm $(INDIR)/server.m
+	mcc -o $(LLVMPREFIX)/client -funsafe -mbackend=llvm $(INDIR)/client.modest
+	mcc -o $(LLVMPREFIX)/server -funsafe -mbackend=llvm $(INDIR)/server.modest
 	clang -oclient $(LLVMPREFIX)/client.ll
 	clang -oserver $(LLVMPREFIX)/server.ll
 
 
 C:
-	mcc -o $(CPREFIX)/client -funsafe -mbackend=c11 $(INDIR)/client.m
-	mcc -o $(CPREFIX)/server -funsafe -mbackend=c11 $(INDIR)/server.m
+	mcc -o $(CPREFIX)/client -funsafe -mbackend=c11 $(INDIR)/client.modest
+	mcc -o $(CPREFIX)/server -funsafe -mbackend=c11 $(INDIR)/server.modest
 	clang $(C_OPTIONS) -oclient $(CPREFIX)/client.c
 	clang $(C_OPTIONS) -oserver $(CPREFIX)/server.c
 

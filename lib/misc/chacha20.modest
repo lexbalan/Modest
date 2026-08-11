@@ -1,4 +1,4 @@
-// chacha20.m
+// chacha20.modest
 
 
 public type Key = [8]Word32

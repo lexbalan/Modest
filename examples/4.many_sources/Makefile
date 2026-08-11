@@ -13,13 +13,13 @@ test: CM LLVM C
 
 
 CM:
-	mcc -o $(CMPREFIX)/main -mbackend=modest $(INDIR)/main.m
-	mcc -o $(CMPREFIX)/lib -mbackend=modest $(INDIR)/lib.m
+	mcc -o $(CMPREFIX)/main -mbackend=modest $(INDIR)/main.modest
+	mcc -o $(CMPREFIX)/lib -mbackend=modest $(INDIR)/lib.modest
 
 
 LLVM:
-	mcc -o $(LLVMPREFIX)/main -mbackend=llvm $(INDIR)/main.m
-	mcc -o $(LLVMPREFIX)/lib -mbackend=llvm $(INDIR)/lib.m
+	mcc -o $(LLVMPREFIX)/main -mbackend=llvm $(INDIR)/main.modest
+	mcc -o $(LLVMPREFIX)/lib -mbackend=llvm $(INDIR)/lib.modest
 
 	# translate IR to .o
 	clang -c $(LLVMPREFIX)/main.ll
@@ -30,8 +30,8 @@ LLVM:
 
 
 C:
-	mcc -o $(CPREFIX)/main -mbackend=c11 $(INDIR)/main.m
-	mcc -o $(CPREFIX)/lib -mbackend=c11 $(INDIR)/lib.m
+	mcc -o $(CPREFIX)/main -mbackend=c11 $(INDIR)/main.modest
+	mcc -o $(CPREFIX)/lib -mbackend=c11 $(INDIR)/lib.modest
 	clang $(C_OPTIONS) $(CPREFIX)/main.c $(CPREFIX)/lib.c
 
 

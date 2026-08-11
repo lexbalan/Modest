@@ -35,7 +35,7 @@ calling `register.py` — the same script on both platforms. Since VS Code 1.74
 that file, and not the directory listing, is what the extension scanner
 reads: a folder missing from it is ignored however valid its `package.json`
 is, and the extension never shows up — not in the Extensions view, not in
-`code --list-extensions`, and `.m` files stay unhighlighted. An earlier entry
+`code --list-extensions`, and Modest files stay unhighlighted. An earlier entry
 for the same id is replaced, and a `.bak` of the file is kept.
 
 Start VS Code again and check that it took:
@@ -53,11 +53,15 @@ json.dump([e for e in d if e['identifier']['id']!='lexbalan.modest-lang'], \
 open(p,'w'), separators=(',',':'))" ~/.vscode/extensions/extensions.json
 ```
 
-## Note on the `.m` extension
+## File extensions
 
-Objective-C, which is built into VS Code, claims `.m` as well, and being
-built in it usually wins; MATLAB claims it too. Expect to need this in your
-settings (workspace or user):
+`.modest` is the extension for Modest sources. `.m` is still recognised for
+sources that have not been renamed yet.
+
+`.modest` is ours alone, so it needs no help. `.m`, on the other hand, is
+claimed by Objective-C, which is built into VS Code and therefore usually
+wins; MATLAB claims it too. As long as `.m` files are still around, expect to
+need this in your settings (workspace or user):
 
 ```json
 "files.associations": {

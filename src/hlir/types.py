@@ -250,9 +250,10 @@ class Module:
 
 	def get_import(self, id_str, with_private=False):
 		imp = self.imports.get(id_str)
-		if imp == None and with_private:
-			imp = self.imports.get(id_str)
-		imp.usecnt += 1
+		#if imp == None and with_private:
+		#	imp = self.imports.get(id_str)
+		if imp != None:
+			imp.usecnt += 1
 		return imp
 
 

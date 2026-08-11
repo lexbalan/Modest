@@ -31,7 +31,7 @@ Generates `int32_t s[2 - 2];`, which clang only accepts as a GNU
 extension (`-Wzero-length-array` under `-pedantic`). Array size comes
 straight from the slice's `volume` expression with no zero-length case;
 see `do_ctype_array_volume` in `src/backend/c11.py:210`. Reproduced by
-`testEmptySlice` in `tests/slice/src/main.m` (passes, but only because
+`testEmptySlice` in `tests/slice/src/main.modest` (passes, but only because
 `-pedantic` warnings aren't treated as errors).
 
 ## 7. Postfix operators after a slice are silently dropped
@@ -151,7 +151,7 @@ prints `f32 = 3.141593`, which is correct.
 ## 15. C backend's `#include` of its own header ignores `-o`
 
 ```sh
-mcc -o out/prog -mbackend=c11 main.m
+mcc -o out/prog -mbackend=c11 main.modest
 # writes out/prog.c and out/prog.h, but out/prog.c contains:
 #include "main.h"        # does not exist -> clang: file not found
 ```
@@ -163,7 +163,7 @@ mcc -o out/prog -mbackend=c11 main.m
   when `-o` happens to end in the same base name as the source.
 - Expected: both should come from the same name.
 - Went unnoticed because every existing invocation follows the
-  `-o <dir>/main main.m` shape, where the two coincide.
+  `-o <dir>/main main.modest` shape, where the two coincide.
 
 ## 16. Backends disagree about a function that falls off its end
 

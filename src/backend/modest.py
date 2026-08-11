@@ -1060,7 +1060,7 @@ def run(module, fname):
 	dirname = os.path.dirname(fname)
 	if dirname != '':
 		os.makedirs(dirname, exist_ok=True)
-	file = open(fname+'.m', "w")
+	file = open(fname+'.modest', "w")
 
 	for s in ss:
 		file.write(s)

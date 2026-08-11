@@ -22,11 +22,11 @@ returned the wrong code, the last thing it printed before giving up —
 which, by the self-checking convention above, is the check that failed.
 
 ```
-FAIL  lang/stmt/assign.m [c11] — exit 1, expected 0
+FAIL  lang/stmt/assign.modest [c11] — exit 1, expected 0
       arr[1:4] = [7, 8, 0], expected [7, 8, 9]
       failed: assign
 
-FAIL  lang/stmt/if.m [llvm] — clang failed (exit 1)
+FAIL  lang/stmt/if.modest [llvm] — clang failed (exit 1)
       if.ll:188: expected instruction opcode
 ```
 
@@ -40,7 +40,7 @@ mistake for a source file.
 
 ## Writing a test
 
-A test is one `.m` file.  Its leading comment block declares the
+A test is one `.modest` file.  Its leading comment block declares the
 expectations; everything below is an ordinary Modest program.
 
 ```modest
@@ -72,7 +72,7 @@ prints nothing and returns 0 also "passes" otherwise.
 | `BACKENDS: c11, llvm` | `c11, llvm` | which backends to run under |
 | `EXPECT-EXIT: 0` | `0` | required exit code |
 | `EXPECT-OUT: text` | — | substring that must appear in stdout; repeatable, matched **in order** |
-| `LINK: other.m` | — | extra sources compiled and linked with this one (multi-module tests) |
+| `LINK: other.modest` | — | extra sources compiled and linked with this one (multi-module tests) |
 | `FLAGS: -funsafe` | — | extra flags passed to `mcc` |
 | `EXPECTED-FAIL: reason` | — | known-broken; see below |
 
@@ -107,7 +107,7 @@ has a reproducer.
 the same path:
 
 ```
-docs/lang/stmt/while.md   ->   tests/lang/stmt/while.m
+docs/lang/stmt/while.md   ->   tests/lang/stmt/while.modest
 ```
 
 Directories whose name starts with `_` are skipped by discovery — use them

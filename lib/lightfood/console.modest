@@ -1,4 +1,4 @@
-// lightfood/console.m
+// lightfood/console.modest
 
 pragma unsafe
 pragma c_include "./utf.h"

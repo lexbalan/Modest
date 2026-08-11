@@ -1,4 +1,4 @@
-// libc/ctype.m
+// libc/ctype.modest
 
 pragma do_not_include
 pragma c_include "ctype.h"

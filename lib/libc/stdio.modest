@@ -1,4 +1,4 @@
-// libc/stdio.m
+// libc/stdio.modest
 
 pragma do_not_include
 pragma prefix ""

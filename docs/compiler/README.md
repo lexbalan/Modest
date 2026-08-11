@@ -1,6 +1,6 @@
 # The Modest Compiler
 
-`mcc` is a Python-based compiler that translates Modest (`.m`) sources
+`mcc` is a Python-based compiler that translates Modest (`.modest`) sources
 to C11, LLVM IR, or back to Modest.
 
 | Page | Contents |

@@ -112,7 +112,7 @@ Design constraints to resolve **before** implementing:
   of safety-class keys (or: config/CLI may mark a key `final`).
 - **Provenance.** With three layers, diagnostics need "who set this
   value": store the origin (`cfg/avr.toml:12` / CLI / `pragma at
-  main.m:3`) next to the value, show it in `-v` and in warning texts.
+  main.modest:3`) next to the value, show it in `-v` and in warning texts.
   Analogue: `git config --show-origin`.
 
 ## Conditional compilation (`$`-directives)

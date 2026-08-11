@@ -2,7 +2,7 @@
 
 Modest is a Swift/Go-inspired compiled language for medium-level system
 programming and embedded development. Python-based compiler (`src/`),
-transpiles `.m` sources to C11 or LLVM IR.
+transpiles `.modest` sources to C11 or LLVM IR.
 
 ## Language reference — READ THIS
 
@@ -23,6 +23,6 @@ read docs/CHEATSHEET.md before writing Modest code
 
 ## Build & test
 
-- Compile: `./mcc -o <out> -mbackend=c11|llvm|modest <file.m>` (needs `MODEST_DIR`, `MODEST_LIB` env vars)
-- Tests: `./tests/run.py` (one `.m` file per test; expectations in its header — see `tests/README.md`)
+- Compile: `./mcc -o <out> -mbackend=c11|llvm|modest <file.modest>` (needs `MODEST_DIR`, `MODEST_LIB` env vars)
+- Tests: `./tests/run.py` (one `.modest` file per test; expectations in its header — see `tests/README.md`)
 - Config: `cfg/*.toml` (target arch, type widths, backend)

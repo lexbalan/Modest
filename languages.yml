@@ -1,4 +1,4 @@
 - name: Modest
-  extensions: [m]
+  extensions: [modest]
   tm_scope: source.modest
 

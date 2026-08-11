@@ -1,4 +1,4 @@
-// lightfood/str.m
+// lightfood/str.modest
 
 
 public func len8(str: *Str8) -> Nat64 {

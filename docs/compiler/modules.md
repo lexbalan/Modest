@@ -136,7 +136,7 @@ backend.run(module, outname)    # walk the HLIR module, write files
 | :-- | :-- | :-- |
 | `c11.py` | `.c` + `.h` | Builds a `cshape` C AST and renders it. Header skipped for `main` or with the `no-h-file` feature. The only backend with an external dependency and the only one reading `common.features`. |
 | `llvm.py` | `.ll` | Direct textual emission with its own register counter and SSA bookkeeping; takes `target_triple` / `target_datalayout` / `size_width` from settings. |
-| `modest.py` | `.m` | Pretty-printer. Also exports `str_type`, reused by diagnostics. |
+| `modest.py` | `.modest` | Pretty-printer. Also exports `str_type`, reused by diagnostics. |
 
 ### Layer 6 — `main.py`
 
