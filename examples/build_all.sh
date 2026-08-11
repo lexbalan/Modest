@@ -14,6 +14,10 @@ cd demo1 && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 cd bubble_sort && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. #&& \
 cd web && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 cd sha256 && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
+cd aes256 && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
+cd crc32 && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
+cd chacha20 && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
+cd in_y_minutes && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 cd table && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 cd annotations && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. \
 
