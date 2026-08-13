@@ -3,6 +3,7 @@ import os
 import copy
 
 from hlir import *
+from common import get_setting
 from error import info, warning, error, fatal
 from util import align_bits_up
 from pprint import pprint
@@ -24,7 +25,7 @@ def output_open(fname):
 	dirname = os.path.dirname(fname)
 	if dirname != '':
 		os.makedirs(dirname, exist_ok=True)
-	f = open(fname, "w")
+	f = open(fname, "w", encoding=get_setting('backend.encoding'))
 
 
 def output_close():

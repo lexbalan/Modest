@@ -1,6 +1,7 @@
 
 from error import error, info
 from hlir import TokenInfo, TextInfo
+from common import get_setting
 
 
 EOF = ''
@@ -38,7 +39,7 @@ class Lexer:
 		self.space_pos = 0
 		self.tab_pos = 0
 		self.line = 1
-		with open(filename, "r") as f:
+		with open(filename, "r", encoding=get_setting('encoding')) as f:
 			self.text = f.read()
 		self.pos = 0
 		self.start = None

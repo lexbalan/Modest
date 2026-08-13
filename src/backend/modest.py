@@ -1,5 +1,6 @@
 
 from hlir import *
+from common import get_setting
 from error import info
 #from .common import *
 from util import str_fractional
@@ -24,7 +25,7 @@ def output_open(fname):
 	dirname = os.path.dirname(fname)
 	if dirname != '':
 		os.makedirs(dirname, exist_ok=True)
-	f = open(fname, "w")
+	f = open(fname, "w", encoding=get_setting('backend.encoding'))
 
 
 def output_close():
@@ -1060,7 +1061,7 @@ def run(module, fname):
 	dirname = os.path.dirname(fname)
 	if dirname != '':
 		os.makedirs(dirname, exist_ok=True)
-	file = open(fname+'.modest', "w")
+	file = open(fname+'.modest', "w", encoding=get_setting('backend.encoding'))
 
 	for s in ss:
 		file.write(s)

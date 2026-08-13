@@ -6,7 +6,7 @@ import tomllib
 
 import error
 import semantic
-from common import settings, features
+from common import settings, features, merge_settings, get_setting, set_setting, backend_settings
 
 
 
@@ -60,12 +60,15 @@ def main():
 		for feature in args.feature:
 			features.append(feature)
 
-	# parse modifiers (like -mbackend=c, -mstyle=legacy)
+	# parse modifiers (like -mbackend=c11, -mbackend.encoding=cp1251)
 	# and change default settings
 	if args.m != None:
 		for mod in args.m:
 			k, v = mod.split('=')
-			settings[k] = v
+			# -mbackend=<name> — привычный алиас к backend.default
+			if k == 'backend':
+				k = 'backend.default'
+			set_setting(k, v)
 
 	outname = args.output
 	if outname == None:
@@ -94,9 +97,12 @@ def do_file(src_name, outname, settings):
 		exit(1)
 
 	# select & run backend
-	backend_impline = "backend." + settings['backend']
-	backend = importlib.import_module(backend_impline)
-	backend.init(settings)
+	name = get_setting('backend.default')
+	if name == None:
+		error.fatal("backend not specified (cfg: backend.default)")
+
+	backend = importlib.import_module("backend." + name)
+	backend.init(backend_settings(name))
 	backend.run(module, outname)
 
 	if error.get_errcnt() > 0:
@@ -109,7 +115,7 @@ def apply_config(cfg_path):
 	from common import settings
 	with open(cfg_path, "rb") as toml:
 		config = tomllib.load(toml)
-		settings.update(config)
+		merge_settings(settings, config)
 
 
 

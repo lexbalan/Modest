@@ -1,7 +1,7 @@
 # error.py
 import os
 import sys
-from common import features
+from common import features, get_setting
 from hlir import TokenInfo, TextInfo
 
 # error codes:
@@ -48,7 +48,7 @@ TABSTOP = 4
 # offset - позиция в символах (как lexer.pos), не в байтах,
 # поэтому читаем декодированный текст, а не f.seek()
 def read_line(file, offset):
-	with open(file, 'r') as f:
+	with open(file, 'r', encoding=get_setting('encoding')) as f:
 		text = f.read()
 	end = text.find('\n', offset)
 	if end == -1:

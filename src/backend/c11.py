@@ -9,7 +9,7 @@ from hlir import *
 from error import info, warning, error, fatal
 from unicode import chars_to_utf32
 from util import str_fractional, align_bits_up, nbits_for_num
-from common import features
+from common import features, get_setting
 from cshape import *
 from util import trace
 
@@ -2263,7 +2263,7 @@ def dump(filename, defs):
 	dirname = os.path.dirname(filename)
 	if dirname != '':
 		os.makedirs(dirname, exist_ok=True)
-	file = open(filename, "w")
+	file = open(filename, "w", encoding=get_setting('backend.encoding'))
 	for d in defs:
 		file.write(render(d, style='legacy'))
 	file.write("\n\n")

@@ -127,8 +127,9 @@ type kind to its handler, and exports `value_cons_implicit`,
 **`backend/*`** — each backend is a plugin with a two-function contract:
 
 ```python
-backend = importlib.import_module("backend." + settings['backend'])
-backend.init(settings)          # cache target parameters
+name = get_setting('backend.default')
+backend = importlib.import_module("backend." + name)
+backend.init(backend_settings(name))         # cache target parameters
 backend.run(module, outname)    # walk the HLIR module, write files
 ```
 
@@ -141,7 +142,8 @@ backend.run(module, outname)    # walk the HLIR module, write files
 ### Layer 6 — `main.py`
 
 CLI and orchestration, 123 lines: `argparse`, layered TOML config
-(`cfg/default.toml` → `--config` → `-m key=value`), `MODEST_DIR` /
+(`cfg/default.toml` → `--config` → `-m key=value`, where the key may be a
+dotted path: `-mbackend.encoding=cp1251`), `MODEST_DIR` /
 `MODEST_LIB`, then per input file:
 
 ```
