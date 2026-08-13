@@ -238,9 +238,9 @@ func testArray () -> Bool {
 		return false
 	}
 
-	var len: Nat32 = lengthof(a)
+	var len: Size = lengthof(a)
 	if len != 3 {
-		printf("lengthof(a) = %u, expected 3\n", len)
+		printf("lengthof(a) = %zu, expected 3\n", len)
 		return false
 	}
 

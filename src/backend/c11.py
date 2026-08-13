@@ -1163,10 +1163,14 @@ def do_cvalue_sizeof_value(x, ctx):
 def do_cvalue_sizeof_type(x, ctx):
 	if x.oftype.is_unit():
 		return CValueCast(CTypeIdentifier("size_t"), CValueInteger(0))
-	return CValueSizeofType(do_ctype(x.oftype))
+	return cvalue_sizeof_type(x.oftype)
 
 def do_cvalue_lengthof_type(x, ctx):
-	return cvalue_literal_integer(x.oftype.volume.asset, is_unsigned=True, ctx=ctx)
+	# у VLA объём известен только в рантайме - печатаем само выражение,
+	# а не литерал (asset у такого объёма пуст). Ср. llvm.do_eval_lengthof_type
+	if x.oftype.is_vla():
+		return do_cvalue(x.oftype.volume)
+	return cvalue_literal_integer(x.asset, is_unsigned=True, ctx=ctx)
 
 def do_cvalue_alignof_type(x, ctx):
 	if x.oftype.is_unit():
@@ -1236,9 +1240,21 @@ def do_cvalue_eq(x, logic, ctx):
 
 
 
+# Размер типа как C-выражение.
+#
+# Для массива с неконстантным объёмом печатаем `sizeof(item) * n`, а не
+# `sizeof(item [n])`: второе - это VLA-тип, а они в C11 необязательны
+# (__STDC_NO_VLA__), не поддержаны MSVC и запрещены MISRA C:2012 (18.8).
+# Машинный код получается тот же самый.
+def cvalue_sizeof_type(t):
+	if t.is_vla():
+		return CValueMul(cvalue_sizeof_type(t.of), do_cvalue(t.volume))
+	return CValueSizeofType(do_ctype(t))
+
+
 def get_cvalue_size_for(a, b, ti):
 	ct = Type.select_common_type(a.type, b.type, ti=ti)
-	return CValueSizeofType(do_ctype(ct))
+	return cvalue_sizeof_type(ct)
 
 
 
@@ -1270,7 +1286,7 @@ def cvalue_malloc(size):
 
 
 def do_cvalue_new(x, ctx):
-	sizeof = CValueSizeofType(do_ctype(x.value.type))
+	sizeof = cvalue_sizeof_type(x.value.type)
 	xvalue = do_cvalue_as_ptr(x.value)
 	return CValueCast(do_ctype(x.type), cvalue_memcpy(cvalue_malloc(sizeof), xvalue, sizeof))
 
@@ -1509,7 +1525,7 @@ def do_cstmt_return(x):
 			cvalue_memcpy(
 				CValueIdentifier("__out"),
 				do_cvalue_as_ptr(x.value),
-				CValueSizeofType(do_ctype(x.value.type))
+				cvalue_sizeof_type(x.value.type)
 			)
 		)
 
@@ -1725,7 +1741,7 @@ def do_def_func(x):
 				cvalue_memcpy(
 					CValueIdentifier(paramId),
 					CValueIdentifier('_' + paramId),
-					CValueSizeofType(do_ctype(param.type))
+					cvalue_sizeof_type(param.type)
 				)
 			)
 
@@ -2377,7 +2393,7 @@ def do_cvalue_as_ptr(x, parr_relax=False):
 
 
 def do_memzero(value):
-	return CStmtExpr(cvalue_memzero(do_cvalue_as_ptr(value), CValueSizeofType(do_ctype(value.type))))
+	return CStmtExpr(cvalue_memzero(do_cvalue_as_ptr(value), cvalue_sizeof_type(value.type)))
 
 
 def assign_by_memcopy(left, right):
@@ -2389,7 +2405,7 @@ def assign_by_memcopy(left, right):
 		cvalue_memcpy(
 			do_cvalue_as_ptr(left),
 			do_cvalue_as_ptr(right),
-			CValueSizeofType(do_ctype(left.type))
+			cvalue_sizeof_type(left.type)
 		)
 	)
 

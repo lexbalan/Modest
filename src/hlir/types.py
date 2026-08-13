@@ -854,8 +854,7 @@ class Type(Entity):
 		return False
 
 
-
-	def is_scalar_type(t):
+	def is_scalar(t):
 		return t.is_word() or t.is_int() or t.is_nat() or t.is_char() or t.is_integer() or t.is_rational()
 
 
@@ -2259,7 +2258,6 @@ class ValueFunc(Value):
 		super().__init__(type=type, ti=ti)
 		self.id = id
 		self.is_pure = False
-		self.is_runtime = False
 		self.usecnt = 0
 		self.typedefs = []
 		self.funcs = []
@@ -2460,50 +2458,38 @@ class ValueSizeofValue(Value):
 
 
 
+# длина массива - такой же Size, как и у sizeof: величина одной природы
+# (счёт элементов) и не бывает отрицательной
+def array_length_of(t, value=None):
+	if t.is_array() and t.volume.is_immediate():
+		return t.volume.asset
+	if t.is_string() and value != None:
+		return len(value.asset)
+	return 0
+
+
 class ValueLengthofValue(Value):
 	def __init__(self, value, ti=None):
-
-		type = None
-		if value.type.is_vla():
-			# is a VLA
-			from semantic import typeSysInt
-			type = typeSysInt
-		else:
-			from .defs import type_integer_for
-			length = 0
-			if value.type.is_array():
-				length = value.type.volume.asset
-			elif value.type.is_string():
-				length = len(value.asset)
-			type = type_integer_for(length, ti=ti)
-		super().__init__(type=type, ti=ti)
+		from semantic import typeSysSize
+		super().__init__(type=typeSysSize, ti=ti)
 		if not value.type.is_vla():
-			self.set_asset(length)
 			self.stage = HLIR_VALUE_STAGE_COMPILETIME
+			self.set_asset(array_length_of(value.type, value))
+		else:
+			self.stage = HLIR_VALUE_STAGE_RUNTIME
 
 		self.value = value
 
 
 class ValueLengthofType(Value):
 	def __init__(self, t, ti=None):
-
-		type = None
-		if t.is_vla():
-			# is a VLA
-			from semantic import typeSysInt
-			type = typeSysInt
-		else:
-			from .defs import type_integer_for
-			length = 0
-			if t.is_array():
-				length = t.volume.asset
-			elif t.is_string():
-				length = len(value.asset)
-			type = type_integer_for(length, ti=ti)
-		super().__init__(type=type, ti=ti)
+		from semantic import typeSysSize
+		super().__init__(type=typeSysSize, ti=ti)
 		if not t.is_vla():
-			self.set_asset(length)
 			self.stage = HLIR_VALUE_STAGE_COMPILETIME
+			self.set_asset(array_length_of(t))
+		else:
+			self.stage = HLIR_VALUE_STAGE_RUNTIME
 
 		self.oftype = t
 

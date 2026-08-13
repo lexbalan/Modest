@@ -1620,7 +1620,7 @@ def do_eval_cons(x):
 			v = do_reval(value)
 			return docast(v, type)
 
-	if type.is_scalar_type():
+	if type.is_scalar():
 		if from_type.is_integer() or from_type.is_rational():
 			if type.width == from_type.width:
 				return do_reval(value)

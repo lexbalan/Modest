@@ -356,3 +356,23 @@ return 0            // error: undefined value 'return'
   operator, not at the innocent token on the next line that got swallowed.
 - `unexpected token1` leaks an internal name into user-facing output; it appears
   in many other diagnostics too and deserves a separate pass.
+
+## 24. `sizeof` of an array value through a pointer returns the element size
+
+```modest
+let q = *[10]Int32 p
+return sizeof(*q)      // 4, expected 40
+```
+
+- Silently wrong, not a crash. `sizeof` of the array *type* is correct
+  (`sizeof([10]Int32)` → 40), as is `sizeof(g)` for a real array variable —
+  only the deref-through-pointer form is affected.
+- Cause is `ARRAY_AS_POINTER`: Modest's `*[10]Int32` is emitted as `int32_t *`,
+  so `do_cvalue_sizeof_value` (`src/backend/c11.py:1160`) prints `sizeof *q`,
+  which in C is one `int32_t`.
+- Not VLA-specific — reproduces with a constant size, and predates the
+  `sizeof(item) * n` lowering.
+- Fix: take the size from the type when the value's type is an array, i.e.
+  `cvalue_sizeof_type(x.ofvalue.type)` instead of `CValueSizeofValue(...)`.
+  Held back because it changes existing behavior rather than fixing a crash.
+- No test covers `sizeof` of an array value.

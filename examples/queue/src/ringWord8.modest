@@ -1,0 +1,84 @@
+// ringWord8
+// queue implementation example
+
+import "queue"
+
+
+
+public type RingWord8 = {
+	queue: queue.Queue
+	data: *[]Word8
+}
+
+
+public func init (q: *RingWord8, buf: *[]Word8, capacity: Nat32) -> Bool {
+	if buf == nil or capacity == 0 {
+		return false
+	}
+	q.data = buf
+	return queue.init(&q.queue, capacity=capacity)
+}
+
+
+public func deinit (q: *RingWord8) -> Unit {
+	let pdata = *[queue.capacity(&q.queue)]Word8 q.data
+	*pdata = []
+	queue.deinit(&q.queue)
+	q.data = nil
+}
+
+
+public func clear (q: *RingWord8) -> Unit {
+	let pdata = *[queue.capacity(&q.queue)]Word8 q.data
+	*pdata = []
+	queue.clear(&q.queue)
+}
+
+
+public func capacity (q: *RingWord8) -> Nat32 {
+	return queue.capacity(&q.queue)
+}
+
+
+public func size (q: *RingWord8) -> Nat32 {
+	return queue.size(&q.queue)
+}
+
+
+public func isFull (q: *RingWord8) -> Bool {
+	return queue.isFull(&q.queue)
+}
+
+
+public func isEmpty (q: *RingWord8) -> Bool {
+	return queue.isEmpty(&q.queue)
+}
+
+
+public func put (q: *RingWord8, b: Word8) -> @unused Bool {
+	/*
+	if queue.isFull(&q.queue) {
+		return false
+	}
+	*/
+
+	let p = queue.getPutPosition(&q.queue)
+	q.data[p] = b
+
+	return true
+}
+
+
+public func get (q: *RingWord8, b: *Word8) -> @unused Bool {
+	if queue.isEmpty(&q.queue) {
+		return false
+	}
+
+	let g = queue.getGetPosition(&q.queue)
+	*b = q.data[g]
+
+	return true
+}
+
+
+
