@@ -276,7 +276,8 @@ declare %Bool @ringWord8_get(%ringWord8_RingWord8* %q, %Word8* %b)
 @.str1 = private constant [17 x i8] [i8 60, i8 113, i8 117, i8 101, i8 117, i8 101, i8 32, i8 105, i8 115, i8 32, i8 102, i8 117, i8 108, i8 108, i8 62, i8 10, i8 0]
 @.str2 = private constant [12 x i8] [i8 98, i8 113, i8 46, i8 112, i8 117, i8 116, i8 40, i8 37, i8 100, i8 41, i8 10, i8 0]
 @.str3 = private constant [18 x i8] [i8 60, i8 113, i8 117, i8 101, i8 117, i8 101, i8 32, i8 105, i8 115, i8 32, i8 101, i8 109, i8 112, i8 116, i8 121, i8 62, i8 10, i8 0]
-@.str4 = private constant [13 x i8] [i8 98, i8 113, i8 46, i8 103, i8 101, i8 116, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@.str4 = private constant [23 x i8] [i8 98, i8 113, i8 46, i8 103, i8 101, i8 116, i8 32, i8 61, i8 32, i8 37, i8 100, i8 44, i8 32, i8 114, i8 101, i8 115, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@.str5 = private constant [16 x i8] [i8 98, i8 113, i8 46, i8 105, i8 110, i8 105, i8 116, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
 ; -- endstrings --
 @bq0 = internal global %queueWord8_QueueWord8 zeroinitializer
 @br0 = internal global %ringWord8_RingWord8 zeroinitializer
@@ -337,10 +338,13 @@ endif_0:
 	%8 = call %Bool @queueWord8_get(%queueWord8_QueueWord8* @bq0, %Word8* %7)
 	%9 = load %Word8, %Word8* %7
 	%10 = sext %Word8 %9 to %Int
-	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @.str4 to [0 x i8]*), %Int %10)
-	%12 = load %Nat32, %Nat32* %1
-	%13 = add %Nat32 %12, 1
-	store %Nat32 %13, %Nat32* %1
+	%11 = zext %Bool %8 to %Word8
+	%12 = zext %Word8 %11 to %Word32
+	%13 = bitcast %Word32 %12 to %Int
+	%14 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @.str4 to [0 x i8]*), %Int %10, %Int %13)
+	%15 = load %Nat32, %Nat32* %1
+	%16 = add %Nat32 %15, 1
+	store %Nat32 %16, %Nat32* %1
 	br label %again_1
 break_1:
 	ret void
@@ -348,8 +352,16 @@ break_1:
 
 @qbuf = internal global [10 x %Word8] zeroinitializer
 define %Int @main() {
+; if_0
 	%1 = bitcast [10 x %Word8]* @qbuf to [0 x %Word8]*
 	%2 = call %Bool @queueWord8_init(%queueWord8_QueueWord8* @bq0, [0 x %Word8]* %1, %Nat32 10)
+	%3 = xor %Bool %2, 1
+	br %Bool %3 , label %then_0, label %endif_0
+then_0:
+	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @.str5 to [0 x i8]*))
+	ret %Int 1
+	br label %endif_0
+endif_0:
 	call void @fill(%Nat32 3)
 	call void @fetch(%Nat32 7)
 	call void @fill(%Nat32 12)

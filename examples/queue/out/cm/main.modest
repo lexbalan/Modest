@@ -44,7 +44,7 @@ func fetch (n: Nat32) -> Unit {
 
 		var x: Word8
 		let res: @unused  Bool = bq.get(&bq0, &x)
-		printf("bq.get = %d\n", Int x)
+		printf("bq.get = %d, res = %d\n", Int x, Int Word32 Word8 res)
 		++i
 	}
 }
@@ -56,7 +56,11 @@ var qbuf: [qsize]Word8
 
 @nonstatic
 func main () -> Int {
-	bq.init(&bq0, &qbuf, qsize)
+
+	if not bq.init(&bq0, &qbuf, qsize) {
+		printf("bq.init failed\n")
+		return 1
+	}
 
 	fill(3)
 	fetch(7)

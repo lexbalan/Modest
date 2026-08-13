@@ -33,7 +33,7 @@ static void fetch(uint32_t n) {
 		}
 		uint8_t x;
 		const bool res = queueWord8_get(&bq0, &x);
-		printf("bq.get = %d\n", (int)x);
+		printf("bq.get = %d, res = %d\n", (int)x, (uint32_t)(uint8_t)res);
 		++i;
 	}
 }
@@ -42,7 +42,10 @@ static uint8_t qbuf[QSIZE];
 
 
 int main(void) {
-	queueWord8_init(&bq0, qbuf, QSIZE);
+	if (!queueWord8_init(&bq0, qbuf, QSIZE)) {
+		printf("bq.init failed\n");
+		return 1;
+	}
 	fill(3);
 	fetch(7);
 	fill(12);
