@@ -4,24 +4,26 @@ import "queue"
 import "queue" as queue
 
 
-
 public type QueueWord8 = {
 	queue: Queue
 	data: *[]Word8
 }
 
 
-
-public func init (q: *QueueWord8, buf: *[]Word8, capacity: Nat32) -> Unit {
-	queue.init(&q.queue, capacity=capacity)
+public func init (q: *QueueWord8, buf: *[]Word8, capacity: Nat32) -> Bool {
+	if buf == nil or capacity == 0 {
+		return false
+	}
 	q.data = buf
+	return queue.init(&q.queue, capacity=capacity)
 }
 
 
 public func deinit (q: *QueueWord8) -> Unit {
-	queue.deinit(&q.queue)
 	let pdata = *[queue.capacity(&q.queue)]Word8 q.data
 	*pdata = []
+	queue.deinit(&q.queue)
+	q.data = nil
 }
 
 
@@ -97,9 +99,9 @@ public func write (q: *QueueWord8, data: *[]Word8, len: Nat32) -> Nat32 {
 }
 
 
-
 public func clear (q: *QueueWord8) -> Unit {
 	let pdata = *[queue.capacity(&q.queue)]Word8 q.data
 	*pdata = []
+	queue.clear(&q.queue)
 }
 

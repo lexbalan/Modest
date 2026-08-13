@@ -9,14 +9,23 @@ public type Queue = {
 }
 
 
-public func init (q: *Queue, capacity: Nat32) -> Unit {
-	*q = {}
+public func init (q: *Queue, capacity: Nat32) -> Bool {
+	if capacity == 0 {
+		return false
+	}
+	deinit(q)
 	q.capacity = capacity
+	return true
 }
 
 
 public func deinit (q: *Queue) -> Unit {
 	*q = {}
+}
+
+
+public func clear (q: *Queue) -> Unit {
+	*q = {capacity = q.capacity}
 }
 
 
@@ -63,7 +72,7 @@ public func getGetPosition (q: *Queue) -> Nat32 {
 
 
 func next (capacity: Nat32, x: Nat32) -> Nat32 {
-	if x < capacity - 1 {
+	if x + 1 < capacity {
 		return x + 1
 	}
 	return 0

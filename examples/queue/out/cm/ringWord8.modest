@@ -4,16 +4,33 @@ import "queue"
 import "queue" as queue
 
 
-
 public type RingWord8 = {
 	queue: Queue
 	data: *[]Word8
 }
 
 
-public func init (q: *RingWord8, buf: *[]Word8, capacity: Nat32) -> Unit {
-	queue.init(&q.queue, capacity=capacity)
+public func init (q: *RingWord8, buf: *[]Word8, capacity: Nat32) -> Bool {
+	if buf == nil or capacity == 0 {
+		return false
+	}
 	q.data = buf
+	return queue.init(&q.queue, capacity=capacity)
+}
+
+
+public func deinit (q: *RingWord8) -> Unit {
+	let pdata = *[queue.capacity(&q.queue)]Word8 q.data
+	*pdata = []
+	queue.deinit(&q.queue)
+	q.data = nil
+}
+
+
+public func clear (q: *RingWord8) -> Unit {
+	let pdata = *[queue.capacity(&q.queue)]Word8 q.data
+	*pdata = []
+	queue.clear(&q.queue)
 }
 
 

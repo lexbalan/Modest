@@ -64,15 +64,30 @@ declare void @llvm.stackrestore(i8*)
 	%Nat32
 };
 
-define void @queue_init(%queue_Queue* %q, %Nat32 %capacity) {
-	store %queue_Queue zeroinitializer, %queue_Queue* %q
-	%1 = getelementptr %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 0
-	store %Nat32 %capacity, %Nat32* %1
-	ret void
+define %Bool @queue_init(%queue_Queue* %q, %Nat32 %capacity) {
+; if_0
+	%1 = icmp eq %Nat32 %capacity, 0
+	br %Bool %1 , label %then_0, label %endif_0
+then_0:
+	ret %Bool 0
+	br label %endif_0
+endif_0:
+	call void @queue_deinit(%queue_Queue* %q)
+	%3 = getelementptr %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 0
+	store %Nat32 %capacity, %Nat32* %3
+	ret %Bool 1
 }
 
 define void @queue_deinit(%queue_Queue* %q) {
 	store %queue_Queue zeroinitializer, %queue_Queue* %q
+	ret void
+}
+
+define void @queue_clear(%queue_Queue* %q) {
+	%1 = getelementptr %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 0
+	%2 = load %Nat32, %Nat32* %1
+	%3 = insertvalue %queue_Queue zeroinitializer, %Nat32 %2, 0
+	store %queue_Queue %3, %queue_Queue* %q
 	ret void
 }
 
@@ -158,8 +173,8 @@ endif_0:
 
 define internal %Nat32 @next(%Nat32 %capacity, %Nat32 %x) {
 ; if_0
-	%1 = sub %Nat32 %capacity, 1
-	%2 = icmp ult %Nat32 %x, %1
+	%1 = add %Nat32 %x, 1
+	%2 = icmp ult %Nat32 %1, %capacity
 	br %Bool %2 , label %then_0, label %endif_0
 then_0:
 	%3 = add %Nat32 %x, 1

@@ -222,8 +222,9 @@ declare void @perror(%ConstCharStr* %str)
 	%Nat32
 };
 
-declare void @queue_init(%queue_Queue* %q, %Nat32 %capacity)
+declare %Bool @queue_init(%queue_Queue* %q, %Nat32 %capacity)
 declare void @queue_deinit(%queue_Queue* %q)
+declare void @queue_clear(%queue_Queue* %q)
 declare %Nat32 @queue_capacity(%queue_Queue* %q)
 declare %Nat32 @queue_size(%queue_Queue* %q)
 declare %Bool @queue_isEmpty(%queue_Queue* %q)
@@ -239,7 +240,7 @@ declare %Nat32 @queue_getGetPosition(%queue_Queue* %q)
 	[0 x %Word8]*
 };
 
-declare void @queueWord8_init(%queueWord8_QueueWord8* %q, [0 x %Word8]* %buf, %Nat32 %capacity)
+declare %Bool @queueWord8_init(%queueWord8_QueueWord8* %q, [0 x %Word8]* %buf, %Nat32 %capacity)
 declare void @queueWord8_deinit(%queueWord8_QueueWord8* %q)
 declare %Nat32 @queueWord8_capacity(%queueWord8_QueueWord8* %q)
 declare %Nat32 @queueWord8_size(%queueWord8_QueueWord8* %q)
@@ -259,7 +260,9 @@ declare void @queueWord8_clear(%queueWord8_QueueWord8* %q)
 	[0 x %Word8]*
 };
 
-declare void @ringWord8_init(%ringWord8_RingWord8* %q, [0 x %Word8]* %buf, %Nat32 %capacity)
+declare %Bool @ringWord8_init(%ringWord8_RingWord8* %q, [0 x %Word8]* %buf, %Nat32 %capacity)
+declare void @ringWord8_deinit(%ringWord8_RingWord8* %q)
+declare void @ringWord8_clear(%ringWord8_RingWord8* %q)
 declare %Nat32 @ringWord8_capacity(%ringWord8_RingWord8* %q)
 declare %Nat32 @ringWord8_size(%ringWord8_RingWord8* %q)
 declare %Bool @ringWord8_isFull(%ringWord8_RingWord8* %q)
@@ -346,7 +349,7 @@ break_1:
 @qbuf = internal global [10 x %Word8] zeroinitializer
 define %Int @main() {
 	%1 = bitcast [10 x %Word8]* @qbuf to [0 x %Word8]*
-	call void @queueWord8_init(%queueWord8_QueueWord8* @bq0, [0 x %Word8]* %1, %Nat32 10)
+	%2 = call %Bool @queueWord8_init(%queueWord8_QueueWord8* @bq0, [0 x %Word8]* %1, %Nat32 10)
 	call void @fill(%Nat32 3)
 	call void @fetch(%Nat32 7)
 	call void @fill(%Nat32 12)

@@ -32,7 +32,7 @@ func fill (n: Nat32) -> Unit {
 
 
 // выгребаем и распечатываем n значений
-func fetch(n: Nat32) -> Unit {
+func fetch (n: Nat32) -> Unit {
 	var i: Nat32 = 0
 	while i < n {
 		if bq.isEmpty(&bq0) {

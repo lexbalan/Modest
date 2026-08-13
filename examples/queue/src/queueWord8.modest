@@ -4,12 +4,10 @@
 import "queue"
 
 
-
 public type QueueWord8 = {
 	queue: queue.Queue
 	data: *[]Word8
 }
-
 
 
 public func init (q: *QueueWord8, buf: *[]Word8, capacity: Nat32) -> Bool {
