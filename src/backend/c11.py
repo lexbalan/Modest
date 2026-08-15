@@ -1314,15 +1314,15 @@ def do_cvalue_default(x, ctx):
 		1/0
 
 
-#
-#def str_value_offsetof(x, ctx):
-#	sstr = "__offsetof("
-#	sstr += str_type(x.oftype)
-#	sstr += ", "
-#	sstr += x.field.str
-#	sstr += ")"
-#	return sstr
-#
+# Смещение поля печатаем символьно - offsetof() из <stddef.h>, а не готовым
+# числом: раскладка записи остаётся делом C-компилятора (ср. cvalue_sizeof_type)
+def do_cvalue_offsetof(x, ctx):
+	return CValueCall(
+		CValueIdentifier("offsetof"), [
+			CValueIdentifier(str_type(x.oftype)),
+			CValueIdentifier(get_id_str(x.field_def))
+		]
+	)
 
 
 def do_cvalue(x, ctx=[]):
@@ -1353,6 +1353,7 @@ def do_cvalue(x, ctx=[]):
 	elif x.is_lengthof_type(): return do_cvalue_lengthof_type(x, ctx)
 	elif x.is_alignof_type(): return do_cvalue_alignof_type(x, ctx)
 	elif x.is_alignof_value(): return do_cvalue_alignof_value(x, ctx)
+	elif x.is_offsetof(): return do_cvalue_offsetof(x, ctx)
 	elif x.is_va_arg(): return do_cvalue_va_arg(x, ctx)
 	elif x.is_va_start(): return do_cvalue_va_start(x, ctx)
 	elif x.is_va_end(): return do_cvalue_va_end(x, ctx)
@@ -1370,7 +1371,6 @@ def do_cvalue(x, ctx=[]):
 	assert(False)
 
 #	elif x.is_new(): sstr += str_value_new(x, ctx)
-#	elif x.is_offsetof(): sstr += str_value_offsetof(x, ctx)
 #	else: sstr += str(x)
 
 	return None

@@ -197,7 +197,7 @@ declare %list_Node* @list_append(%list_List* %list, i8* %data)
 @.str14 = private constant [43 x i8] [i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 10, i8 0]
 ; -- endstrings --
 define internal void @nat32_list_insert(%list_List* %lst, %Nat32 %x) {
-	%1 = call i8* @malloc(%Size 4)
+	%1 = call i8* @malloc(%SizeT 4)
 	%2 = bitcast i8* %1 to %Nat32*
 	store %Nat32 %x, %Nat32* %2
 	%3 = bitcast %Nat32* %2 to i8*
@@ -349,7 +349,7 @@ endif_2:
 	br label %again_2
 break_2:
 	%45 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([43 x i8]* @.str14 to [0 x i8]*))
-	%46 = call i8* @malloc(%Size 4)
+	%46 = call i8* @malloc(%SizeT 4)
 	%47 = bitcast i8* %46 to %Nat32*
 	store %Nat32 1234, %Nat32* %47
 	%48 = bitcast %Nat32* %47 to i8*

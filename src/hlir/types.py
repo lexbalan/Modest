@@ -645,6 +645,15 @@ class Type(Entity):
 		self.kind = HLIR_TYPE_KIND_UNKNOWN
 		self.generic = generic
 		self.width = width
+
+		# Знаковость - собственное свойство типа, а не производная от его вида.
+		# У Int*/Nat* она задаётся видом (см. TypeSimple), а generic Integer
+		# несёт её в себе: sizeof/lengthof/alignof/offsetof дают беззнаковый
+		# Integer, а числовой литерал - Integer без знаковости вообще
+		# (он одинаково пригоден и для Int*, и для Nat*)
+		self.signed = False
+		self.unsigned = False
+
 		self.size = size
 		self.align = align
 		self.ops = ops
@@ -1035,11 +1044,11 @@ class Type(Entity):
 
 
 	def is_signed(self):
-		return self.kind == HLIR_TYPE_KIND_INT
+		return self.signed
 
 
 	def is_unsigned(self):
-		return self.kind == HLIR_TYPE_KIND_NAT
+		return self.unsigned
 
 
 	# returns root type of any array
@@ -1498,6 +1507,8 @@ class TypeSimple(Type):
 		self.kind = kind
 		self.incomplete = False
 		self.id = id
+		self.signed = (kind == HLIR_TYPE_KIND_INT)
+		self.unsigned = (kind == HLIR_TYPE_KIND_NAT)
 
 
 class TypeString(TypeSimple):
@@ -1524,18 +1535,24 @@ class TypeString(TypeSimple):
 
 
 class TypeInteger(TypeSimple):
-	def __init__(self, width=0, ti=None):
+	def __init__(self, width=0, unsigned=False, ti=None):
 		integer_id = Id(None)
 		integer_id.c = None
 		integer_id.llvm = None
 
 		if width > 0:
-			integer_id.c_alias = 'int%d_t' % align_bits_up(width)
+			integer_id.c_alias = '%sint%d_t' % ('u' if unsigned else '', align_bits_up(width))
 		else:
-			integer_id.c_alias = 'int'
+			integer_id.c_alias = 'unsigned int' if unsigned else 'int'
 
 		super().__init__(width=width, kind=HLIR_TYPE_KIND_INTEGER, id=integer_id, ops=NUMBER_OPS, ti=ti)
 		self.generic = True
+
+		# Знаковость generic-числа: беззнаковым его делают только величины,
+		# которые не бывают отрицательными (sizeof и родня). Литерал остаётся
+		# без знаковости - её выберет тип, в который его сконструируют
+		self.signed = False
+		self.unsigned = unsigned
 
 
 class TypeRational(TypeSimple):
@@ -2432,14 +2449,27 @@ class ValueNew(Value):
 
 
 
+# Тип величины размера: пока она известна на этапе компиляции - это generic
+# Integer ровно той ширины, которой хватает самому значению (тогда
+# `var x: Nat16 = sizeof(T)` не требует приведения). У VLA размер известен
+# только в рантайме, нести в типе нечего - остаётся Size
+def type_for_size(size, is_runtime, ti=None):
+	if is_runtime:
+		from semantic import typeSysSize
+		return typeSysSize
+	from .defs import type_size_for
+	return type_size_for(size, ti=ti)
+
+
 class ValueSizeofType(Value):
 	def __init__(self, of, ti=None):
-		from semantic import typeSysSize
-		super().__init__(type=typeSysSize, ti=ti)
+		is_vla = of.is_vla()
+		size = 0 if is_vla else of.get_size()
+		super().__init__(type=type_for_size(size, is_vla, ti=ti), ti=ti)
 		self.oftype = of
-		if not of.is_vla():
+		if not is_vla:
 			self.stage = HLIR_VALUE_STAGE_COMPILETIME
-			self.set_asset(of.get_size())
+			self.set_asset(size)
 		else:
 			self.stage = HLIR_VALUE_STAGE_RUNTIME
 
@@ -2447,12 +2477,13 @@ class ValueSizeofType(Value):
 
 class ValueSizeofValue(Value):
 	def __init__(self, value, ti=None):
-		from semantic import typeSysSize
-		super().__init__(type=typeSysSize, ti=ti)
+		is_vla = value.type.is_vla()
+		size = 0 if is_vla else value.type.get_size()
+		super().__init__(type=type_for_size(size, is_vla, ti=ti), ti=ti)
 		self.ofvalue = value
-		if not value.type.is_vla():
+		if not is_vla:
 			self.stage = HLIR_VALUE_STAGE_COMPILETIME
-			self.set_asset(value.type.get_size())
+			self.set_asset(size)
 		else:
 			self.stage = HLIR_VALUE_STAGE_RUNTIME
 
@@ -2470,11 +2501,12 @@ def array_length_of(t, value=None):
 
 class ValueLengthofValue(Value):
 	def __init__(self, value, ti=None):
-		from semantic import typeSysSize
-		super().__init__(type=typeSysSize, ti=ti)
-		if not value.type.is_vla():
+		is_vla = value.type.is_vla()
+		length = 0 if is_vla else array_length_of(value.type, value)
+		super().__init__(type=type_for_size(length, is_vla, ti=ti), ti=ti)
+		if not is_vla:
 			self.stage = HLIR_VALUE_STAGE_COMPILETIME
-			self.set_asset(array_length_of(value.type, value))
+			self.set_asset(length)
 		else:
 			self.stage = HLIR_VALUE_STAGE_RUNTIME
 
@@ -2483,11 +2515,12 @@ class ValueLengthofValue(Value):
 
 class ValueLengthofType(Value):
 	def __init__(self, t, ti=None):
-		from semantic import typeSysSize
-		super().__init__(type=typeSysSize, ti=ti)
-		if not t.is_vla():
+		is_vla = t.is_vla()
+		length = 0 if is_vla else array_length_of(t)
+		super().__init__(type=type_for_size(length, is_vla, ti=ti), ti=ti)
+		if not is_vla:
 			self.stage = HLIR_VALUE_STAGE_COMPILETIME
-			self.set_asset(array_length_of(t))
+			self.set_asset(length)
 		else:
 			self.stage = HLIR_VALUE_STAGE_RUNTIME
 
@@ -2497,8 +2530,7 @@ class ValueLengthofType(Value):
 class ValueAlignofType(Value):
 	def __init__(self, of, ti=None):
 		align = of.get_align()
-		from semantic import typeSysSize
-		super().__init__(type=typeSysSize, ti=ti)
+		super().__init__(type=type_for_size(align, False, ti=ti), ti=ti)
 		self.oftype = of
 		self.stage = HLIR_VALUE_STAGE_COMPILETIME
 		self.set_asset(align)
@@ -2507,8 +2539,7 @@ class ValueAlignofType(Value):
 class ValueAlignofValue(Value):
 	def __init__(self, of, ti=None):
 		align = of.type.get_align()
-		from semantic import typeSysSize
-		super().__init__(type=typeSysSize, ti=ti)
+		super().__init__(type=type_for_size(align, False, ti=ti), ti=ti)
 		self.value = of
 		self.stage = HLIR_VALUE_STAGE_COMPILETIME
 		self.set_asset(align)
@@ -2516,19 +2547,25 @@ class ValueAlignofValue(Value):
 
 class ValueOffsetof(Value):
 	def __init__(self, record, field_id, ti=None):
+		from error import error
 		field = TypeRecord.record_field_get(record, field_id.str)
 		if field == None:
-			error("undefined field '%s'" % field_id['str'], field_id.ti)
-			return ValueBad(ti=ti)
+			error("undefined field '%s'" % field_id.str, field_id.ti)
+			super().__init__(type=TypeBad(ti=ti), ti=ti)
+			self.oftype = record
+			self.field = field_id
+			self.field_def = None
+			return
 
 		offset = field.offset
-		from .defs import type_integer_for
-		type = type_integer_for(offset, ti=ti)
-		super().__init__(type=type, ti=ti)
+		super().__init__(type=type_for_size(offset, False, ti=ti), ti=ti)
 		self.stage = HLIR_VALUE_STAGE_COMPILETIME
 		self.set_asset(offset)
 		self.oftype = record
 		self.field = field_id
+		# разрешённое поле записи: у него есть id для бэкендов
+		# (field_id - это только имя из исходника)
+		self.field_def = field
 
 
 

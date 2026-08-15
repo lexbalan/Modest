@@ -1,0 +1,168 @@
+// TEST: run
+// BACKENDS: c11, llvm, modest
+// EXPECT-EXIT: 0
+// EXPECT-OUT: passed: sizeof
+// EXPECT-OUT: passed: alignof
+// EXPECT-OUT: passed: lengthof
+// EXPECT-OUT: passed: offsetof
+// EXPECT-OUT: passed: narrowing
+// EXPECT-OUT: passed: mixing
+// EXPECT-OUT: passed: sizeof/alignof/lengthof/offsetof
+//
+// Covers docs/lang/value/sizeof.md: the four layout queries and the type
+// of what they produce.
+//
+// A compile-time size carries the width it actually needs, so it lands in
+// any Nat wide enough to hold it without a construction - that is what
+// `testNarrowing` and `testMixing` are here for. Without it every one of
+// those lines would need an explicit (and unsafe) construction.
+
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+
+
+type Buf = [16]Word8
+
+type Header = {
+	tag: Word8
+	len: Nat32
+}
+
+
+func testSizeof () -> Bool {
+	var bytes: Size = sizeof(Buf)
+	if bytes != 16 {
+		printf("sizeof(Buf) = %zu, expected 16\n", bytes)
+		return false
+	}
+
+	// sizeof of a value asks the type of that value
+	var h: Header = {}
+	if sizeof(h) != sizeof(Header) {
+		printf("sizeof(h) and sizeof(Header) differ\n")
+		return false
+	}
+
+	printf("passed: sizeof\n")
+	return true
+}
+
+
+func testAlignof () -> Bool {
+	// alignment of a base type equals its size
+	var a: Size = alignof(Nat32)
+	if a != 4 {
+		printf("alignof(Nat32) = %zu, expected 4\n", a)
+		return false
+	}
+
+	printf("passed: alignof\n")
+	return true
+}
+
+
+func testLengthof () -> Bool {
+	var arr: [5]Int32 = []
+	var len: Size = lengthof(arr)
+	if len != 5 {
+		printf("lengthof(arr) = %zu, expected 5\n", len)
+		return false
+	}
+
+	if lengthof(Buf) != 16 {
+		printf("lengthof(Buf) = %zu, expected 16\n", lengthof(Buf))
+		return false
+	}
+
+	printf("passed: lengthof\n")
+	return true
+}
+
+
+func testOffsetof () -> Bool {
+	// with the default layout `len` sits behind a padded `tag`
+	var off: Size = offsetof(Header.len)
+	if off != 4 {
+		printf("offsetof(Header.len) = %zu, expected 4\n", off)
+		return false
+	}
+
+	if offsetof(Header.tag) != 0 {
+		printf("offsetof(Header.tag) = %zu, expected 0\n", offsetof(Header.tag))
+		return false
+	}
+
+	printf("passed: offsetof\n")
+	return true
+}
+
+
+// The width of a compile-time size is the width the value needs, so a
+// narrow Nat accepts it as it is
+func testNarrowing () -> Bool {
+	var size: Nat8 = sizeof(Buf)
+	if size != 16 {
+		printf("Nat8 sizeof(Buf) = %u, expected 16\n", Word32 size)
+		return false
+	}
+
+	var align: Nat8 = alignof(Nat32)
+	var len: Nat16 = lengthof(Buf)
+	var off: Nat8 = offsetof(Header.len)
+	if align != 4 or len != 16 or off != 4 {
+		printf("align = %u, len = %u, off = %u, expected 4, 16, 4\n",
+			Word32 align, Word32 len, Word32 off)
+		return false
+	}
+
+	printf("passed: narrowing\n")
+	return true
+}
+
+
+// ...and it mixes with a variable of any numeric type, taking that type
+func testMixing () -> Bool {
+	var arr: [5]Int32 = []
+	var i: Nat32 = 0
+	var sum: Int32 = 0
+	while i < lengthof(arr) {
+		arr[i] = Int32 i
+		sum = sum + arr[i]
+		++i
+	}
+
+	if sum != 10 {
+		printf("sum = %d, expected 10\n", sum)
+		return false
+	}
+
+	var n: Nat16 = 4
+	var total: Nat16 = sizeof(Buf) * n
+	if total != 64 {
+		printf("sizeof(Buf) * n = %u, expected 64\n", Word32 total)
+		return false
+	}
+
+	printf("passed: mixing\n")
+	return true
+}
+
+
+func main () -> Int {
+	var result = true
+	result = testSizeof() and result
+	result = testAlignof() and result
+	result = testLengthof() and result
+	result = testOffsetof() and result
+	result = testNarrowing() and result
+	result = testMixing() and result
+
+	if not result {
+		printf("failed: sizeof/alignof/lengthof/offsetof\n")
+		return exitFailure
+	}
+
+	printf("passed: sizeof/alignof/lengthof/offsetof\n")
+	return exitSuccess
+}

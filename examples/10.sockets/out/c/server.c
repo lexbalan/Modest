@@ -56,7 +56,7 @@ int main(void) {
 		exit(1);
 	}
 	printf("[+] Listening...\n");
-	socklen_t addrSize = (socklen_t)sizeof(struct sockaddr_in);
+	socklen_t addrSize = sizeof(struct sockaddr_in);
 	struct sockaddr_in newAddr;
 	struct sockaddr *const sa = (struct sockaddr *)(void *)&newAddr;
 	const int newSock = accept(sockFd, sa, &addrSize);

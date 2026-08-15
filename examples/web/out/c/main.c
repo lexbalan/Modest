@@ -69,7 +69,7 @@ int32_t main(void) {
 	while (true) {
 		struct sockaddr_in clientAddr;
 		struct sockaddr *const socadr = (struct sockaddr *)&clientAddr;
-		socklen_t clientAdrLen = (socklen_t)sizeof clientAddr;
+		socklen_t clientAdrLen = sizeof clientAddr;
 		const int clientSocket = accept(serverSocket, socadr, &clientAdrLen);
 		if (clientSocket < 0) {
 			perror("cannot accept connection");

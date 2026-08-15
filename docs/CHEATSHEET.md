@@ -354,6 +354,10 @@ alignof(Type) alignof(value)       // alignment in bytes
 lengthof(ArrayType)                // number of elements in array type
 offsetof(RecordType.field)         // byte offset of field
 ```
+> These fold at compile time into a value that carries the width it needs,
+> so it goes into any `NatX` that fits — `var x: Nat16 = sizeof(T)` — and
+> mixes with any numeric variable. With no type to take, it becomes `Size`
+> (`var x = sizeof(T)`). Of a VLA, the size is a run-time `Size`.
 
 ### Access
 ```modest

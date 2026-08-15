@@ -3,8 +3,8 @@ from .types import *
 
 
 
-def type_integer_create(width=0, ti=None):
-	return TypeInteger(width, ti)
+def type_integer_create(width=0, unsigned=False, ti=None):
+	return TypeInteger(width, unsigned=unsigned, ti=ti)
 
 
 def type_rational_create(ti=None):
@@ -202,9 +202,17 @@ def type_select_nat(sz):
 
 
 
-def type_integer_for(num, ti=None):
+def type_integer_for(num, unsigned=False, ti=None):
 	required_width = align_bits_up(nbits_for_num(num))
-	return type_integer_create(width=required_width, ti=ti)
+	return type_integer_create(width=required_width, unsigned=unsigned, ti=ti)
+
+
+# Тип для величины, которая по своей природе не бывает отрицательной:
+# размер, выравнивание, длина, смещение поля. Ширина - минимально
+# достаточная для самого значения, поэтому такая величина неявно
+# конструируется в любой Nat*, который её вмещает
+def type_size_for(num, ti=None):
+	return type_integer_for(num, unsigned=True, ti=ti)
 
 
 

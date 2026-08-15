@@ -321,7 +321,7 @@ define internal %Float @lineLength(%Line %__line) {
 }
 
 define internal void @ptr_example() {
-	%1 = call i8* @malloc(%Size 16)
+	%1 = call i8* @malloc(%SizeT 16)
 	%2 = bitcast i8* %1 to %Point*
 	%3 = getelementptr %Point, %Point* %2, %Int32 0, %Int32 0
 	store %Float 10.0000000000000000, %Float* %3

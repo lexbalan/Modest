@@ -20,6 +20,13 @@ offsetof(<#Type.field#>)                        // field offset in bytes
 - `offsetof` takes a record type and a field: `offsetof(Point.y)`.
 - Alignment of base types equals their size (`alignof(Unit)` is 1);
   records may change it with `@alignment(N)` / `@layout("packed")`.
+- The result is a compile-time value carrying the width it needs, so it
+  goes into any `NatX` wide enough to hold it — `var x: Nat16 =
+  sizeof(T)` — and mixes with a variable of any numeric type, taking that
+  type. Where there is no type to take, it becomes `Size`: `var x =
+  sizeof(T)`, or an extra argument of a variadic function.
+- The size of a VLA is known only at run time, so there is no width to
+  carry: `sizeof` / `lengthof` of one is a `Size`.
 
 ## Examples
 
@@ -37,6 +44,9 @@ while i < lengthof(a) {
 	a[i] = Int32 i
 	++i
 }
+
+var small: Nat8 = sizeof(Buf)           // fits, no construction needed
+var size = sizeof(Buf)                  // Size: nothing to take a type from
 ```
 
 ## See also

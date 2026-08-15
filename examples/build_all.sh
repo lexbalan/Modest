@@ -19,6 +19,7 @@ cd crc32 && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 cd chacha20 && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 cd in_y_minutes && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 cd table && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
+cd queue && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. && \
 cd annotations && printf "\nBUILD: $PWD\n" && make -j7 test && cd .. \
 
 #cd m328p_blink && printf "\nBUILD: $PWD\n" && make -j7 test && cd ..

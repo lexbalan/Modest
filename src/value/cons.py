@@ -197,17 +197,19 @@ def value_cons_default(v):
 
 
 def _select_default_type_for(t):
-	from semantic import typeSysWord, typeSysNat, typeSysInt, typeSysFloat, typeSysChar, typeSysStr
+	from semantic import typeSysWord, typeSysNat, typeSysInt, typeSysFloat, typeSysChar, typeSysStr, typeSysSize
 
 	# ONLY FOR GENERICS
 	if not t.is_generic():
 		return None
 
 	if t.is_integer():
-		t = typeSysInt
+		# беззнаковым generic бывает только величина размера (sizeof и родня),
+		# и её тип по умолчанию - Size: там, где ширину выбирать не из чего
+		# (`var x = sizeof(T)`, extra-аргумент), она ведёт себя как раньше
 		if t.is_unsigned():
-			t = typeSysNat
-		return t
+			return typeSysSize
+		return typeSysInt
 
 	elif t.is_string():
 		return typeSysStr

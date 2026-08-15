@@ -880,8 +880,13 @@ def do_value_neg(x):
 			error("expected value with signed type", v.ti)
 	else:
 		# is generic type
+		# отрицание делает generic-число знаковым
+		# (!) знаковость правим на копии: объект generic-типа бывает общим -
+		# напр. typeInteger стоит типом у всех встроенных констант target.*,
+		# и пометка на нём разъехалась бы по всему модулю
+		vtype = vtype.copy()
 		vtype.signed = True
-		vtype.unsigned = True
+		vtype.unsigned = False
 
 	nv = ValueNeg(vtype, v, ti=x['ti'])
 
@@ -1237,7 +1242,9 @@ def do_value_call(x):
 			args_is_ct = False
 
 		if not arg.is_bad():
-			if arg.type.is_generic():
+			# величина размера (sizeof и родня) - тоже generic, но её тип
+			# по умолчанию однозначен (Size), поэтому предупреждать не о чем
+			if arg.type.is_generic() and not arg.type.is_unsigned():
 				warning("extra argument with generic type", a['ti'])
 			arg = value_cons_default(arg)
 
