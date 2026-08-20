@@ -43,6 +43,11 @@ Target-width aliases (resolved from target config): `Int`, `Nat`, `Word`,
 - `Fixed32`/`Fixed64` carry a binary point set by `@fraction(N)`
   (default 16 for `Fixed32`).
 
+> `FixedX` is described here as designed, not as built: today the compiler
+> applies no scale at all — literals, arithmetic and conversions all treat
+> the type as a plain integer, and the LLVM backend cannot emit a `Fixed`
+> literal. See `docs/BUGS.md` (#25) and `tests/lang/type/fixed.modest`.
+
 ## Examples
 
 ```modest

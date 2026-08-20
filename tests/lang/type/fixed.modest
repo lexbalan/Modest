@@ -1,0 +1,305 @@
+// TEST: run
+// BACKENDS: c11, llvm, modest
+// EXPECT-EXIT: 0
+// EXPECT-OUT: passed: fixed literals
+// EXPECT-OUT: passed: fixed arithmetic
+// EXPECT-OUT: passed: fixed comparison
+// EXPECT-OUT: passed: fixed construction
+// EXPECT-OUT: passed: fraction attribute
+// EXPECT-OUT: passed: Fixed64
+// EXPECT-OUT: passed: fixed
+// EXPECTED-FAIL(c11, llvm): BUGS.md#25 FixedX has no binary point anywhere
+//
+// Fixed32/Fixed64 as docs/lang/type/base.md describes them: a fixed-point
+// number whose binary point sits at bit `@fraction(N)`, default half the
+// width — 16.16 for Fixed32, 32.32 for Fixed64.
+//
+// The type is declared experimental, and today nothing scales: a literal is
+// handed to the backend unscaled, arithmetic is plain integer arithmetic and
+// every conversion is a no-op, so the whole file is expected to fail (see
+// BUGS.md#25).  It lives here as the reproducer, and as the statement of what
+// the type is supposed to do.
+//
+// It sits in its own file rather than in a test of all base types, so that
+// one experimental type being broken does not mark the rest of them broken
+// too.
+//
+// Everything is checked through Float64, the one conversion the cheatsheet's
+// construction table grants FixedX.  The values are chosen to be exact in
+// both formats — halves and quarters — so an equality check is honest.
+
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+
+
+const half: Fixed32 = 0.5
+
+
+@inline
+func scale (x: Fixed32) -> Fixed32 {
+	return x * half
+}
+
+
+// A rational literal reaches a FixedX variable with its fraction intact —
+// this is the whole point of the type over an Int.
+func testLiteral () -> Bool {
+	var a: Fixed32 = 1.5
+	if Float64 a != 1.5 {
+		printf("a = %f, expected 1.5\n", Float64 a)
+		return false
+	}
+
+	var neg: Fixed32 = -2.25
+	if Float64 neg != -2.25 {
+		printf("neg = %f, expected -2.25\n", Float64 neg)
+		return false
+	}
+
+	// An integer literal is a Fixed value too, and keeps its magnitude.
+	var whole: Fixed32 = 3
+	if Float64 whole != 3.0 {
+		printf("whole = %f, expected 3.0\n", Float64 whole)
+		return false
+	}
+
+	// 16 fraction bits resolve 1/65536; a quarter is far inside that.
+	var small: Fixed32 = 0.25
+	if Float64 small != 0.25 {
+		printf("small = %f, expected 0.25\n", Float64 small)
+		return false
+	}
+
+	var zero: Fixed32 = 0
+	if Float64 zero != 0.0 {
+		printf("zero = %f, expected 0.0\n", Float64 zero)
+		return false
+	}
+
+	printf("passed: fixed literals\n")
+	return true
+}
+
+
+// Addition and subtraction are the raw ones; multiplication and division are
+// not — they have to correct the scale, or every product comes out 2^16 times
+// too large and every quotient 2^16 times too small.
+func testArithmetic () -> Bool {
+	var a: Fixed32 = 1.5
+	var b: Fixed32 = 2.0
+
+	if Float64(a + b) != 3.5 {
+		printf("a + b = %f, expected 3.5\n", Float64(a + b))
+		return false
+	}
+
+	if Float64(a - b) != -0.5 {
+		printf("a - b = %f, expected -0.5\n", Float64(a - b))
+		return false
+	}
+
+	if Float64(a * b) != 3.0 {
+		printf("a * b = %f, expected 3.0\n", Float64(a * b))
+		return false
+	}
+
+	// A product of two fractions stays a fraction: 1.5 * 0.5 = 0.75.
+	if Float64(a * half) != 0.75 {
+		printf("a * half = %f, expected 0.75\n", Float64(a * half))
+		return false
+	}
+
+	// Division must be able to produce a fraction from two whole values.
+	var one: Fixed32 = 1.0
+	var four: Fixed32 = 4.0
+	if Float64(one / four) != 0.25 {
+		printf("one / four = %f, expected 0.25\n", Float64(one / four))
+		return false
+	}
+
+	if Float64(b / a * a) != 2.0 {
+		printf("b / a * a = %f, expected 2.0\n", Float64(b / a * a))
+		return false
+	}
+
+	if Float64 -a != -1.5 {
+		printf("-a = %f, expected -1.5\n", Float64 -a)
+		return false
+	}
+
+	// The same operations through a constant and a call, where the value is
+	// folded at compile time rather than built at run time.
+	if Float64 scale(a) != 0.75 {
+		printf("scale(a) = %f, expected 0.75\n", Float64 scale(a))
+		return false
+	}
+
+	printf("passed: fixed arithmetic\n")
+	return true
+}
+
+
+func testComparison () -> Bool {
+	var a: Fixed32 = 1.5
+	var b: Fixed32 = 2.0
+	var a2: Fixed32 = 1.5
+
+	if not (a < b) or not (b > a) or not (a <= a2) or not (a >= a2) {
+		printf("ordering of 1.5 and 2.0 is wrong\n")
+		return false
+	}
+
+	if not (a == a2) or a != a2 {
+		printf("1.5 does not equal 1.5\n")
+		return false
+	}
+
+	// Two values that differ only below the binary point must not compare
+	// equal — they would if the fraction were dropped on the way in.
+	var q: Fixed32 = 1.25
+	if a == q {
+		printf("1.5 equals 1.25\n")
+		return false
+	}
+
+	printf("passed: fixed comparison\n")
+	return true
+}
+
+
+func testConstruction () -> Bool {
+	// IntX -> FixedX scales up.
+	var i: Int32 = 7
+	var f: Fixed32 = Fixed32 i
+	if Float64 f != 7.0 {
+		printf("Fixed32 7 = %f, expected 7.0\n", Float64 f)
+		return false
+	}
+
+	// FixedX -> IntX drops the fraction and gives the whole part back.
+	var back: Int32 = Int32 f
+	if back != 7 {
+		printf("Int32 (Fixed32 7) = %d, expected 7\n", back)
+		return false
+	}
+
+	var frac: Fixed32 = 2.75
+	if Int32 frac != 2 {
+		printf("Int32 2.75 = %d, expected 2\n", Int32 frac)
+		return false
+	}
+
+	// NatX is a source too.
+	var n: Nat32 = 5
+	if Float64 Fixed32 n != 5.0 {
+		printf("Fixed32 (Nat32 5) = %f, expected 5.0\n", Float64 Fixed32 n)
+		return false
+	}
+
+	// Fixed32 -> Fixed64 keeps the value across widths, each with its own
+	// binary point (16 bits and 32 bits).
+	var wide: Fixed64 = Fixed64 frac
+	if Float64 wide != 2.75 {
+		printf("Fixed64 2.75 = %f, expected 2.75\n", Float64 wide)
+		return false
+	}
+
+	printf("passed: fixed construction\n")
+	return true
+}
+
+
+// @fraction(N) moves the binary point: 20.12 instead of the default 16.16.
+// The arithmetic must follow the type's own N, not a fixed 16.
+func testFraction () -> Bool {
+	var a: @fraction(12) Fixed32 = 1.5
+	if Float64 a != 1.5 {
+		printf("a = %f, expected 1.5\n", Float64 a)
+		return false
+	}
+
+	var b: @fraction(12) Fixed32 = 2.25
+	if Float64(a + b) != 3.75 {
+		printf("a + b = %f, expected 3.75\n", Float64(a + b))
+		return false
+	}
+
+	if Float64(a * b) != 3.375 {
+		printf("a * b = %f, expected 3.375\n", Float64(a * b))
+		return false
+	}
+
+	// 12 fraction bits still resolve 1/4096; 1/16 is well inside.
+	var fine: @fraction(12) Fixed32 = 0.0625
+	if Float64 fine != 0.0625 {
+		printf("fine = %f, expected 0.0625\n", Float64 fine)
+		return false
+	}
+
+	// A whole part that needs 20 bits fits where 16.16 would overflow.
+	var big: @fraction(12) Fixed32 = 100000.5
+	if Float64 big != 100000.5 {
+		printf("big = %f, expected 100000.5\n", Float64 big)
+		return false
+	}
+
+	printf("passed: fraction attribute\n")
+	return true
+}
+
+
+func testFixed64 () -> Bool {
+	var a: Fixed64 = 100.5
+	if Float64 a != 100.5 {
+		printf("a = %f, expected 100.5\n", Float64 a)
+		return false
+	}
+
+	var b: Fixed64 = 0.5
+	if Float64(a * b) != 50.25 {
+		printf("a * b = %f, expected 50.25\n", Float64(a * b))
+		return false
+	}
+
+	if Float64(a + b) != 101.0 {
+		printf("a + b = %f, expected 101.0\n", Float64(a + b))
+		return false
+	}
+
+	// 32 fraction bits resolve 1/4294967296 — a value this small is what
+	// Fixed64 buys over Fixed32.
+	var tiny: Fixed64 = 0.000001
+	if Float64 tiny == 0.0 {
+		printf("tiny = %f, expected 0.000001\n", Float64 tiny)
+		return false
+	}
+
+	var arr: [2]Fixed64 = [1.5, 2.5]
+	if Float64(arr[0] + arr[1]) != 4.0 {
+		printf("arr[0] + arr[1] = %f, expected 4.0\n", Float64(arr[0] + arr[1]))
+		return false
+	}
+
+	printf("passed: Fixed64\n")
+	return true
+}
+
+
+func main () -> Int {
+	var result = true
+	result = testLiteral() and result
+	result = testArithmetic() and result
+	result = testComparison() and result
+	result = testConstruction() and result
+	result = testFraction() and result
+	result = testFixed64() and result
+
+	if not result {
+		printf("failed: fixed\n")
+		return exitFailure
+	}
+
+	printf("passed: fixed\n")
+	return exitSuccess
+}

@@ -376,3 +376,74 @@ return sizeof(*q)      // 4, expected 40
   `cvalue_sizeof_type(x.ofvalue.type)` instead of `CValueSizeofValue(...)`.
   Held back because it changes existing behavior rather than fixing a crash.
 - No test covers `sizeof` of an array value.
+
+## 25. `FixedX` has no binary point: nothing scales, anywhere
+
+```modest
+var a: Fixed32 = 1.5
+var b: Fixed32 = 2.0
+printf("%f\n", Float64 (a * b))   // 2.000000, expected 3.000000
+```
+
+`Fixed32`/`Fixed64` are documented (`docs/lang/type/base.md`) as fixed-point
+with the point at `@fraction(N)`, default half the width. In practice the
+type is an `int32_t`/`int64_t` alias and the scale is never applied:
+
+- A rational literal is passed through unscaled — `var a: Fixed32 = 1.5`
+  emits `int32_t a = 1.5;` (clang truncates it to 1), and
+  `const half: Fixed32 = 0.5` emits `#define HALF ((int32_t)0.5)`, i.e. 0.
+  `value_fixed_cons` (`src/value/fixed.py:36`) sets `nv.asset = 1` under a
+  `# TODO` instead of computing `value * 2^fraction`.
+- Arithmetic is plain integer arithmetic: `a * b` emits `a * b` with no
+  `>> fraction`, `a / b` no `<< fraction`. The C backend *does* emit
+  `__fixed32_mul`, `__fixed32_div`, `__fixed32_from_int32`,
+  `__fixed32_to_int32`, `__fixed32_from_float64` and `__fixed32_to_float64`
+  (`do_helper_use_fixed_point`, `src/backend/c11.py:2022`) — every use of a
+  Fixed value pulls the helper block in, and no generated code ever calls it.
+- `FixedX` ↔ `IntX` and `FixedX` → `FloatX` construction emits a bare C cast,
+  so both directions are off by 2^fraction.
+- `@fraction(N)` parses and lands on the type (`src/hlir/types.py:709`), but
+  nothing except `Type.eq` ever reads `.fraction`. So the attribute changes
+  the type's identity and nothing else.
+- The LLVM backend cannot emit a Fixed literal at all:
+  `do_eval_literal: unknown literal` (`src/backend/llvm.py:1873`), and the
+  diagnostic it raises then crashes itself — `Value.print` does
+  `len(x.asset)` on an int (`src/hlir/types.py:2104`), `TypeError`.
+
+Waiting further down the same road, once the scale is actually applied:
+
+- The helper block is 32-bit only. Everything for `Fixed64` beyond
+  `__fixed64_create` is missing — no `__fixed64_mul`, `_div`, `_from_int64`,
+  `_to_int64`, `_to_float64` — so a `Fixed64` fix cannot reuse the `Fixed32`
+  path as it stands.
+- The helpers scale with `(1 << fraction)` in plain `int`. For `Fixed64`,
+  whose default fraction is 32, that shift is undefined behavior;
+  `__fixed64_create` already contains it. It has to be `(1LL << fraction)`,
+  or the scale has to be built at the fixed type's own width.
+- `type_fixed_create` (`src/hlir/defs.py:84`) computes the default as
+  `width / 2`, which in Python 3 is a *float* — `16.0`, not `16`. Harmless
+  while nothing reads `.fraction`; the moment codegen interpolates it into a
+  shift, it emits `>> 16.0`.
+- The `modest` backend drops the attribute's argument: `@fraction(12)
+  Fixed32` comes back out as `@fraction Fixed32`. It only has to survive
+  codegen, so the test passes there — but the emitted source silently loses
+  the binary point. Same class as the backend's other round-trip gaps.
+- Under `-Wall -Wextra -pedantic` the generated C warns
+  (`-Wliteral-conversion`, "changes value from 3.5 to 3") — the truncation is
+  visible in the build log today, and nothing treats it as an error.
+- `FixedX` carries `FLOAT_OPS` (`src/hlir/defs.py:83`), i.e. equ + ord + math
+  and no `%`. That matches `docs/lang/type/base.md`; noted here only so a fix
+  does not "helpfully" widen it.
+
+Two design questions to settle before fixing, both visible in
+`value_fixed_can` (`src/value/fixed.py:19`):
+
+- `Float64 → Fixed32` is rejected (`cannot construct 'Fixed32' from
+  'Float64' value`) while `Fixed32 → Float64` is allowed, even though the
+  C helper `__fixed32_from_float64` is already written for it. The
+  construction table in `docs/CHEATSHEET.md` has no `FixedX` target row.
+- `WordX → FixedX` is unsafe-only, which reads as "the raw storage is the
+  scaled integer", but the reverse (`unsafe WordX f`) is not documented as
+  a reinterpretation, so the storage layout is not actually stated anywhere.
+
+Reproducer: `tests/lang/type/fixed.modest` (XFAIL under c11 and llvm).

@@ -136,34 +136,9 @@ declare void @perror(%ConstCharStr* %str)
 ; -- end print imports 'main' --
 ; -- strings --
 @.str1 = private constant [14 x i8] [i8 72, i8 101, i8 108, i8 108, i8 111, i8 32, i8 87, i8 111, i8 114, i8 108, i8 100, i8 33, i8 10, i8 0]
-@.str2 = private constant [14 x i8] [i8 99, i8 51, i8 50, i8 32, i8 61, i8 32, i8 123, i8 48, i8 120, i8 37, i8 120, i8 125, i8 10, i8 0]
-@.str3 = private constant [12 x i8] [i8 97, i8 32, i8 61, i8 32, i8 123, i8 48, i8 120, i8 37, i8 120, i8 125, i8 10, i8 0]
 ; -- endstrings --
-@a = internal global [10 x %Char8] zeroinitializer
-define internal [0 x %Char8]* @foo() {
-	ret [0 x %Char8]* null
-}
-
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @.str1 to [0 x i8]*))
-	%2 = alloca %Int, align 4
-	store %Int 10, %Int* %2
-	%3 = alloca [0 x %Char8]*, align 8
-	%4 = zext i8 0 to %Nat32
-	%5 = getelementptr [10 x %Char8], [10 x %Char8]* @a, %Int32 0, %Nat32 %4
-	%6 = bitcast %Char8* %5 to [0 x %Char8]*
-	%7 = bitcast [0 x %Char8]* %6 to [0 x %Char8]*
-	store [0 x %Char8]* %7, [0 x %Char8]** %3
-	%8 = call [0 x %Char8]* @foo()
-	store [0 x %Char8]* %8, [0 x %Char8]** %3
-	%9 = alloca %Char32, align 4
-	store %Char32 128000, %Char32* %9
-	%10 = load %Char32, %Char32* %9
-	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @.str2 to [0 x i8]*), %Char32 %10)
-	%12 = alloca %Char8, align 1
-	store %Char8 233, %Char8* %12
-	%13 = load %Char8, %Char8* %12
-	%14 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @.str3 to [0 x i8]*), %Char8 %13)
 	ret %Int 0
 }
 
