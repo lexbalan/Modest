@@ -81,7 +81,7 @@ def type_fixed_create(width, ti=None):
 		id.c = 'int64_t'
 	id.llvm = 'Fixed%d' % width
 	nt = TypeSimple(width, HLIR_TYPE_KIND_FIXED, id, FLOAT_OPS, ti)
-	nt.fraction = width / 2
+	nt.fraction = width // 2
 	return nt
 
 

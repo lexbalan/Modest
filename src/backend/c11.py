@@ -682,6 +682,12 @@ def do_cvalue_cons2(x, ctx):
 	if type.is_word(): return do_cvalue_cons_word(x, ctx)
 	if type.is_variant(): return do_cvalue_cons_variant(x, ctx)
 
+	if type.is_fixed():
+		if from_type.is_generic():
+			# позиция двоичной точки берется из типа
+			args = [do_cvalue(value), CValueInteger(type.fraction)]
+			return CValueCall(CValueIdentifier("FIXED%d" % type.width), args)
+
 
 	if x.method in ['implicit', 'default']:
 		#sstr = str_value(value)
@@ -1417,7 +1423,8 @@ def do_cinitializer(type, value, ctx):
 		to = value.type
 		if Type.eq(to, value.type):
 			if to.brand == v.type.brand:
-				if v.type.is_integer():
+				# у FixedX приведение несет в себе масштаб, снимать его нельзя
+				if v.type.is_integer() and not to.is_fixed():
 					value = value.value
 
 		# ⚠️ C не позволяет приводить литерал массива к типу массива в инициализаторах
@@ -2026,6 +2033,9 @@ def do_helper_use_fixed_point():
 	sstr += ("\ntypedef int32_t __fixed32;")
 	sstr += ("\ntypedef int64_t __fixed64;")
 
+	sstr += ("\n#define FIXED32(x, f) ((__fixed32)((x) * ((int64_t)1 << (f))))")
+	sstr += ("\n#define FIXED64(x, f) ((__fixed64)((x) * ((int64_t)1 << (f))))")
+
 	sstr += ("\nstatic inline __fixed64 __fixed64_create(int64_t i, uint64_t m, uint64_t n, uint8_t fraction) {")
 	sstr += ("\n	return (i << fraction) | (m * (1 << fraction) / n);")
 	sstr += ("\n}")
@@ -2055,7 +2065,7 @@ def do_helper_use_fixed_point():
 	sstr += ("\n	return (__fixed32)(((int64_t)a << fraction) / (int64_t)b);")
 	sstr += ("\n}")
 
-	sstr += ("\n#endif /* __FIXED_POINT__ */")
+	sstr += ("\n#endif /* __FIXED_POINT__ */\n")
 	return (CRawText(sstr),)
 
 

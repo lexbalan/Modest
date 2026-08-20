@@ -1605,6 +1605,36 @@ def do_eval_cons_pointer_to_array(x):
 	return docast(v, type)
 
 
+# FixedX хранится как целое, умноженное на 2^fraction.
+# Позиция двоичной точки берется из самого типа: @fraction(N),
+# по умолчанию половина ширины (см. type_fixed_create)
+def fixed_fraction(type):
+	return type.fraction
+
+
+
+def fixed_asset(v):
+	# разворачиваем константы и вложенные приведения до значения с asset;
+	# у Fixed-cons asset это заглушка (== 1, см. value_fixed_cons),
+	# поэтому сперва спускаемся и только потом берем число
+	while True:
+		if v.is_const(): v = v.init_value
+		elif v.is_cons(): v = v.value
+		else: return v.asset
+
+
+
+def do_eval_cons_fixed(x):
+	asset = fixed_asset(x.value)
+	if asset == None:
+		error("do_eval_cons_fixed: not an immediate value", x.ti)
+		exit(1)
+
+	# усечение к нулю, как в C-макросе
+	return llvm_value_num(x.type, int(asset * (1 << fixed_fraction(x.type))))
+
+
+
 def do_eval_cons(x):
 	#info("do_eval_cons", x.ti)
 	value = x.value
@@ -1624,6 +1654,10 @@ def do_eval_cons(x):
 		if from_type.is_integer() or from_type.is_rational():
 			if type.width == from_type.width:
 				return do_reval(value)
+
+	if type.is_fixed():
+		if value.is_immediate():
+			return do_eval_cons_fixed(x)
 
 
 	# skipping cast to THE SAME type
