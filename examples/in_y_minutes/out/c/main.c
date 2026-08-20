@@ -77,7 +77,7 @@ int main(void) {
 		++i;
 	}
 	printf("\n");
-	const struct point origin = (struct point){.x = .0, .y = .0};
+	const struct point origin = (struct point){.x = 0.0, .y = 0.0};
 	const struct point corner = (struct point){.x = 3.0, .y = 4.0};
 	printf("distance = %f\n", distance(origin, corner));
 	struct point p = corner;

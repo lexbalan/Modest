@@ -95,7 +95,7 @@ func main () -> Int {
 		++i
 	}
 	printf("\n")
-	let origin = Point {x = .0, y = .0}
+	let origin = Point {x = 0.0, y = 0.0}
 	let corner = Point {x = 3.0, y = 4.0}
 	printf("distance = %f\n", distance(origin, corner))
 

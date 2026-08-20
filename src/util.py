@@ -149,15 +149,12 @@ def fractional_to_decimal(f):
 
 def decimal_to_str(d: Decimal, max_frac=None):
 	s = format(d, 'f')
-	# remove zero tail
-	i = len(s) - 1
-	while i >= 0:
-		if s[i] == '0':
-			i -= 1
-		else:
-			i += 2
-			break
-	return s[0:i]
+	# remove zero tail (only in the fractional part!)
+	if '.' in s:
+		s = s.rstrip('0')
+		if s.endswith('.'):
+			s = s + '0'
+	return s
 
 
 
