@@ -75,10 +75,10 @@ def type_float_create(width, ti=None):
 def type_fixed_create(width, ti=None):
 	width = align_bits_up(width)
 	id = Id('Fixed%d' % width)
-	if width == 32:
-		id.c = 'int32_t'
-	else:
-		id.c = 'int64_t'
+	# (!) не int32_t/int64_t: FixedX это не целое, и в C оно должно быть
+	# видно как отдельное имя - иначе объявления теряют тип (см. хелпер
+	# use_fixed_point в backend/c11.py). Симметрично %FixedX в LLVM.
+	id.c = '__fixed%d' % width
 	id.llvm = 'Fixed%d' % width
 	nt = TypeSimple(width, HLIR_TYPE_KIND_FIXED, id, FLOAT_OPS, ti)
 	nt.fraction = width // 2

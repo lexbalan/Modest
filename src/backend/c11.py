@@ -2128,6 +2128,20 @@ def do_helper_use_arrcpy():
 #	return unsafe Fixed32 ((Word32 i << fraction) or unsafe Word32 tail)
 #}
 
+# Только имена типов: FixedX печатается как __fixedX (см. type_fixed_create),
+# поэтому typedef нужен и в заголовке, где публичное объявление может
+# упомянуть тип, но ни одной fixed-операции нет. Повтор typedef с тем же
+# типом легален в C11 (6.7p3), а вот static inline из полного хелпера
+# продублировать нельзя - потому он и вынесен отдельно.
+def do_helper_use_fixed_point_types():
+	sstr = ''
+	sstr += ("\n#ifndef __FIXED_POINT__")
+	sstr += ("\ntypedef int32_t __fixed32;")
+	sstr += ("\ntypedef int64_t __fixed64;")
+	sstr += ("\n#endif /* __FIXED_POINT__ */\n")
+	return (CRawText(sstr),)
+
+
 def do_helper_use_fixed_point():
 	sstr = ''
 	sstr += ("\n#ifndef __FIXED_POINT__")
@@ -2249,6 +2263,7 @@ def do_helper_use_fixed_point():
 h_helpers = {
 	'use_bigint': do_helper_use_bigint,
 	'use_va_arg': do_helper_use_va_arg,
+	'use_fixed_point': do_helper_use_fixed_point_types,
 }
 
 c_helpers = {

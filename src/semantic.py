@@ -479,6 +479,12 @@ def do_type_named(x):
 		if id_str in ['Char16', 'Char32', 'Str16', 'Str32']:
 			# включаем в модуле поддержку unicode
 			cmodule_use('use_unicode')
+		elif id_str in ['Fixed32', 'Fixed64']:
+			# (!) не только операции, но и само УПОМИНАНИЕ типа требует
+			# хелпера: в C имя типа это __fixedX, и без typedef объявление
+			# не соберется (var x: Fixed32 без единой операции над ним)
+			cmodule_use('use_fixed_point')
+
 		t = csymtab.type_get(id_str)
 
 	if t == None:

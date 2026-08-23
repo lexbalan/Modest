@@ -74,10 +74,10 @@ static inline __fixed64 __fixed64_div(__fixed64 a, __fixed64 b, uint8_t fraction
 
 static float f32 = 0.0;
 static double f64 = 0.0;
-static int32_t fx32 = FIXED32(0.0, 16);
-static int64_t fx64 = FIXED64(0.0, 32);
+static __fixed32 fx32 = FIXED32(0.0, 16);
+static __fixed64 fx64 = FIXED64(0.0, 32);
 #define C 1.5
-static int64_t arr[10] = {FIXED64(1.5, 32), FIXED64(2.5, 32)};
+static __fixed64 arr[10] = {FIXED64(1.5, 32), FIXED64(2.5, 32)};
 
 
 int main(void) {
@@ -92,11 +92,11 @@ int main(void) {
 	fx64 = FIXED64(C, 32);
 	printf("fx32 = 0x%08x\n", fx32);
 	printf("fx64 = 0x%016llx\n", fx64);
-	const int32_t c2 = FIXED32(1.5, 16);
-	const int32_t c3 = __FIXED32_DIV(c2, FIXED32(2, 16), 16);
+	const __fixed32 c2 = FIXED32(1.5, 16);
+	const __fixed32 c3 = __FIXED32_DIV(c2, FIXED32(2, 16), 16);
 	printf("c3 = 0x%08x\n", c3);
 	printf("c3 = %lf\n", 0.75);
-	int32_t v1 = c3;
+	__fixed32 v1 = c3;
 	v1 = __fixed32_div(v1 + FIXED32(1, 16), FIXED32(2, 16), 16);
 	printf("v1 = %lf\n", (double)v1);
 	return 0;
