@@ -2,6 +2,7 @@
 from hlir import *
 from common import settings
 from error import info, warning, error
+from .fixed import fixed_to_number
 
 
 
@@ -35,7 +36,11 @@ def value_float_cons(t, v, method, ti):
 	assert(t.is_float())
 	nv = ValueCons(t, t, v, method, ti=ti)
 	if v.is_immediate():
-		nv.set_asset(v.asset)
+		a = v.asset
+		if v.type.is_fixed():
+			# снимаем масштаб: сырое хранилище -> точное значение
+			a = fixed_to_number(v.asset, v.type.fraction)
+		nv.set_asset(a)
 		nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 		return nv
 	nv.stage = HLIR_VALUE_STAGE_RUNTIME

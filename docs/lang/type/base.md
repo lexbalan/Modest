@@ -41,12 +41,17 @@ Target-width aliases (resolved from target config): `Int`, `Nat`, `Word`,
   explicit discard (`Unit x`), and the free pointer `*Unit`
   (see [pointer](./pointer.md)).
 - `Fixed32`/`Fixed64` carry a binary point set by `@fraction(N)`
-  (default 16 for `Fixed32`).
+  (default 16 for `Fixed32`, 32 for `Fixed64`). A value is stored as the
+  number multiplied by `2^fraction`.
 
-> `FixedX` is described here as designed, not as built: today the compiler
-> applies no scale at all — literals, arithmetic and conversions all treat
-> the type as a plain integer, and the LLVM backend cannot emit a `Fixed`
-> literal. See `docs/BUGS.md` (#25) and `tests/lang/type/fixed.modest`.
+> `FixedX` is only half built. Everything the compiler can work out at
+> compile time is correct — literals, constants, arithmetic between them,
+> and construction to and from other types all apply the scale, and both
+> backends agree. Arithmetic on `FixedX` **variables** is still emitted as
+> plain integer arithmetic, so a product comes out `2^fraction` too large
+> and a quotient that much too small. See `docs/BUGS.md` (#25),
+> `tests/lang/type/fixed.modest` (what is still broken) and
+> `tests/lang/type/fixed_const.modest` (what works).
 
 ## Examples
 

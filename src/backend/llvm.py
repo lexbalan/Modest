@@ -1605,33 +1605,11 @@ def do_eval_cons_pointer_to_array(x):
 	return docast(v, type)
 
 
-# FixedX хранится как целое, умноженное на 2^fraction.
-# Позиция двоичной точки берется из самого типа: @fraction(N),
-# по умолчанию половина ширины (см. type_fixed_create)
-def fixed_fraction(type):
-	return type.fraction
-
-
-
-def fixed_asset(v):
-	# разворачиваем константы и вложенные приведения до значения с asset;
-	# у Fixed-cons asset это заглушка (== 1, см. value_fixed_cons),
-	# поэтому сперва спускаемся и только потом берем число
-	while True:
-		if v.is_const(): v = v.init_value
-		elif v.is_cons(): v = v.value
-		else: return v.asset
-
-
-
+# FixedX хранится как целое, умноженное на 2^fraction, и asset у
+# значения с типом FixedX это уже готовое хранилище: масштаб посчитан
+# на этапе свертки (см. value/fixed.py), здесь только печатаем число
 def do_eval_cons_fixed(x):
-	asset = fixed_asset(x.value)
-	if asset == None:
-		error("do_eval_cons_fixed: not an immediate value", x.ti)
-		exit(1)
-
-	# усечение к нулю, как в C-макросе
-	return llvm_value_num(x.type, int(asset * (1 << fixed_fraction(x.type))))
+	return llvm_value_num(x.type, x.asset)
 
 
 
@@ -1650,14 +1628,21 @@ def do_eval_cons(x):
 			v = do_reval(value)
 			return docast(v, type)
 
+	# (!) до общей ветки scalar: у FixedX приведение несет в себе масштаб,
+	# отдавать вместо него исходное значение нельзя - ни в ту сторону,
+	# ни в обратную (под узлом лежит сырое хранилище, а не значение)
+	if type.is_fixed():
+		if x.is_immediate():
+			return do_eval_cons_fixed(x)
+
+	if from_type.is_fixed():
+		if x.is_immediate():
+			return do_eval_literal(x)
+
 	if type.is_scalar():
 		if from_type.is_integer() or from_type.is_rational():
 			if type.width == from_type.width:
 				return do_reval(value)
-
-	if type.is_fixed():
-		if value.is_immediate():
-			return do_eval_cons_fixed(x)
 
 
 	# skipping cast to THE SAME type
@@ -1893,6 +1878,7 @@ def do_eval_literal(x):
 	elif xt.is_rational(): return llvm_value_num(xt, x.asset)  #TODO: FIXIT!
 	elif xt.is_int() or xt.is_nat(): return llvm_value_num(xt, x.asset)
 	elif xt.is_float(): return llvm_value_num(xt, x.asset)
+	elif xt.is_fixed(): return llvm_value_num(xt, x.asset)
 	elif xt.is_record(): return do_eval_record(x)
 	elif xt.is_array(): return do_eval_array(x)
 	elif xt.is_bool(): return do_eval_bool(x)

@@ -17,6 +17,7 @@ from value.string import value_string_create, value_string_concat
 from value.array import value_array_create, value_array_concat
 from value.record import value_record_create
 from value.word import value_word_create
+from value.fixed import fixed_from_number, fixed_to_number
 
 
 
@@ -788,15 +789,32 @@ def do_value_bin_op(op, l, r, ti):
 				t = type_integer_create(width=need_width, ti=ti)
 			elif t.is_rational():
 				pass  # Rational is arbitrary precision (Fraction), no fixed width to overflow
+			elif t.is_float():
+				pass  # у FloatX диапазон задает экспонента, а не разрядность целой части
 			else:
 				if need_width > t.width or (not t.is_signed() and asset < 0):
-					error("integer overflow", ti)
+					# у FixedX разрядность съедает масштаб, и "integer overflow"
+					# на дробном типе читается странно
+					error("fixed point overflow" if t.is_fixed() else "integer overflow", ti)
 
 
 	nv = ValueBin(t, op, l, r, ti=ti)
 	nv.set_asset(asset)
 	nv.stage = stage
 	return nv
+
+
+
+def do_bin_immediate_fixed(op, l, r):
+	fraction = l.type.fraction
+	a = fixed_to_number(l.asset, fraction)
+	b = fixed_to_number(r.asset, fraction)
+	if op == HLIR_VALUE_OP_MUL:
+		q = a * b
+	elif op == HLIR_VALUE_OP_DIV:
+		q = a / b
+	# считаем точно и округляем один раз, в конце
+	return fixed_from_number(q, fraction)
 
 
 
@@ -821,6 +839,13 @@ def do_bin_immediate(op, l, r, ti):
 	if (op == HLIR_VALUE_OP_DIV) and l.type.is_rational() and (r.asset == 0):
 		error("division by zero", ti)
 		return ValueBad(ti=ti)
+
+	# У FixedX asset это сырое хранилище (значение * 2^fraction).
+	# Для +, -, унарного минуса и сравнений масштаб сокращается сам,
+	# а вот при умножении он возводится в квадрат и при делении исчезает -
+	# эти две операции сворачиваем через точное значение
+	if l.type.is_fixed() and (op in [HLIR_VALUE_OP_MUL, HLIR_VALUE_OP_DIV]):
+		return do_bin_immediate_fixed(op, l, r)
 
 	asset = None
 	if op in [HLIR_VALUE_OP_EQ, HLIR_VALUE_OP_NE]:

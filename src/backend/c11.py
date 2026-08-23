@@ -455,17 +455,26 @@ def do_cvalue_literal_char(t, v, ctx):
 
 
 
-def array_literal_from_items(items, ctx):
+# nmax - максимальное количество элементов, которое можно напечатать
+def do_array_literal_from_nitems(items, nmax, ctx):
 	initializers = []
+	i = 0
 	for item in items:
+		if i >= nmax:
+			break
 		ini = do_cinitializer(item.type, item, ctx=ctx)
 		ini.nl = item.nl
 		initializers.append(ini)
+		i += 1
 	return CValueArray(initializers)
 
 
+def do_array_literal_from_items(items, ctx):
+	return do_array_literal_from_nitems(items, nmax=len(items), ctx=ctx)
+
+
 def do_cvalue_literal_array(v, ctx):
-	return array_literal_from_items(v.asset, ctx=ctx)
+	return do_array_literal_from_items(v.asset, ctx=ctx)
 
 
 
@@ -509,6 +518,26 @@ def cvalue_literal_integer(asset, width=0, is_unsigned=False, as_hex=False, nsig
 
 
 
+# FixedX печатается сырым хранилищем (значение * 2^fraction);
+# отдельно от do_cvalue_literal_number, тк сюда приходят не только
+# литералы, но и свернутые cons/bin - а у них нет поля nsigns
+def do_cvalue_fixed(t, v, ctx):
+	return cvalue_literal_integer(int(v.asset), width=t.width, ctx=ctx)
+
+
+
+# Обратная сторона do_cvalue_fixed: масштаб снимается на этапе свертки,
+# и asset у cons-узла уже без 2^fraction - а под узлом лежит сырое
+# хранилище, так что печатать операнд вместо результата нельзя
+def do_cvalue_from_fixed(t, x, ctx):
+	if t.is_float() or t.is_rational():
+		return do_cvalue_literal_rational(x, ctx)
+
+	return cvalue_literal_integer(int(x.asset), width=t.width,
+		is_unsigned=t.is_nat() or t.is_word(), as_hex=t.is_word(), ctx=ctx)
+
+
+
 # сам заботится о том чтобы литерал соответствовал типу (int/longlong)
 def do_cvalue_literal_number(t, v, ctx):
 	#if not (t.is_generic()):
@@ -543,11 +572,11 @@ def do_cvalue_literal_with_type(v, t, ctx):
 	elif t.is_bool(): return do_cvalue_literal_bool(v, ctx)
 	elif t.is_rational(): return do_cvalue_literal_rational(v, ctx)
 	elif t.is_float(): return do_cvalue_literal_rational(v, ctx)
+	elif t.is_fixed(): return do_cvalue_fixed(t, v, ctx)
 	elif t.is_char(): return do_cvalue_literal_char(t, v, ctx)
 	elif t.is_array(): return do_cvalue_literal_array(v, ctx)
 	elif t.is_record(): return do_cvalue_literal_record(v, ctx)
 	elif t.is_pointer(): return do_cvalue_literal_pointer(v, ctx)
-	#elif t.is_fixed(): return str_value_fixed(t, v, ctx)
 	else: error("str_value_literal not implemented for %s" % str(t), v.ti)
 
 	print(t)
@@ -562,10 +591,8 @@ def do_cvalue_cons_array(x, ctx):
 	from_type = value.type
 
 	if from_type.is_generic_array() or from_type.is_string():
-
 		if from_type.is_string() and value.is_bin() and value.op == HLIR_VALUE_OP_STRCAT:
 			return do_cvalue(x.value)
-
 
 		if from_type.is_string():
 			width = 0
@@ -574,6 +601,7 @@ def do_cvalue_cons_array(x, ctx):
 			cv = do_cvalue_literal_string(x.value.asset, width)
 		else:
 			cv = do_cvalue(value, ctx=ctx)
+
 		return cv
 
 	# for:
@@ -661,6 +689,31 @@ def do_cvalue_cons(x, ctx):
 	return cv
 
 
+# FIXED32(x, f) накладывает масштаб средствами C. Это читается куда лучше
+# готового числа, но применимо не всегда:
+#
+# - под приведением должно лежать НЕмасштабированное значение. Если операнд
+#   сам FixedX, масштаб в нем уже есть, и макрос наложил бы его второй раз
+#   (когда-то так и было: `#define K (HALF * FIXED32(3.0, 16))`)
+# - макрос считает в double, а свертка - в точных Fraction. Для Fixed32 это
+#   неразличимо (хранилище <= 32 бит против 53 бит мантиссы), а вот на
+#   Fixed64 результаты расходятся на младший бит
+# - произвольное выражение под макрос не отдаем: его пересчитает уже
+#   компилятор C, со своей семантикой (BUGS.md #10). Только литерал
+#   и константа, т.е. ровно то, что человек и написал в исходнике
+# - и только то, что известно на этапе компиляции: is_const() в этом
+#   бэкенде верен и для параметров функции, а они значения рантаймовые
+def fixed_cons_via_macro(value, x):
+	if not x.is_immediate():
+		return False
+
+	if value.type.is_fixed():
+		return False
+
+	return value.is_literal() or value.is_const()
+
+
+
 def do_cvalue_cons2(x, ctx):
 	type = x.type
 	value = x.value
@@ -674,6 +727,10 @@ def do_cvalue_cons2(x, ctx):
 		cv = do_cvalue_cons_record(x, ctx)
 		#cv.mark = 'CR'
 		return cv
+	if from_type.is_fixed() and not type.is_fixed():
+		if x.is_immediate():
+			return do_cvalue_from_fixed(type, x, ctx)
+
 	if type.is_branded(): return do_cvalue_cast(x.type, x.value, ctx)
 	if type.is_char(): return do_cvalue_cons_char(x, ctx)
 	if type.is_pointer(): return do_cvalue_cons_pointer(x, ctx)
@@ -683,10 +740,23 @@ def do_cvalue_cons2(x, ctx):
 	if type.is_variant(): return do_cvalue_cons_variant(x, ctx)
 
 	if type.is_fixed():
-		if from_type.is_generic():
+		if fixed_cons_via_macro(value, x):
 			# позиция двоичной точки берется из типа
 			args = [do_cvalue(value), CValueInteger(type.fraction)]
 			return CValueCall(CValueIdentifier("FIXED%d" % type.width), args)
+
+		if not x.is_immediate():
+			if from_type.is_float():
+				# (!) не макрос: операнд может иметь побочный эффект
+				# (`Fixed32 next()`), а FIXED*() вычисляет его дважды
+				args = [do_cvalue(value), CValueInteger(type.fraction)]
+				fn = "__fixed%d_from_float64" % type.width
+				return CValueCall(CValueIdentifier(fn), args)
+
+		if x.is_immediate():
+			# масштаб посчитан на этапе свертки (см. value/fixed.py),
+			# здесь печатаем готовое хранилище
+			return do_cvalue_fixed(type, x, ctx)
 
 
 	if x.method in ['implicit', 'default']:
@@ -944,7 +1014,6 @@ def do_cvalue_cast_raw(type, value, ctx):
 
 
 def do_cvalue_cons_variant(x, ctx):
-	# mass
 	# Возвращаем литерал структуры с полем __tag = 0 и полем __value = value
 	items = []
 	tag = x.type.getVariantId(x.value.type)
@@ -1383,6 +1452,11 @@ def do_cvalue(x, ctx=[]):
 
 
 def do_cvalue_bin(x, ctx):
+	# (!) у FixedX масштаб не сокращается сам: 'a * b' над хранилищами
+	# это не хранилище a*b. Свернутый узел печатаем числом, а не выражением
+	if x.type.is_fixed() and x.is_immediate():
+		return do_cvalue_fixed(x.type, x, ctx)
+
 	left = do_cvalue(x.left)
 	right = do_cvalue(x.right)
 
@@ -1412,44 +1486,51 @@ def do_cvalue_bin(x, ctx):
 	if x.op == HLIR_VALUE_OP_LOGIC_OR: return CValueLogicalOr(left, right)
 	if x.op == HLIR_VALUE_OP_LOGIC_AND: return CValueLogicalAnd(left, right)
 	if x.op == HLIR_VALUE_OP_STRCAT: return CValueStringConcat(left, right)
-	if x.op == HLIR_VALUE_OP_ARRCAT: return array_literal_from_items(x.asset, ctx=ctx)
+	if x.op == HLIR_VALUE_OP_ARRCAT: return do_array_literal_from_items(x.asset, ctx=ctx)
 
 	assert(False)
 
 
 def do_cinitializer(type, value, ctx):
 	if value.is_cons():
-		v = value.value
-		to = value.type
-		if Type.eq(to, value.type):
-			if to.brand == v.type.brand:
-				# у FixedX приведение несет в себе масштаб, снимать его нельзя
-				if v.type.is_integer() and not to.is_fixed():
-					value = value.value
+		return do_cinitializer_cons(type, value, ctx)
+	return do_cvalue(value, ctx=ctx)
 
-		# ⚠️ C не позволяет приводить литерал массива к типу массива в инициализаторах
-		# Вот все можно приводить, все ок, а массив - нет.
-		if to.is_array():
-			if v.is_array():
-				return do_cvalue_literal_with_type(v, to, ctx=ctx)
-			elif v.type.is_string():
-				width = 0
-				if to.is_concretic():
-					width = to.of.width
-				cv_chars = []
-				for char in v.asset:
-					cv = CValueChar(ord(char), width=width)
-					cv.nl = 0
-					cv_chars.append(cv)
-				cv = CValueArray(cv_chars)
-				return cv
 
-		if v.type.is_generic():
-			if to.is_float() and v.type.is_rational():
-				return do_cvalue(v, ctx=ctx)
+def do_cinitializer_cons(type, value, ctx):
+	v = value.value
+	to = value.type
+	if Type.eq(to, value.type):
+		if to.brand == v.type.brand:
+			# у FixedX приведение несет в себе масштаб, снимать его нельзя
+			if v.type.is_integer() and not to.is_fixed():
+				value = value.value
 
-	cv = do_cvalue(value, ctx=ctx)
-	return cv
+	# ⚠️ C не позволяет приводить литерал массива к типу массива в инициализаторах
+	# Вот все можно приводить, все ок, а массив - нет.
+	if to.is_array():
+		if v.is_array():
+			if value.is_immediate():
+				return do_array_literal_from_nitems(value.asset, nmax=len(v.asset), ctx=ctx)
+			return do_cvalue_literal_with_type(v, to, ctx=ctx)
+
+		elif v.type.is_string():
+			width = 0
+			if to.is_concretic():
+				width = to.of.width
+			cv_chars = []
+			for char in v.asset:
+				cv = CValueChar(ord(char), width=width)
+				cv.nl = 0
+				cv_chars.append(cv)
+			cv = CValueArray(cv_chars)
+			return cv
+
+	if v.type.is_generic():
+		if to.is_float() and v.type.is_rational():
+			return do_cvalue(v, ctx=ctx)
+
+	return do_cvalue(value, ctx=ctx)
 
 
 #
@@ -2033,8 +2114,16 @@ def do_helper_use_fixed_point():
 	sstr += ("\ntypedef int32_t __fixed32;")
 	sstr += ("\ntypedef int64_t __fixed64;")
 
-	sstr += ("\n#define FIXED32(x, f) ((__fixed32)((x) * ((int64_t)1 << (f))))")
-	sstr += ("\n#define FIXED64(x, f) ((__fixed64)((x) * ((int64_t)1 << (f))))")
+	# Округление к ближайшему, половина - от нуля: то же правило, что и у
+	# свертки констант (см. value/fixed.py), иначе одно и то же выражение
+	# давало бы разный результат в зависимости от того, известно оно на
+	# этапе компиляции или нет.
+	# (!) Макрос обязан оставаться КОНСТАНТНЫМ ВЫРАЖЕНИЕМ - он попадает
+	# в статические инициализаторы, где вызов функции недопустим. Ценой
+	# этого (x) вычисляется дважды, поэтому codegen подставляет сюда
+	# только литералы и константы; для рантайма есть __fixedX_from_float64
+	sstr += ("\n#define FIXED32(x, f) ((__fixed32)((double)(x) * (double)((int64_t)1 << (f)) + ((x) < 0 ? -0.5 : 0.5)))")
+	sstr += ("\n#define FIXED64(x, f) ((__fixed64)((double)(x) * (double)((int64_t)1 << (f)) + ((x) < 0 ? -0.5 : 0.5)))")
 
 	sstr += ("\nstatic inline __fixed64 __fixed64_create(int64_t i, uint64_t m, uint64_t n, uint8_t fraction) {")
 	sstr += ("\n	return (i << fraction) | (m * (1 << fraction) / n);")
@@ -2044,9 +2133,16 @@ def do_helper_use_fixed_point():
 	sstr += ("\n	return a * (1 << fraction);")
 	sstr += ("\n}")
 
+	# аргумент вычисляется один раз (в отличие от макроса) - через это
+	# codegen пропускает рантаймовые значения, в т.ч. вызовы функций
 	sstr += ("\n__attribute__((used))")
 	sstr += ("\nstatic inline __fixed32 __fixed32_from_float64(double a, uint8_t fraction) {")
-	sstr += ("\n	return (__fixed32)(a * (1 << fraction));")
+	sstr += ("\n	return FIXED32(a, fraction);")
+	sstr += ("\n}")
+
+	sstr += ("\n__attribute__((used))")
+	sstr += ("\nstatic inline __fixed64 __fixed64_from_float64(double a, uint8_t fraction) {")
+	sstr += ("\n	return FIXED64(a, fraction);")
 	sstr += ("\n}")
 
 	sstr += ("\nstatic inline int32_t __fixed32_to_int32(__fixed32 a, uint8_t fraction) {")
@@ -2057,12 +2153,19 @@ def do_helper_use_fixed_point():
 	sstr += ("\n	return (double)a / (1 << fraction);")
 	sstr += ("\n}")
 
+	# у mul масштаб возводится в квадрат, у div - сокращается;
+	# половину младшего разряда добавляем ДО сдвига/деления, чтобы
+	# округление совпало с __fixed_round (и со сверткой констант)
 	sstr += ("\nstatic inline __fixed32 __fixed32_mul(__fixed32 a, __fixed32 b, uint8_t fraction) {")
-	sstr += ("\n	return (__fixed32)(((int64_t)a * (int64_t)b) >> fraction);")
+	sstr += ("\n	int64_t p = (int64_t)a * (int64_t)b;")
+	sstr += ("\n	int64_t half = (int64_t)1 << (fraction - 1);")
+	sstr += ("\n	return (__fixed32)((p < 0 ? p - half : p + half) >> fraction);")
 	sstr += ("\n}")
 
 	sstr += ("\nstatic inline __fixed32 __fixed32_div(__fixed32 a, __fixed32 b, uint8_t fraction) {")
-	sstr += ("\n	return (__fixed32)(((int64_t)a << fraction) / (int64_t)b);")
+	sstr += ("\n	int64_t n = (int64_t)a << fraction;")
+	sstr += ("\n	int64_t half = (int64_t)b / 2;")
+	sstr += ("\n	return (__fixed32)(((n < 0) == (b < 0) ? n + half : n - half) / (int64_t)b);")
 	sstr += ("\n}")
 
 	sstr += ("\n#endif /* __FIXED_POINT__ */\n")

@@ -1507,7 +1507,10 @@ class TypeSimple(Type):
 		self.kind = kind
 		self.incomplete = False
 		self.id = id
-		self.signed = (kind == HLIR_TYPE_KIND_INT)
+		# FloatX и FixedX знаковые наравне с IntX: без этого свертка
+		# отрицательной константы упирается в проверку переполнения
+		# (см. do_value_bin_op) и дает ложный "integer overflow"
+		self.signed = kind in (HLIR_TYPE_KIND_INT, HLIR_TYPE_KIND_FLOAT, HLIR_TYPE_KIND_FIXED)
 		self.unsigned = (kind == HLIR_TYPE_KIND_NAT)
 
 
@@ -1820,6 +1823,9 @@ class Value(Entity):
 					a = pack_int(int(a), width=t.width, signed=True)
 				elif t.is_nat() or t.is_word():
 					a = pack_int(int(a), width=t.width, signed=False)
+				elif t.is_fixed():
+					# у FixedX asset это сырое хранилище (см. value/fixed.py)
+					a = pack_int(int(a), width=t.width, signed=True)
 				elif t.is_float():
 					# numpy капец как замедляет компиляцию своей долгой загрузкой
 					# но он пока лучший в плвне создания floatXX

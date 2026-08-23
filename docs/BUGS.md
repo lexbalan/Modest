@@ -377,73 +377,91 @@ return sizeof(*q)      // 4, expected 40
   Held back because it changes existing behavior rather than fixing a crash.
 - No test covers `sizeof` of an array value.
 
-## 25. `FixedX` has no binary point: nothing scales, anywhere
+## 25. `FixedX` scales only at compile time; run-time arithmetic is still raw
 
 ```modest
 var a: Fixed32 = 1.5
 var b: Fixed32 = 2.0
-printf("%f\n", Float64 (a * b))   // 2.000000, expected 3.000000
+printf("%f\n", Float64 (a * b))   // wrong: no scale correction anywhere
+
+const ca: Fixed32 = 1.5
+const cb: Fixed32 = 2.0
+const cc = ca * cb                // right: folds to 0x00030000 (3.0)
 ```
 
-`Fixed32`/`Fixed64` are documented (`docs/lang/type/base.md`) as fixed-point
-with the point at `@fraction(N)`, default half the width. In practice the
-type is an `int32_t`/`int64_t` alias and the scale is never applied:
+Constant folding of `FixedX` is implemented: literals, `const`s, arithmetic
+between them, array elements, `@fraction(N)` and every construction into and
+out of `FixedX` apply the scale. A `FixedX` value stores the number multiplied
+by `2^fraction`; the `asset` of an HLIR value with a `FixedX` type is that raw
+storage, and `src/value/fixed.py` is the only place the scale is applied or
+removed. Rounding is to the nearest representable step, a half step going away
+from zero. Covered by `tests/lang/type/fixed_const.modest`.
 
-- A rational literal is passed through unscaled — `var a: Fixed32 = 1.5`
-  emits `int32_t a = 1.5;` (clang truncates it to 1), and
-  `const half: Fixed32 = 0.5` emits `#define HALF ((int32_t)0.5)`, i.e. 0.
-  `value_fixed_cons` (`src/value/fixed.py:36`) sets `nv.asset = 1` under a
-  `# TODO` instead of computing `value * 2^fraction`.
-- Arithmetic is plain integer arithmetic: `a * b` emits `a * b` with no
-  `>> fraction`, `a / b` no `<< fraction`. The C backend *does* emit
-  `__fixed32_mul`, `__fixed32_div`, `__fixed32_from_int32`,
-  `__fixed32_to_int32`, `__fixed32_from_float64` and `__fixed32_to_float64`
-  (`do_helper_use_fixed_point`, `src/backend/c11.py:2022`) — every use of a
-  Fixed value pulls the helper block in, and no generated code ever calls it.
-- `FixedX` ↔ `IntX` and `FixedX` → `FloatX` construction emits a bare C cast,
-  so both directions are off by 2^fraction.
-- `@fraction(N)` parses and lands on the type (`src/hlir/types.py:709`), but
-  nothing except `Type.eq` ever reads `.fraction`. So the attribute changes
-  the type's identity and nothing else.
-- The LLVM backend cannot emit a Fixed literal at all:
-  `do_eval_literal: unknown literal` (`src/backend/llvm.py:1873`), and the
-  diagnostic it raises then crashes itself — `Value.print` does
-  `len(x.asset)` on an int (`src/hlir/types.py:2104`), `TypeError`.
+One deliberate exception, taken for the sake of readable C: where the operand
+is a plain literal or a `const`, the C backend emits `FIXED32(1.5, 16)` rather
+than the folded number (`fixed_cons_via_macro`, `src/backend/c11.py`). The
+macro scales in `double` while the fold is exact, so the two disagree by one
+LSB whenever the value needs more than 53 significant bits — reachable only
+on `Fixed64`, where the fraction is 32 by default:
 
-Waiting further down the same road, once the scale is actually applied:
+```c
+FIXED64(1312230.071214217469, 32)   // C:    0x001405e6123b1850
+                                    // fold: 0x001405e6123b184f  (LLVM emits this)
+```
 
-- The helper block is 32-bit only. Everything for `Fixed64` beyond
-  `__fixed64_create` is missing — no `__fixed64_mul`, `_div`, `_from_int64`,
-  `_to_int64`, `_to_float64` — so a `Fixed64` fix cannot reuse the `Fixed32`
-  path as it stands.
-- The helpers scale with `(1 << fraction)` in plain `int`. For `Fixed64`,
-  whose default fraction is 32, that shift is undefined behavior;
-  `__fixed64_create` already contains it. It has to be `(1LL << fraction)`,
-  or the scale has to be built at the fixed type's own width.
-- `type_fixed_create` (`src/hlir/defs.py:84`) computes the default as
-  `width / 2`, which in Python 3 is a *float* — `16.0`, not `16`. Harmless
-  while nothing reads `.fraction`; the moment codegen interpolates it into a
-  shift, it emits `>> 16.0`.
+`Fixed32` can never hit it (32-bit storage against a 53-bit mantissa). Roughly
+1 in 50000 random 12-decimal `Fixed64` literals diverges. Emitting the folded
+number everywhere removes it — that was the behaviour until 2026-08-23, traded
+away for output that reads like the source.
+
+Two constraints on that macro, both load-bearing: it must stay a *constant
+expression* (it lands in static initializers, so no function call inside), and
+because that forces it to evaluate `(x)` twice, codegen must never hand it an
+expression with side effects — run-time values go through
+`__fixedX_from_float64` instead.
+
+What is left is everything that happens at run time:
+
+- **Arithmetic on `FixedX` variables is plain integer arithmetic.** `a * b`
+  emits `a * b` with no `>> fraction` and `a / b` no `<< fraction`, in both
+  backends (`do_cvalue_bin`, `src/backend/c11.py`; `do_eval_bin`,
+  `src/backend/llvm.py`). Products come out `2^fraction` too large and
+  quotients that much too small. `+`, `-` and the comparisons are correct as
+  they stand — the scale cancels itself there.
+- **Run-time conversions do not rescale.** `Float64 a` on a `FixedX`
+  variable emits a bare C cast, and in LLVM `docast` has no opcode for the
+  pair at all: it emits the placeholder `%3 = cast %Fixed32 %2 to %Float64`,
+  which is not valid IR, so clang rejects the whole module. That is what
+  `tests/lang/type/fixed.modest` fails on today.
+- Most of the C helper block is still dead. `__fixed32_mul`, `__fixed32_div`,
+  `__fixed32_from_int32`, `__fixed32_to_int32` and `__fixed32_to_float64`
+  (`do_helper_use_fixed_point`, `src/backend/c11.py`) are emitted on every use
+  of a `Fixed` value and nothing calls them — they are what run-time codegen
+  should be using. Their rounding already matches the fold. Only
+  `__fixedX_from_float64` is wired up (run-time `FloatX → FixedX`).
+- The helper block is otherwise 32-bit only. Beyond `__fixed64_create` and
+  `__fixed64_from_float64`, everything for `Fixed64` is missing — no
+  `__fixed64_mul`, `_div`, `_from_int64`, `_to_int64`, `_to_float64` — so a
+  `Fixed64` fix cannot reuse the `Fixed32` path as it stands.
+- `__fixed64_create` and the `__fixed32_*` helpers scale with
+  `(1 << fraction)` in plain `int`. For `Fixed64`, whose default fraction is
+  32, that shift is undefined behavior. It has to be `(1LL << fraction)`, or
+  the scale has to be built at the fixed type's own width. (`FIXED32`,
+  `FIXED64` and `__fixed_round` already do this correctly.)
+- `NatX` is the one numeric target that does not accept a `FixedX` source
+  (`value_nat_can`, `src/value/nat.py`), even though `IntX` accepts one and
+  `NatX` accepts a `FloatY`. Looks like an omission rather than a rule; the
+  construction table in `docs/CHEATSHEET.md` records the behaviour as it is.
 - The `modest` backend drops the attribute's argument: `@fraction(12)
   Fixed32` comes back out as `@fraction Fixed32`. It only has to survive
-  codegen, so the test passes there — but the emitted source silently loses
+  codegen, so the tests pass there — but the emitted source silently loses
   the binary point. Same class as the backend's other round-trip gaps.
-- Under `-Wall -Wextra -pedantic` the generated C warns
-  (`-Wliteral-conversion`, "changes value from 3.5 to 3") — the truncation is
-  visible in the build log today, and nothing treats it as an error.
-- `FixedX` carries `FLOAT_OPS` (`src/hlir/defs.py:83`), i.e. equ + ord + math
-  and no `%`. That matches `docs/lang/type/base.md`; noted here only so a fix
-  does not "helpfully" widen it.
+- Integer literals wider than 32 bits get an `L` suffix rather than `LL`
+  (`cvalue_literal_integer` sizes the suffix from the value, not the type),
+  so a `Fixed64` constant emits e.g. `6442450944L`. Correct on LP64, wrong
+  where `long` is 32-bit. Not `FixedX`-specific — a plain `Word64` constant
+  does the same — but `Fixed64` values are large by construction, so it
+  shows up there constantly.
 
-Two design questions to settle before fixing, both visible in
-`value_fixed_can` (`src/value/fixed.py:19`):
-
-- `Float64 → Fixed32` is rejected (`cannot construct 'Fixed32' from
-  'Float64' value`) while `Fixed32 → Float64` is allowed, even though the
-  C helper `__fixed32_from_float64` is already written for it. The
-  construction table in `docs/CHEATSHEET.md` has no `FixedX` target row.
-- `WordX → FixedX` is unsafe-only, which reads as "the raw storage is the
-  scaled integer", but the reverse (`unsafe WordX f`) is not documented as
-  a reinterpretation, so the storage layout is not actually stated anywhere.
-
-Reproducer: `tests/lang/type/fixed.modest` (XFAIL under c11 and llvm).
+Reproducers: `tests/lang/type/fixed.modest` (run-time, XFAIL under c11 and
+llvm) and `tests/lang/type/fixed_const.modest` (compile-time, passes).

@@ -25,7 +25,7 @@ Nat8, Nat16, Nat32, Nat64, Nat128  // unsigned integers
 Word8, Word16, Word32, Word64, Word128  // bitwise integers
 Char8, Char16, Char32              // characters
 Float32, Float64                   // floating point
-Fixed32, Fixed64                   // fixed-point — declared, NOT implemented (BUGS.md #25)
+Fixed32, Fixed64                   // fixed-point — constants only; run-time arithmetic NOT implemented (BUGS.md #25)
 Str8, Str16, Str32                 // aliases for: []Char8, []Char16, []Char32 (string values are passed as *Str8)
 Int, Nat, Word                     // target-width integer aliases (builtin)
 Byte                               // builtin byte type
@@ -433,10 +433,11 @@ Unit value                         // discard a value (suppress warnings)
 
 | Target | Safe sources | Unsafe sources | Comment |
 |---|---|---|---|
-| `IntX` | `Integer`, `IntY`(Y≤X), `NatY`(Y≤X), `WordY`(Y≤X), `FloatY`, `Rational` | `IntY`(Y>X), `NatY`(Y>X), `WordY`(Y>X), `*T` | `FloatY→IntX` truncates fraction; compile-time overflow = error; `*T` only if pointer width ≤ X |
+| `IntX` | `Integer`, `IntY`(Y≤X), `NatY`(Y≤X), `WordY`(Y≤X), `FloatY`, `FixedY`(Y≤X), `Rational` | `IntY`(Y>X), `NatY`(Y>X), `WordY`(Y>X), `FixedY`(Y>X), `*T` | `FloatY→IntX` and `FixedY→IntX` truncate the fraction toward zero; compile-time overflow = error; `*T` only if pointer width ≤ X |
 | `NatX` | `Integer`, `NatY`(Y≤X), `WordY`(Y≤X), `IntY`(Y≤X), `FloatY`, `Rational` | `NatY`(Y>X), `WordY`(Y>X), `IntY`(Y>X), `*T` | `IntY→NatX` applies `abs()`; `FloatY→NatX` truncates fraction |
-| `WordX` | `Integer`, `WordY`(Y≤X), `IntY`(Y≤X), `NatY`(Y≤X), `CharY`(Y≤X), `FloatY`(Y≤X), `Bool` | `WordY`(Y>X), `IntY`(Y>X), `NatY`(Y>X), `FloatY`(Y>X), `*T` | signed→Word zero-extends (not sign-extends); `FloatY→WordX` reinterprets bits |
-| `FloatX` | `Integer`, `Rational`, `IntY`, `NatY`, `FloatY`, `Fixed` | `WordY` | `WordY→FloatX` reinterprets bits |
+| `WordX` | `Integer`, `WordY`(Y≤X), `IntY`(Y≤X), `NatY`(Y≤X), `CharY`(Y≤X), `FloatY`(Y≤X), `FixedY`(Y≤X), `Bool` | `WordY`(Y>X), `IntY`(Y>X), `NatY`(Y>X), `FloatY`(Y>X), `FixedY`(Y>X), `*T` | signed→Word zero-extends (not sign-extends); `FloatY→WordX` reinterprets bits; `FixedY→WordX` gives the raw scaled storage |
+| `FloatX` | `Integer`, `Rational`, `IntY`, `NatY`, `FloatY`, `FixedY` | `WordY` | `WordY→FloatX` reinterprets bits; `FixedY→FloatX` removes the scale |
+| `FixedX` | `Integer`, `Rational`, `IntY`, `NatY`, `FloatY`, `FixedY` | `WordY` | applies the scale of the target's own `@fraction`; `WordY→FixedX` takes the raw storage as is |
 | `*T` | `nil`, `*[N]T→*[]T`, `*Unit`, `String→*[]CharX`, `*[]T→*[N]T` | `*U`, `WordY`, `IntY` | `*[]T→*[N]T` safe only if element types match; otherwise full reinterpret = unsafe |
 | `CharX` | `Integer`(≤X), `WordY`(Y≤X), `String`(len=1) | any numeric | `String→CharX` compile-time only; string must be exactly 1 character |
 | `Bool` | `Bool` | — | no construction from other types; use `==` / `!=` to produce Bool |
@@ -448,6 +449,12 @@ Unit value                         // discard a value (suppress warnings)
 > - `IntY → NatX` applies `abs()` — this is a semantic conversion, not a bitwise reinterpretation.
 > - `signed → WordX` zero-extends, **not** sign-extends. `Int32 -1` → `Word64` gives `0x00000000FFFFFFFF`, not `0xFFFFFFFFFFFFFFFF`.
 > - `FloatY → WordX` and `WordY → FloatX` always **reinterpret bits** (like `memcpy`), never do numeric conversion.
+> - `FixedX` values are stored scaled by `2^fraction`. Every construction into or out of `FixedX`
+>   applies or removes that scale — except `WordX`, which is the raw storage in both directions.
+>   Anything that does not land on a representable step is rounded to the nearest one,
+>   with a half step going away from zero.
+> - `NatX` is the one numeric target that does **not** accept a `FixedX` source, even though
+>   `IntX` and `FloatY` both do — an asymmetry in `value_nat_can`, not a stated rule.
 
 ## Annotations
 
@@ -505,7 +512,7 @@ Unit value                         // discard a value (suppress warnings)
 @nonstatic                         // suppress static linkage on a definition (C backend internal)
 @c_no_print                        // suppress C output for this module (pragma-level, internal)
 @zarray                            // zero-terminated array marker (internal)
-@fraction(N)                       // fixed-point fractional bits (experimental)
+@fraction(N)                       // fixed-point fractional bits — moves the binary point of a FixedX
 ```
 
 ### Examples

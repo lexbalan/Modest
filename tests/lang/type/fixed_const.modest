@@ -1,0 +1,277 @@
+// TEST: run
+// BACKENDS: c11, llvm, modest
+// EXPECT-EXIT: 0
+// EXPECT-OUT: passed: fixed const literals
+// EXPECT-OUT: passed: fixed const arithmetic
+// EXPECT-OUT: passed: fixed const rounding
+// EXPECT-OUT: passed: fixed const construction
+// EXPECT-OUT: passed: fixed const fraction
+// EXPECT-OUT: passed: fixed const array
+// EXPECT-OUT: passed: fixed_const
+//
+// Constant folding of FixedX, checked at the only place where it is
+// observable without any run-time arithmetic: the storage itself.
+//
+// A value of type FixedX is stored as the number multiplied by 2^fraction,
+// and everything the compiler folds at compile time has to end up as that
+// exact integer.  `unsafe WordX` hands the raw storage back untouched (the
+// one construction that does not rescale), so each check below compares a
+// folded constant against the bit pattern it must have produced.
+//
+// Run-time FixedX arithmetic is a separate matter and is still unimplemented
+// — see lang/type/fixed.modest and BUGS.md#25.  Nothing here computes at run
+// time: every value is a `const`, and the program only prints comparisons.
+
+pragma unsafe
+
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+
+
+// 16.16: one whole unit is 0x10000
+const half: Fixed32 = 0.5
+const quarter: Fixed32 = 0.25
+const one: Fixed32 = 1.0
+const three: Fixed32 = 3.0
+
+
+func check (name: *ConstCharStr, got: Word32, expected: Word32) -> Bool {
+	if got == expected {
+		return true
+	}
+	printf("%s = 0x%08x, expected 0x%08x\n", name, got, expected)
+	return false
+}
+
+
+func check64 (name: *ConstCharStr, got: Word64, expected: Word64) -> Bool {
+	if got == expected {
+		return true
+	}
+	printf("%s = 0x%016llx, expected 0x%016llx\n", name, got, expected)
+	return false
+}
+
+
+func testLiterals () -> Bool {
+	var ok = true
+	ok = check("half", unsafe Word32 half, 0x00008000) and ok
+	ok = check("quarter", unsafe Word32 quarter, 0x00004000) and ok
+	ok = check("one", unsafe Word32 one, 0x00010000) and ok
+
+	// An integer literal scales the same way a fractional one does.
+	const whole: Fixed32 = 7
+	ok = check("whole", unsafe Word32 whole, 0x00070000) and ok
+
+	// Negative values are the two's complement of the scaled magnitude.
+	const neg: Fixed32 = -2.25
+	ok = check("neg", unsafe Word32 neg, 0xFFFDC000) and ok
+
+	const zero: Fixed32 = 0
+	ok = check("zero", unsafe Word32 zero, 0x00000000) and ok
+
+	if not ok {
+		return false
+	}
+
+	printf("passed: fixed const literals\n")
+	return true
+}
+
+
+// Addition and subtraction are the raw ones; multiplication and division
+// are not — the scale squares itself in a product and cancels in a quotient,
+// so both have to be corrected or the result is 2^16 out.
+func testArithmetic () -> Bool {
+	var ok = true
+
+	const sum = half + quarter               // 0.75
+	ok = check("half + quarter", unsafe Word32 sum, 0x0000C000) and ok
+
+	const diff = quarter - half              // -0.25
+	ok = check("quarter - half", unsafe Word32 diff, 0xFFFFC000) and ok
+
+	const product = half * three             // 1.5
+	ok = check("half * three", unsafe Word32 product, 0x00018000) and ok
+
+	// A product of two fractions stays a fraction: 0.5 * 0.25 = 0.125
+	const small = half * quarter
+	ok = check("half * quarter", unsafe Word32 small, 0x00002000) and ok
+
+	// Division produces a fraction out of two whole values: 1.0 / 4.0
+	const four: Fixed32 = 4.0
+	const q = one / four
+	ok = check("one / four", unsafe Word32 q, 0x00004000) and ok
+
+	// Multiplication and division undo each other.
+	const roundtrip = three / half * half
+	ok = check("three / half * half", unsafe Word32 roundtrip, 0x00030000) and ok
+
+	const negated = -half
+	ok = check("-half", unsafe Word32 negated, 0xFFFF8000) and ok
+
+	// Comparisons fold too, and they see the fraction.
+	if not (quarter < half) or not (half > quarter) {
+		printf("ordering of 0.25 and 0.5 is wrong\n")
+		return false
+	}
+
+	// Two values differing only below the binary point are not equal.
+	if half == quarter {
+		printf("0.5 equals 0.25\n")
+		return false
+	}
+
+	if not ok {
+		return false
+	}
+
+	printf("passed: fixed const arithmetic\n")
+	return true
+}
+
+
+// A value that does not land on a representable step is rounded to the
+// nearest one, with a half step going away from zero — the same rule the
+// run-time helpers use, so that folding a constant and computing it cannot
+// disagree.
+func testRounding () -> Bool {
+	var ok = true
+
+	// 0.1 * 65536 = 6553.6 -> 6554, not 6553
+	const tenth: Fixed32 = 0.1
+	ok = check("0.1", unsafe Word32 tenth, 0x0000199A) and ok
+
+	const negTenth: Fixed32 = -0.1
+	ok = check("-0.1", unsafe Word32 negTenth, 0xFFFFE666) and ok
+
+	// Exactly half a step, in both directions.
+	// 1/131072 * 65536 = 0.5 -> 1, and -0.5 -> -1
+	const halfStep: @fraction(1) Fixed32 = 0.25
+	ok = check("half step up", unsafe Word32 halfStep, 0x00000001) and ok
+
+	const halfStepDown: @fraction(1) Fixed32 = -0.25
+	ok = check("half step down", unsafe Word32 halfStepDown, 0xFFFFFFFF) and ok
+
+	if not ok {
+		return false
+	}
+
+	printf("passed: fixed const rounding\n")
+	return true
+}
+
+
+func testConstruction () -> Bool {
+	var ok = true
+
+	// IntX -> FixedX scales up.
+	const fromInt: Fixed32 = Fixed32 7
+	ok = check("Fixed32 7", unsafe Word32 fromInt, 0x00070000) and ok
+
+	// Float64 -> FixedX scales up too.
+	const fromFloat: Fixed32 = Fixed32 (Float64 2.5)
+	ok = check("Fixed32 2.5", unsafe Word32 fromFloat, 0x00028000) and ok
+
+	// FixedX -> IntX drops the fraction, truncating toward zero.
+	const backHalf: Int32 = Int32 half
+	const backThree: Int32 = Int32 three
+	const backNeg: Int32 = Int32 (Fixed32 -2.75)
+	if backHalf != 0 or backThree != 3 or backNeg != -2 {
+		printf("Int32 of 0.5/3.0/-2.75 = %d/%d/%d, expected 0/3/-2\n",
+			backHalf, backThree, backNeg)
+		return false
+	}
+
+	// FixedX -> FloatX gives the value back.
+	const asFloat: Float64 = Float64 half
+	if asFloat != 0.5 {
+		printf("Float64 0.5 = %f, expected 0.500000\n", asFloat)
+		return false
+	}
+
+	// Fixed32 -> Fixed64 moves the binary point from 16 to 32 bits.
+	const wide: Fixed64 = Fixed64 half
+	ok = check64("Fixed64 0.5", unsafe Word64 wide, 0x0000000080000000) and ok
+
+	if not ok {
+		return false
+	}
+
+	printf("passed: fixed const construction\n")
+	return true
+}
+
+
+// @fraction(N) moves the binary point, and the fold follows the type's own
+// N rather than a fixed 16.
+func testFraction () -> Bool {
+	var ok = true
+
+	const a: @fraction(12) Fixed32 = 1.5
+	ok = check("1.5 @12", unsafe Word32 a, 0x00001800) and ok
+
+	const b: @fraction(12) Fixed32 = 2.25
+	ok = check("2.25 @12", unsafe Word32 b, 0x00002400) and ok
+
+	const sum = a + b                        // 3.75
+	ok = check("sum @12", unsafe Word32 sum, 0x00003C00) and ok
+
+	const product = a * b                    // 3.375
+	ok = check("product @12", unsafe Word32 product, 0x00003600) and ok
+
+	// A whole part needing 20 bits fits where 16.16 would overflow.
+	const big: @fraction(12) Fixed32 = 100000.5
+	ok = check("100000.5 @12", unsafe Word32 big, 0x186A0800) and ok
+
+	// Fixed64 keeps its own default of 32 fraction bits.
+	const w: Fixed64 = 100.5
+	ok = check64("Fixed64 100.5", unsafe Word64 w, 0x0000006480000000) and ok
+
+	if not ok {
+		return false
+	}
+
+	printf("passed: fixed const fraction\n")
+	return true
+}
+
+
+// Array elements are constructed to the array's element type, so the scale
+// has to reach them too.
+const arr: [3]Fixed32 = [1.5, 2.5, -0.5]
+
+
+func testArray () -> Bool {
+	var ok = true
+	ok = check("arr[0]", unsafe Word32 arr[0], 0x00018000) and ok
+	ok = check("arr[1]", unsafe Word32 arr[1], 0x00028000) and ok
+	ok = check("arr[2]", unsafe Word32 arr[2], 0xFFFF8000) and ok
+
+	if not ok {
+		return false
+	}
+
+	printf("passed: fixed const array\n")
+	return true
+}
+
+
+func main () -> Int {
+	var result = true
+	result = testLiterals() and result
+	result = testArithmetic() and result
+	result = testRounding() and result
+	result = testConstruction() and result
+	result = testFraction() and result
+	result = testArray() and result
+
+	if not result {
+		printf("failed: fixed_const\n")
+		return exitFailure
+	}
+
+	printf("passed: fixed_const\n")
+	return exitSuccess
+}

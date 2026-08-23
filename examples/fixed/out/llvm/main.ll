@@ -140,11 +140,24 @@ declare void @perror(%ConstCharStr* %str)
 @.str3 = private constant [18 x i8] [i8 102, i8 120, i8 54, i8 52, i8 32, i8 61, i8 32, i8 48, i8 120, i8 37, i8 48, i8 49, i8 54, i8 108, i8 108, i8 120, i8 10, i8 0]
 @.str4 = private constant [15 x i8] [i8 102, i8 120, i8 51, i8 50, i8 32, i8 61, i8 32, i8 48, i8 120, i8 37, i8 48, i8 56, i8 120, i8 10, i8 0]
 @.str5 = private constant [18 x i8] [i8 102, i8 120, i8 54, i8 52, i8 32, i8 61, i8 32, i8 48, i8 120, i8 37, i8 48, i8 49, i8 54, i8 108, i8 108, i8 120, i8 10, i8 0]
+@.str6 = private constant [13 x i8] [i8 99, i8 51, i8 32, i8 61, i8 32, i8 48, i8 120, i8 37, i8 48, i8 56, i8 120, i8 10, i8 0]
 ; -- endstrings --
 @f32 = internal global %Float32 0.0000000000000000
 @f64 = internal global %Float64 0.0000000000000000
 @fx32 = internal global %Fixed32 0
 @fx64 = internal global %Fixed64 0
+@arr = internal global [10 x %Fixed64] [
+	%Fixed64 6442450944,
+	%Fixed64 10737418240,
+	%Fixed64 0,
+	%Fixed64 0,
+	%Fixed64 0,
+	%Fixed64 0,
+	%Fixed64 0,
+	%Fixed64 0,
+	%Fixed64 0,
+	%Fixed64 0
+]
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @.str1 to [0 x i8]*))
 	store %Float32 1.0000000000000000, %Float32* @f32
@@ -161,6 +174,7 @@ define %Int @main() {
 	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @.str4 to [0 x i8]*), %Fixed32 %6)
 	%8 = load %Fixed64, %Fixed64* @fx64
 	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @.str5 to [0 x i8]*), %Fixed64 %8)
+	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @.str6 to [0 x i8]*), %Fixed32 49152)
 	ret %Int 0
 }
 

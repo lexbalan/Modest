@@ -11,6 +11,8 @@ var fx64: Fixed64 = 0.0
 
 const c = 1.5
 
+var arr: [10]Fixed64 = [1.5, 2.5]
+
 func main () -> Int {
 	printf("Hello World!\n")
 
@@ -28,6 +30,10 @@ func main () -> Int {
 
 	printf("fx32 = 0x%08x\n", fx32)
 	printf("fx64 = 0x%016llx\n", fx64)
+
+	const c2: Fixed32 = 1.5
+	const c3 = c2 / 2
+	printf("c3 = 0x%08x\n", c3)
 
 	return 0
 }

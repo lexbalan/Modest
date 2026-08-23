@@ -105,20 +105,10 @@ def value_array_can(to, from_type, method, ti):
 
 
 
-def get_last_array_in_chain(t):
-	if t.of.is_array():
-		return get_last_array_in_chain(t.of)
-	return t
-
-
-
 # type   : [2][ ][ ][3]Int32
 # v.type : [2][2][2][3]Integer
 # result : [2][2][2][3]Int32
-
-
-
-def resolve(t1, t2):
+def _resolve(t1, t2):
 	if t1.is_array():
 
 		if t2.is_string():
@@ -135,7 +125,7 @@ def resolve(t1, t2):
 			nt = t1.copy()
 			#nt.attributes = t1.attributes
 
-		nt.of = resolve(t1.of, t2.of)
+		nt.of = _resolve(t1.of, t2.of)
 		return nt
 
 	return t1
@@ -145,14 +135,13 @@ def value_array_cons(t, v, method, ti):
 	result_type = t
 
 	if t.is_holed():
-		result_type = resolve(t, v.type)
+		result_type = _resolve(t, v.type)
 		#warning("holed, RT = %s" % result_type.to_str(), ti)
 
 	# if t.hasAttribute('zarray'):
 	# 	# конструируем zarray а это значит что он должен быть на 1 длиннее
 	# 	from semantic import do_value_bin_op
 	# 	result_type.volume = do_value_bin_op(HLIR_VALUE_OP_ADD, result_type.volume, value_integer_create(1, ti=ti), ti)
-
 
 	if method == 'implicit':
 		n_to = result_type.volume.asset
@@ -191,7 +180,6 @@ def value_array_cons(t, v, method, ti):
 
 	size = 0
 	if v.is_immediate():
-
 		items = []
 
 		for item in v.asset:

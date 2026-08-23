@@ -2,6 +2,13 @@
 from hlir import *
 from error import info, warning, error
 from util import nbits_for_num, int_zext
+from .fixed import fixed_to_number
+
+
+# FixedX -> целое: снимаем масштаб с усечением к нулю,
+# как обычное приведение дробного к целому (и как __fixedX_to_intX)
+def fixed_to_int(v):
+	return int(fixed_to_number(v.asset, v.type.fraction))
 
 
 
@@ -57,7 +64,7 @@ def value_int_cons(t, v, method, ti):
 
 	nv = ValueCons(t, t, v, method, ti=ti)
 	if v.is_immediate():
-		a = int(v.asset)
+		a = fixed_to_int(v) if v.type.is_fixed() else int(v.asset)
 		nv.set_asset(a)
 		nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 		return nv
