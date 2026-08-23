@@ -1451,11 +1451,32 @@ def do_cvalue(x, ctx=[]):
 	return None
 
 
+# Коррекция масштаба у FixedX '*' и '/' ('+' и '-' в ней не нуждаются -
+# там масштаб сокращается сам). Известное на этапе компиляции выражение
+# печатаем макросом: оно попадает в статические инициализаторы, где вызов
+# функции недопустим. Ценой этого макрос вычисляет операнды дважды,
+# поэтому все остальное идет через inline-функцию
+# (то же правило, что и у fixed_cons_via_macro выше)
+def do_cvalue_fixed_bin(x, ctx):
+	args = [do_cvalue(x.left, ctx), do_cvalue(x.right, ctx)]
+	# позиция двоичной точки берется из типа
+	args.append(CValueInteger(x.type.fraction))
+
+	op = "mul" if x.op == HLIR_VALUE_OP_MUL else "div"
+
+	if x.is_immediate():
+		fn = "__FIXED%d_%s" % (x.type.width, op.upper())
+	else:
+		fn = "__fixed%d_%s" % (x.type.width, op)
+
+	return CValueCall(CValueIdentifier(fn), args)
+
+
 def do_cvalue_bin(x, ctx):
 	# (!) у FixedX масштаб не сокращается сам: 'a * b' над хранилищами
-	# это не хранилище a*b. Свернутый узел печатаем числом, а не выражением
-	if x.type.is_fixed() and x.is_immediate():
-		return do_cvalue_fixed(x.type, x, ctx)
+	# это не хранилище a*b
+	if x.type.is_fixed() and x.op in [HLIR_VALUE_OP_MUL, HLIR_VALUE_OP_DIV]:
+		return do_cvalue_fixed_bin(x, ctx)
 
 	left = do_cvalue(x.left)
 	right = do_cvalue(x.right)
@@ -2154,19 +2175,72 @@ def do_helper_use_fixed_point():
 	sstr += ("\n}")
 
 	# у mul масштаб возводится в квадрат, у div - сокращается;
-	# половину младшего разряда добавляем ДО сдвига/деления, чтобы
-	# округление совпало с __fixed_round (и со сверткой констант)
+	# половину младшего разряда добавляем ДО деления, чтобы округление
+	# (к ближайшему, половина - от нуля) совпало со сверткой констант.
+	# Делим, а не сдвигаем: '/' у отрицательных отбрасывает дробь в
+	# сторону нуля, а '>>' - в сторону минус бесконечности, и половина
+	# ушла бы не от нуля, а вниз (плюс сдвиг отрицательного в C11 UB).
+	# Промежуточное произведение вдвое шире хранилища: int64_t у Fixed32,
+	# __int128 у Fixed64
+	#
+	# (!) МАКРОСЫ обязаны оставаться КОНСТАНТНЫМ ВЫРАЖЕНИЕМ - они попадают
+	# в статические инициализаторы, где вызов функции недопустим. Ценой
+	# этого операнды вычисляются дважды, поэтому codegen подставляет их
+	# только там, где выражение известно на этапе компиляции; для рантайма
+	# есть одноименные inline-функции (см. do_cvalue_fixed_bin)
+	sstr += ("\n#define __FIXED32_MUL(a, b, f) \\")
+	sstr += ("\n	((__fixed32)(((int64_t)(a) * (int64_t)(b) < 0 \\")
+	sstr += ("\n		? (int64_t)(a) * (int64_t)(b) - (((int64_t)1 << (f)) / 2) \\")
+	sstr += ("\n		: (int64_t)(a) * (int64_t)(b) + (((int64_t)1 << (f)) / 2)) \\")
+	sstr += ("\n	/ ((int64_t)1 << (f))))")
+
+	sstr += ("\n#define __FIXED32_DIV(a, b, f) \\")
+	sstr += ("\n	((__fixed32)((((a) < 0) == ((b) < 0) \\")
+	sstr += ("\n		? (int64_t)(a) * ((int64_t)1 << (f)) + (int64_t)(b) / 2 \\")
+	sstr += ("\n		: (int64_t)(a) * ((int64_t)1 << (f)) - (int64_t)(b) / 2) \\")
+	sstr += ("\n	/ (int64_t)(b)))")
+
 	sstr += ("\nstatic inline __fixed32 __fixed32_mul(__fixed32 a, __fixed32 b, uint8_t fraction) {")
 	sstr += ("\n	int64_t p = (int64_t)a * (int64_t)b;")
-	sstr += ("\n	int64_t half = (int64_t)1 << (fraction - 1);")
-	sstr += ("\n	return (__fixed32)((p < 0 ? p - half : p + half) >> fraction);")
+	sstr += ("\n	int64_t scale = (int64_t)1 << fraction;")
+	sstr += ("\n	return (__fixed32)((p < 0 ? p - scale / 2 : p + scale / 2) / scale);")
 	sstr += ("\n}")
 
 	sstr += ("\nstatic inline __fixed32 __fixed32_div(__fixed32 a, __fixed32 b, uint8_t fraction) {")
-	sstr += ("\n	int64_t n = (int64_t)a << fraction;")
+	sstr += ("\n	int64_t n = (int64_t)a * ((int64_t)1 << fraction);")
 	sstr += ("\n	int64_t half = (int64_t)b / 2;")
-	sstr += ("\n	return (__fixed32)(((n < 0) == (b < 0) ? n + half : n - half) / (int64_t)b);")
+	sstr += ("\n	return (__fixed32)(((a < 0) == (b < 0) ? n + half : n - half) / (int64_t)b);")
 	sstr += ("\n}")
+
+	# __int128 есть только у 64-битных целей: под guard, чтобы модуль,
+	# который пользуется одним лишь Fixed32, собирался и без него
+	sstr += ("\n#ifdef __SIZEOF_INT128__")
+
+	sstr += ("\n#define __FIXED64_MUL(a, b, f) \\")
+	sstr += ("\n	((__fixed64)(((__int128)(a) * (__int128)(b) < 0 \\")
+	sstr += ("\n		? (__int128)(a) * (__int128)(b) - (((__int128)1 << (f)) / 2) \\")
+	sstr += ("\n		: (__int128)(a) * (__int128)(b) + (((__int128)1 << (f)) / 2)) \\")
+	sstr += ("\n	/ ((__int128)1 << (f))))")
+
+	sstr += ("\n#define __FIXED64_DIV(a, b, f) \\")
+	sstr += ("\n	((__fixed64)((((a) < 0) == ((b) < 0) \\")
+	sstr += ("\n		? (__int128)(a) * ((__int128)1 << (f)) + (__int128)(b) / 2 \\")
+	sstr += ("\n		: (__int128)(a) * ((__int128)1 << (f)) - (__int128)(b) / 2) \\")
+	sstr += ("\n	/ (__int128)(b)))")
+
+	sstr += ("\nstatic inline __fixed64 __fixed64_mul(__fixed64 a, __fixed64 b, uint8_t fraction) {")
+	sstr += ("\n	__int128 p = (__int128)a * (__int128)b;")
+	sstr += ("\n	__int128 scale = (__int128)1 << fraction;")
+	sstr += ("\n	return (__fixed64)((p < 0 ? p - scale / 2 : p + scale / 2) / scale);")
+	sstr += ("\n}")
+
+	sstr += ("\nstatic inline __fixed64 __fixed64_div(__fixed64 a, __fixed64 b, uint8_t fraction) {")
+	sstr += ("\n	__int128 n = (__int128)a * ((__int128)1 << fraction);")
+	sstr += ("\n	__int128 half = (__int128)b / 2;")
+	sstr += ("\n	return (__fixed64)(((a < 0) == (b < 0) ? n + half : n - half) / (__int128)b);")
+	sstr += ("\n}")
+
+	sstr += ("\n#endif /* __SIZEOF_INT128__ */")
 
 	sstr += ("\n#endif /* __FIXED_POINT__ */\n")
 	return (CRawText(sstr),)

@@ -420,34 +420,45 @@ because that forces it to evaluate `(x)` twice, codegen must never hand it an
 expression with side effects — run-time values go through
 `__fixedX_from_float64` instead.
 
-What is left is everything that happens at run time:
+What is left, all of it at run time:
 
-- **Arithmetic on `FixedX` variables is plain integer arithmetic.** `a * b`
-  emits `a * b` with no `>> fraction` and `a / b` no `<< fraction`, in both
-  backends (`do_cvalue_bin`, `src/backend/c11.py`; `do_eval_bin`,
-  `src/backend/llvm.py`). Products come out `2^fraction` too large and
-  quotients that much too small. `+`, `-` and the comparisons are correct as
-  they stand — the scale cancels itself there.
+- **Arithmetic on `FixedX` variables is plain integer arithmetic in the LLVM
+  backend.** `a * b` emits `a * b` with no `>> fraction` and `a / b` no
+  `<< fraction` (`do_eval_bin`, `src/backend/llvm.py`). Products come out
+  `2^fraction` too large and quotients that much too small. `+`, `-` and the
+  comparisons are correct as they stand — the scale cancels itself there.
+  The C11 backend rescales both (`do_cvalue_fixed_bin`,
+  `src/backend/c11.py`): a compile-time expression gets the constant-expression
+  macro `__FIXED32_MUL(a, b, f)` / `__FIXED64_DIV(...)` — it has to survive in a
+  static initializer, where a function call is not allowed — and everything else
+  the matching `__fixedX_mul` / `__fixedX_div` inline, since the macro evaluates
+  its operands twice. Same split as `fixed_cons_via_macro`, and both forms round
+  exactly like the fold.
 - **Run-time conversions do not rescale.** `Float64 a` on a `FixedX`
   variable emits a bare C cast, and in LLVM `docast` has no opcode for the
   pair at all: it emits the placeholder `%3 = cast %Fixed32 %2 to %Float64`,
   which is not valid IR, so clang rejects the whole module. That is what
   `tests/lang/type/fixed.modest` fails on today.
-- Most of the C helper block is still dead. `__fixed32_mul`, `__fixed32_div`,
-  `__fixed32_from_int32`, `__fixed32_to_int32` and `__fixed32_to_float64`
-  (`do_helper_use_fixed_point`, `src/backend/c11.py`) are emitted on every use
-  of a `Fixed` value and nothing calls them — they are what run-time codegen
-  should be using. Their rounding already matches the fold. Only
-  `__fixedX_from_float64` is wired up (run-time `FloatX → FixedX`).
-- The helper block is otherwise 32-bit only. Beyond `__fixed64_create` and
-  `__fixed64_from_float64`, everything for `Fixed64` is missing — no
-  `__fixed64_mul`, `_div`, `_from_int64`, `_to_int64`, `_to_float64` — so a
-  `Fixed64` fix cannot reuse the `Fixed32` path as it stands.
-- `__fixed64_create` and the `__fixed32_*` helpers scale with
-  `(1 << fraction)` in plain `int`. For `Fixed64`, whose default fraction is
-  32, that shift is undefined behavior. It has to be `(1LL << fraction)`, or
-  the scale has to be built at the fixed type's own width. (`FIXED32`,
-  `FIXED64` and `__fixed_round` already do this correctly.)
+- Part of the C helper block is still dead. `__fixed32_from_int32`,
+  `__fixed32_to_int32` and `__fixed32_to_float64` (`do_helper_use_fixed_point`,
+  `src/backend/c11.py`) are emitted on every use of a `Fixed` value and nothing
+  calls them — they are what the run-time conversions above should be using.
+  Their rounding already matches the fold. Wired up so far:
+  `__fixedX_from_float64` (run-time `FloatX → FixedX`) and the
+  `__fixedX_mul` / `__fixedX_div` pair.
+- The helper block is otherwise 32-bit only. Beyond `__fixed64_create`,
+  `__fixed64_from_float64` and `__fixed64_mul` / `_div`, everything for
+  `Fixed64` is missing — no `_from_int64`, `_to_int64`, `_to_float64` — so a
+  `Fixed64` fix cannot reuse the `Fixed32` path as it stands. `Fixed64`
+  multiplication and division need a `__int128` intermediate, which exists only
+  on 64-bit targets; those four helpers sit under `#ifdef __SIZEOF_INT128__`,
+  so a module that uses `Fixed64 *` or `/` on a 32-bit target fails to compile.
+- `__fixed64_create`, `__fixed32_from_int32`, `__fixed32_to_int32` and
+  `__fixed32_to_float64` scale with `(1 << fraction)` in plain `int`. For
+  `Fixed64`, whose default fraction is 32, that shift is undefined behavior. It
+  has to be `(1LL << fraction)`, or the scale has to be built at the fixed
+  type's own width. (`FIXED32`, `FIXED64`, `__fixed_round` and the mul/div
+  helpers already do this correctly.)
 - `NatX` is the one numeric target that does not accept a `FixedX` source
   (`value_nat_can`, `src/value/nat.py`), even though `IntX` accepts one and
   `NatX` accepts a `FloatY`. Looks like an omission rather than a rule; the
