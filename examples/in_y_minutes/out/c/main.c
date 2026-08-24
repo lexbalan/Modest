@@ -82,7 +82,7 @@ int main(void) {
 	printf("distance = %f\n", distance(origin, corner));
 	struct point p = corner;
 	struct point *pp = &p;
-	pp->x = (double)99.0;
+	pp->x = 99.0;
 	printf("p.x = %f\n", p.x);
 	Color c = COLOR_GREEN;
 	if (c == COLOR_GREEN) {

@@ -37,8 +37,8 @@ static inline double min(double a, double b) {
 static double distance(struct point a, struct point b) {
 	const double dx = max(a.x, b.x) - min(a.x, b.x);
 	const double dy = max(a.y, b.y) - min(a.y, b.y);
-	const double dx2 = pow(dx, (double)2);
-	const double dy2 = pow(dy, (double)2);
+	const double dx2 = pow(dx, 2.0);
+	const double dy2 = pow(dy, 2.0);
 	return sqrt(dx2 + dy2);
 }
 
@@ -48,8 +48,8 @@ static double lineLength(struct line line) {
 
 static void ptr_example(void) {
 	struct point *const ptr_p = (struct point *)malloc(sizeof(struct point));
-	ptr_p->x = (double)10;
-	ptr_p->y = (double)20;
+	ptr_p->x = 10.0;
+	ptr_p->y = 20.0;
 	printf("point(%f, %f)\n", ptr_p->x, ptr_p->y);
 }
 

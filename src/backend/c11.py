@@ -878,6 +878,9 @@ def do_cvalue_cons_float(x, ctx):
 	value = x.value
 	from_type = value.type
 
+	if value.is_literal() and (type.width == 64):
+		return do_cvalue_literal_rational(value, ctx)
+
 	if x.method in ['implicit', 'default']:
 
 		if not Type.eq(type, value.type):
