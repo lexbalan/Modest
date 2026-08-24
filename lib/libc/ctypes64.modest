@@ -60,7 +60,7 @@ public type UnsignedLongLongInt = Nat64
 
 
 @extern("C", "float")
-public type Float = Float64
+public type Float = Float32
 
 @extern("C", "double")
 public type Double = Float64

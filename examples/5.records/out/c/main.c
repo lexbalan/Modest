@@ -6,8 +6,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 struct point {
-	float x;
-	float y;
+	double x;
+	double y;
 };
 struct line {
 	struct point a;
@@ -19,7 +19,7 @@ static struct line line = (struct line){
 };
 
 __attribute__((always_inline))
-static inline float max(float a, float b) {
+static inline double max(double a, double b) {
 	if (a > b) {
 		return a;
 	}
@@ -27,34 +27,34 @@ static inline float max(float a, float b) {
 }
 
 __attribute__((always_inline))
-static inline float min(float a, float b) {
+static inline double min(double a, double b) {
 	if (a < b) {
 		return a;
 	}
 	return b;
 }
 
-static float distance(struct point a, struct point b) {
-	const float dx = max(a.x, b.x) - min(a.x, b.x);
-	const float dy = max(a.y, b.y) - min(a.y, b.y);
-	const double dx2 = pow(dx, 2);
-	const double dy2 = pow(dy, 2);
+static double distance(struct point a, struct point b) {
+	const double dx = max(a.x, b.x) - min(a.x, b.x);
+	const double dy = max(a.y, b.y) - min(a.y, b.y);
+	const double dx2 = pow(dx, (double)2);
+	const double dy2 = pow(dy, (double)2);
 	return sqrt(dx2 + dy2);
 }
 
-static float lineLength(struct line line) {
+static double lineLength(struct line line) {
 	return distance(line.a, line.b);
 }
 
 static void ptr_example(void) {
 	struct point *const ptr_p = (struct point *)malloc(sizeof(struct point));
-	ptr_p->x = 10;
-	ptr_p->y = 20;
+	ptr_p->x = (double)10;
+	ptr_p->y = (double)20;
 	printf("point(%f, %f)\n", ptr_p->x, ptr_p->y);
 }
 
 int main(void) {
-	const float len = lineLength(line);
+	const double len = lineLength(line);
 	printf("line length = %f\n", len);
 	ptr_example();
 	return 0;

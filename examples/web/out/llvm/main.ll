@@ -66,7 +66,7 @@ declare void @llvm.stackrestore(i8*)
 %UnsignedLongLong = type %Nat64;
 %LongLongInt = type %Int64;
 %UnsignedLongLongInt = type %Nat64;
-%Float = type %Float64;
+%Float = type %Float32;
 %Double = type %Float64;
 %LongDouble = type %Float64;
 %SizeT = type %UnsignedLongInt;

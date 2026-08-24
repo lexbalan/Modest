@@ -40,6 +40,8 @@ func main () -> Int {
 	printf("c3 = %lf\n", Float64 c3)
 
 	var v1: Fixed32 = c3
+	printf("v1 = %lf\n", Float64 v1)
+
 	v1 = (v1 + 1) / 2
 
 	printf("v1 = %lf\n", Float64 v1)

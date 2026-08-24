@@ -37,6 +37,10 @@ __attribute__((used))
 static inline __fixed64 __fixed64_from_float64(double a, uint8_t fraction) {
 	return FIXED64(a, fraction);
 }
+#define __FIXED32_TO_INT32(x, f) ((int32_t)((x) / ((int64_t)1 << (f))))
+#define __FIXED64_TO_INT64(x, f) ((int64_t)((x) / ((int64_t)1 << (f))))
+#define __FIXED32_TO_FLOAT64(x, f) ((double)(x) / (double)((int64_t)1 << (f)))
+#define __FIXED64_TO_FLOAT64(x, f) ((double)(x) / (double)((int64_t)1 << (f)))
 __attribute__((used))
 static inline int32_t __fixed32_to_int32(__fixed32 a, uint8_t fraction) {
 	return (int32_t)(a / ((int64_t)1 << fraction));
@@ -108,7 +112,7 @@ static __fixed64 arr[10] = {FIXED64(1.5, 32), FIXED64(2.5, 32)};
 int main(void) {
 	printf("Hello World!\n");
 	f32 = (float)1.0;
-	f64 = 1.0;
+	f64 = (double)1.0;
 	fx32 = FIXED32(1, 16);
 	fx64 = FIXED64(1, 32);
 	printf("fx32 = 0x%08x\n", fx32);
@@ -120,8 +124,9 @@ int main(void) {
 	const __fixed32 c2 = FIXED32(1.5, 16);
 	const __fixed32 c3 = __FIXED32_DIV(c2, FIXED32(2, 16), 16);
 	printf("c3 = 0x%08x\n", c3);
-	printf("c3 = %lf\n", 0.75);
+	printf("c3 = %lf\n", __FIXED32_TO_FLOAT64(c3, 16));
 	__fixed32 v1 = c3;
+	printf("v1 = %lf\n", __fixed32_to_float64(v1, 16));
 	v1 = __fixed32_div(v1 + FIXED32(1, 16), FIXED32(2, 16), 16);
 	printf("v1 = %lf\n", __fixed32_to_float64(v1, 16));
 	return 0;

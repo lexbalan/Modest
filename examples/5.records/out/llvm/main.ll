@@ -66,7 +66,7 @@ declare void @llvm.stackrestore(i8*)
 %UnsignedLongLong = type %Nat64;
 %LongLongInt = type %Int64;
 %UnsignedLongLongInt = type %Nat64;
-%Float = type %Float64;
+%Float = type %Float32;
 %Double = type %Float64;
 %LongDouble = type %Float64;
 %SizeT = type %UnsignedLongInt;
@@ -234,8 +234,8 @@ declare void @perror(%ConstCharStr* %str)
 @.str2 = private constant [18 x i8] [i8 108, i8 105, i8 110, i8 101, i8 32, i8 108, i8 101, i8 110, i8 103, i8 116, i8 104, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
 ; -- endstrings --
 %Point = type {
-	%Float,
-	%Float
+	%Double,
+	%Double
 };
 
 %Line = type {
@@ -245,100 +245,100 @@ declare void @perror(%ConstCharStr* %str)
 
 @line = internal global %Line {
 	%Point {
-		%Float 0.0000000000000000,
-		%Float 0.0000000000000000
+		%Double 0.0000000000000000,
+		%Double 0.0000000000000000
 	},
 	%Point {
-		%Float 1.0000000000000000,
-		%Float 1.0000000000000000
+		%Double 1.0000000000000000,
+		%Double 1.0000000000000000
 	}
 }
-define internal %Float @max(%Float %a, %Float %b) alwaysinline {
+define internal %Double @max(%Double %a, %Double %b) alwaysinline {
 ; if_0
-	%1 = fcmp ogt %Float %a, %b
+	%1 = fcmp ogt %Double %a, %b
 	br %Bool %1 , label %then_0, label %endif_0
 then_0:
-	ret %Float %a
+	ret %Double %a
 	br label %endif_0
 endif_0:
-	ret %Float %b
+	ret %Double %b
 }
 
-define internal %Float @min(%Float %a, %Float %b) alwaysinline {
+define internal %Double @min(%Double %a, %Double %b) alwaysinline {
 ; if_0
-	%1 = fcmp olt %Float %a, %b
+	%1 = fcmp olt %Double %a, %b
 	br %Bool %1 , label %then_0, label %endif_0
 then_0:
-	ret %Float %a
+	ret %Double %a
 	br label %endif_0
 endif_0:
-	ret %Float %b
+	ret %Double %b
 }
 
-define internal %Float @distance(%Point %__a, %Point %__b) {
+define internal %Double @distance(%Point %__a, %Point %__b) {
 	%a = alloca %Point
 	store %Point %__a, %Point* %a
 	%b = alloca %Point
 	store %Point %__b, %Point* %b
 	%1 = getelementptr %Point, %Point* %a, %Int32 0, %Int32 0
-	%2 = load %Float, %Float* %1
+	%2 = load %Double, %Double* %1
 	%3 = getelementptr %Point, %Point* %b, %Int32 0, %Int32 0
-	%4 = load %Float, %Float* %3
-	%5 = call %Float @max(%Float %2, %Float %4)
+	%4 = load %Double, %Double* %3
+	%5 = call %Double @max(%Double %2, %Double %4)
 	%6 = getelementptr %Point, %Point* %a, %Int32 0, %Int32 0
-	%7 = load %Float, %Float* %6
+	%7 = load %Double, %Double* %6
 	%8 = getelementptr %Point, %Point* %b, %Int32 0, %Int32 0
-	%9 = load %Float, %Float* %8
-	%10 = call %Float @min(%Float %7, %Float %9)
-	%11 = fsub %Float %5, %10
+	%9 = load %Double, %Double* %8
+	%10 = call %Double @min(%Double %7, %Double %9)
+	%11 = fsub %Double %5, %10
 	%12 = getelementptr %Point, %Point* %a, %Int32 0, %Int32 1
-	%13 = load %Float, %Float* %12
+	%13 = load %Double, %Double* %12
 	%14 = getelementptr %Point, %Point* %b, %Int32 0, %Int32 1
-	%15 = load %Float, %Float* %14
-	%16 = call %Float @max(%Float %13, %Float %15)
+	%15 = load %Double, %Double* %14
+	%16 = call %Double @max(%Double %13, %Double %15)
 	%17 = getelementptr %Point, %Point* %a, %Int32 0, %Int32 1
-	%18 = load %Float, %Float* %17
+	%18 = load %Double, %Double* %17
 	%19 = getelementptr %Point, %Point* %b, %Int32 0, %Int32 1
-	%20 = load %Float, %Float* %19
-	%21 = call %Float @min(%Float %18, %Float %20)
-	%22 = fsub %Float %16, %21
-	%23 = call %Double @pow(%Float %11, %Double 2.0000000000000000)
-	%24 = call %Double @pow(%Float %22, %Double 2.0000000000000000)
+	%20 = load %Double, %Double* %19
+	%21 = call %Double @min(%Double %18, %Double %20)
+	%22 = fsub %Double %16, %21
+	%23 = call %Double @pow(%Double %11, %Double 2.0000000000000000)
+	%24 = call %Double @pow(%Double %22, %Double 2.0000000000000000)
 	%25 = fadd %Double %23, %24
 	%26 = call %Double @sqrt(%Double %25)
 	ret %Double %26
 }
 
-define internal %Float @lineLength(%Line %__line) {
+define internal %Double @lineLength(%Line %__line) {
 	%line = alloca %Line
 	store %Line %__line, %Line* %line
 	%1 = getelementptr %Line, %Line* %line, %Int32 0, %Int32 0
 	%2 = load %Point, %Point* %1
 	%3 = getelementptr %Line, %Line* %line, %Int32 0, %Int32 1
 	%4 = load %Point, %Point* %3
-	%5 = call %Float @distance(%Point %2, %Point %4)
-	ret %Float %5
+	%5 = call %Double @distance(%Point %2, %Point %4)
+	ret %Double %5
 }
 
 define internal void @ptr_example() {
 	%1 = call i8* @malloc(%SizeT 16)
 	%2 = bitcast i8* %1 to %Point*
 	%3 = getelementptr %Point, %Point* %2, %Int32 0, %Int32 0
-	store %Float 10.0000000000000000, %Float* %3
+	store %Double 10.0000000000000000, %Double* %3
 	%4 = getelementptr %Point, %Point* %2, %Int32 0, %Int32 1
-	store %Float 20.0000000000000000, %Float* %4
+	store %Double 20.0000000000000000, %Double* %4
 	%5 = getelementptr %Point, %Point* %2, %Int32 0, %Int32 0
-	%6 = load %Float, %Float* %5
+	%6 = load %Double, %Double* %5
 	%7 = getelementptr %Point, %Point* %2, %Int32 0, %Int32 1
-	%8 = load %Float, %Float* %7
-	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @.str1 to [0 x i8]*), %Float %6, %Float %8)
+	%8 = load %Double, %Double* %7
+	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @.str1 to [0 x i8]*), %Double %6, %Double %8)
 	ret void
 }
 
 define %Int @main() {
 	%1 = load %Line, %Line* @line
-	%2 = call %Float @lineLength(%Line %1)
-	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @.str2 to [0 x i8]*), %Float %2)
+	%2 = call %Double @lineLength(%Line %1)
+	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @.str2 to [0 x i8]*), %Double %2)
 	call void @ptr_example()
 	ret %Int 0
 }

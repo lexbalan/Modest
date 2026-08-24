@@ -526,10 +526,9 @@ def do_cvalue_fixed(t, v, ctx):
 
 
 
-# Обратная сторона do_cvalue_fixed: масштаб снимается на этапе свертки,
-# и asset у cons-узла уже без 2^fraction - а под узлом лежит сырое
-# хранилище, так что печатать операнд вместо результата нельзя
-def do_cvalue_from_fixed(t, x, ctx):
+# Обратная сторона do_cvalue_fixed для WordX: масштаб не снимается,
+# печатаем готовое хранилище. (Rational - только generic-литералы.)
+def do_cvalue_from_fixed_folded(t, x, ctx):
 	if t.is_float() or t.is_rational():
 		return do_cvalue_literal_rational(x, ctx)
 
@@ -538,25 +537,38 @@ def do_cvalue_from_fixed(t, x, ctx):
 
 
 
-# Рантаймовая сторона do_cvalue_from_fixed: снять масштаб на этапе
-# свертки уже не выйдет, зовем хелпер. Зеркало ветки type.is_fixed()
-# в do_cvalue_cons2 - с той разницей, что fraction берется у ИСХОДНОГО
-# типа, а не у целевого.
-# (!) функция, а не макрос: операнд может иметь побочный эффект
-def do_cvalue_from_fixed_runtime(t, value, from_type, ctx):
-	arg = [do_cvalue(value, ctx=ctx), CValueInteger(from_type.fraction)]
+# Снятие масштаба у FixedX. Известное на этапе компиляции выражение
+# печатаем макросом: оно попадает в статические инициализаторы, где
+# вызов функции недопустим. Тот же split, что и у do_cvalue_fixed_bin -
+# но без его оговорки про литералы: макросы __FIXEDX_TO_* вычисляют
+# операнд один раз, побочный эффект им не страшен.
+# (!) Считать надо от того, что НАПЕЧАТАНО в C, а не от asset: у const
+# с типом FixedX хранилище задает макрос FIXED64(), считающий в double,
+# и на Fixed64 оно расходится с точной сверткой на 1 LSB (BUGS.md#25).
+# Свернешь здесь - и `c` с `Float64 c` в одной программе разойдутся.
+# (!) fraction берется у ИСХОДНОГО типа, а не у целевого - зеркально
+# ветке type.is_fixed() в do_cvalue_cons2
+def do_cvalue_from_fixed(t, x, ctx):
+	value = x.value
+	from_type = value.type
 
 	if t.is_float():
 		# у хелперов пивот всегда float64, FloatX уже поверх результата
-		fn = "__fixed%d_to_float64" % from_type.width
+		op = "to_float64"
 		natural_width = 64
 	else:
 		# int такой же ширины, как у источника: масштаб снимается без
 		# потери целой части, а сужение - отдельным приведением
-		fn = "__fixed%d_to_int%d" % (from_type.width, from_type.width)
+		op = "to_int%d" % from_type.width
 		natural_width = from_type.width
 
-	cv = CValueCall(CValueIdentifier(fn), arg)
+	if x.is_immediate():
+		fn = "__FIXED%d_%s" % (from_type.width, op.upper())
+	else:
+		fn = "__fixed%d_%s" % (from_type.width, op)
+
+	cv = CValueCall(CValueIdentifier(fn),
+		[do_cvalue(value, ctx=ctx), CValueInteger(from_type.fraction)])
 
 	if t.width != natural_width:
 		cv = CValueCast(do_ctype(t), cv)
@@ -710,12 +722,6 @@ def do_cvalue_cons_record(x, ctx):
 
 
 
-#
-def do_cvalue_cons(x, ctx):
-	cv = do_cvalue_cons2(x, ctx)
-	return cv
-
-
 # FIXED32(x, f) накладывает масштаб средствами C. Это читается куда лучше
 # готового числа, но применимо не всегда:
 #
@@ -741,135 +747,35 @@ def fixed_cons_via_macro(value, x):
 
 
 
-def do_cvalue_cons2(x, ctx):
-	type = x.type
-	value = x.value
-	from_type = value.type
+def do_cvalue_cons(x, ctx):
+	t = x.type
 
-	if type.is_array():
-		cv = do_cvalue_cons_array(x, ctx)
-		#cv.mark = 'CA'
-		return cv
-	if type.is_record():
-		cv = do_cvalue_cons_record(x, ctx)
-		#cv.mark = 'CR'
-		return cv
-	if from_type.is_fixed() and not type.is_fixed():
-		if x.is_immediate():
-			return do_cvalue_from_fixed(type, x, ctx)
-
+	if x.value.type.is_fixed() and not t.is_fixed():
 		# (!) WordX сюда не попадает намеренно: он забирает сырое
 		# хранилище как есть, без снятия масштаба (docs/CHEATSHEET.md)
-		if type.is_float() or type.is_int():
-			return do_cvalue_from_fixed_runtime(type, value, from_type, ctx)
-
-	if type.is_branded(): return do_cvalue_cast(x.type, x.value, ctx)
-	if type.is_char(): return do_cvalue_cons_char(x, ctx)
-	if type.is_pointer(): return do_cvalue_cons_pointer(x, ctx)
-	if type.is_int(): return do_cvalue_cons_int(x, ctx)
-	if type.is_nat(): return do_cvalue_cons_nat(x, ctx)
-	if type.is_word(): return do_cvalue_cons_word(x, ctx)
-	if type.is_variant(): return do_cvalue_cons_variant(x, ctx)
-
-	if type.is_fixed():
-		if fixed_cons_via_macro(value, x):
-			# позиция двоичной точки берется из типа
-			args = [do_cvalue(value), CValueInteger(type.fraction)]
-			return CValueCall(CValueIdentifier("FIXED%d" % type.width), args)
-
-		if not x.is_immediate():
-			# (!) WordX сюда не попадает намеренно: он ОТДАЕТ сырое
-			# хранилище как есть, масштаб не накладывается
-			# (docs/CHEATSHEET.md)
-			if from_type.is_float():
-				# (!) не макрос: операнд может иметь побочный эффект
-				# (`Fixed32 next()`), а FIXED*() вычисляет его дважды
-				args = [do_cvalue(value), CValueInteger(type.fraction)]
-				fn = "__fixed%d_from_float64" % type.width
-				return CValueCall(CValueIdentifier(fn), args)
-
-			if from_type.is_int() or from_type.is_nat():
-				args = [do_cvalue(value), CValueInteger(type.fraction)]
-				fn = "__fixed%d_from_int%d" % (type.width, type.width)
-				return CValueCall(CValueIdentifier(fn), args)
-
-			if from_type.is_fixed() and from_type.fraction != type.fraction:
-				# перенос двоичной точки; при одинаковом @fraction это
-				# просто смена ширины, ее делает общий cast ниже
-				args = [do_cvalue(value),
-					CValueInteger(from_type.fraction),
-					CValueInteger(type.fraction)]
-				cv = CValueCall(CValueIdentifier("__fixed_rescale"), args)
-				if type.width != 64:
-					cv = CValueCast(do_ctype(type), cv)
-				return cv
+		if t.is_float() or t.is_int():
+			return do_cvalue_from_fixed(t, x, ctx)
 
 		if x.is_immediate():
-			# масштаб посчитан на этапе свертки (см. value/fixed.py),
-			# здесь печатаем готовое хранилище
-			return do_cvalue_fixed(type, x, ctx)
+			return do_cvalue_from_fixed_folded(t, x, ctx)
 
-
-	if x.method in ['implicit', 'default']:
-		#sstr = str_value(value)
-
-		if not Type.eq(type, value.type):
-			#if not (value.is_literal() or is_the_same_in_c(type, value.type)):
-			if not (from_type.is_generic() or is_the_same_in_c(type, value.type)):
-				#sstr = "(" + str_type(type) + ")" + sstr
-				cv = do_cvalue_cast(type, value, ctx=ctx)
-				return cv
-
-		if type.is_float() and type.width != 64:
-			# ⚠️ Необходимо привести, тк в C литералы с плавающей точкой по умолчанию double
-			cv = do_cvalue_cast(type, value, ctx=ctx)
-			return cv
-
-		cv = do_cvalue(value, ctx=ctx)
-		return cv
-
-#	if value.is_literal():
-#		cv = do_cvalue(value, ctx=ctx)
-#		return cv
-
-
-	# ⚠️ WARNING:
-	# - in C  int32(-1) -> uint64 => 0xffffffffffffffff
-	# - in Cm Int32(-1) -> Word64 => 0x00000000ffffffff
-	# - in Cm Int32(-1) -> Nat64 => 1
-	# required: (uint64_t)((uint32)int32_value)
-	#if type.is_int():
-	"""
-	if from_type.is_int() or from_type.is_integer():
-		if from_type.is_signed():
-			if type.is_nat():
-				arg = do_cvalue(value, ctx=ctx)
-
-				acall = None
-				if value.type.width <= 32:
-					acall = CValueCall(CValueIdentifier("abs"), [arg])
-				elif value.type.width <= 64:
-					acall = CValueCall(CValueIdentifier("llabs"), [arg])
-				elif value.type.width <= 128:
-					acall = CValueCall(CValueIdentifier("llabs"), [arg])
-				else:
-					1/0
-					#return "<ABS_TOO_BIG>"
-
-				ctype = do_ctype(type)
-				return CValueCast(ctype, acall)
-
-			elif type.is_word():
-				if from_type.get_size() < type.get_size():
-					nat_same_sz = type_select_nat(from_type.width)
-					#return "(" + str_type(type) + ")" + str_cast(nat_same_sz, value, ctx=ctx)
-					return CValueCast
-	"""
-
-	cv = do_cvalue_cast(type, value, ctx=ctx)
+	cv = None
+	if t.is_int(): cv = do_cvalue_cons_int(x, ctx)
+	elif t.is_nat(): cv = do_cvalue_cons_nat(x, ctx)
+	elif t.is_array(): cv = do_cvalue_cons_array(x, ctx)
+	elif t.is_record(): cv = do_cvalue_cons_record(x, ctx)
+	elif t.is_char(): cv = do_cvalue_cons_char(x, ctx)
+	elif t.is_word(): cv = do_cvalue_cons_word(x, ctx)
+	elif t.is_float(): cv = do_cvalue_cons_float(x, ctx)
+	elif t.is_pointer(): cv = do_cvalue_cons_pointer(x, ctx)
+	elif t.is_variant(): cv = do_cvalue_cons_variant(x, ctx)
+	elif t.is_fixed(): cv = do_cvalue_cons_fixed(x, ctx)
+	elif t.is_integer(): cv = do_cvalue(x.value, ctx)
+	else:
+		assert(False, "do_cvalue_cons: not implemented for type %s" % str(t))
+	#elif type.is_branded(): return do_cvalue_cast(x.type, x.value, ctx)
+	assert(cv != None)
 	return cv
-
-
 
 
 def do_cvalue_cons_word(x, ctx):
@@ -966,6 +872,23 @@ def do_cvalue_cons_nat(x, ctx):
 	cv = do_cvalue_cast(type, value, ctx=ctx)
 	return cv
 
+
+def do_cvalue_cons_float(x, ctx):
+	type = x.type
+	value = x.value
+	from_type = value.type
+
+	if x.method in ['implicit', 'default']:
+
+		if not Type.eq(type, value.type):
+			if not (from_type.is_generic() or is_the_same_in_c(type, value.type)):
+				return do_cvalue_cast(type, value, ctx=ctx)
+
+		if type.width != 64:
+			# ⚠️ Необходимо привести, тк в C литералы с плавающей точкой по умолчанию double
+			return do_cvalue_cast(type, value, ctx=ctx)
+
+	return do_cvalue_cast(type, value, ctx=ctx)
 
 
 def do_cvalue_cons_char(x, ctx):
@@ -1072,6 +995,58 @@ def do_cvalue_cons_variant(x, ctx):
 	items.append(KV('value._%d' % tag, do_cvalue(x.value, ctx=ctx), nl=x.nl))
 	variant_struct_literal = CValueStruct(items)
 	return CValueCast(do_ctype(x.type), variant_struct_literal)
+
+
+# Наложение масштаба при конструировании FixedX.
+# (!) Возвращает значение ВСЕГДА. do_cvalue_cons2 зовет эту функцию через
+# 'return', так что провалиться в разбор ниже уже нельзя, а None в этом
+# месте означает не "не обработал", а "инициализатора нет": CStmtDefVar
+# именно так кодирует объявление без значения, и молча напечатает
+# '__fixed32 f;' вместо '__fixed32 f = ...'
+def do_cvalue_cons_fixed(x, ctx):
+	type = x.type
+	value = x.value
+	from_type = value.type
+
+	if fixed_cons_via_macro(value, x):
+		# позиция двоичной точки берется из типа
+		args = [do_cvalue(value), CValueInteger(type.fraction)]
+		return CValueCall(CValueIdentifier("FIXED%d" % type.width), args)
+
+	if x.is_immediate():
+		# масштаб посчитан на этапе свертки (см. value/fixed.py),
+		# здесь печатаем готовое хранилище
+		return do_cvalue_fixed(type, x, ctx)
+
+	if from_type.is_float():
+		# (!) не макрос: операнд может иметь побочный эффект
+		# (`Fixed32 next()`), а FIXED*() вычисляет его дважды
+		args = [do_cvalue(value), CValueInteger(type.fraction)]
+		fn = "__fixed%d_from_float64" % type.width
+		return CValueCall(CValueIdentifier(fn), args)
+
+	if from_type.is_int() or from_type.is_nat():
+		args = [do_cvalue(value), CValueInteger(type.fraction)]
+		fn = "__fixed%d_from_int%d" % (type.width, type.width)
+		return CValueCall(CValueIdentifier(fn), args)
+
+	if from_type.is_fixed() and from_type.fraction != type.fraction:
+		# перенос двоичной точки
+		args = [do_cvalue(value),
+			CValueInteger(from_type.fraction),
+			CValueInteger(type.fraction)]
+		cv = CValueCall(CValueIdentifier("__fixed_rescale"), args)
+		if type.width != 64:
+			cv = CValueCast(do_ctype(type), cv)
+		return cv
+
+	# Дальше масштаб трогать не надо, остается только ширина:
+	# - WordX отдает сырое хранилище как есть (docs/CHEATSHEET.md)
+	# - FixedY с тем же @fraction: двоичная точка уже на месте
+	# do_cvalue_cast сам не поставит приведение, если C-имена совпали
+	return do_cvalue_cast(type, value, ctx)
+	
+	
 
 
 def do_cvalue_call(x, ctx):
@@ -2257,12 +2232,24 @@ def do_helper_use_fixed_point():
 	sstr += ("\n	return FIXED64(a, fraction);")
 	sstr += ("\n}")
 
-	# обратная сторона __fixedX_from_*: снимаем масштаб.
+	# Обратная сторона __fixedX_from_*: снимаем масштаб.
 	# (!) 1 сдвигаем как int64_t: @fraction(N) доходит до 31 у Fixed32
 	# и до 63 у Fixed64, а `1 << 31` на int - переполнение со знаком.
 	# Деление, а не сдвиг: '/' у отрицательных отбрасывает дробь в
 	# сторону нуля - как того требует таблица конструирования и как
 	# считает свертка (int(Fraction) в value/int.py)
+	#
+	# Макрос и inline-функция считают одно и то же; макрос нужен затем,
+	# что известное на этапе компиляции снятие масштаба попадает в
+	# статические инициализаторы, где вызов функции недопустим. В отличие
+	# от FIXED32()/FIXED64() операнд здесь вычисляется РОВНО ОДИН РАЗ,
+	# поэтому оговорки "только литералы и константы" тут не нужно -
+	# codegen отдает макросу любое immediate-выражение
+	sstr += ("\n#define __FIXED32_TO_INT32(x, f) ((int32_t)((x) / ((int64_t)1 << (f))))")
+	sstr += ("\n#define __FIXED64_TO_INT64(x, f) ((int64_t)((x) / ((int64_t)1 << (f))))")
+	sstr += ("\n#define __FIXED32_TO_FLOAT64(x, f) ((double)(x) / (double)((int64_t)1 << (f)))")
+	sstr += ("\n#define __FIXED64_TO_FLOAT64(x, f) ((double)(x) / (double)((int64_t)1 << (f)))")
+
 	sstr += ("\n__attribute__((used))")
 	sstr += ("\nstatic inline int32_t __fixed32_to_int32(__fixed32 a, uint8_t fraction) {")
 	sstr += ("\n	return (int32_t)(a / ((int64_t)1 << fraction));")
