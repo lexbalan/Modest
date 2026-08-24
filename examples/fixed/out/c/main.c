@@ -11,8 +11,23 @@ typedef int64_t __fixed64;
 static inline __fixed64 __fixed64_create(int64_t i, uint64_t m, uint64_t n, uint8_t fraction) {
 	return (i << fraction) | (m * (1 << fraction) / n);
 }
+__attribute__((used))
 static inline __fixed32 __fixed32_from_int32(int32_t a, uint8_t fraction) {
-	return a * (1 << fraction);
+	return (__fixed32)(a * ((int32_t)1 << fraction));
+}
+__attribute__((used))
+static inline __fixed64 __fixed64_from_int64(int64_t a, uint8_t fraction) {
+	return (__fixed64)(a * ((int64_t)1 << fraction));
+}
+__attribute__((used))
+static inline int64_t __fixed_rescale(int64_t a, uint8_t from_fraction, uint8_t to_fraction) {
+	if (to_fraction >= from_fraction) {
+		return a << (to_fraction - from_fraction);
+	} else {
+		int64_t d = (int64_t)1 << (from_fraction - to_fraction);
+		int64_t half = d / 2;
+		return (a < 0 ? a - half : a + half) / d;
+	}
 }
 __attribute__((used))
 static inline __fixed32 __fixed32_from_float64(double a, uint8_t fraction) {
@@ -22,11 +37,21 @@ __attribute__((used))
 static inline __fixed64 __fixed64_from_float64(double a, uint8_t fraction) {
 	return FIXED64(a, fraction);
 }
+__attribute__((used))
 static inline int32_t __fixed32_to_int32(__fixed32 a, uint8_t fraction) {
-	return a / (1 << fraction);
+	return (int32_t)(a / ((int64_t)1 << fraction));
 }
+__attribute__((used))
+static inline int64_t __fixed64_to_int64(__fixed64 a, uint8_t fraction) {
+	return a / ((int64_t)1 << fraction);
+}
+__attribute__((used))
 static inline double __fixed32_to_float64(__fixed32 a, uint8_t fraction) {
-	return (double)a / (1 << fraction);
+	return (double)a / (double)((int64_t)1 << fraction);
+}
+__attribute__((used))
+static inline double __fixed64_to_float64(__fixed64 a, uint8_t fraction) {
+	return (double)a / (double)((int64_t)1 << fraction);
 }
 #define __FIXED32_MUL(a, b, f) \
 	((__fixed32)(((int64_t)(a) * (int64_t)(b) < 0 \
@@ -98,7 +123,7 @@ int main(void) {
 	printf("c3 = %lf\n", 0.75);
 	__fixed32 v1 = c3;
 	v1 = __fixed32_div(v1 + FIXED32(1, 16), FIXED32(2, 16), 16);
-	printf("v1 = %lf\n", (double)v1);
+	printf("v1 = %lf\n", __fixed32_to_float64(v1, 16));
 	return 0;
 }
 

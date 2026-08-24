@@ -599,6 +599,18 @@ def llvm_eval_binary(op, l, r, x=None):
 
 
 
+def llvm_select(cond, a, b, type):
+	assert(cond['isa'] == 'll_value')
+	rv = ll_reg_operation('select', type)
+	llvm_print_type_value(cond)
+	out(", ")
+	llvm_print_type_value(a)
+	out(", ")
+	llvm_print_type_value(b)
+	return rv
+
+
+
 def llvm_deref(x):
 	assert(x['isa'] == 'll_value')
 	nv = copy.copy(x)
@@ -1407,12 +1419,16 @@ def select_cast_operator(a, b):
 		if align_bits_up(a.width) == align_bits_up(b.width):
 			return 'bitcast'
 
-	if a.is_integer() or a.is_int() or a.is_nat() or a.is_char() or a.is_word():
+	# FixedX здесь идет как целое: это приведение его СЫРОГО хранилища,
+	# без снятия масштаба. Именно оно и нужно для WordX (docs/CHEATSHEET.md),
+	# а для IntX/FloatX служит лишь кирпичиком - масштаб снимает
+	# do_eval_from_fixed, перехватывая их до docast()
+	if a.is_integer() or a.is_int() or a.is_nat() or a.is_char() or a.is_word() or a.is_fixed():
 
 		if b.is_pointer():
 			return 'bitcast'
 
-		if b.is_integer() or b.is_rational() or b.is_int() or b.is_nat() or b.is_char() or b.is_bool() or b.is_word():
+		if b.is_integer() or b.is_rational() or b.is_int() or b.is_nat() or b.is_char() or b.is_bool() or b.is_word() or b.is_fixed():
 			signed = b.is_signed()
 
 			aw = a.width
@@ -1613,6 +1629,100 @@ def do_eval_cons_fixed(x):
 
 
 
+# Обратная сторона: снимаем масштаб. Рантайм-библиотеки у этого бэкенда
+# нет, поэтому то, что в C11 делают __fixedX_to_{int,float}, печатаем
+# инструкциями. WordX сюда не попадает - ему нужно сырое хранилище
+def do_eval_from_fixed(x):
+	from_type = x.value.type
+	type = x.type
+	v = do_reval(x.value)
+
+	if type.is_float():
+		# sitofp сразу в целевой FloatX: деление на точную степень
+		# двойки после него второго округления не добавляет
+		f = llvm_cast('sitofp', v, type)
+		scale = llvm_value_num(type, float(1 << from_type.fraction))
+		return llvm_eval_binary('fdiv', f, scale, x)
+
+	# (!) делим в ширине ИСТОЧНИКА: сузить раньше деления - потерять
+	# целую часть. sdiv, как и '/' в C, отбрасывает дробь к нулю
+	scale = llvm_value_num(from_type, 1 << from_type.fraction)
+	if type.width == from_type.width:
+		return llvm_eval_binary('sdiv', v, scale, x)
+
+	q = llvm_eval_binary('sdiv', v, scale)
+	return docast(q, type)
+
+
+
+# Округление к ближайшему, половина - от нуля: прибавляем половину
+# младшего разряда ДО отбрасывания дроби. Знак половины берем по знаку
+# операнда, иначе у отрицательных округление уедет к минус бесконечности
+def llvm_bias_half_away(v, type, half):
+	zero = llvm_value_num(type, 0.0 if type.is_float() else 0)
+	cmp_op = 'fcmp olt' if type.is_float() else 'icmp slt'
+	neg = llvm_eval_binary(cmp_op, v, zero, ValueUndefined(typeBool))
+	bias = llvm_select(neg,
+		llvm_value_num(type, -half),
+		llvm_value_num(type, half), type)
+	add_op = 'fadd' if type.is_float() else 'add'
+	return llvm_eval_binary(add_op, v, bias)
+
+
+
+# Перенос двоичной точки между разными @fraction - то, что в C11 делает
+# __fixed_rescale
+def do_eval_fixed_rescale(v, from_type, type, x):
+	if type.fraction == from_type.fraction:
+		# точка на месте, остается только ширина
+		return docast(v, type)
+
+	if type.fraction > from_type.fraction:
+		# точный сдвиг влево, округлять нечего. Ширину меняем ДО
+		# него, иначе старшие биты уедут еще до расширения
+		iv = v if type.width == from_type.width else docast(v, type)
+		k = llvm_value_num(type, 1 << (type.fraction - from_type.fraction))
+		return llvm_eval_binary('mul', iv, k, x)
+
+	# (!) сужение считаем в ширине ИСТОЧНИКА: урезать до переноса
+	# точки нельзя, целая часть уедет
+	d = 1 << (from_type.fraction - type.fraction)
+	biased = llvm_bias_half_away(v, from_type, d // 2)
+	q = llvm_eval_binary('sdiv', biased, llvm_value_num(from_type, d))
+
+	if type.width == from_type.width:
+		return q
+	return docast(q, type)
+
+
+
+# Зеркало do_eval_from_fixed: накладываем масштаб. То, что в C11 делают
+# __fixedX_from_* и __fixed_rescale, здесь печатается инструкциями.
+# WordX сюда не попадает - он отдает сырое хранилище как есть
+def do_eval_to_fixed(x):
+	from_type = x.value.type
+	type = x.type
+	v = do_reval(x.value)
+
+	if from_type.is_fixed():
+		return do_eval_fixed_rescale(v, from_type, type, x)
+
+	if from_type.is_float():
+		# масштабируем во float и отбрасываем дробь к нулю - ровно то,
+		# что делает макрос FIXED*() в C11
+		scale = llvm_value_num(from_type, float(1 << type.fraction))
+		f = llvm_eval_binary('fmul', v, scale)
+		f = llvm_bias_half_away(f, from_type, 0.5)
+		return llvm_cast('fptosi', f, type)
+
+	# целое: дробной части нет, масштаб - точное умножение.
+	# Ширину опять же меняем первой
+	iv = v if type.width == from_type.width else docast(v, type)
+	scale = llvm_value_num(type, 1 << type.fraction)
+	return llvm_eval_binary('mul', iv, scale, x)
+
+
+
 def do_eval_cons(x):
 	#info("do_eval_cons", x.ti)
 	value = x.value
@@ -1635,9 +1745,17 @@ def do_eval_cons(x):
 		if x.is_immediate():
 			return do_eval_cons_fixed(x)
 
+		# (!) WordX не здесь: он отдает сырое хранилище как есть
+		if from_type.is_float() or from_type.is_int() \
+				or from_type.is_nat() or from_type.is_fixed():
+			return do_eval_to_fixed(x)
+
 	if from_type.is_fixed():
 		if x.is_immediate():
 			return do_eval_literal(x)
+
+		if type.is_float() or type.is_int():
+			return do_eval_from_fixed(x)
 
 	if type.is_scalar():
 		if from_type.is_integer() or from_type.is_rational():

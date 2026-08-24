@@ -44,12 +44,13 @@ Target-width aliases (resolved from target config): `Int`, `Nat`, `Word`,
   (default 16 for `Fixed32`, 32 for `Fixed64`). A value is stored as the
   number multiplied by `2^fraction`.
 
-> `FixedX` is only half built. Everything the compiler can work out at
-> compile time is correct — literals, constants, arithmetic between them,
-> and construction to and from other types all apply the scale, and both
-> backends agree. Arithmetic on `FixedX` **variables** is still emitted as
-> plain integer arithmetic, so a product comes out `2^fraction` too large
-> and a quotient that much too small. See `docs/BUGS.md` (#25),
+> `FixedX` is experimental, with one gap left. Literals, constants,
+> arithmetic between them, and construction to and from other types — at
+> compile time and at run time alike — all apply the scale, and both
+> backends agree. What is left is `*` and `/` on `FixedX` **variables**
+> under the LLVM backend: they are still emitted as plain integer
+> arithmetic, so a product comes out `2^fraction` too large and a quotient
+> that much too small. See `docs/BUGS.md` (#25),
 > `tests/lang/type/fixed.modest` (what is still broken) and
 > `tests/lang/type/fixed_const.modest` (what works).
 

@@ -37,6 +37,12 @@ func main () -> Int {
 	let c2: Fixed32 = 1.5
 	let c3: Fixed32 = c2 / 2
 	printf("c3 = 0x%08x\n", c3)
+	printf("c3 = %lf\n", Float64 c3)
+
+	var v1: Fixed32 = c3
+	v1 = (v1 + 1) / 2
+
+	printf("v1 = %lf\n", Float64 v1)
 
 	return 0
 }

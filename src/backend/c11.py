@@ -538,6 +538,33 @@ def do_cvalue_from_fixed(t, x, ctx):
 
 
 
+# Рантаймовая сторона do_cvalue_from_fixed: снять масштаб на этапе
+# свертки уже не выйдет, зовем хелпер. Зеркало ветки type.is_fixed()
+# в do_cvalue_cons2 - с той разницей, что fraction берется у ИСХОДНОГО
+# типа, а не у целевого.
+# (!) функция, а не макрос: операнд может иметь побочный эффект
+def do_cvalue_from_fixed_runtime(t, value, from_type, ctx):
+	arg = [do_cvalue(value, ctx=ctx), CValueInteger(from_type.fraction)]
+
+	if t.is_float():
+		# у хелперов пивот всегда float64, FloatX уже поверх результата
+		fn = "__fixed%d_to_float64" % from_type.width
+		natural_width = 64
+	else:
+		# int такой же ширины, как у источника: масштаб снимается без
+		# потери целой части, а сужение - отдельным приведением
+		fn = "__fixed%d_to_int%d" % (from_type.width, from_type.width)
+		natural_width = from_type.width
+
+	cv = CValueCall(CValueIdentifier(fn), arg)
+
+	if t.width != natural_width:
+		cv = CValueCast(do_ctype(t), cv)
+
+	return cv
+
+
+
 # сам заботится о том чтобы литерал соответствовал типу (int/longlong)
 def do_cvalue_literal_number(t, v, ctx):
 	#if not (t.is_generic()):
@@ -731,6 +758,11 @@ def do_cvalue_cons2(x, ctx):
 		if x.is_immediate():
 			return do_cvalue_from_fixed(type, x, ctx)
 
+		# (!) WordX сюда не попадает намеренно: он забирает сырое
+		# хранилище как есть, без снятия масштаба (docs/CHEATSHEET.md)
+		if type.is_float() or type.is_int():
+			return do_cvalue_from_fixed_runtime(type, value, from_type, ctx)
+
 	if type.is_branded(): return do_cvalue_cast(x.type, x.value, ctx)
 	if type.is_char(): return do_cvalue_cons_char(x, ctx)
 	if type.is_pointer(): return do_cvalue_cons_pointer(x, ctx)
@@ -746,12 +778,31 @@ def do_cvalue_cons2(x, ctx):
 			return CValueCall(CValueIdentifier("FIXED%d" % type.width), args)
 
 		if not x.is_immediate():
+			# (!) WordX сюда не попадает намеренно: он ОТДАЕТ сырое
+			# хранилище как есть, масштаб не накладывается
+			# (docs/CHEATSHEET.md)
 			if from_type.is_float():
 				# (!) не макрос: операнд может иметь побочный эффект
 				# (`Fixed32 next()`), а FIXED*() вычисляет его дважды
 				args = [do_cvalue(value), CValueInteger(type.fraction)]
 				fn = "__fixed%d_from_float64" % type.width
 				return CValueCall(CValueIdentifier(fn), args)
+
+			if from_type.is_int() or from_type.is_nat():
+				args = [do_cvalue(value), CValueInteger(type.fraction)]
+				fn = "__fixed%d_from_int%d" % (type.width, type.width)
+				return CValueCall(CValueIdentifier(fn), args)
+
+			if from_type.is_fixed() and from_type.fraction != type.fraction:
+				# перенос двоичной точки; при одинаковом @fraction это
+				# просто смена ширины, ее делает общий cast ниже
+				args = [do_cvalue(value),
+					CValueInteger(from_type.fraction),
+					CValueInteger(type.fraction)]
+				cv = CValueCall(CValueIdentifier("__fixed_rescale"), args)
+				if type.width != 64:
+					cv = CValueCast(do_ctype(type), cv)
+				return cv
 
 		if x.is_immediate():
 			# масштаб посчитан на этапе свертки (см. value/fixed.py),
@@ -2164,8 +2215,34 @@ def do_helper_use_fixed_point():
 	sstr += ("\n	return (i << fraction) | (m * (1 << fraction) / n);")
 	sstr += ("\n}")
 
+	# у целого источника дробной части нет, поэтому масштаб - ровно
+	# сдвиг влево, и округлять тут нечего.
+	# (!) 1 сдвигаем в ширине результата: `1 << 31` на int - переполнение
+	sstr += ("\n__attribute__((used))")
 	sstr += ("\nstatic inline __fixed32 __fixed32_from_int32(int32_t a, uint8_t fraction) {")
-	sstr += ("\n	return a * (1 << fraction);")
+	sstr += ("\n	return (__fixed32)(a * ((int32_t)1 << fraction));")
+	sstr += ("\n}")
+
+	sstr += ("\n__attribute__((used))")
+	sstr += ("\nstatic inline __fixed64 __fixed64_from_int64(int64_t a, uint8_t fraction) {")
+	sstr += ("\n	return (__fixed64)(a * ((int64_t)1 << fraction));")
+	sstr += ("\n}")
+
+	# Перенос двоичной точки между разными @fraction. Считаем в int64
+	# независимо от ширин: у сужения (Fixed64 -> Fixed32) урезать
+	# операнд ДО переноса нельзя, целая часть уедет. Целевую ширину
+	# накладывает codegen приведением результата.
+	# Влево - точный сдвиг; вправо - округление к ближайшему, половина
+	# от нуля, тем же правилом, что и свертка (см. value/fixed.py)
+	sstr += ("\n__attribute__((used))")
+	sstr += ("\nstatic inline int64_t __fixed_rescale(int64_t a, uint8_t from_fraction, uint8_t to_fraction) {")
+	sstr += ("\n	if (to_fraction >= from_fraction) {")
+	sstr += ("\n		return a << (to_fraction - from_fraction);")
+	sstr += ("\n	} else {")
+	sstr += ("\n		int64_t d = (int64_t)1 << (from_fraction - to_fraction);")
+	sstr += ("\n		int64_t half = d / 2;")
+	sstr += ("\n		return (a < 0 ? a - half : a + half) / d;")
+	sstr += ("\n	}")
 	sstr += ("\n}")
 
 	# аргумент вычисляется один раз (в отличие от макроса) - через это
@@ -2180,12 +2257,30 @@ def do_helper_use_fixed_point():
 	sstr += ("\n	return FIXED64(a, fraction);")
 	sstr += ("\n}")
 
+	# обратная сторона __fixedX_from_*: снимаем масштаб.
+	# (!) 1 сдвигаем как int64_t: @fraction(N) доходит до 31 у Fixed32
+	# и до 63 у Fixed64, а `1 << 31` на int - переполнение со знаком.
+	# Деление, а не сдвиг: '/' у отрицательных отбрасывает дробь в
+	# сторону нуля - как того требует таблица конструирования и как
+	# считает свертка (int(Fraction) в value/int.py)
+	sstr += ("\n__attribute__((used))")
 	sstr += ("\nstatic inline int32_t __fixed32_to_int32(__fixed32 a, uint8_t fraction) {")
-	sstr += ("\n	return a / (1 << fraction);")
+	sstr += ("\n	return (int32_t)(a / ((int64_t)1 << fraction));")
 	sstr += ("\n}")
 
+	sstr += ("\n__attribute__((used))")
+	sstr += ("\nstatic inline int64_t __fixed64_to_int64(__fixed64 a, uint8_t fraction) {")
+	sstr += ("\n	return a / ((int64_t)1 << fraction);")
+	sstr += ("\n}")
+
+	sstr += ("\n__attribute__((used))")
 	sstr += ("\nstatic inline double __fixed32_to_float64(__fixed32 a, uint8_t fraction) {")
-	sstr += ("\n	return (double)a / (1 << fraction);")
+	sstr += ("\n	return (double)a / (double)((int64_t)1 << fraction);")
+	sstr += ("\n}")
+
+	sstr += ("\n__attribute__((used))")
+	sstr += ("\nstatic inline double __fixed64_to_float64(__fixed64 a, uint8_t fraction) {")
+	sstr += ("\n	return (double)a / (double)((int64_t)1 << fraction);")
 	sstr += ("\n}")
 
 	# у mul масштаб возводится в квадрат, у div - сокращается;

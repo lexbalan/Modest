@@ -18,9 +18,10 @@
 // one construction that does not rescale), so each check below compares a
 // folded constant against the bit pattern it must have produced.
 //
-// Run-time FixedX arithmetic is a separate matter and is still unimplemented
-// — see lang/type/fixed.modest and BUGS.md#25.  Nothing here computes at run
-// time: every value is a `const`, and the program only prints comparisons.
+// Run-time FixedX arithmetic is a separate matter, and `*` and `/` are still
+// unrescaled under LLVM — see lang/type/fixed.modest and BUGS.md#25.  Nothing
+// here computes at run time: every value is a `const`, and the program only
+// prints comparisons.
 
 pragma unsafe
 
