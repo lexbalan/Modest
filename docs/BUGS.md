@@ -377,17 +377,11 @@ return sizeof(*q)      // 4, expected 40
   Held back because it changes existing behavior rather than fixing a crash.
 - No test covers `sizeof` of an array value.
 
-## 25. `FixedX` run-time `*` and `/` do not rescale in the LLVM backend
+## 25. `FixedX` — the gaps left around a working type
 
-```modest
-var a: Fixed32 = 1.5
-var b: Fixed32 = 2.0
-printf("%f\n", Float64 (a * b))   // LLVM: 2^16 too large; C11 is right
-
-const ca: Fixed32 = 1.5
-const cb: Fixed32 = 2.0
-const cc = ca * cb                // right: folds to 0x00030000 (3.0)
-```
+The scale itself is right everywhere now: constant folding, run-time
+construction and run-time `*` and `/` all apply it, in both backends.  What
+is listed here is what still surrounds that.
 
 Constant folding of `FixedX` is implemented: literals, `const`s, arithmetic
 between them, array elements, `@fraction(N)` and every construction into and
@@ -397,12 +391,15 @@ storage, and `src/value/fixed.py` is the only place the scale is applied or
 removed. Rounding is to the nearest representable step, a half step going away
 from zero. Covered by `tests/lang/type/fixed_const.modest`.
 
-Run-time construction applies and removes the scale too, in both backends and
-in every direction the construction table allows — `IntX`, `FloatX` and a
-`FixedY` with a different `@fraction`, with `WordX` staying the raw storage on
-purpose. C11 goes through the `__fixedX_*` helpers, LLVM prints the equivalent
-instructions; both round like the fold. `tests/lang/type/fixed.modest` passes
-under C11 on the strength of it.
+Run-time arithmetic and construction apply and remove the scale too, in both
+backends: `*` and `/` correct it through the `__fixedX_mul` / `__fixedX_div`
+helpers (`do_cvalue_fixed_bin` in `src/backend/c11.py`, `llvm_eval_fixed_bin`
+against the `fixed_helpers_impl` blob in `src/backend/llvm.py`), while `+`,
+`-` and the comparisons need no correction — the scale cancels itself there.
+Construction works in every direction the construction table allows — `IntX`,
+`FloatX` and a `FixedY` with a different `@fraction`, with `WordX` staying the
+raw storage on purpose. C11 goes through the `__fixedX_*` helpers, LLVM prints
+the equivalent instructions; both round like the fold.
 
 One deliberate exception, taken for the sake of readable C: where the operand
 is a plain literal or a `const`, the C backend emits `FIXED32(1.5, 16)` rather
@@ -427,24 +424,13 @@ because that forces it to evaluate `(x)` twice, codegen must never hand it an
 expression with side effects — run-time values go through
 `__fixedX_from_float64` instead.
 
-What is left, all of it at run time:
+What is left:
 
-- **Arithmetic on `FixedX` variables is plain integer arithmetic in the LLVM
-  backend.** `a * b` emits `a * b` with no `>> fraction` and `a / b` no
-  `<< fraction` (`do_eval_bin`, `src/backend/llvm.py`). Products come out
-  `2^fraction` too large and quotients that much too small. `+`, `-` and the
-  comparisons are correct as they stand — the scale cancels itself there.
-  The C11 backend rescales both (`do_cvalue_fixed_bin`,
-  `src/backend/c11.py`): a compile-time expression gets the constant-expression
-  macro `__FIXED32_MUL(a, b, f)` / `__FIXED64_DIV(...)` — it has to survive in a
-  static initializer, where a function call is not allowed — and everything else
-  the matching `__fixedX_mul` / `__fixedX_div` inline, since the macro evaluates
-  its operands twice. Same split as `fixed_cons_via_macro`, and both forms round
-  exactly like the fold.
 - `Fixed64` multiplication and division need a `__int128` intermediate, which
-  exists only on 64-bit targets; those four helpers sit under
+  exists only on 64-bit targets; those four C helpers sit under
   `#ifdef __SIZEOF_INT128__`, so a module that uses `Fixed64 *` or `/` on a
-  32-bit target fails to compile.
+  32-bit target fails to compile. The LLVM backend does not share the problem:
+  `i128` is a native IR type there.
 - `__fixed64_create` is dead code — nothing in codegen calls it — and it scales
   with `(1 << fraction)` in plain `int`, which is undefined behavior for a
   `Fixed64` fraction of 32. Everything else in the helper block builds the
@@ -464,5 +450,6 @@ What is left, all of it at run time:
   does the same — but `Fixed64` values are large by construction, so it
   shows up there constantly.
 
-Reproducers: `tests/lang/type/fixed.modest` (run-time, XFAIL under c11 and
-llvm) and `tests/lang/type/fixed_const.modest` (compile-time, passes).
+Coverage: `tests/lang/type/fixed.modest` (run-time) and
+`tests/lang/type/fixed_const.modest` (compile-time); both pass under c11 and
+llvm.

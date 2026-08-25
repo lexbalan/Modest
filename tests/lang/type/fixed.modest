@@ -8,22 +8,21 @@
 // EXPECT-OUT: passed: fraction attribute
 // EXPECT-OUT: passed: Fixed64
 // EXPECT-OUT: passed: fixed
-// EXPECTED-FAIL(llvm): BUGS.md#25 FixedX * and / are raw integer ops in LLVM
 //
 // Fixed32/Fixed64 as docs/lang/type/base.md describes them: a fixed-point
 // number whose binary point sits at bit `@fraction(N)`, default half the
 // width — 16.16 for Fixed32, 32.32 for Fixed64.
 //
-// The type is declared experimental.  Literals, constant folding and every
-// run-time conversion into and out of FixedX now apply the scale in both
-// backends.  What is left is run-time `*` and `/` under LLVM: they emit plain
-// integer arithmetic, so a product comes out 2^fraction too large and a
-// quotient that much too small (BUGS.md#25).  The file is the reproducer for
-// that, and the statement of what the type is supposed to do.
+// The type is declared experimental, but complete at run time: literals,
+// constant folding, every conversion into and out of FixedX and the scale
+// correction of `*` and `/` apply in both backends.  C11 goes through the
+// `__fixedX_mul` / `__fixedX_div` helpers, LLVM through the same-named ones
+// it prints itself (`fixed_helpers_impl`, src/backend/llvm.py); both round
+// exactly like the compile-time fold.  This file is the statement of what
+// the type is supposed to do.
 //
 // It sits in its own file rather than in a test of all base types, so that
-// one experimental type being broken does not mark the rest of them broken
-// too.
+// one experimental type breaking does not mark the rest of them broken too.
 //
 // Everything is checked through Float64, the one conversion the cheatsheet's
 // construction table grants FixedX.  The values are chosen to be exact in

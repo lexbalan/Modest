@@ -1039,6 +1039,30 @@ def do_reval(x):
 	return llvm_dold(do_eval(x))
 
 
+# Коррекция масштаба у FixedX '*' и '/'. Позиция двоичной точки берется
+# из типа и уходит аргументом в хелпер (см. fixed_helpers_impl) - то же
+# разделение, что у do_cvalue_fixed_bin в backend/c11.py, только там
+# известное на этапе компиляции выражение уходит в макрос, а здесь такое
+# выражение до бэкенда не доходит: его свернул value/fixed.py
+def llvm_eval_fixed_bin(x, l, r):
+	type = x.type
+	op = 'mul' if x.op == HLIR_VALUE_OP_MUL else 'div'
+
+	rv = ll_reg_operation('call', type)
+	print_type(type)
+	out(" (")
+	print_type(type)
+	out(", ")
+	print_type(type)
+	out(", i8) @__fixed%d_%s(" % (type.width, op))
+	llvm_print_type_value(l)
+	out(", ")
+	llvm_print_type_value(r)
+	out(", i8 %d)" % type.fraction)
+	return rv
+
+
+
 def do_eval_bin(x):
 	if x.is_immediate():
 		return do_eval_literal(x)
@@ -1086,6 +1110,11 @@ def do_eval_bin(x):
 	# requires their values as is in register
 	l = llvm_dold(l)
 	r = llvm_dold(r)
+
+	# (!) у FixedX масштаб не сокращается сам: 'a * b' над хранилищами
+	# это не хранилище a*b ('+' и '-' в коррекции не нуждаются)
+	if x.type.is_fixed() and op in [HLIR_VALUE_OP_MUL, HLIR_VALUE_OP_DIV]:
+		return llvm_eval_fixed_bin(x, l, r)
 
 	if op in [HLIR_VALUE_OP_SHL, HLIR_VALUE_OP_SHR]:
 		# LLVM requires the same type for left & right arguments of shift operator
@@ -3122,6 +3151,9 @@ def run(module, outname):
 	if 'use_memcmp' in module.helpers:
 		out(memeq_impl)
 
+	if 'use_fixed_point' in module.helpers:
+		out(fixed_helpers_impl)
+
 	print_module(module)
 	output_close()
 
@@ -3266,6 +3298,92 @@ endif_1:
 	br label %again_2
 break_2:
 	ret i1 1
+}
+
+"""
+
+
+# Зеркало __fixedX_mul/__fixedX_div из backend/c11.py: те же имена, та же
+# арифметика, только напечатанная инструкциями - рантайм-библиотеки у этого
+# бэкенда нет. Округление к ближайшему, половина - от нуля, чтобы результат
+# совпал со сверткой констант (см. value/fixed.py).
+#
+# Делим, а не сдвигаем: sdiv у отрицательных отбрасывает дробь к нулю, а
+# ashr - к минус бесконечности, и половина ушла бы вниз, а не от нуля.
+# Промежуток вдвое шире хранилища: i64 у Fixed32, i128 у Fixed64 - в IR
+# оба родные, гарда вроде сишного __SIZEOF_INT128__ здесь не нужна.
+#
+# internal + alwaysinline, а не weak: weak-функцию LLVM инлайнить не станет
+# (определение могут подменить на линковке), и на -O0 каждое умножение
+# стало бы вызовом. fraction идет параметром - как и в C11, это дает по две
+# функции на ширину вместо развертки по каждому @fraction(N)
+fixed_helpers_impl = """
+define internal %Fixed32 @__fixed32_mul(%Fixed32 %a, %Fixed32 %b, i8 %f) alwaysinline {
+	%1 = sext %Fixed32 %a to i64
+	%2 = sext %Fixed32 %b to i64
+	%3 = mul i64 %1, %2
+	%4 = zext i8 %f to i64
+	%5 = shl i64 1, %4
+	%6 = lshr i64 %5, 1
+	%7 = icmp slt i64 %3, 0
+	%8 = sub i64 %3, %6
+	%9 = add i64 %3, %6
+	%10 = select i1 %7, i64 %8, i64 %9
+	%11 = sdiv i64 %10, %5
+	%12 = trunc i64 %11 to %Fixed32
+	ret %Fixed32 %12
+}
+
+define internal %Fixed32 @__fixed32_div(%Fixed32 %a, %Fixed32 %b, i8 %f) alwaysinline {
+	%1 = sext %Fixed32 %a to i64
+	%2 = sext %Fixed32 %b to i64
+	%3 = zext i8 %f to i64
+	%4 = shl i64 1, %3
+	%5 = mul i64 %1, %4
+	%6 = sdiv i64 %2, 2
+	%7 = icmp slt i64 %1, 0
+	%8 = icmp slt i64 %2, 0
+	%9 = icmp eq i1 %7, %8
+	%10 = add i64 %5, %6
+	%11 = sub i64 %5, %6
+	%12 = select i1 %9, i64 %10, i64 %11
+	%13 = sdiv i64 %12, %2
+	%14 = trunc i64 %13 to %Fixed32
+	ret %Fixed32 %14
+}
+
+define internal %Fixed64 @__fixed64_mul(%Fixed64 %a, %Fixed64 %b, i8 %f) alwaysinline {
+	%1 = sext %Fixed64 %a to i128
+	%2 = sext %Fixed64 %b to i128
+	%3 = mul i128 %1, %2
+	%4 = zext i8 %f to i128
+	%5 = shl i128 1, %4
+	%6 = lshr i128 %5, 1
+	%7 = icmp slt i128 %3, 0
+	%8 = sub i128 %3, %6
+	%9 = add i128 %3, %6
+	%10 = select i1 %7, i128 %8, i128 %9
+	%11 = sdiv i128 %10, %5
+	%12 = trunc i128 %11 to %Fixed64
+	ret %Fixed64 %12
+}
+
+define internal %Fixed64 @__fixed64_div(%Fixed64 %a, %Fixed64 %b, i8 %f) alwaysinline {
+	%1 = sext %Fixed64 %a to i128
+	%2 = sext %Fixed64 %b to i128
+	%3 = zext i8 %f to i128
+	%4 = shl i128 1, %3
+	%5 = mul i128 %1, %4
+	%6 = sdiv i128 %2, 2
+	%7 = icmp slt i128 %1, 0
+	%8 = icmp slt i128 %2, 0
+	%9 = icmp eq i1 %7, %8
+	%10 = add i128 %5, %6
+	%11 = sub i128 %5, %6
+	%12 = select i1 %9, i128 %10, i128 %11
+	%13 = sdiv i128 %12, %2
+	%14 = trunc i128 %13 to %Fixed64
+	ret %Fixed64 %14
 }
 
 """
