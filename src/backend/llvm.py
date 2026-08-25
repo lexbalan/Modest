@@ -3313,12 +3313,18 @@ break_2:
 # Промежуток вдвое шире хранилища: i64 у Fixed32, i128 у Fixed64 - в IR
 # оба родные, гарда вроде сишного __SIZEOF_INT128__ здесь не нужна.
 #
-# internal + alwaysinline, а не weak: weak-функцию LLVM инлайнить не станет
-# (определение могут подменить на линковке), и на -O0 каждое умножение
-# стало бы вызовом. fraction идет параметром - как и в C11, это дает по две
-# функции на ширину вместо развертки по каждому @fraction(N)
+# internal, а не weak: weak-функцию LLVM инлайнить не станет (определение
+# могут подменить на линковке), а internal он на -O1 и выше подставляет сам -
+# fraction в точке вызова константа, и тело сворачивается в несколько
+# инструкций. Просить alwaysinline не за чем: на -O1+ разницы нет вовсе, а
+# на -O0 у модуля с десятками умножений это только раздувает код (замер:
+# 90 точек вызова, -O0, 7584 против 2964 байт __text). То же поведение, что
+# у static inline в C11.
+#
+# fraction идет параметром - как и в C11, это дает по две функции на ширину
+# вместо развертки по каждому @fraction(N)
 fixed_helpers_impl = """
-define internal %Fixed32 @__fixed32_mul(%Fixed32 %a, %Fixed32 %b, i8 %f) alwaysinline {
+define internal %Fixed32 @__fixed32_mul(%Fixed32 %a, %Fixed32 %b, i8 %f) {
 	%1 = sext %Fixed32 %a to i64
 	%2 = sext %Fixed32 %b to i64
 	%3 = mul i64 %1, %2
@@ -3334,7 +3340,7 @@ define internal %Fixed32 @__fixed32_mul(%Fixed32 %a, %Fixed32 %b, i8 %f) alwaysi
 	ret %Fixed32 %12
 }
 
-define internal %Fixed32 @__fixed32_div(%Fixed32 %a, %Fixed32 %b, i8 %f) alwaysinline {
+define internal %Fixed32 @__fixed32_div(%Fixed32 %a, %Fixed32 %b, i8 %f) {
 	%1 = sext %Fixed32 %a to i64
 	%2 = sext %Fixed32 %b to i64
 	%3 = zext i8 %f to i64
@@ -3352,7 +3358,7 @@ define internal %Fixed32 @__fixed32_div(%Fixed32 %a, %Fixed32 %b, i8 %f) alwaysi
 	ret %Fixed32 %14
 }
 
-define internal %Fixed64 @__fixed64_mul(%Fixed64 %a, %Fixed64 %b, i8 %f) alwaysinline {
+define internal %Fixed64 @__fixed64_mul(%Fixed64 %a, %Fixed64 %b, i8 %f) {
 	%1 = sext %Fixed64 %a to i128
 	%2 = sext %Fixed64 %b to i128
 	%3 = mul i128 %1, %2
@@ -3368,7 +3374,7 @@ define internal %Fixed64 @__fixed64_mul(%Fixed64 %a, %Fixed64 %b, i8 %f) alwaysi
 	ret %Fixed64 %12
 }
 
-define internal %Fixed64 @__fixed64_div(%Fixed64 %a, %Fixed64 %b, i8 %f) alwaysinline {
+define internal %Fixed64 @__fixed64_div(%Fixed64 %a, %Fixed64 %b, i8 %f) {
 	%1 = sext %Fixed64 %a to i128
 	%2 = sext %Fixed64 %b to i128
 	%3 = zext i8 %f to i128
