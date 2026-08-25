@@ -8,9 +8,9 @@ implicitly construct a value of the required concrete type.
 
 | Generic type | Produced by | Implicitly converts to |
 | :--- | :--- | :--- |
-| `Integer` | `0`, `42`, `0xFF` | IntX, NatX, WordX, FloatX (width permitting) |
-| `Rational` | `3.14`, `0.5` | FloatX |
-| `String` | `"abc"`, `'abc'` | `[N]CharX` arrays (see [array](./array.md)) |
+| `Integer` | `0`, `42`, `0xFF` | IntX, NatX, WordX, FloatX, FixedX (width permitting) |
+| `Rational` | `3.14`, `0.5` | FloatX, FixedX |
+| `String` | `"abc"`, `'abc'` | `[N]CharX` arrays (see [array](./array.md)), `StrX`, and `CharX` if the length is exactly 1 |
 | generic char | `"A"[0]` | CharX |
 | generic array | `[1, 2, 3]` | same-size array of compatible element type |
 | generic record | `{x=1, y=2}` | record with the same fields |

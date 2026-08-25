@@ -16,8 +16,8 @@ Quick reference for writing Modest code.
 
 ### Base Types
 ```modest
-Integer                            // compile-time type for integer literals — implicitly cast to IntX, NatX, WordX, FloatX
-Rational                           // compile-time type for rational literals — implicitly cast to FloatX
+Integer                            // compile-time type for integer literals — implicitly cast to IntX, NatX, WordX, FloatX, FixedX
+Rational                           // compile-time type for rational literals — implicitly cast to FloatX, FixedX
 Unit                               // void (empty type)
 Bool                               // true, false
 Int8, Int16, Int32, Int64, Int128  // signed integers
@@ -40,8 +40,8 @@ These are sometimes called **generic** types internally.
 
 | Compile-time type  | Literal form              | Implicitly converts to          |
 |--------------------|---------------------------|---------------------------------|
-| `Integer`          | `0`, `42`, `0xFF`         | IntX, NatX, WordX, Float, Char  |
-| `Rational`         | `3.14`, `0.5`             | FloatX                          |
+| `Integer`          | `0`, `42`, `0xFF`         | IntX, NatX, WordX, FloatX, FixedX |
+| `Rational`         | `3.14`, `0.5`             | FloatX, FixedX                  |
 | `String`           | `"hello"`, `'hello'`      | CharX, StrX (= `*[]CharX`)      |
 | `GenericArray`     | `[1, 2, 3]`               | same-size array of matching type|
 | `GenericRecord`    | `{x=1, y=2}`              | record with same fields         |
@@ -87,8 +87,8 @@ type Name = @branded Type          // branded type (newtype pattern)
 
 | Literal | Type | Notes |
 |---------|------|-------|
-| `42`, `0xFF` | `Integer` | compile-time; converts to IntX, NatX, WordX, FloatX, CharX |
-| `3.14`, `0.5` | `Rational` | compile-time; converts to FloatX |
+| `42`, `0xFF` | `Integer` | compile-time; converts to IntX, NatX, WordX, FloatX, FixedX. *Not* to `CharX` — that needs value construction: `Char8 65` |
+| `3.14`, `0.5` | `Rational` | compile-time; converts to FloatX, FixedX |
 | `true`, `false` | `Bool` | | non-generic; just Bool
 | `"Hello World"` | `String` | compile-time; converts to CharX or StrX (`*[]CharX`) |
 | `'Hello World'` | `String` | same; no char literal — use value construction: `Char8 'A'` |
