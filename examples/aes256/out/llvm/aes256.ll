@@ -913,13 +913,13 @@ body_1:
 	%27 = getelementptr %aes256_Block, %aes256_Block* %block, %Int32 0, %Nat32 %26
 	%28 = load %Byte, %Byte* %27
 	store %Byte %28, %Word8* %4
-	%29 = load %Word8, %Word8* %3
-	%30 = load %Word8, %Word8* %4
+	%29 = load %Word8, %Word8* %1
+	%30 = load %Word8, %Word8* %2
 	%31 = xor %Word8 %29, %30
-	%32 = load %Word8, %Word8* %2
-	%33 = xor %Word8 %32, %31
-	%34 = load %Word8, %Word8* %1
-	%35 = xor %Word8 %34, %33
+	%32 = load %Word8, %Word8* %3
+	%33 = xor %Word8 %31, %32
+	%34 = load %Word8, %Word8* %4
+	%35 = xor %Word8 %33, %34
 	store %Word8 %35, %Word8* %5
 	%36 = load %Nat8, %Nat8* %6
 	%37 = add %Nat8 %36, 0
@@ -929,14 +929,14 @@ body_1:
 	%41 = add %Nat8 %40, 0
 	%42 = zext %Nat8 %41 to %Nat32
 	%43 = getelementptr %aes256_Block, %aes256_Block* %block, %Int32 0, %Nat32 %42
-	%44 = load %Word8, %Word8* %1
-	%45 = load %Word8, %Word8* %2
-	%46 = xor %Word8 %44, %45
-	%47 = call %Word8 @rj_xtime(%Word8 %46)
-	%48 = load %Word8, %Word8* %5
-	%49 = xor %Word8 %48, %47
-	%50 = load %Byte, %Byte* %43
-	%51 = xor %Byte %50, %49
+	%44 = load %Byte, %Byte* %43
+	%45 = load %Word8, %Word8* %5
+	%46 = xor %Byte %44, %45
+	%47 = load %Word8, %Word8* %1
+	%48 = load %Word8, %Word8* %2
+	%49 = xor %Word8 %47, %48
+	%50 = call %Word8 @rj_xtime(%Word8 %49)
+	%51 = xor %Byte %46, %50
 	store %Byte %51, %Byte* %39
 	%52 = load %Nat8, %Nat8* %6
 	%53 = add %Nat8 %52, 1
@@ -946,14 +946,14 @@ body_1:
 	%57 = add %Nat8 %56, 1
 	%58 = zext %Nat8 %57 to %Nat32
 	%59 = getelementptr %aes256_Block, %aes256_Block* %block, %Int32 0, %Nat32 %58
-	%60 = load %Word8, %Word8* %2
-	%61 = load %Word8, %Word8* %3
-	%62 = xor %Word8 %60, %61
-	%63 = call %Word8 @rj_xtime(%Word8 %62)
-	%64 = load %Word8, %Word8* %5
-	%65 = xor %Word8 %64, %63
-	%66 = load %Byte, %Byte* %59
-	%67 = xor %Byte %66, %65
+	%60 = load %Byte, %Byte* %59
+	%61 = load %Word8, %Word8* %5
+	%62 = xor %Byte %60, %61
+	%63 = load %Word8, %Word8* %2
+	%64 = load %Word8, %Word8* %3
+	%65 = xor %Word8 %63, %64
+	%66 = call %Word8 @rj_xtime(%Word8 %65)
+	%67 = xor %Byte %62, %66
 	store %Byte %67, %Byte* %55
 	%68 = load %Nat8, %Nat8* %6
 	%69 = add %Nat8 %68, 2
@@ -963,14 +963,14 @@ body_1:
 	%73 = add %Nat8 %72, 2
 	%74 = zext %Nat8 %73 to %Nat32
 	%75 = getelementptr %aes256_Block, %aes256_Block* %block, %Int32 0, %Nat32 %74
-	%76 = load %Word8, %Word8* %3
-	%77 = load %Word8, %Word8* %4
-	%78 = xor %Word8 %76, %77
-	%79 = call %Word8 @rj_xtime(%Word8 %78)
-	%80 = load %Word8, %Word8* %5
-	%81 = xor %Word8 %80, %79
-	%82 = load %Byte, %Byte* %75
-	%83 = xor %Byte %82, %81
+	%76 = load %Byte, %Byte* %75
+	%77 = load %Word8, %Word8* %5
+	%78 = xor %Byte %76, %77
+	%79 = load %Word8, %Word8* %3
+	%80 = load %Word8, %Word8* %4
+	%81 = xor %Word8 %79, %80
+	%82 = call %Word8 @rj_xtime(%Word8 %81)
+	%83 = xor %Byte %78, %82
 	store %Byte %83, %Byte* %71
 	%84 = load %Nat8, %Nat8* %6
 	%85 = add %Nat8 %84, 3
@@ -980,14 +980,14 @@ body_1:
 	%89 = add %Nat8 %88, 3
 	%90 = zext %Nat8 %89 to %Nat32
 	%91 = getelementptr %aes256_Block, %aes256_Block* %block, %Int32 0, %Nat32 %90
-	%92 = load %Word8, %Word8* %4
-	%93 = load %Word8, %Word8* %1
-	%94 = xor %Word8 %92, %93
-	%95 = call %Word8 @rj_xtime(%Word8 %94)
-	%96 = load %Word8, %Word8* %5
-	%97 = xor %Word8 %96, %95
-	%98 = load %Byte, %Byte* %91
-	%99 = xor %Byte %98, %97
+	%92 = load %Byte, %Byte* %91
+	%93 = load %Word8, %Word8* %5
+	%94 = xor %Byte %92, %93
+	%95 = load %Word8, %Word8* %4
+	%96 = load %Word8, %Word8* %1
+	%97 = xor %Word8 %95, %96
+	%98 = call %Word8 @rj_xtime(%Word8 %97)
+	%99 = xor %Byte %94, %98
 	store %Byte %99, %Byte* %87
 	%100 = load %Nat8, %Nat8* %6
 	%101 = add %Nat8 %100, 4
@@ -1039,32 +1039,32 @@ body_1:
 	%30 = getelementptr %aes256_Block, %aes256_Block* %block, %Int32 0, %Nat32 %29
 	%31 = load %Byte, %Byte* %30
 	store %Byte %31, %Word8* %4
-	%32 = load %Word8, %Word8* %3
-	%33 = load %Word8, %Word8* %4
+	%32 = load %Word8, %Word8* %1
+	%33 = load %Word8, %Word8* %2
 	%34 = xor %Word8 %32, %33
-	%35 = load %Word8, %Word8* %2
-	%36 = xor %Word8 %35, %34
-	%37 = load %Word8, %Word8* %1
-	%38 = xor %Word8 %37, %36
+	%35 = load %Word8, %Word8* %3
+	%36 = xor %Word8 %34, %35
+	%37 = load %Word8, %Word8* %4
+	%38 = xor %Word8 %36, %37
 	store %Word8 %38, %Word8* %5
 	%39 = load %Word8, %Word8* %5
 	%40 = call %Word8 @rj_xtime(%Word8 %39)
 	store %Word8 %40, %Word8* %8
-	%41 = load %Word8, %Word8* %1
-	%42 = load %Word8, %Word8* %3
+	%41 = load %Word8, %Word8* %8
+	%42 = load %Word8, %Word8* %1
 	%43 = xor %Word8 %41, %42
-	%44 = load %Word8, %Word8* %8
-	%45 = xor %Word8 %44, %43
+	%44 = load %Word8, %Word8* %3
+	%45 = xor %Word8 %43, %44
 	%46 = call %Word8 @rj_xtime(%Word8 %45)
 	%47 = call %Word8 @rj_xtime(%Word8 %46)
 	%48 = load %Word8, %Word8* %5
 	%49 = xor %Word8 %48, %47
 	store %Word8 %49, %Word8* %6
-	%50 = load %Word8, %Word8* %2
-	%51 = load %Word8, %Word8* %4
+	%50 = load %Word8, %Word8* %8
+	%51 = load %Word8, %Word8* %2
 	%52 = xor %Word8 %50, %51
-	%53 = load %Word8, %Word8* %8
-	%54 = xor %Word8 %53, %52
+	%53 = load %Word8, %Word8* %4
+	%54 = xor %Word8 %52, %53
 	%55 = call %Word8 @rj_xtime(%Word8 %54)
 	%56 = call %Word8 @rj_xtime(%Word8 %55)
 	%57 = load %Word8, %Word8* %5
@@ -1078,14 +1078,14 @@ body_1:
 	%64 = add %Nat8 %63, 0
 	%65 = zext %Nat8 %64 to %Nat32
 	%66 = getelementptr %aes256_Block, %aes256_Block* %block, %Int32 0, %Nat32 %65
-	%67 = load %Word8, %Word8* %1
-	%68 = load %Word8, %Word8* %2
-	%69 = xor %Word8 %67, %68
-	%70 = call %Word8 @rj_xtime(%Word8 %69)
-	%71 = load %Word8, %Word8* %6
-	%72 = xor %Word8 %71, %70
-	%73 = load %Byte, %Byte* %66
-	%74 = xor %Byte %73, %72
+	%67 = load %Byte, %Byte* %66
+	%68 = load %Word8, %Word8* %6
+	%69 = xor %Byte %67, %68
+	%70 = load %Word8, %Word8* %1
+	%71 = load %Word8, %Word8* %2
+	%72 = xor %Word8 %70, %71
+	%73 = call %Word8 @rj_xtime(%Word8 %72)
+	%74 = xor %Byte %69, %73
 	store %Byte %74, %Byte* %62
 	%75 = load %Nat8, %Nat8* %9
 	%76 = add %Nat8 %75, 1
@@ -1095,14 +1095,14 @@ body_1:
 	%80 = add %Nat8 %79, 1
 	%81 = zext %Nat8 %80 to %Nat32
 	%82 = getelementptr %aes256_Block, %aes256_Block* %block, %Int32 0, %Nat32 %81
-	%83 = load %Word8, %Word8* %2
-	%84 = load %Word8, %Word8* %3
-	%85 = xor %Word8 %83, %84
-	%86 = call %Word8 @rj_xtime(%Word8 %85)
-	%87 = load %Word8, %Word8* %7
-	%88 = xor %Word8 %87, %86
-	%89 = load %Byte, %Byte* %82
-	%90 = xor %Byte %89, %88
+	%83 = load %Byte, %Byte* %82
+	%84 = load %Word8, %Word8* %7
+	%85 = xor %Byte %83, %84
+	%86 = load %Word8, %Word8* %2
+	%87 = load %Word8, %Word8* %3
+	%88 = xor %Word8 %86, %87
+	%89 = call %Word8 @rj_xtime(%Word8 %88)
+	%90 = xor %Byte %85, %89
 	store %Byte %90, %Byte* %78
 	%91 = load %Nat8, %Nat8* %9
 	%92 = add %Nat8 %91, 2
@@ -1112,14 +1112,14 @@ body_1:
 	%96 = add %Nat8 %95, 2
 	%97 = zext %Nat8 %96 to %Nat32
 	%98 = getelementptr %aes256_Block, %aes256_Block* %block, %Int32 0, %Nat32 %97
-	%99 = load %Word8, %Word8* %3
-	%100 = load %Word8, %Word8* %4
-	%101 = xor %Word8 %99, %100
-	%102 = call %Word8 @rj_xtime(%Word8 %101)
-	%103 = load %Word8, %Word8* %6
-	%104 = xor %Word8 %103, %102
-	%105 = load %Byte, %Byte* %98
-	%106 = xor %Byte %105, %104
+	%99 = load %Byte, %Byte* %98
+	%100 = load %Word8, %Word8* %6
+	%101 = xor %Byte %99, %100
+	%102 = load %Word8, %Word8* %3
+	%103 = load %Word8, %Word8* %4
+	%104 = xor %Word8 %102, %103
+	%105 = call %Word8 @rj_xtime(%Word8 %104)
+	%106 = xor %Byte %101, %105
 	store %Byte %106, %Byte* %94
 	%107 = load %Nat8, %Nat8* %9
 	%108 = add %Nat8 %107, 3
@@ -1129,14 +1129,14 @@ body_1:
 	%112 = add %Nat8 %111, 3
 	%113 = zext %Nat8 %112 to %Nat32
 	%114 = getelementptr %aes256_Block, %aes256_Block* %block, %Int32 0, %Nat32 %113
-	%115 = load %Word8, %Word8* %4
-	%116 = load %Word8, %Word8* %1
-	%117 = xor %Word8 %115, %116
-	%118 = call %Word8 @rj_xtime(%Word8 %117)
-	%119 = load %Word8, %Word8* %7
-	%120 = xor %Word8 %119, %118
-	%121 = load %Byte, %Byte* %114
-	%122 = xor %Byte %121, %120
+	%115 = load %Byte, %Byte* %114
+	%116 = load %Word8, %Word8* %7
+	%117 = xor %Byte %115, %116
+	%118 = load %Word8, %Word8* %4
+	%119 = load %Word8, %Word8* %1
+	%120 = xor %Word8 %118, %119
+	%121 = call %Word8 @rj_xtime(%Word8 %120)
+	%122 = xor %Byte %117, %121
 	store %Byte %122, %Byte* %110
 	%123 = load %Nat8, %Nat8* %9
 	%124 = add %Nat8 %123, 4
@@ -1153,10 +1153,10 @@ define internal void @expandEncKey(%aes256_Key* %k, %Byte* %rc) {
 	%4 = getelementptr %aes256_Key, %aes256_Key* %k, %Int32 0, %Int32 29
 	%5 = load %Byte, %Byte* %4
 	%6 = call %Byte @rj_sbox(%Byte %5)
-	%7 = load %Byte, %Byte* %rc
-	%8 = xor %Byte %6, %7
-	%9 = load %Byte, %Byte* %3
-	%10 = xor %Byte %9, %8
+	%7 = load %Byte, %Byte* %3
+	%8 = xor %Byte %7, %6
+	%9 = load %Byte, %Byte* %rc
+	%10 = xor %Byte %8, %9
 	store %Byte %10, %Byte* %2
 	%11 = getelementptr %aes256_Key, %aes256_Key* %k, %Int32 0, %Int32 1
 	%12 = getelementptr %aes256_Key, %aes256_Key* %k, %Int32 0, %Int32 1
@@ -1588,10 +1588,10 @@ endif_0:
 	%173 = getelementptr %aes256_Key, %aes256_Key* %k, %Int32 0, %Int32 29
 	%174 = load %Byte, %Byte* %173
 	%175 = call %Byte @rj_sbox(%Byte %174)
-	%176 = load %Byte, %Byte* %rc
-	%177 = xor %Byte %175, %176
-	%178 = load %Byte, %Byte* %172
-	%179 = xor %Byte %178, %177
+	%176 = load %Byte, %Byte* %172
+	%177 = xor %Byte %176, %175
+	%178 = load %Byte, %Byte* %rc
+	%179 = xor %Byte %177, %178
 	store %Byte %179, %Byte* %171
 	%180 = getelementptr %aes256_Key, %aes256_Key* %k, %Int32 0, %Int32 1
 	%181 = getelementptr %aes256_Key, %aes256_Key* %k, %Int32 0, %Int32 1

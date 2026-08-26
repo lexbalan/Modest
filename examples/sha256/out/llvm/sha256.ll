@@ -136,47 +136,47 @@ define internal %Word32 @ch(%Word32 %x, %Word32 %y, %Word32 %z) alwaysinline {
 define internal %Word32 @maj(%Word32 %x, %Word32 %y, %Word32 %z) alwaysinline {
 	%1 = and %Word32 %x, %y
 	%2 = and %Word32 %x, %z
-	%3 = and %Word32 %y, %z
-	%4 = xor %Word32 %2, %3
-	%5 = xor %Word32 %1, %4
+	%3 = xor %Word32 %1, %2
+	%4 = and %Word32 %y, %z
+	%5 = xor %Word32 %3, %4
 	ret %Word32 %5
 }
 
 define internal %Word32 @ep0(%Word32 %x) alwaysinline {
 	%1 = call %Word32 @rotright(%Word32 %x, %Nat32 2)
 	%2 = call %Word32 @rotright(%Word32 %x, %Nat32 13)
-	%3 = call %Word32 @rotright(%Word32 %x, %Nat32 22)
-	%4 = xor %Word32 %2, %3
-	%5 = xor %Word32 %1, %4
+	%3 = xor %Word32 %1, %2
+	%4 = call %Word32 @rotright(%Word32 %x, %Nat32 22)
+	%5 = xor %Word32 %3, %4
 	ret %Word32 %5
 }
 
 define internal %Word32 @ep1(%Word32 %x) alwaysinline {
 	%1 = call %Word32 @rotright(%Word32 %x, %Nat32 6)
 	%2 = call %Word32 @rotright(%Word32 %x, %Nat32 11)
-	%3 = call %Word32 @rotright(%Word32 %x, %Nat32 25)
-	%4 = xor %Word32 %2, %3
-	%5 = xor %Word32 %1, %4
+	%3 = xor %Word32 %1, %2
+	%4 = call %Word32 @rotright(%Word32 %x, %Nat32 25)
+	%5 = xor %Word32 %3, %4
 	ret %Word32 %5
 }
 
 define internal %Word32 @sig0(%Word32 %x) alwaysinline {
 	%1 = call %Word32 @rotright(%Word32 %x, %Nat32 7)
 	%2 = call %Word32 @rotright(%Word32 %x, %Nat32 18)
-	%3 = zext i8 3 to %Word32
-	%4 = lshr %Word32 %x, %3
-	%5 = xor %Word32 %2, %4
-	%6 = xor %Word32 %1, %5
+	%3 = xor %Word32 %1, %2
+	%4 = zext i8 3 to %Word32
+	%5 = lshr %Word32 %x, %4
+	%6 = xor %Word32 %3, %5
 	ret %Word32 %6
 }
 
 define internal %Word32 @sig1(%Word32 %x) alwaysinline {
 	%1 = call %Word32 @rotright(%Word32 %x, %Nat32 17)
 	%2 = call %Word32 @rotright(%Word32 %x, %Nat32 19)
-	%3 = zext i8 10 to %Word32
-	%4 = lshr %Word32 %x, %3
-	%5 = xor %Word32 %2, %4
-	%6 = xor %Word32 %1, %5
+	%3 = xor %Word32 %1, %2
+	%4 = zext i8 10 to %Word32
+	%5 = lshr %Word32 %x, %4
+	%6 = xor %Word32 %3, %5
 	ret %Word32 %6
 }
 
@@ -312,25 +312,25 @@ body_1:
 	%22 = zext %Word8 %21 to %Word32
 	%23 = zext i8 16 to %Word32
 	%24 = shl %Word32 %22, %23
-	%25 = load %Nat32, %Nat32* %6
-	%26 = add %Nat32 %25, 2
-	%27 = bitcast %Nat32 %26 to %Nat32
-	%28 = getelementptr [0 x %Word8], [0 x %Word8]* %data, %Int32 0, %Nat32 %27
-	%29 = load %Word8, %Word8* %28
-	%30 = zext %Word8 %29 to %Word32
-	%31 = zext i8 8 to %Word32
-	%32 = shl %Word32 %30, %31
-	%33 = load %Nat32, %Nat32* %6
-	%34 = add %Nat32 %33, 3
-	%35 = bitcast %Nat32 %34 to %Nat32
-	%36 = getelementptr [0 x %Word8], [0 x %Word8]* %data, %Int32 0, %Nat32 %35
-	%37 = load %Word8, %Word8* %36
-	%38 = zext %Word8 %37 to %Word32
-	%39 = zext i8 0 to %Word32
-	%40 = shl %Word32 %38, %39
-	%41 = or %Word32 %32, %40
-	%42 = or %Word32 %24, %41
-	%43 = or %Word32 %16, %42
+	%25 = or %Word32 %16, %24
+	%26 = load %Nat32, %Nat32* %6
+	%27 = add %Nat32 %26, 2
+	%28 = bitcast %Nat32 %27 to %Nat32
+	%29 = getelementptr [0 x %Word8], [0 x %Word8]* %data, %Int32 0, %Nat32 %28
+	%30 = load %Word8, %Word8* %29
+	%31 = zext %Word8 %30 to %Word32
+	%32 = zext i8 8 to %Word32
+	%33 = shl %Word32 %31, %32
+	%34 = or %Word32 %25, %33
+	%35 = load %Nat32, %Nat32* %6
+	%36 = add %Nat32 %35, 3
+	%37 = bitcast %Nat32 %36 to %Nat32
+	%38 = getelementptr [0 x %Word8], [0 x %Word8]* %data, %Int32 0, %Nat32 %37
+	%39 = load %Word8, %Word8* %38
+	%40 = zext %Word8 %39 to %Word32
+	%41 = zext i8 0 to %Word32
+	%42 = shl %Word32 %40, %41
+	%43 = or %Word32 %34, %42
 	%44 = load %Nat32, %Nat32* %5
 	%45 = bitcast %Nat32 %44 to %Nat32
 	%46 = getelementptr [64 x %Word32], [64 x %Word32]* %1, %Int32 0, %Nat32 %45
