@@ -1,0 +1,245 @@
+// TEST: run
+// BACKENDS: c11, llvm, modest
+// EXPECT-EXIT: 0
+// EXPECT-OUT: passed: and or xor
+// EXPECT-OUT: passed: identities
+// EXPECT-OUT: passed: widths
+// EXPECT-OUT: passed: masking
+// EXPECT-OUT: passed: bitwise
+//
+// `&`, `|` and `^` on WordX — the operators that exist because Word is the
+// type with no interpretation.  Int and Nat carry a number and get
+// arithmetic and ordering; Word carries a pattern of bits and gets these
+// three, plus the shifts next door in shift.modest, plus equality.  Nothing
+// crosses without an explicit construction, and `i & 1` on an integer is a
+// compile error rather than a convenience.
+//
+// There is no `xor` keyword: `^` is it.  `and` and `or` are the Bool
+// operators and have nothing to do with these.
+
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+
+
+func testAndOrXor () -> Bool {
+	var w: Word8 = 0x0F
+	var m: Word8 = 0x33
+
+	if w & m != 0x03 {
+		printf("0x0F & 0x33 = 0x%02x, expected 0x03\n", Word32(w & m))
+		return false
+	}
+
+	if w | m != 0x3F {
+		printf("0x0F | 0x33 = 0x%02x, expected 0x3F\n", Word32(w | m))
+		return false
+	}
+
+	if w ^ m != 0x3C {
+		printf("0x0F ^ 0x33 = 0x%02x, expected 0x3C\n", Word32(w ^ m))
+		return false
+	}
+
+	// `^` is the one that distinguishes itself from `|` exactly on the bits
+	// both operands have set.
+	if w | m == w ^ m {
+		printf("| and ^ agree on 0x0F and 0x33, which have common bits\n")
+		return false
+	}
+
+	// With no bits in common they agree, which is the other half of the
+	// same statement.
+	var low: Word8 = 0x0F
+	var high: Word8 = 0xF0
+	if low | high != 0xFF or low ^ high != 0xFF or low & high != 0x00 {
+		printf("0x0F and 0xF0 do not partition the byte\n")
+		return false
+	}
+
+	printf("passed: and or xor\n")
+	return true
+}
+
+
+// At Word32, where `~` does not run into BUGS.md #30 — the narrow widths
+// are covered in narrow_width.modest.
+func testIdentities () -> Bool {
+	var w: Word32 = 0x0000A55A
+
+	// The neutral and absorbing elements of each operator.
+	if w & 0xFFFF != w or w & 0x0000 != 0 {
+		printf("& identities do not hold for 0xA55A\n")
+		return false
+	}
+
+	if w | 0x0000 != w or w | 0xFFFF != 0xFFFF {
+		printf("| identities do not hold for 0xA55A\n")
+		return false
+	}
+
+	if w ^ 0x0000 != w or w ^ w != 0 {
+		printf("^ identities do not hold for 0xA55A\n")
+		return false
+	}
+
+	// `^` is its own inverse, which is what makes it a toggle.
+	var key: Word32 = 0x00001234
+	if w ^ key ^ key != w {
+		printf("(w ^ key) ^ key != w\n")
+		return false
+	}
+
+	// Idempotence of & and |.
+	if w & w != w or w | w != w {
+		printf("w & w or w | w is not w\n")
+		return false
+	}
+
+	// De Morgan, with the unary `~` from value/unary.md.
+	if ~(w & key) != (~w | ~key) or ~(w | key) != (~w & ~key) {
+		printf("De Morgan does not hold at Word32\n")
+		return false
+	}
+
+	// Two complements make the original again.  The parentheses are not
+	// for precedence: a prefix operator cannot be applied twice in a row
+	// today — see BUGS.md #27.
+	if ~(~w) != w {
+		printf("~(~w) is not w\n")
+		return false
+	}
+
+	printf("passed: identities\n")
+	return true
+}
+
+
+// The same three operators at every width, including the one where a
+// 32-bit intermediate would lose the top half.
+func testWidths () -> Bool {
+	// `&`, `|` and `^` keep every bit inside the operand width at any
+	// width.  `~` does not, under one backend — it lives in
+	// narrow_width.modest with the shifts that share the defect.
+	var b: Word8 = 0xF0
+	if b & 0x3C != 0x30 or b | 0x0F != 0xFF or b ^ 0xFF != 0x0F {
+		printf("Word8 & | ^ = 0x%02x/0x%02x/0x%02x, expected 0x30/0xFF/0x0F\n",
+			Word32(b & 0x3C), Word32(b | 0x0F), Word32(b ^ 0xFF))
+		return false
+	}
+
+	var h: Word16 = 0xFF00
+	if h | 0x00FF != 0xFFFF or h & 0x0FF0 != 0x0F00 {
+		printf("Word16 | & = 0x%04x/0x%04x, expected 0xFFFF/0x0F00\n",
+			Word32(h | 0x00FF), Word32(h & 0x0FF0))
+		return false
+	}
+
+	var w: Word32 = 0xFFFF0000
+	var mask: Word32 = 0x00FF00FF
+	if w & mask != 0x00FF0000 or w | mask != 0xFFFF00FF or w ^ mask != 0xFF0000FF {
+		printf("Word32 & | ^ = 0x%08x/0x%08x/0x%08x\n",
+			w & mask, w | mask, w ^ mask)
+		return false
+	}
+
+	// Word64: the pattern below is destroyed by anything that narrows to 32
+	// bits on the way through.
+	var q: Word64 = 0xDEADBEEFCAFEBABE
+	var qmask: Word64 = 0xFFFFFFFF00000000
+	if q & qmask != 0xDEADBEEF00000000 {
+		printf("Word64 & = 0x%016llx, expected 0xDEADBEEF00000000\n", q & qmask)
+		return false
+	}
+
+	if q & ~qmask != 0x00000000CAFEBABE {
+		printf("Word64 & ~ = 0x%016llx, expected 0x00000000CAFEBABE\n",
+			q & ~qmask)
+		return false
+	}
+
+	if (q & qmask) | (q & ~qmask) != q {
+		printf("the two halves of a Word64 do not add back up\n")
+		return false
+	}
+
+	printf("passed: widths\n")
+	return true
+}
+
+
+// What the operators are actually for: reading and writing bits by mask.
+func testMasking () -> Bool {
+	var flags: Word8 = 0x00
+
+	// Set a bit, test it, clear it — the three-move sequence every driver
+	// is made of.
+	flags = flags | 0x04
+	if flags & 0x04 == 0 {
+		printf("the bit that was just set does not read back\n")
+		return false
+	}
+
+	if flags & 0x08 != 0 {
+		printf("a bit that was never set reads as set\n")
+		return false
+	}
+
+	flags = flags & ~0x04
+	if flags != 0x00 {
+		printf("clearing the bit left 0x%02x\n", Word32 flags)
+		return false
+	}
+
+	// Toggling twice is a no-op, and toggling once is not.  The patterns
+	// are written in hex because the language has no binary literal — `0b`
+	// lexes as a zero followed by a name.
+	var state: Word8 = 0xA5
+	if state ^ 0x0F == state {
+		printf("toggling four bits changed nothing\n")
+		return false
+	}
+
+	// Parenthesised on the left because `^` groups to the right, and the
+	// resulting literal pair does not compile today — BUGS.md #28.
+	if (state ^ 0x0F) ^ 0x0F != state {
+		printf("toggling four bits twice did not restore the value\n")
+		return false
+	}
+
+	// Keeping the low nibble of a byte, the way a decoder does.
+	var byte: Word8 = 0xB7
+	if byte & 0x0F != 0x07 {
+		printf("low nibble of 0xB7 = 0x%02x, expected 0x07\n", Word32(byte & 0x0F))
+		return false
+	}
+
+	// A hex literal takes the width of the operand it meets, so the same
+	// mask spelling works at 8, 16 and 32 bits.
+	var w16: Word16 = 0xB7B7
+	var w32: Word32 = 0xB7B7B7B7
+	if w16 & 0x000F != 0x0007 or w32 & 0x0000000F != 0x00000007 {
+		printf("the same mask does not work at every width\n")
+		return false
+	}
+
+	printf("passed: masking\n")
+	return true
+}
+
+
+func main () -> Int {
+	var result = true
+	result = testAndOrXor() and result
+	result = testIdentities() and result
+	result = testWidths() and result
+	result = testMasking() and result
+
+	if not result {
+		printf("failed: bitwise\n")
+		return exitFailure
+	}
+
+	printf("passed: bitwise\n")
+	return exitSuccess
+}

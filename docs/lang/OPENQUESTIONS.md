@@ -253,3 +253,183 @@ arguments must stop being reordered.
 
 - [`value/call.md`](./value/call.md) — argument passing and named arguments
 - [`BUGS.md`](../BUGS.md) #16 — backends disagreeing on unspecified behaviour
+
+---
+
+## 3. Should `NatX` accept a `CharY` source?
+
+**Question.** A `CharX` is a code unit — a number in an encoding. Ordering
+it is settled: `<` `>` `<=` `>=` are rejected on `Char`, because comparing
+characters means nothing without a collation, and the language does not
+guess ([`type/base.md`](./type/base.md),
+[`value/binary.md`](./value/binary.md)). What is *not* settled is the way
+out: to compare two code units by their numeric value, should
+`Nat8 c` be enough, or is the trip through `WordX` the point?
+
+### Where it stands today
+
+`WordX` is the only safe target a `CharY` has, and it is a one-way street.
+Reading a code unit as a number takes two constructions:
+
+```modest
+const zero: Char8 = '0'
+const nine: Char8 = '9'
+
+func isDigit (c: Char8) -> Bool {
+	return Nat8 Word8 c >= Nat8 Word8 zero and Nat8 Word8 c <= Nat8 Word8 nine
+}
+```
+
+What each direction does today:
+
+| Construction | Result |
+| :-- | :-- |
+| `Word8 c` | safe |
+| `Nat8 c` | `cannot construct 'Nat8' from 'Char8' value` |
+| `Int32 c` | `cannot construct 'Int32' from 'Char8' value` |
+| `unsafe Nat8 c` | rejected too — there is no escape hatch at all |
+| `Char8 w` (`WordX`), `Char8 65` (literal) | safe |
+| `Char8 n` (`NatX`) | needs `unsafe`, and then works |
+
+Two things follow from that table. The first is the cost: a range test
+over characters — the most ordinary thing anyone does with them — spends
+two constructions per operand, and the expression stops reading like what
+it means. The second is that the ban is asymmetric in a way nobody chose:
+`Nat` reaches `Char` through `unsafe`, while `Char` cannot reach `Nat`
+even through `unsafe`.
+
+The library already writes the numeric-ordering idiom for `Word`, and it
+is the one this question would extend to `Char`:
+
+```modest
+if Nat32 x <= Nat32 0x0000007F {          // lib/misc/utf.modest
+```
+
+### Options
+
+**A. Allow `NatX ← CharY`(Y≤X), safe.** The mirror of the `WordX ← CharY`
+rule that already exists.
+
+- `isDigit` becomes `Nat8 c >= Nat8 zero and Nat8 c <= Nat8 nine`.
+- Adds no capability: the value is reachable today through `WordX`, only
+  longer. Nothing becomes expressible that was not.
+- Keeps the ordering ban doing its job — the conversion is still written
+  out, and it still says "I mean the number".
+- Leaves open whether `IntX ← CharY` follows. A code unit is never
+  negative, so `NatX` alone is defensible, but then `Int` is the odd one
+  out of the three.
+
+**B. Leave it as it is.** The two-step conversion *is* the statement: bit
+pattern first, quantity second.
+
+- Costs nothing to implement, and keeps `CharX` maximally apart from the
+  numeric types.
+- But the ritual is not one the language asks for anywhere else, and the
+  `unsafe` asymmetry above stays unexplained.
+
+**C. Make `CharX` an ordinary member of the numeric conversion family** —
+`NatX` and `IntX` both accept it, and `CharX` accepts them back safely
+instead of through `unsafe`.
+
+- The most symmetric table, and the shortest rule to state.
+- Also the loosest: `Char8 n` silently accepting any `Nat8` is exactly
+  what the current `unsafe` requirement is there to slow down.
+
+### What an answer touches
+
+- the construction table in [`value/cons.md`](./value/cons.md) and in
+  [`CHEATSHEET.md`](../CHEATSHEET.md)
+- `value_nat_can` / `value_int_can` in the semantic pass, under A and C
+- [`type/base.md`](./type/base.md) — says "no ordering on `Char`, convert
+  explicitly", without saying to what
+- a test: the accepted conversions are observable; the rejected ones are
+  compile errors and stay outside the suite
+
+### Related
+
+- [`value/binary.md`](./value/binary.md) — ordering is IntX, NatX, FloatX
+- [`type/base.md`](./type/base.md) — the strict split between the classes
+
+---
+
+## 4. Does `and` / `or` evaluate the right operand when the left one decides?
+
+**Question.** Is short-circuit evaluation part of the language? `false and
+f()` and `true or f()` already know their answer from the left operand
+alone — may the right one be skipped, must it be skipped, or is it
+unspecified?
+
+### Where it stands today
+
+The backends disagree, and the program can tell:
+
+```modest
+var calls: Int32 = 0
+
+func mark (v: Bool) -> Bool {
+	calls = calls + 1
+	return v
+}
+
+calls = 0
+let r = mark(false) and mark(true)     // c11: calls = 1    llvm: calls = 2
+```
+
+Each backend inherits the behaviour of what it emits, and neither chose it:
+
+- The C backend emits `mark(false) && mark(true)`, and C's `&&` is
+  short-circuiting by definition — the second call does not happen.
+- The LLVM backend emits the two calls as instructions and then an `and`
+  of their results:
+
+  ```llvm
+  %2 = call %Bool @mark(%Bool 0)
+  %3 = call %Bool @mark(%Bool 1)
+  %4 = and %Bool %2, %3
+  ```
+
+  Both calls happen, always. Short-circuiting in LLVM IR needs branches
+  and a `phi`, which is a shape the backend does not build today.
+
+`docs/lang/value/binary.md` says only that `and` / `or` take Bool operands
+and give a Bool.
+
+### Options
+
+**A. Guarantee short-circuit.** The right operand is evaluated only if the
+left one does not settle the answer — the rule C, Go and Swift all have.
+
+- Makes the guard idiom legal: `p != nil and p.field == 1`, `i < len and
+  arr[i] == x`. Without it, both are a crash waiting for the wrong input,
+  and a language with pointers and no bounds checking needs them.
+- The LLVM backend has to emit a branch and a `phi` for every `and` / `or`
+  whose right operand is not already a value — the actual work in this
+  option.
+
+**B. Guarantee that both operands are evaluated.** The simpler rule to
+state, and the one that makes `and` symmetric with `&`.
+
+- The C backend then has to stop delegating: both operands into
+  temporaries, then `&&`, or plain `&` on two Bools.
+- Costs the guard idiom above, and makes every `and` pay for the right
+  operand even when the left one already decided.
+- Nothing else in the language works this way — `if` does not evaluate the
+  branch it does not take.
+
+**C. Leave it unspecified.** Cheapest, and the same trap as question 2: the
+same program behaves differently under the two backends, and the
+difference only shows when an operand has a side effect — which is exactly
+when it hurts.
+
+### What an answer touches
+
+- [`value/binary.md`](./value/binary.md) — says nothing about evaluation
+  today
+- the LLVM backend, under option A; the C backend, under option B
+- `tests/lang/value/binary/logical.modest` — written to avoid the question
+  entirely, and the place a decision would be pinned down
+
+### Related
+
+- question 2 above — the same shape, for argument evaluation order
+- [`BUGS.md`](../BUGS.md) #16 — backends disagreeing about unstated behaviour

@@ -1,13 +1,13 @@
 // TEST: run
 // BACKENDS: c11, llvm, modest
 // EXPECT-EXIT: 0
-// EXPECT-OUT: passed: fixed const literals
-// EXPECT-OUT: passed: fixed const arithmetic
-// EXPECT-OUT: passed: fixed const rounding
-// EXPECT-OUT: passed: fixed const construction
-// EXPECT-OUT: passed: fixed const fraction
-// EXPECT-OUT: passed: fixed const array
-// EXPECT-OUT: passed: fixed_const
+// EXPECT-OUT: passed: fixed comptime literals
+// EXPECT-OUT: passed: fixed comptime arithmetic
+// EXPECT-OUT: passed: fixed comptime rounding
+// EXPECT-OUT: passed: fixed comptime construction
+// EXPECT-OUT: passed: fixed comptime fraction
+// EXPECT-OUT: passed: fixed comptime array
+// EXPECT-OUT: passed: fixed comptime
 //
 // Constant folding of FixedX, checked at the only place where it is
 // observable without any run-time arithmetic: the storage itself.
@@ -18,10 +18,12 @@
 // one construction that does not rescale), so each check below compares a
 // folded constant against the bit pattern it must have produced.
 //
-// Run-time FixedX arithmetic is a separate matter, and `*` and `/` are still
-// unrescaled under LLVM — see lang/type/fixed.modest and BUGS.md#25.  Nothing
-// here computes at run time: every value is a `const`, and the program only
-// prints comparisons.
+// Nothing here computes at run time: every value is a `const`, and the
+// program only prints comparisons.  The run-time half of the type lives next
+// door, in runtime.modest, which checks the same operations built by the
+// backends instead of folded.  The two stay apart so that a break names its
+// own half — the fold or the codegen — and because the bit-exact checks here
+// need `pragma unsafe`, which run-time code has no reason to ask for.
 
 pragma unsafe
 
@@ -76,7 +78,7 @@ func testLiterals () -> Bool {
 		return false
 	}
 
-	printf("passed: fixed const literals\n")
+	printf("passed: fixed comptime literals\n")
 	return true
 }
 
@@ -128,7 +130,7 @@ func testArithmetic () -> Bool {
 		return false
 	}
 
-	printf("passed: fixed const arithmetic\n")
+	printf("passed: fixed comptime arithmetic\n")
 	return true
 }
 
@@ -159,7 +161,7 @@ func testRounding () -> Bool {
 		return false
 	}
 
-	printf("passed: fixed const rounding\n")
+	printf("passed: fixed comptime rounding\n")
 	return true
 }
 
@@ -200,7 +202,7 @@ func testConstruction () -> Bool {
 		return false
 	}
 
-	printf("passed: fixed const construction\n")
+	printf("passed: fixed comptime construction\n")
 	return true
 }
 
@@ -234,7 +236,7 @@ func testFraction () -> Bool {
 		return false
 	}
 
-	printf("passed: fixed const fraction\n")
+	printf("passed: fixed comptime fraction\n")
 	return true
 }
 
@@ -254,7 +256,7 @@ func testArray () -> Bool {
 		return false
 	}
 
-	printf("passed: fixed const array\n")
+	printf("passed: fixed comptime array\n")
 	return true
 }
 
@@ -269,10 +271,10 @@ func main () -> Int {
 	result = testArray() and result
 
 	if not result {
-		printf("failed: fixed_const\n")
+		printf("failed: fixed comptime\n")
 		return exitFailure
 	}
 
-	printf("passed: fixed_const\n")
+	printf("passed: fixed comptime\n")
 	return exitSuccess
 }

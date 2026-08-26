@@ -1,0 +1,78 @@
+// TEST: run
+// BACKENDS: c11, llvm, modest
+// EXPECT-EXIT: 0
+// EXPECT-OUT: passed: parentheses
+// EXPECTED-FAIL(c11): BUGS.md#31 the C backend drops same-level parentheses
+//
+// Parentheses are part of the expression, not a hint: `a - (b - c)` is not
+// `a - b - c` and the two do not have the same value.  Every check below
+// groups a subexpression against the associativity its operator would
+// otherwise have, and compares the result with the value written out by
+// hand.
+//
+// The C backend re-emits binary expressions as source text and adds
+// parentheses only where the precedence *levels* differ, so a same-level
+// group on the right of a left-associative operator is silently regrouped
+// to the left by the C compiler.  The operands here are run-time values —
+// nothing about this is a folding problem, and the resulting arithmetic is
+// simply wrong.
+
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+
+
+func opaque (n: Int32) -> Int32 {
+	return n
+}
+
+
+func main () -> Int {
+	var a = opaque(1)
+	var b = opaque(2)
+	var c = opaque(3)
+
+	// 1 - (2 - 3) = 2.  Regrouped to the left it is 1 - 2 - 3 = -4.
+	if a - (b - c) != 2 {
+		printf("a - (b - c) = %d, expected 2\n", a - (b - c))
+		return exitFailure
+	}
+
+	// The same shape one level down: 24 / (12 / 2) = 4, not 24 / 12 / 2 = 1.
+	var big = opaque(24)
+	var mid = opaque(12)
+	var two = opaque(2)
+	if big / (mid / two) != 4 {
+		printf("24 / (12 / 2) = %d, expected 4\n", big / (mid / two))
+		return exitFailure
+	}
+
+	// And with `%`, which shares the level of `*` and `/`:
+	// 100 % (7 * 2) = 2, while 100 % 7 * 2 = 8.
+	var hundred = opaque(100)
+	var seven = opaque(7)
+	if hundred % (seven * two) != 2 {
+		printf("100 %% (7 * 2) = %d, expected 2\n", hundred % (seven * two))
+		return exitFailure
+	}
+
+	// Two comparisons of the same level: `t != (a == a)` compares a Bool
+	// with a Bool.  Regrouped as `(t != a) == a` it does not even mean the
+	// same thing about the same types.
+	var t = true
+	if t != (a == a) {
+		printf("t != (a == a) was true, expected false\n")
+		return exitFailure
+	}
+
+	// Subtraction nested twice, where both groupings are visible at once:
+	// (1 - (2 - 3)) - (2 - 3) = 3.
+	if (a - (b - c)) - (b - c) != 3 {
+		printf("(a - (b - c)) - (b - c) = %d, expected 3\n",
+			(a - (b - c)) - (b - c))
+		return exitFailure
+	}
+
+	printf("passed: parentheses\n")
+	return exitSuccess
+}

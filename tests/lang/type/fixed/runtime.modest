@@ -23,6 +23,9 @@
 //
 // It sits in its own file rather than in a test of all base types, so that
 // one experimental type breaking does not mark the rest of them broken too.
+// Its neighbour, comptime.modest, checks the compile-time fold against the raw
+// storage through `unsafe WordX`: that is the only place the scale is visible
+// to the last bit, and it is where rounding is pinned down.
 //
 // Everything is checked through Float64, the one conversion the cheatsheet's
 // construction table grants FixedX.  The values are chosen to be exact in

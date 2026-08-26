@@ -13,7 +13,7 @@
 | Arithmetic | `+` `-` `*` `/` `%` | IntX, NatX, FloatX (`%`: integers only) | operand type |
 | Logical | `and` `or` | Bool | `Bool` |
 | Bitwise | `&` `\|` `^` | WordX | operand type |
-| Shift | `<<` `>>` | left: WordX; right: unsigned integer (NatX, WordX, literal) | left type |
+| Shift | `<<` `>>` | left: WordX; right: NatX or a non-negative integer literal | left type |
 
 ## Semantics
 
@@ -22,7 +22,9 @@
   operation`). Construct to a common type explicitly. Generic literals
   adapt to the other operand: `i + 1` works for any integer `i`.
 - The only exception is shift: the right operand's type may differ from
-  the left's.
+  the left's. It is a count, not a bit pattern — a `WordX` or `IntX`
+  operand, and a negative literal, are all rejected with `expected
+  natural or non-negative integer value`.
 - Equality extends to composites: arrays and records compare element- /
   field-wise, pointers compare addresses (`p == nil`).
 - No ordering on `Char`, `Word`, `Bool`, pointers.

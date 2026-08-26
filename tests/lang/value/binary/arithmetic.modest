@@ -1,0 +1,334 @@
+// TEST: run
+// BACKENDS: c11, llvm, modest
+// EXPECT-EXIT: 0
+// EXPECT-OUT: passed: int arithmetic
+// EXPECT-OUT: passed: truncation
+// EXPECT-OUT: passed: nat arithmetic
+// EXPECT-OUT: passed: widths
+// EXPECT-OUT: passed: float arithmetic
+// EXPECT-OUT: passed: literal operand
+// EXPECT-OUT: passed: associativity
+// EXPECT-OUT: passed: arithmetic
+//
+// `+ - * / %` from docs/lang/value/binary.md: the operators that IntX, NatX
+// and FloatX have and WordX does not.
+//
+// Two things here are worth more than the operators themselves.  One is
+// truncation: `/` on integers rounds toward zero and `%` keeps whatever that
+// leaves, so the sign of a remainder follows the dividend and not the
+// divisor — the rule C has and Python does not, and the one place an
+// arithmetic bug hides in plain sight.  The other is that arithmetic is
+// closed over its operand type: two Int8 give an Int8, and the result is
+// never widened for the convenience of not overflowing.
+//
+// The type rules are stated by what refuses to compile — `Int32 + Int64`,
+// `w + m` on Words — and so cannot appear in a file that has to compile.
+// This one states the other side.
+
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+
+
+func testInt () -> Bool {
+	var a: Int32 = 10
+	var b: Int32 = 3
+
+	if a + b != 13 or a - b != 7 or a * b != 30 {
+		printf("10 + - * 3 = %d/%d/%d, expected 13/7/30\n", a + b, a - b, a * b)
+		return false
+	}
+
+	if a / b != 3 or a % b != 1 {
+		printf("10 / %% 3 = %d/%d, expected 3/1\n", a / b, a % b)
+		return false
+	}
+
+	// Subtraction reaches below zero — Int is the type that may.
+	var small: Int32 = 3
+	var large: Int32 = 10
+	if small - large != -7 {
+		printf("3 - 10 = %d, expected -7\n", small - large)
+		return false
+	}
+
+	// A negative operand multiplies and divides by the usual rules.
+	var neg: Int32 = -4
+	if neg * b != -12 or neg * neg != 16 {
+		printf("-4 * 3 / -4 * -4 = %d/%d, expected -12/16\n", neg * b, neg * neg)
+		return false
+	}
+
+	// Zero and one behave: x * 1, x + 0, x / 1, x % 1.
+	if a * 1 != a or a + 0 != a or a / 1 != a or a % 1 != 0 {
+		printf("identities do not hold for 10\n")
+		return false
+	}
+
+	printf("passed: int arithmetic\n")
+	return true
+}
+
+
+// Integer division truncates toward zero, and `%` is the remainder that
+// truncation leaves — so the remainder takes the dividend's sign, and
+// `(a / b) * b + a % b == a` holds for every combination of signs.
+func testTruncation () -> Bool {
+	var a: Int32 = 10
+	var b: Int32 = 3
+	var negA: Int32 = -10
+	var negB: Int32 = -3
+
+	if a / b != 3 or negA / b != -3 or a / negB != -3 or negA / negB != 3 {
+		printf("±10 / ±3 = %d/%d/%d/%d, expected 3/-3/-3/3\n",
+			a / b, negA / b, a / negB, negA / negB)
+		return false
+	}
+
+	// The remainder follows the dividend, never the divisor.
+	if a % b != 1 or negA % b != -1 or a % negB != 1 or negA % negB != -1 {
+		printf("±10 %% ±3 = %d/%d/%d/%d, expected 1/-1/1/-1\n",
+			a % b, negA % b, a % negB, negA % negB)
+		return false
+	}
+
+	// The identity that ties the two together.
+	if (negA / b) * b + negA % b != negA {
+		printf("(-10 / 3) * 3 + -10 %% 3 = %d, expected -10\n",
+			(negA / b) * b + negA % b)
+		return false
+	}
+
+	// Truncation is toward zero, so a quotient smaller than one is zero and
+	// the whole value survives in the remainder.
+	var one: Int32 = 1
+	var four: Int32 = 4
+	if one / four != 0 or one % four != 1 {
+		printf("1 / %% 4 = %d/%d, expected 0/1\n", one / four, one % four)
+		return false
+	}
+
+	printf("passed: truncation\n")
+	return true
+}
+
+
+// Nat is the same arithmetic without the sign — and without the sign
+// question in `%`, since neither operand can be negative.
+func testNat () -> Bool {
+	var a: Nat32 = 10
+	var b: Nat32 = 4
+
+	if a + b != 14 or a - b != 6 or a * b != 40 {
+		printf("Nat32 10 + - * 4 = %u/%u/%u, expected 14/6/40\n",
+			a + b, a - b, a * b)
+		return false
+	}
+
+	if a / b != 2 or a % b != 2 {
+		printf("Nat32 10 / %% 4 = %u/%u, expected 2/2\n", a / b, a % b)
+		return false
+	}
+
+	// A value above the signed range of the same width is ordinary here:
+	// 3_000_000_000 does not fit Int32 and fits Nat32 with room to spare.
+	var big: Nat32 = 3_000_000_000
+	var half: Nat32 = 2
+	if big / half != 1_500_000_000 {
+		printf("3000000000 / 2 = %u, expected 1500000000\n", big / half)
+		return false
+	}
+
+	printf("passed: nat arithmetic\n")
+	return true
+}
+
+
+// Arithmetic stays inside the operand type: an Int8 sum is an Int8, and a
+// Int64 product is an Int64 — no operand is widened on the way in, and no
+// result is widened on the way out.
+func testWidths () -> Bool {
+	var a8: Int8 = 100
+	var b8: Int8 = 27
+	if a8 + b8 != 127 or a8 - b8 != 73 {
+		printf("Int8 100 ± 27 = %d/%d, expected 127/73\n",
+			Int32(a8 + b8), Int32(a8 - b8))
+		return false
+	}
+
+	var a16: Int16 = 30000
+	var b16: Int16 = 767
+	if a16 + b16 != 30767 or a16 / b16 != 39 {
+		printf("Int16 30000 + / 767 = %d/%d, expected 30767/39\n",
+			Int32(a16 + b16), Int32(a16 / b16))
+		return false
+	}
+
+	// Int64 carries what Int32 cannot: the product below needs 42 bits.
+	var a64: Int64 = 3_000_000_000
+	var b64: Int64 = 1_000
+	if a64 * b64 != 3_000_000_000_000 {
+		printf("Int64 3e9 * 1000 = %lld, expected 3000000000000\n", a64 * b64)
+		return false
+	}
+
+	if a64 / b64 != 3_000_000 or a64 % b64 != 0 {
+		printf("Int64 3e9 / %% 1000 = %lld/%lld, expected 3000000/0\n",
+			a64 / b64, a64 % b64)
+		return false
+	}
+
+	var n64: Nat64 = 10_000_000_000
+	if n64 / 4 != 2_500_000_000 {
+		printf("Nat64 1e10 / 4 = %llu, expected 2500000000\n", n64 / 4)
+		return false
+	}
+
+	printf("passed: widths\n")
+	return true
+}
+
+
+// Float divides without truncating, and it is the one arithmetic type
+// without `%`.  The values are halves and quarters, exact in binary, so an
+// equality check on the result is honest.
+func testFloat () -> Bool {
+	var a: Float64 = 10.0
+	var b: Float64 = 4.0
+
+	if a + b != 14.0 or a - b != 6.0 or a * b != 40.0 {
+		printf("10.0 + - * 4.0 = %f/%f/%f, expected 14/6/40\n",
+			a + b, a - b, a * b)
+		return false
+	}
+
+	// The point of the type: the quotient keeps its fraction.
+	if a / b != 2.5 {
+		printf("10.0 / 4.0 = %f, expected 2.5\n", a / b)
+		return false
+	}
+
+	var neg: Float64 = -1.5
+	if neg * b != -6.0 or neg + b != 2.5 {
+		printf("-1.5 * + 4.0 = %f/%f, expected -6.0/2.5\n", neg * b, neg + b)
+		return false
+	}
+
+	// Float32 is the same arithmetic at a narrower width.
+	var f32: Float32 = 1.5
+	var g32: Float32 = 0.5
+	if f32 + g32 != 2.0 or f32 * g32 != 0.75 {
+		printf("Float32 1.5 + * 0.5 = %f/%f, expected 2.0/0.75\n",
+			Float64(f32 + g32), Float64(f32 * g32))
+		return false
+	}
+
+	printf("passed: float arithmetic\n")
+	return true
+}
+
+
+// A literal has no type of its own: it takes the other operand's, which is
+// the only way the two sides of an operation are ever spelled differently.
+// This is what lets one expression serve every width.
+func testLiteralOperand () -> Bool {
+	var i8: Int8 = 100
+	if i8 + 1 != 101 or i8 / 2 != 50 or i8 % 7 != 2 {
+		printf("Int8 100 + 1 / 2 %% 7 = %d/%d/%d, expected 101/50/2\n",
+			Int32(i8 + 1), Int32(i8 / 2), Int32(i8 % 7))
+		return false
+	}
+
+	var n16: Nat16 = 1000
+	if n16 * 2 != 2000 or n16 - 1 != 999 {
+		printf("Nat16 1000 * 2 - 1 = %u/%u, expected 2000/999\n",
+			Nat32(n16 * 2), Nat32(n16 - 1))
+		return false
+	}
+
+	var i64: Int64 = 5_000_000_000
+	if i64 + 1 != 5_000_000_001 {
+		printf("Int64 5e9 + 1 = %lld, expected 5000000001\n", i64 + 1)
+		return false
+	}
+
+	// A whole literal reaches a Float operand as a Float, so `f * 2` needs
+	// no `2.0` and no construction.
+	var f: Float64 = 1.5
+	if f * 2 != 3.0 or f + 1 != 2.5 or f / 2 != 0.75 {
+		printf("Float64 1.5 * 2 + 1 / 2 = %f/%f/%f, expected 3.0/2.5/0.75\n",
+			f * 2, f + 1, f / 2)
+		return false
+	}
+
+	// The digit separator is part of the literal, not of the value.
+	var n: Int32 = 1_000_000
+	if n / 1_000 != 1000 {
+		printf("1_000_000 / 1_000 = %d, expected 1000\n", n / 1_000)
+		return false
+	}
+
+	printf("passed: literal operand\n")
+	return true
+}
+
+
+// `+ - * / %` are left-associative: 10 - 3 - 2 is (10 - 3) - 2.  Written
+// without parentheses, the two groupings give different answers, so this is
+// a real check and not a restatement.
+func testAssociativity () -> Bool {
+	var a: Int32 = 10
+	var b: Int32 = 3
+	var c: Int32 = 2
+
+	if a - b - c != 5 {
+		printf("10 - 3 - 2 = %d, expected 5 (not 9)\n", a - b - c)
+		return false
+	}
+
+	// 100 / 5 / 2 is 10, not 40.
+	var hundred: Int32 = 100
+	var five: Int32 = 5
+	if hundred / five / c != 10 {
+		printf("100 / 5 / 2 = %d, expected 10 (not 40)\n", hundred / five / c)
+		return false
+	}
+
+	// `%` sits on the same level as `*` and `/`, and groups with them left
+	// to right: 100 % 7 * 2 is (100 % 7) * 2 = 4, not 100 % 14 = 2.
+	var seven: Int32 = 7
+	if hundred % seven * c != 4 {
+		printf("100 %% 7 * 2 = %d, expected 4 (not 2)\n", hundred % seven * c)
+		return false
+	}
+
+	// And `*` before `+`, in both orders of writing.
+	if a + b * c != 16 or b * c + a != 16 {
+		printf("10 + 3 * 2 = %d, 3 * 2 + 10 = %d, expected 16/16\n",
+			a + b * c, b * c + a)
+		return false
+	}
+
+	printf("passed: associativity\n")
+	return true
+}
+
+
+func main () -> Int {
+	var result = true
+	result = testInt() and result
+	result = testTruncation() and result
+	result = testNat() and result
+	result = testWidths() and result
+	result = testFloat() and result
+	result = testLiteralOperand() and result
+	result = testAssociativity() and result
+
+	if not result {
+		printf("failed: arithmetic\n")
+		return exitFailure
+	}
+
+	printf("passed: arithmetic\n")
+	return exitSuccess
+}

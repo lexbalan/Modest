@@ -42,6 +42,44 @@ func main () -> Int {
 	v1 = (v1 + 1) / 2
 
 	printf("v1 = %lf\n", Float64 v1)
+	v1 = v1 / 2
+	printf("v1 = %lf\n", Float64 v1)
+	v1 = v1 / 2
+	printf("v1 = %lf\n", Float64 v1)
+	v1 = v1 / 2
+	printf("v1 = %lf\n", Float64 v1)
+	v1 = v1 / 2
+	printf("v1 = %lf\n", Float64 v1)
+	v1 = v1 / 2
+	printf("v1 = %lf\n", Float64 v1)
+	v1 = v1 / 2
+	printf("v1 = %lf\n", Float64 v1)
+	v1 = v1 / 2
+	printf("v1 = %lf\n", Float64 v1)
+	v1 = v1 / 2
+	printf("v1 = %lf\n", Float64 v1)
+	v1 = v1 / 2
+	printf("v1 = %lf\n", Float64 v1)
+	v1 = v1 / 2
+	printf("v1 = %lf\n", Float64 v1)
+	v1 = v1 / 2
+	printf("v1 = %lf\n", Float64 v1)
+	v1 = v1 / 2
+	printf("v1 = %lf\n", Float64 v1)
+	v1 = v1 / 2
+	printf("v1 = %lf\n", Float64 v1)
+	v1 = v1 / 2
+	printf("v1 = %lf\n", Float64 v1)
+	v1 = v1 / 2
+	printf("v1 = %lf\n", Float64 v1)
+	v1 = v1 / 2
+	printf("v1 = %lf\n", Float64 v1)
+	v1 = v1 / 2
+	printf("v1 = %lf\n", Float64 v1)
+	v1 = v1 / 2
+	printf("v1 = %lf\n", Float64 v1)
+	v1 = v1 / 2
+	printf("v1 = %lf\n", Float64 v1)
 
 	return 0
 }

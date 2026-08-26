@@ -41,7 +41,7 @@ Binding examples (lower level = binds tighter):
 ```modest
 w & mask == 0            // (w & mask) == 0   — bitwise tighter than ==
 a == 1 and b == 2        // (a == 1) and (b == 2)
-x + 1 < y << 2           // (x + 1) < (y << 2)
+w << n + 1               // w << (n + 1)     — arithmetic tighter than shift
 ```
 
 ## Value categories

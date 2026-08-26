@@ -1,0 +1,203 @@
+// TEST: run
+// BACKENDS: c11, llvm, modest
+// EXPECT-EXIT: 0
+// EXPECT-OUT: passed: left
+// EXPECT-OUT: passed: right
+// EXPECT-OUT: passed: count types
+// EXPECT-OUT: passed: widths
+// EXPECT-OUT: passed: shift
+//
+// `<<` and `>>` — the one binary operation whose two operands are not
+// required to have the same type.  The left one is the WordX being shifted
+// and gives the result its type; the right one is a *count*, and a count is
+// a NatX of any width or a non-negative integer literal.  A WordX count, an
+// IntX count and a negative literal are all rejected with `expected natural
+// or non-negative integer value`, which is the rule this file cannot state
+// directly — it states what is accepted instead.
+//
+// Word has no sign, so `>>` fills with zeroes: there is no arithmetic shift
+// here, and the top bit does not spread.  Bits shifted past either end are
+// gone — nothing rotates.
+
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+
+
+func testLeft () -> Bool {
+	var w: Word32 = 1
+
+	if w << 0 != 1 or w << 1 != 2 or w << 4 != 0x10 or w << 31 != 0x80000000 {
+		printf("1 << 0/1/4/31 = 0x%x/0x%x/0x%x/0x%x\n",
+			w << 0, w << 1, w << 4, w << 31)
+		return false
+	}
+
+	// A shift by n multiplies by 2^n while the bits still fit.
+	var v: Word32 = 0x25
+	if v << 8 != 0x2500 or v << 16 != 0x250000 {
+		printf("0x25 << 8/16 = 0x%x/0x%x, expected 0x2500/0x250000\n",
+			v << 8, v << 16)
+		return false
+	}
+
+	// Bits that leave the top are dropped, not carried and not rotated.
+	var top: Word32 = 0x80000000
+	if top << 1 != 0 {
+		printf("0x80000000 << 1 = 0x%x, expected 0\n", top << 1)
+		return false
+	}
+
+	// A left shift that pushes bits out of a narrow Word is where the two
+	// backends part company — see narrow_width.modest and BUGS.md #30.
+
+	printf("passed: left\n")
+	return true
+}
+
+
+func testRight () -> Bool {
+	var w: Word32 = 0xF0
+
+	if w >> 0 != 0xF0 or w >> 4 != 0x0F or w >> 8 != 0 {
+		printf("0xF0 >> 0/4/8 = 0x%x/0x%x/0x%x\n", w >> 0, w >> 4, w >> 8)
+		return false
+	}
+
+	// Zero-fill: the top bit of a Word is a bit like any other, and a
+	// right shift never sign-extends it.
+	var top: Word32 = 0x80000000
+	if top >> 31 != 1 or top >> 4 != 0x08000000 {
+		printf("0x80000000 >> 31/4 = 0x%x/0x%x, expected 0x1/0x08000000\n",
+			top >> 31, top >> 4)
+		return false
+	}
+
+	var allOnes: Word8 = 0xFF
+	if allOnes >> 4 != 0x0F or allOnes >> 7 != 0x01 {
+		printf("0xFF >> 4/7 = 0x%02x/0x%02x, expected 0x0F/0x01\n",
+			Word32(allOnes >> 4), Word32(allOnes >> 7))
+		return false
+	}
+
+	// Bits that leave the bottom are dropped: shifting right then left does
+	// not bring them back.
+	var odd: Word8 = 0x0B
+	if odd >> 1 << 1 != 0x0A {
+		printf("0x0B >> 1 << 1 = 0x%02x, expected 0x0A\n", Word32(odd >> 1 << 1))
+		return false
+	}
+
+	printf("passed: right\n")
+	return true
+}
+
+
+// The count is a value of its own type, and the result never takes it: a
+// Word8 shifted by a Nat64 is still a Word8.
+func testCountTypes () -> Bool {
+	var w: Word32 = 1
+
+	var n8: Nat8 = 4
+	var n16: Nat16 = 4
+	var n32: Nat32 = 4
+	var n64: Nat64 = 4
+
+	if w << n8 != 0x10 or w << n16 != 0x10 or w << n32 != 0x10 or w << n64 != 0x10 {
+		printf("the same count in Nat8/16/32/64 gives 0x%x/0x%x/0x%x/0x%x\n",
+			w << n8, w << n16, w << n32, w << n64)
+		return false
+	}
+
+	// A literal count is the other accepted spelling, and agrees.
+	if w << n8 != w << 4 {
+		printf("a Nat8 count and a literal count disagree\n")
+		return false
+	}
+
+	// A narrow left operand with a wide count keeps its own width: 0x01
+	// shifted by 7 is 0x80 in a Word8, not in a Word64.
+	var b: Word8 = 0x01
+	var seven: Nat64 = 7
+	if b << seven != 0x80 {
+		printf("Word8 1 << Nat64 7 = 0x%02x, expected 0x80\n", Word32(b << seven))
+		return false
+	}
+
+	// A count computed at run time is a count like any other.
+	var base: Nat32 = 2
+	if w << (base + 2) != 0x10 {
+		printf("1 << (2 + 2) = 0x%x, expected 0x10\n", w << (base + 2))
+		return false
+	}
+
+	printf("passed: count types\n")
+	return true
+}
+
+
+// Every width shifts within itself: what leaves the top of a Word8 is gone
+// even if the same pattern would still fit in a Word16.
+func testWidths () -> Bool {
+	// Shifts that keep every bit inside the width behave at every width;
+	// the ones that push a bit out of a Word8 or a Word16 are in
+	// narrow_width.modest, where the backends disagree.
+	var b: Word8 = 0x41
+	if b << 1 != 0x82 or b >> 6 != 0x01 {
+		printf("Word8 0x41 << 1 >> 6 = 0x%02x/0x%02x, expected 0x82/0x01\n",
+			Word32(b << 1), Word32(b >> 6))
+		return false
+	}
+
+	var h: Word16 = 0x4001
+	if h << 1 != 0x8002 or h >> 15 != 0x0000 {
+		printf("Word16 0x4001 << 1 >> 15 = 0x%04x/0x%04x, expected 0x8002/0x0000\n",
+			Word32(h << 1), Word32(h >> 15))
+		return false
+	}
+
+	// Word64: a shift by 32 crosses the boundary where a 32-bit
+	// intermediate would lose everything.
+	var q: Word64 = 0xDEADBEEF
+	if q << 32 != 0xDEADBEEF00000000 {
+		printf("Word64 0xDEADBEEF << 32 = 0x%016llx\n", q << 32)
+		return false
+	}
+
+	var big: Word64 = 0xDEADBEEFCAFEBABE
+	if big >> 32 != 0xDEADBEEF {
+		printf("Word64 >> 32 = 0x%016llx, expected 0xDEADBEEF\n", big >> 32)
+		return false
+	}
+
+	if big >> 63 != 1 {
+		printf("Word64 0xDEAD... >> 63 = 0x%016llx, expected 1\n", big >> 63)
+		return false
+	}
+
+	// The two halves recovered by shifting, and put back together.
+	if (big >> 32) << 32 | (big << 32) >> 32 != big {
+		printf("splitting a Word64 by shifts does not put it back together\n")
+		return false
+	}
+
+	printf("passed: widths\n")
+	return true
+}
+
+
+func main () -> Int {
+	var result = true
+	result = testLeft() and result
+	result = testRight() and result
+	result = testCountTypes() and result
+	result = testWidths() and result
+
+	if not result {
+		printf("failed: shift\n")
+		return exitFailure
+	}
+
+	printf("passed: shift\n")
+	return exitSuccess
+}

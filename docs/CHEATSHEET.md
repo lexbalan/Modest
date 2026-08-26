@@ -305,7 +305,7 @@ a + b, a - b, a * b, a / b, a % b
 ### Comparison
 ```modest
 a == b, a != b                     // any two values of the same type
-a < b, a > b, a <= b, a >= b       // ordering: IntX, NatX, FloatX, CharX only
+a < b, a > b, a <= b, a >= b       // ordering: IntX, NatX, FloatX only
 ```
 
 > `==` and `!=` are defined for **every** type, as long as both sides have the
@@ -317,9 +317,11 @@ a < b, a > b, a <= b, a >= b       // ordering: IntX, NatX, FloatX, CharX only
 > if p == nil { ... }            // pointer against nil
 > ```
 >
-> Ordering is the narrow one: `<` `>` `<=` `>=` need a type that has a natural
-> order. A record, array or pointer operand is rejected with
-> `unsuitable value type '...' for 'lt' operation`, and so is `Word*`.
+> Ordering is the narrow one: `<` `>` `<=` `>=` need a type that carries a
+> number. A record, array or pointer operand is rejected with
+> `unsuitable value type '...' for 'lt' operation`, and so are `Word*` and
+> `Char*` — a bit pattern and a code unit are not quantities. Order them
+> through an explicit `NatX`: `Nat32 w < Nat32 m`.
 
 ### Logical
 ```modest

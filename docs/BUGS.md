@@ -389,7 +389,7 @@ out of `FixedX` apply the scale. A `FixedX` value stores the number multiplied
 by `2^fraction`; the `asset` of an HLIR value with a `FixedX` type is that raw
 storage, and `src/value/fixed.py` is the only place the scale is applied or
 removed. Rounding is to the nearest representable step, a half step going away
-from zero. Covered by `tests/lang/type/fixed_const.modest`.
+from zero. Covered by `tests/lang/type/fixed/comptime.modest`.
 
 Run-time arithmetic and construction apply and remove the scale too, in both
 backends: `*` and `/` correct it through the `__fixedX_mul` / `__fixedX_div`
@@ -450,6 +450,231 @@ What is left:
   does the same — but `Fixed64` values are large by construction, so it
   shows up there constantly.
 
-Coverage: `tests/lang/type/fixed.modest` (run-time) and
-`tests/lang/type/fixed_const.modest` (compile-time); both pass under c11 and
+Coverage: `tests/lang/type/fixed/runtime.modest` (run-time) and
+`tests/lang/type/fixed/comptime.modest` (compile-time); both pass under c11 and
 llvm.
+
+## 26. Record equality compares the padding between fields
+
+```modest
+type Sample = {
+	tag: Word8       // 1 byte, then 3 bytes of padding
+	value: Int32
+}
+
+var a: Sample = {tag = 0x01, value = 7}
+var b: Sample = {tag = 0x01, value = 7}
+
+a == b        // llvm: false      c11: true
+```
+
+- `docs/lang/value/binary.md` says records compare field-wise. Both backends
+  instead compare the object's raw bytes over `sizeof`, which includes the
+  padding that belongs to no field: `__builtin_memcmp` in C
+  (`cvalue_memcmp`, `src/backend/c11.py:1373`) and a hand-written `memeq`
+  loop in LLVM (`llvm_memcmp`, `src/backend/llvm.py:814`).
+- Only the LLVM backend is visibly wrong today, and the C backend is right
+  by luck rather than by construction: it emits a compound literal
+  (`(struct sample){.tag = 0x01, .value = 7}`), which clang zero-fills, so
+  both objects' padding agrees. The LLVM backend emits an `alloca` and
+  stores each field into it, leaving the three bytes between them as
+  whatever the stack held — two identical values then differ.
+- Arrays are unaffected unless their element type is a padded record: the
+  elements of `[8]Int32` are contiguous, with nothing between them.
+- The same comparison is what `!=` uses, so a padded record is unequal to
+  itself in both directions.
+- Fix: compare aggregates member-wise — field by field for a record,
+  element by element for an array, recursing into both — and keep the
+  byte-wise path only for types that provably have no padding. The
+  alternative, zeroing every record on creation, makes the comparison
+  correct by making every write more expensive, and still leaves a record
+  reached through a pointer from elsewhere.
+- Coverage: `tests/lang/value/binary/record_padding.modest`, marked
+  `EXPECTED-FAIL(llvm)`. It passes under c11 on purpose — if that backend
+  ever stops emitting a compound literal, the test reports it.
+
+## 27. A prefix operator cannot be applied twice
+
+```modest
+var w: Word16 = 0xA55A
+let r = ~~w        // error: unexpected token1 '~'
+let n = - -a       // error: unexpected token1 '-'
+let b = not not t  // error: undefined value 'not'
+let s = &*p        // error: unexpected token1 '*'
+```
+
+- `docs/EBNF.txt:118` states the rule as `expr_10 ::= prefix_op* expr_11` —
+  any number of prefix operators. The parser accepts one.
+- Cause is one line per operator in `expr_value_10`
+  (`src/parser.py:920`): `*` recurses into `expr_value_10` and therefore
+  chains (`**pp` and `*&a` both compile), while `&`, `not`, `~`, `+` and
+  `-` each call `expr_value_11` — the postfix level — so nothing but a
+  primary may follow them.
+- Parenthesising works: `~(~w)`, `-(-a)`, `&(*p)`. So this costs
+  readability rather than expressiveness, which is why it has gone
+  unnoticed — `~~w` is rare, `not not x` is a Bool round-trip nobody
+  writes, and `- -a` is `a`.
+- The `not not t` case is worth reading twice: the second `not` is taken
+  for an identifier, so the diagnostic is `undefined value 'not'` and
+  points at a name the language reserves.
+- Fix: call `self.expr_value_10()` instead of `self.expr_value_11()` in the
+  five branches. Precedence is unaffected — the level is the same one.
+- No test covers repeated prefix operators; `tests/lang/value/unary.modest`
+  does not exist yet.
+
+## 28. Bitwise operators reject a pair of literal operands
+
+```modest
+const flags: Word8 = 0x0F | 0x30      // error: unsuitable value type
+                                      // 'Integer(8)' for 'bitwise-or' operation
+var s: Word8 = 0xA5
+let r = s ^ 0x0F ^ 0x30               // same error
+```
+
+- A literal has no type of its own and takes the other operand's, so
+  `s | 0x0F` is fine. When *both* operands are literals there is nothing to
+  take a type from, and the generic `Integer` that results is rejected by
+  `&`, `|` and `^` — which accept `WordX` only.
+- Combining two flag constants is the ordinary way to write a mask, and it
+  does not compile at all: neither `const both: Word8 = 0x0F | 0x30` nor
+  the untyped `const both = 0x0F | 0x30`.
+- The second line above is the same defect reached through associativity.
+  `&`, `^`, `|` group to the **right** (`docs/lang/value/README.md`), so
+  `s ^ 0x0F ^ 0x30` is `s ^ (0x0F ^ 0x30)` — a literal pair. Written
+  left-grouped by hand, `(s ^ 0x0F) ^ 0x30` compiles. The cheatsheet's note
+  that right grouping "makes no difference to the result" holds for values
+  and not for literals, which is how this stayed hidden.
+- Arithmetic does not have the problem: `1 + 2 + 3` folds, because `+`
+  accepts a generic `Integer`.
+- Fix: let `&`, `|` and `^` accept two `Integer` operands and fold them
+  into an `Integer`, the way `+` already does — the result then adapts to
+  whatever it meets, exactly like a single literal. Making the three
+  operators left-associative would hide the chained case, but not
+  `const both = 0x0F | 0x30`.
+- Coverage: `tests/lang/value/binary/bitwise.modest` works around it by
+  keeping one operand a variable.
+
+## 29. A value identifier that starts with a capital is defined, then unusable
+
+```modest
+var Xx: Int32 = 1        // accepted
+var y = Xx + 1           // error: undefined type
+```
+
+- `docs/lang/identifier.md` states the rule: the case of the first letter
+  decides the class lexically, uppercase names a type, and `var Xx: Int32`
+  is "a syntax error". The definition is accepted instead — for `var`,
+  `const` and `func` alike (`func Foo () -> Int32` compiles).
+- Every use then fails, because in a value position the capitalized name
+  parses as a type: `Xx + 1` gives `undefined type`, `s ^ M1 ^ M2` gives
+  `unexpected token1 '^'`, and a bare `let r = M1` gives `unexpected
+  token1 'newline'`. None of them names the actual mistake.
+- The cost is a definition that looks fine and a diagnostic that points at
+  the use site with the wrong word. `const MASK: Word8 = 0x0F` is the
+  spelling a C programmer reaches for first, and nothing says why it
+  cannot work.
+- Fix: reject the capitalized name where it is defined, with the rule in
+  the message — the check belongs next to the identifier class the lexer
+  already computes.
+
+## 30. C backend does narrow `Word` operations at `int` width
+
+```modest
+var b: Word8 = 0x81
+b << 1        // c11: 0x102     llvm: 0x02
+
+var f: Word8 = 0xF0
+~f            // c11: 0xFFFFFF0F llvm: 0x0F
+```
+
+- `docs/lang/value/binary.md` gives the result of a bitwise or shift
+  operation the operand's own type, and `docs/lang/value/unary.md` does the
+  same for `~`. A `Word8` result cannot hold 0x102.
+- The C backend emits the expression as C and lets C's integer promotions
+  apply: `uint8_t` becomes `int`, the operation happens at 32 bits, and the
+  bits that left the type are still there. The LLVM backend does the
+  operation at `i8` and truncates by construction, so the two disagree.
+- Affects `<<` and `~`/`not` on `Word8` and `Word16` — every operation that
+  can produce a bit outside the operand width. `&`, `|`, `^` and `>>`
+  cannot, and agree.
+- Hidden by assignment: `var r: Word8 = b << 1` is 0x02 under both
+  backends, because C truncates on the store. It shows where the
+  expression is used directly — in a comparison, as a call argument, as an
+  operand of a wider construction.
+- The same promotion applies to `Int8`/`Int16` arithmetic, where the result
+  is a signed overflow rather than an extra bit: `Int8 100 * 2` is 200 in C
+  and -56 in LLVM IR. What Modest wants there is a separate question — the
+  language has not said whether signed overflow wraps — so this entry
+  covers the `Word` case, where wrapping is the whole meaning of the type.
+- Fix: cast the result of a narrow `Word` operation back to its own type in
+  `cvalue_binary` / the unary path — `(uint8_t)(b << 1)` — or hoist it into
+  a temporary of the operand type.
+- Coverage: `tests/lang/value/binary/narrow_width.modest`, marked
+  `EXPECTED-FAIL(c11)`.
+
+## 31. C backend drops parentheses, changing what the expression means
+
+```modest
+var a = opaque(1)
+var b = opaque(2)
+var c = opaque(3)
+
+a - (b - c)      // c11: -4      llvm: 2
+```
+
+```c
+printf("%d\n", a - b - c);        // the parentheses are gone
+```
+
+- Not a folding problem: the operands are run-time values. `do_cvalue_bin`
+  (`src/backend/c11.py`) re-emits `left op right` as source text — see
+  BUGS.md #10 for the other half of that decision — and adds parentheses
+  only when the two operators sit at *different* precedence levels. A
+  same-level subexpression on the right of a left-associative operator
+  loses its grouping, and C regroups it to the left.
+- `a - (b - c)` becomes `a - b - c`, `a / (b / c)` the same way. So does a
+  comparison against a comparison: `t != (a == a)` is emitted as
+  `t != a == a`, which C reads as `(t != a) == a`.
+- Different-level groupings are emitted correctly — `(a + b) * c`,
+  `(w & m) == 0`, `(t or f) and f` all keep their parentheses — which is
+  why this survived: the classic C-precedence traps are the ones handled.
+- Silent and value-changing, on ordinary arithmetic over variables. This is
+  the most dangerous shape a backend bug can have.
+- The LLVM backend is unaffected: it emits one instruction per operation
+  from the tree, so grouping cannot be lost. The `modest` backend re-emits
+  source text and has the same defect (`src/backend/modest.py`), where it
+  matters less — see the note on that backend in BUGS.md #10.
+- Fix: parenthesise from the tree rather than from the precedence table —
+  wrap a binary operand whenever it is itself a binary operation of the
+  same level, or simply wrap every non-atomic operand and let the C
+  compiler's own reader deal with the noise.
+- Coverage: `tests/lang/value/binary/parens.modest`, marked
+  `EXPECTED-FAIL(c11)`.
+
+## 32. Compile-time `%` uses floored remainder, run time uses truncated
+
+```modest
+const negTen: Int32 = -10
+const three: Int32 = 3
+
+negTen % three     // folded: 2, computed at run time: -1
+```
+
+- `docs/lang/value/binary.md`: integer division truncates and `%` is the
+  remainder that truncation leaves, so `-10 % 3` is `-1`. That is what both
+  backends compute at run time, and what C and LLVM IR both do.
+- The fold does not agree. The table in `do_bin_immediate`
+  (`src/semantic.py:842`) maps the operator onto Python's `%`, which is
+  *floored*: `-10 % 3` is `2` in Python and `10 % -3` is `-2`. Only the
+  signs differ from the run-time answer — with both operands positive the
+  two definitions coincide, which is why nothing noticed.
+- Visible under llvm, where the folded value is what gets emitted. Under
+  c11 the same expression comes out right by accident: that backend
+  re-emits the operands as C source text and lets C recompute them
+  (BUGS.md #10), and C truncates.
+- `/` does not have the problem: the fold divides and the result is
+  truncated toward zero before it is used.
+- Fix: fold `%` as `a - (a // b) * b` with truncating division — or
+  `math.fmod` semantics: `abs(a) % abs(b)` carrying the sign of `a`.
+- Coverage: `tests/lang/value/binary/fold_remainder.modest`, marked
+  `EXPECTED-FAIL(llvm)`.

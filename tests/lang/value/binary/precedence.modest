@@ -1,0 +1,278 @@
+// TEST: run
+// BACKENDS: c11, llvm, modest
+// EXPECT-EXIT: 0
+// EXPECT-OUT: passed: arithmetic levels
+// EXPECT-OUT: passed: bitwise against equality
+// EXPECT-OUT: passed: bitwise levels
+// EXPECT-OUT: passed: shift levels
+// EXPECT-OUT: passed: logical levels
+// EXPECT-OUT: passed: unary and construction
+// EXPECT-OUT: passed: precedence
+//
+// The ladder from docs/lang/value/README.md, checked from the loose end
+// down: or, and, ==/!=, |, ^, &, ordering, shifts, + -, * / %, then
+// construction, then the unary operators, then the postfix ones.
+//
+// Every check here is written without the parentheses it is about, and the
+// expected value is one the other grouping would not produce — otherwise
+// the check would pass under any precedence at all and prove nothing.
+//
+// Two levels are not where a C habit puts them.  `&`, `^` and `|` bind
+// *tighter* than `==`, so `w & mask == 0` needs no parentheses and means
+// what it looks like; in C the same line is `w & (mask == 0)`.  And the
+// three bitwise operators group to the right rather than to the left, which
+// changes no result — but does decide which subexpression the type checker
+// sees first, and with two literals there it stops compiling (BUGS.md #28).
+
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+
+
+func testArithmeticLevels () -> Bool {
+	var a: Int32 = 2
+	var b: Int32 = 3
+	var c: Int32 = 4
+
+	// `*` `/` `%` before `+` `-`.
+	if a + b * c != 14 or b * c + a != 14 {
+		printf("2 + 3 * 4 = %d, 3 * 4 + 2 = %d, expected 14/14\n",
+			a + b * c, b * c + a)
+		return false
+	}
+
+	var twelve: Int32 = 12
+	if twelve - twelve / c != 9 or twelve % b + c != 4 {
+		printf("12 - 12 / 4 = %d, 12 %% 3 + 4 = %d, expected 9/4\n",
+			twelve - twelve / c, twelve % b + c)
+		return false
+	}
+
+	// Arithmetic before ordering, and ordering before equality-as-a-value.
+	if not (a + b > c) or a * b < c {
+		printf("2 + 3 > 4 or 2 * 3 < 4 is wrong\n")
+		return false
+	}
+
+	printf("passed: arithmetic levels\n")
+	return true
+}
+
+
+// The level that differs from C: `&`, `^` and `|` are tighter than `==`.
+func testBitwiseAgainstEquality () -> Bool {
+	var w: Word8 = 0x0F
+	var mask: Word8 = 0xF0
+
+	// (w & mask) == 0 — true.  As C would read it, w & (mask == 0), the
+	// operand types alone would not even typecheck.
+	if not (w & mask == 0) {
+		printf("`w & mask == 0` did not group as (w & mask) == 0\n")
+		return false
+	}
+
+	var overlapping: Word8 = 0x03
+	if w & overlapping == 0 {
+		printf("0x0F & 0x03 was seen as zero\n")
+		return false
+	}
+
+	// The same for `|` and `^`, where the grouping is again visible in the
+	// answer: (w | mask) == 0xFF, not w | (mask == 0xFF).
+	if not (w | mask == 0xFF) or not (w ^ mask == 0xFF) {
+		printf("`|` and `^` did not group tighter than `==`\n")
+		return false
+	}
+
+	// And it holds through `!=` as well as `==`.
+	if not (w & mask != 0xFF) {
+		printf("`w & mask != 0xFF` did not group as (w & mask) != 0xFF\n")
+		return false
+	}
+
+	printf("passed: bitwise against equality\n")
+	return true
+}
+
+
+// Among themselves: `&` tighter than `^` tighter than `|`.
+func testBitwiseLevels () -> Bool {
+	var a: Word8 = 0x01
+	var b: Word8 = 0x03
+	var c: Word8 = 0x01
+
+	// a | b ^ b & c  is  a | (b ^ (b & c)) = 0x01 | (0x03 ^ 0x01) = 0x03.
+	// Left to right it would be ((a | b) ^ b) & c = 0x01 — a different
+	// answer, which is what makes this a check.
+	if a | b ^ b & c != 0x03 {
+		printf("0x01 | 0x03 ^ 0x03 & 0x01 = 0x%02x, expected 0x03\n",
+			Word32(a | b ^ b & c))
+		return false
+	}
+
+	// `&` before `|`: a | b & c is a | (b & c) = 0x01, not (a | b) & c.
+	var d: Word8 = 0x02
+	if d | b & c != 0x03 {
+		printf("0x02 | 0x03 & 0x01 = 0x%02x, expected 0x03\n", Word32(d | b & c))
+		return false
+	}
+
+	// `&` before `^`: d ^ b & c is d ^ (b & c) = 0x03.
+	if d ^ b & c != 0x03 {
+		printf("0x02 ^ 0x03 & 0x01 = 0x%02x, expected 0x03\n", Word32(d ^ b & c))
+		return false
+	}
+
+	printf("passed: bitwise levels\n")
+	return true
+}
+
+
+// Shifts sit between the bitwise operators and arithmetic: tighter than
+// `&`, looser than `+`.
+func testShiftLevels () -> Bool {
+	var w: Word8 = 0x01
+	var one: Nat8 = 1
+
+	// `+` before `<<`: the count is the sum, so this is 1 << 2 = 4.
+	// Grouped the other way, (w << 1) + 1, it would be 3.
+	if w << one + 1 != 0x04 {
+		printf("1 << 1 + 1 = 0x%02x, expected 0x04\n", Word32(w << one + 1))
+		return false
+	}
+
+	// `<<` before `&`: mask & (w << 2), not (mask & w) << 2.
+	var mask: Word8 = 0x0C
+	if mask & w << 2 != 0x04 {
+		printf("0x0C & 0x01 << 2 = 0x%02x, expected 0x04\n", Word32(mask & w << 2))
+		return false
+	}
+
+	// `>>` before `|` for the same reason.
+	var high: Word8 = 0xF0
+	if w | high >> 4 != 0x0F {
+		printf("0x01 | 0xF0 >> 4 = 0x%02x, expected 0x0F\n", Word32(w | high >> 4))
+		return false
+	}
+
+	// And shifts before `==`, which is what lets a mask test be written
+	// with no parentheses at all.
+	if not (w << 3 == 0x08) {
+		printf("`w << 3 == 0x08` did not group as (w << 3) == 0x08\n")
+		return false
+	}
+
+	printf("passed: shift levels\n")
+	return true
+}
+
+
+// `or` is the loosest thing in an expression, then `and`, then equality.
+func testLogicalLevels () -> Bool {
+	var a: Int32 = 1
+	var b: Int32 = 2
+
+	// (a == 1) and (b == 2) — the operands of `and` are the comparisons,
+	// not the values.
+	if not (a == 1 and b == 2) {
+		printf("`a == 1 and b == 2` is wrong for 1 and 2\n")
+		return false
+	}
+
+	// `and` before `or`: false and false or true.
+	if not (a == 9 and b == 9 or a == 1) {
+		printf("`and` did not group tighter than `or`\n")
+		return false
+	}
+
+	// A whole arithmetic-comparison-conjunction chain with no parentheses:
+	// ((a + 1) == b) and ((b * 2) > (a + 1)).
+	if not (a + 1 == b and b * 2 > a + 1) {
+		printf("the unparenthesised chain over 1 and 2 is wrong\n")
+		return false
+	}
+
+	printf("passed: logical levels\n")
+	return true
+}
+
+
+// Below the binary operators: construction, then the unary operators, then
+// the postfix ones — each tighter than the last.
+func testUnaryAndConstruction () -> Bool {
+	// Construction takes the value next to it, not the expression around
+	// it: `Int32 small * 2` is (Int32 small) * 2.
+	var small: Int8 = 3
+	if Int32 small * 2 != 6 {
+		printf("Int32 small * 2 = %d, expected 6\n", Int32 small * 2)
+		return false
+	}
+
+	// Unary tighter than binary: (-a) + b, and (-a) * b.
+	var a: Int32 = 5
+	var b: Int32 = 3
+	if -a + b != -2 or -a * b != -15 {
+		printf("-a + b = %d, -a * b = %d, expected -2/-15\n", -a + b, -a * b)
+		return false
+	}
+
+	// `not` is tighter than `==`, so this is (not t) == f.
+	var t = true
+	var f = false
+	if not (not t == f) {
+		printf("`not t == f` did not group as (not t) == f\n")
+		return false
+	}
+
+	// `~` is tighter than `&`: (~mask) & w, not ~(mask & w).
+	var w: Word32 = 0x0F
+	var mask: Word32 = 0x03
+	if ~mask & w != 0x0C {
+		printf("~0x03 & 0x0F = 0x%x, expected 0x0C\n", ~mask & w)
+		return false
+	}
+
+	// Postfix is tighter than everything: arr[1] + arr[2], and the index
+	// expression is evaluated inside the brackets.
+	var arr: [4]Int32 = [10, 20, 30, 40]
+	var i: Int32 = 1
+	if arr[1] + arr[2] != 50 or arr[i + 1] != 30 {
+		printf("arr[1] + arr[2] = %d, arr[i + 1] = %d, expected 50/30\n",
+			arr[1] + arr[2], arr[i + 1])
+		return false
+	}
+
+	// A call binds tighter than the operator around it.
+	if twice(a) + 1 != 11 or twice(a + 1) != 12 {
+		printf("twice(a) + 1 = %d, twice(a + 1) = %d, expected 11/12\n",
+			twice(a) + 1, twice(a + 1))
+		return false
+	}
+
+	printf("passed: unary and construction\n")
+	return true
+}
+
+
+func twice (n: Int32) -> Int32 {
+	return n * 2
+}
+
+
+func main () -> Int {
+	var result = true
+	result = testArithmeticLevels() and result
+	result = testBitwiseAgainstEquality() and result
+	result = testBitwiseLevels() and result
+	result = testShiftLevels() and result
+	result = testLogicalLevels() and result
+	result = testUnaryAndConstruction() and result
+
+	if not result {
+		printf("failed: precedence\n")
+		return exitFailure
+	}
+
+	printf("passed: precedence\n")
+	return exitSuccess
+}

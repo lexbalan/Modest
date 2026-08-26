@@ -45,6 +45,75 @@ declare i8* @llvm.stacksave()
 declare void @llvm.stackrestore(i8*)
 
 
+
+define internal %Fixed32 @__fixed32_mul(%Fixed32 %a, %Fixed32 %b, i8 %f) {
+	%1 = sext %Fixed32 %a to i64
+	%2 = sext %Fixed32 %b to i64
+	%3 = mul i64 %1, %2
+	%4 = zext i8 %f to i64
+	%5 = shl i64 1, %4
+	%6 = lshr i64 %5, 1
+	%7 = icmp slt i64 %3, 0
+	%8 = sub i64 %3, %6
+	%9 = add i64 %3, %6
+	%10 = select i1 %7, i64 %8, i64 %9
+	%11 = sdiv i64 %10, %5
+	%12 = trunc i64 %11 to %Fixed32
+	ret %Fixed32 %12
+}
+
+define internal %Fixed32 @__fixed32_div(%Fixed32 %a, %Fixed32 %b, i8 %f) {
+	%1 = sext %Fixed32 %a to i64
+	%2 = sext %Fixed32 %b to i64
+	%3 = zext i8 %f to i64
+	%4 = shl i64 1, %3
+	%5 = mul i64 %1, %4
+	%6 = sdiv i64 %2, 2
+	%7 = icmp slt i64 %1, 0
+	%8 = icmp slt i64 %2, 0
+	%9 = icmp eq i1 %7, %8
+	%10 = add i64 %5, %6
+	%11 = sub i64 %5, %6
+	%12 = select i1 %9, i64 %10, i64 %11
+	%13 = sdiv i64 %12, %2
+	%14 = trunc i64 %13 to %Fixed32
+	ret %Fixed32 %14
+}
+
+define internal %Fixed64 @__fixed64_mul(%Fixed64 %a, %Fixed64 %b, i8 %f) {
+	%1 = sext %Fixed64 %a to i128
+	%2 = sext %Fixed64 %b to i128
+	%3 = mul i128 %1, %2
+	%4 = zext i8 %f to i128
+	%5 = shl i128 1, %4
+	%6 = lshr i128 %5, 1
+	%7 = icmp slt i128 %3, 0
+	%8 = sub i128 %3, %6
+	%9 = add i128 %3, %6
+	%10 = select i1 %7, i128 %8, i128 %9
+	%11 = sdiv i128 %10, %5
+	%12 = trunc i128 %11 to %Fixed64
+	ret %Fixed64 %12
+}
+
+define internal %Fixed64 @__fixed64_div(%Fixed64 %a, %Fixed64 %b, i8 %f) {
+	%1 = sext %Fixed64 %a to i128
+	%2 = sext %Fixed64 %b to i128
+	%3 = zext i8 %f to i128
+	%4 = shl i128 1, %3
+	%5 = mul i128 %1, %4
+	%6 = sdiv i128 %2, 2
+	%7 = icmp slt i128 %1, 0
+	%8 = icmp slt i128 %2, 0
+	%9 = icmp eq i1 %7, %8
+	%10 = add i128 %5, %6
+	%11 = sub i128 %5, %6
+	%12 = select i1 %9, i128 %10, i128 %11
+	%13 = sdiv i128 %12, %2
+	%14 = trunc i128 %13 to %Fixed64
+	ret %Fixed64 %14
+}
+
 ; MODULE: main
 
 ; -- print includes --
@@ -66,7 +135,7 @@ declare void @llvm.stackrestore(i8*)
 %UnsignedLongLong = type %Nat64;
 %LongLongInt = type %Int64;
 %UnsignedLongLongInt = type %Nat64;
-%Float = type %Float64;
+%Float = type %Float32;
 %Double = type %Float64;
 %LongDouble = type %Float64;
 %SizeT = type %UnsignedLongInt;
@@ -187,7 +256,7 @@ define %Int @main() {
 	%16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @.str8 to [0 x i8]*), %Float64 %15)
 	%17 = load %Fixed32, %Fixed32* %12
 	%18 = add %Fixed32 %17, 65536
-	%19 = sdiv %Fixed32 %18, 131072
+	%19 = call %Fixed32 (%Fixed32, %Fixed32, i8) @__fixed32_div(%Fixed32 %18, %Fixed32 131072, i8 16)
 	store %Fixed32 %19, %Fixed32* %12
 	%20 = load %Fixed32, %Fixed32* %12
 	%21 = sitofp %Fixed32 %20 to %Float64

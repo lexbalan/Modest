@@ -1,0 +1,284 @@
+// TEST: run
+// BACKENDS: c11, llvm, modest
+// EXPECT-EXIT: 0
+// EXPECT-OUT: passed: folded arithmetic
+// EXPECT-OUT: passed: folded truncation
+// EXPECT-OUT: passed: folded bitwise
+// EXPECT-OUT: passed: folded comparison
+// EXPECT-OUT: passed: folded in initializers
+// EXPECT-OUT: passed: comptime
+//
+// The same operators as the files next door, but with both operands known
+// at compile time — an expression over `const` values is folded before any
+// code is emitted (docs/lang/value/README.md, "Immediate").
+//
+// A fold is a second implementation of every operator: one in the compiler,
+// one in the backend.  They can disagree, and the disagreement is invisible
+// unless something compares them.  So every check below computes the same
+// thing twice — once folded, once from variables the compiler cannot see
+// through — and requires the two to be equal.  A `check` that only tested
+// the folded value against a literal would be testing the compiler against
+// itself.
+//
+// The interesting cases are the ones where the answer is not obvious from
+// the operator: truncating division of negatives, the sign of a remainder,
+// and the bit patterns.
+
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+
+
+const ten: Int32 = 10
+const three: Int32 = 3
+const negTen: Int32 = -10
+const negThree: Int32 = -3
+
+const mask: Word8 = 0xF0
+const low: Word8 = 0x0F
+
+
+func check (name: *ConstCharStr, folded: Int32, computed: Int32) -> Bool {
+	if folded == computed {
+		return true
+	}
+	printf("%s: folded %d, computed %d\n", name, folded, computed)
+	return false
+}
+
+
+func checkWord (name: *ConstCharStr, folded: Word32, computed: Word32) -> Bool {
+	if folded == computed {
+		return true
+	}
+	printf("%s: folded 0x%x, computed 0x%x\n", name, folded, computed)
+	return false
+}
+
+
+func testFoldedArithmetic () -> Bool {
+	var ok = true
+
+	// The variables carry the same values, and nothing tells the compiler
+	// what they hold — they come back from a function it must call.
+	var a = opaque(10)
+	var b = opaque(3)
+
+	ok = check("10 + 3", ten + three, a + b) and ok
+	ok = check("10 - 3", ten - three, a - b) and ok
+	ok = check("10 * 3", ten * three, a * b) and ok
+	ok = check("10 / 3", ten / three, a / b) and ok
+	ok = check("10 % 3", ten % three, a % b) and ok
+
+	// A fold nested inside another fold.
+	const nested = (ten + three) * (ten - three)
+	ok = check("(10 + 3) * (10 - 3)", nested, (a + b) * (a - b)) and ok
+
+	// Unary minus folds too, and so does a fold used as an operand.
+	const negated = -ten
+	ok = check("-10", negated, -a) and ok
+	ok = check("-10 + 3", negated + three, -a + b) and ok
+
+	// A literal operand next to a folded one.
+	ok = check("10 * 2 + 1", ten * 2 + 1, a * 2 + 1) and ok
+
+	if not ok {
+		return false
+	}
+
+	printf("passed: folded arithmetic\n")
+	return true
+}
+
+
+// Where a fold is easiest to get wrong: the compiler is written in a
+// language whose `//` and `%` round the other way.
+func testFoldedTruncation () -> Bool {
+	var ok = true
+
+	var a = opaque(-10)
+	var b = opaque(3)
+	var c = opaque(-3)
+
+	ok = check("-10 / 3", negTen / three, a / b) and ok
+	ok = check("10 / -3", ten / negThree, opaque(10) / c) and ok
+	ok = check("-10 / -3", negTen / negThree, a / c) and ok
+
+	// `%` over operands of unlike sign folds differently from the way it
+	// computes — that is BUGS.md #32, and it lives in fold_remainder.modest.
+	ok = check("10 % 3", ten % three, opaque(10) % b) and ok
+
+	// A quotient that truncates to zero, and the remainder that keeps
+	// everything.
+	const one: Int32 = 1
+	const four: Int32 = 4
+	ok = check("1 / 4", one / four, opaque(1) / opaque(4)) and ok
+	ok = check("1 % 4", one % four, opaque(1) % opaque(4)) and ok
+
+	if not ok {
+		return false
+	}
+
+	printf("passed: folded truncation\n")
+	return true
+}
+
+
+func testFoldedBitwise () -> Bool {
+	var ok = true
+
+	var m = opaqueWord(0xF0)
+	var l = opaqueWord(0x0F)
+
+	ok = checkWord("0xF0 & 0x0F", Word32(mask & low), m & l) and ok
+	ok = checkWord("0xF0 | 0x0F", Word32(mask | low), m | l) and ok
+	ok = checkWord("0xF0 ^ 0x3C", Word32(mask ^ 0x3C), m ^ 0x3C) and ok
+
+	// Shifts fold as well, at a width where nothing leaves the type.
+	const w: Word32 = 0x00000F0F
+	var v = opaqueWord(0x00000F0F)
+	ok = checkWord("0x0F0F << 4", w << 4, v << 4) and ok
+	ok = checkWord("0x0F0F >> 4", w >> 4, v >> 4) and ok
+	ok = checkWord("0x0F0F << 16 >> 16", (w << 16) >> 16, (v << 16) >> 16) and ok
+
+	// A folded mask used against a run-time value: the constant is the
+	// half the compiler knows, and it must reach the backend intact.
+	const both: Word32 = 0x0000FF00
+	if (v << 4) & both != (v << 4) & 0x0000FF00 {
+		printf("a folded mask differs from the same mask written inline\n")
+		return false
+	}
+
+	if not ok {
+		return false
+	}
+
+	printf("passed: folded bitwise\n")
+	return true
+}
+
+
+// A comparison over immediates folds to a Bool, and it has to agree with
+// the comparison the backend emits.
+func testFoldedComparison () -> Bool {
+	var a = opaque(10)
+	var b = opaque(3)
+
+	const ltFolded = three < ten
+	const gtFolded = three > ten
+	const eqFolded = ten == ten
+	const neFolded = ten != three
+
+	var computedLt = b < a
+	var computedGt = b > a
+	if ltFolded != computedLt or gtFolded != computedGt {
+		printf("folded ordering disagrees with the computed one\n")
+		return false
+	}
+
+	// Written through a variable rather than as `eqFolded != (a == a)`:
+	// the C backend drops the parentheses of a same-level group, and that
+	// defect has its own reproducer in parens.modest (BUGS.md #31).
+	var computedEq = a == a
+	var computedNe = a != b
+	if eqFolded != computedEq or neFolded != computedNe {
+		printf("folded equality disagrees with the computed one\n")
+		return false
+	}
+
+	// `and` / `or` over folded comparisons.
+	const inRange = three > 0 and three < ten
+	var computedInRange = b > 0 and b < a
+	if inRange != computedInRange {
+		printf("folded conjunction disagrees with the computed one\n")
+		return false
+	}
+
+	const outside = three > ten or three < 0
+	var computedOutside = b > a or b < 0
+	if outside != computedOutside {
+		printf("folded disjunction disagrees with the computed one\n")
+		return false
+	}
+
+	// A folded comparison is an ordinary Bool: it can be stored and used.
+	var flag = ltFolded
+	if not flag {
+		printf("3 < 10 folded to false\n")
+		return false
+	}
+
+	printf("passed: folded comparison\n")
+	return true
+}
+
+
+// Where a fold is not optional: an initializer has no run time to happen
+// in, so these expressions must be folded or they cannot exist at all.
+const sum: Int32 = ten + three
+const arr: [3]Int32 = [ten + three, ten - three, ten * three]
+const masked: Word8 = mask & 0x3C
+var global: Int32 = ten * three + 1
+
+
+func testFoldedInitializers () -> Bool {
+	var ok = true
+
+	var a = opaque(10)
+	var b = opaque(3)
+
+	ok = check("global const", sum, a + b) and ok
+	ok = check("array [0]", arr[0], a + b) and ok
+	ok = check("array [1]", arr[1], a - b) and ok
+	ok = check("array [2]", arr[2], a * b) and ok
+	ok = check("global var", global, a * b + 1) and ok
+	ok = checkWord("global Word", Word32 masked, opaqueWord(0xF0) & 0x3C) and ok
+
+	// A local with a folded initializer, and a folded default argument
+	// reaching a parameter.
+	var local: Int32 = ten * three
+	ok = check("local", local, a * b) and ok
+	ok = check("argument", identity(ten + three), a + b) and ok
+
+	if not ok {
+		return false
+	}
+
+	printf("passed: folded in initializers\n")
+	return true
+}
+
+
+// The compiler cannot see through a call, so what comes back is a value it
+// has to compute at run time — which is the whole point of the comparison.
+func opaque (n: Int32) -> Int32 {
+	return n
+}
+
+
+func opaqueWord (w: Word32) -> Word32 {
+	return w
+}
+
+
+func identity (n: Int32) -> Int32 {
+	return n
+}
+
+
+func main () -> Int {
+	var result = true
+	result = testFoldedArithmetic() and result
+	result = testFoldedTruncation() and result
+	result = testFoldedBitwise() and result
+	result = testFoldedComparison() and result
+	result = testFoldedInitializers() and result
+
+	if not result {
+		printf("failed: comptime\n")
+		return exitFailure
+	}
+
+	printf("passed: comptime\n")
+	return exitSuccess
+}

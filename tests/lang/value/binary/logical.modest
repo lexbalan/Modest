@@ -1,0 +1,184 @@
+// TEST: run
+// BACKENDS: c11, llvm, modest
+// EXPECT-EXIT: 0
+// EXPECT-OUT: passed: and
+// EXPECT-OUT: passed: or
+// EXPECT-OUT: passed: mixed
+// EXPECT-OUT: passed: from comparisons
+// EXPECT-OUT: passed: logical
+//
+// `and` and `or` — Bool in, Bool out, and nothing else in either
+// direction.  There is no truthiness: an integer is not a condition, a
+// pointer is not a condition, and `not 0` does not compile.  The way to
+// make a Bool out of anything else is a comparison, which is why half of
+// this file feeds them from `==` and `<` rather than from `true`.
+//
+// One thing this file deliberately does not check: whether the right
+// operand is evaluated when the left one already decides the answer.  The
+// backends disagree about it today and the language has not said which is
+// right — see docs/lang/OPENQUESTIONS.md #4.  Everything below is written
+// so that the answer cannot change the outcome: no operand has a side
+// effect.
+
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+
+
+func testAnd () -> Bool {
+	var t = true
+	var f = false
+
+	// The whole table, in one line per row.
+	if not (t and t) {
+		printf("true and true is not true\n")
+		return false
+	}
+
+	if t and f or f and t or f and f {
+		printf("`and` is true where it should be false\n")
+		return false
+	}
+
+	// `and` chains, and one false anywhere is enough.
+	if not (t and t and t) or t and t and f or f and t and t {
+		printf("chained `and` is wrong\n")
+		return false
+	}
+
+	printf("passed: and\n")
+	return true
+}
+
+
+func testOr () -> Bool {
+	var t = true
+	var f = false
+
+	if not (t or t) or not (t or f) or not (f or t) {
+		printf("`or` is false where it should be true\n")
+		return false
+	}
+
+	if f or f {
+		printf("false or false is true\n")
+		return false
+	}
+
+	// `or` chains too, and one true anywhere is enough.
+	if not (f or f or t) or not (t or f or f) or f or f or f {
+		printf("chained `or` is wrong\n")
+		return false
+	}
+
+	printf("passed: or\n")
+	return true
+}
+
+
+// `and` binds tighter than `or`, so a mixed chain reads as a disjunction of
+// conjunctions — the grouping every language with both operators has, and
+// the one worth pinning down because it is never written with parentheses.
+func testMixed () -> Bool {
+	var t = true
+	var f = false
+
+	// f and f or t  is  (f and f) or t = true.  Grouped the other way,
+	// f and (f or t), it would be false.
+	if not (f and f or t) {
+		printf("`f and f or t` did not group as (f and f) or t\n")
+		return false
+	}
+
+	// t or f and f  is  t or (f and f) = true.  Grouped the other way,
+	// (t or f) and f, it would be false.
+	if not (t or f and f) {
+		printf("`t or f and f` did not group as t or (f and f)\n")
+		return false
+	}
+
+	// `not` is tighter than both: not f and t is (not f) and t.
+	if not (not f and t) {
+		printf("`not f and t` did not group as (not f) and t\n")
+		return false
+	}
+
+	// De Morgan, which only holds if the grouping above is right.
+	if (not (t and f)) != (not t or not f) {
+		printf("not (t and f) differs from (not t or not f)\n")
+		return false
+	}
+
+	if (not (t or f)) != (not t and not f) {
+		printf("not (t or f) differs from (not t and not f)\n")
+		return false
+	}
+
+	printf("passed: mixed\n")
+	return true
+}
+
+
+// Where a Bool actually comes from in a program: a comparison.  Both
+// operators sit looser than `==` and than the ordering operators, so a
+// range test needs no parentheses at all.
+func testFromComparisons () -> Bool {
+	var x: Int32 = 5
+	var lo: Int32 = 0
+	var hi: Int32 = 10
+
+	if not (x >= lo and x <= hi) {
+		printf("5 is not seen to be inside 0..10\n")
+		return false
+	}
+
+	var outside: Int32 = 42
+	if outside >= lo and outside <= hi {
+		printf("42 is seen to be inside 0..10\n")
+		return false
+	}
+
+	// The complementary shape: outside the range is a disjunction.
+	if not (outside < lo or outside > hi) {
+		printf("42 is not seen to be outside 0..10\n")
+		return false
+	}
+
+	// Equality feeding a conjunction, on types that have no ordering at
+	// all — this is the only comparison a Word or a record can give.
+	var w: Word8 = 0xF0
+	var c: Char8 = 'z'
+	if not (w == 0xF0 and c == 'z') {
+		printf("Word and Char equality do not feed `and`\n")
+		return false
+	}
+
+	// A Bool is a value like any other: it can be stored, returned and
+	// compared, and `==` on two Bools is the same thing as agreement.
+	var inRange = x >= lo and x <= hi
+	var alsoInRange = not (x < lo or x > hi)
+	if inRange != alsoInRange {
+		printf("the two spellings of `in range` disagree\n")
+		return false
+	}
+
+	printf("passed: from comparisons\n")
+	return true
+}
+
+
+func main () -> Int {
+	var result = true
+	result = testAnd() and result
+	result = testOr() and result
+	result = testMixed() and result
+	result = testFromComparisons() and result
+
+	if not result {
+		printf("failed: logical\n")
+		return exitFailure
+	}
+
+	printf("passed: logical\n")
+	return exitSuccess
+}

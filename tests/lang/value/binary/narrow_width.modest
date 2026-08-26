@@ -1,0 +1,106 @@
+// TEST: run
+// BACKENDS: c11, llvm, modest
+// EXPECT-EXIT: 0
+// EXPECT-OUT: passed: narrow width
+// EXPECTED-FAIL(c11): BUGS.md#30 narrow Word operations are done at int width
+//
+// An operation on WordX gives a WordX — the operand's own width, says
+// docs/lang/value/binary.md, and nothing wider.  Every check below is a
+// case where the result cannot be represented in that width unless the
+// operation truncates back into it: a bit shifted off the top of a Word8,
+// or the complement of one.
+//
+// The LLVM backend does the operation at the operand's width and agrees.
+// The C backend hands the expression to C, where a `uint8_t` is promoted to
+// `int` first, and the extra bits survive: `0x81 << 1` comes back 0x102 and
+// `~0xF0` comes back 0xFFFFFF0F.  Storing the result into a variable of the
+// type hides it — C truncates on assignment — so the difference only shows
+// where the expression is used directly, which is what this file does.
+
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+
+
+func testShiftOutOfWord8 () -> Bool {
+	var b: Word8 = 0x81
+
+	if b << 1 != 0x02 {
+		printf("Word8 0x81 << 1 = 0x%x, expected 0x02\n", Word32(b << 1))
+		return false
+	}
+
+	var all: Word8 = 0xFF
+	if all << 4 != 0xF0 {
+		printf("Word8 0xFF << 4 = 0x%x, expected 0xF0\n", Word32(all << 4))
+		return false
+	}
+
+	// Stored into a variable of the type, the same expression is right
+	// under both backends — the type is what truncates, and this is the
+	// contrast that names the defect.
+	var stored: Word8 = b << 1
+	if stored != 0x02 {
+		printf("stored Word8 0x81 << 1 = 0x%x, expected 0x02\n", Word32 stored)
+		return false
+	}
+
+	return true
+}
+
+
+func testShiftOutOfWord16 () -> Bool {
+	var h: Word16 = 0x8001
+
+	if h << 1 != 0x0002 {
+		printf("Word16 0x8001 << 1 = 0x%x, expected 0x0002\n", Word32(h << 1))
+		return false
+	}
+
+	var all: Word16 = 0xFFFF
+	if all << 8 != 0xFF00 {
+		printf("Word16 0xFFFF << 8 = 0x%x, expected 0xFF00\n", Word32(all << 8))
+		return false
+	}
+
+	return true
+}
+
+
+func testComplement () -> Bool {
+	var b: Word8 = 0xF0
+	if ~b != 0x0F {
+		printf("~(Word8 0xF0) = 0x%x, expected 0x0F\n", Word32 ~b)
+		return false
+	}
+
+	var h: Word16 = 0xFF00
+	if ~h != 0x00FF {
+		printf("~(Word16 0xFF00) = 0x%x, expected 0x00FF\n", Word32 ~h)
+		return false
+	}
+
+	// `not` is the same operation on a Word, and inherits the same fate.
+	if not b != 0x0F {
+		printf("not (Word8 0xF0) = 0x%x, expected 0x0F\n", Word32 not b)
+		return false
+	}
+
+	return true
+}
+
+
+func main () -> Int {
+	var result = true
+	result = testShiftOutOfWord8() and result
+	result = testShiftOutOfWord16() and result
+	result = testComplement() and result
+
+	if not result {
+		printf("failed: narrow width\n")
+		return exitFailure
+	}
+
+	printf("passed: narrow width\n")
+	return exitSuccess
+}
