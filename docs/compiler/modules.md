@@ -169,7 +169,7 @@ semantic.init() → semantic.translate(src) → error gate → backend.init() �
 | `backend/c11.py` | `hlir`, `error`, `util`, `unicode`, `common`, **`cshape`** |
 | `backend/llvm.py` | `hlir`, `error`, `util` |
 | `backend/modest.py` | `hlir`, `error`, `util` |
-| `common.py`, `util.py`, `unicode.py` | — (stdlib only; `util` loads `numpy` lazily) |
+| `common.py`, `util.py`, `unicode.py` | — (stdlib only) |
 
 ### Cycles and deferred imports
 
