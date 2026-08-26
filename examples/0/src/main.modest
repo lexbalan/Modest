@@ -3,15 +3,8 @@
 include "libc/ctypes64"
 include "libc/stdio"
 
-var a: Int32 = 10
-var b: Int32 = 6
-var c: Int32 = 4
-
 func main () -> Int {
 	printf("Hello World!\n")
-
-	let x = a - (b - c)
-	printf("a - (b - c) = %d\n", x)
 	return 0
 }
 
