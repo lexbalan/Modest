@@ -527,8 +527,6 @@ let s = &*p        // error: unexpected token1 '*'
 ```modest
 const flags: Word8 = 0x0F | 0x30      // error: unsuitable value type
                                       // 'Integer(8)' for 'bitwise-or' operation
-var s: Word8 = 0xA5
-let r = s ^ 0x0F ^ 0x30               // same error
 ```
 
 - A literal has no type of its own and takes the other operand's, so
@@ -538,19 +536,17 @@ let r = s ^ 0x0F ^ 0x30               // same error
 - Combining two flag constants is the ordinary way to write a mask, and it
   does not compile at all: neither `const both: Word8 = 0x0F | 0x30` nor
   the untyped `const both = 0x0F | 0x30`.
-- The second line above is the same defect reached through associativity.
-  `&`, `^`, `|` group to the **right** (`docs/lang/value/README.md`), so
-  `s ^ 0x0F ^ 0x30` is `s ^ (0x0F ^ 0x30)` — a literal pair. Written
-  left-grouped by hand, `(s ^ 0x0F) ^ 0x30` compiles. The cheatsheet's note
-  that right grouping "makes no difference to the result" holds for values
-  and not for literals, which is how this stayed hidden.
+- A chain over a variable used to hit the same error from a different
+  direction: `&`, `^`, `|` grouped to the right, so `s ^ 0x0F ^ 0x30` was
+  `s ^ (0x0F ^ 0x30)` — a literal pair. Those three operators are
+  left-associative now, so the chain reaches only one literal at a time and
+  compiles. That hid a symptom, not the defect: a literal pair written on
+  its own still does not.
 - Arithmetic does not have the problem: `1 + 2 + 3` folds, because `+`
   accepts a generic `Integer`.
 - Fix: let `&`, `|` and `^` accept two `Integer` operands and fold them
   into an `Integer`, the way `+` already does — the result then adapts to
-  whatever it meets, exactly like a single literal. Making the three
-  operators left-associative would hide the chained case, but not
-  `const both = 0x0F | 0x30`.
+  whatever it meets, exactly like a single literal.
 - Coverage: `tests/lang/value/binary/bitwise.modest` works around it by
   keeping one operand a variable.
 
@@ -639,44 +635,3 @@ negTen % three     // folded: 2, computed at run time: -1
   `math.fmod` semantics: `abs(a) % abs(b)` carrying the sign of `a`.
 - Coverage: `tests/lang/value/binary/fold_remainder.modest`, marked
   `EXPECTED-FAIL(llvm)`.
-
-## 33. Backend-built expressions lose the grouping of their operands
-
-```modest
-var n = opaque(9)
-var m = opaque(4)
-
-sizeof([n / m]Int32)      // c11: 9      llvm: 8
-```
-
-```c
-printf("%zu\n", sizeof(int32_t) * n / m);   // the volume is no longer a unit
-```
-
-- `sizeof` of an array is `sizeof(item) * volume`, and with a run-time
-  volume the C backend has to write that product out: a VLA type is
-  optional in C11 and rejected outright by MISRA, so `cvalue_sizeof_type`
-  (`src/backend/c11.py:1354`) emits `CValueMul(sizeof(item), volume)`
-  instead of `sizeof(item [n])`.
-- The volume expression is dropped into the right operand as-is. When it is
-  itself an operation of the same precedence level — `n / m`, `n * m`,
-  `n % m` — C regroups it to the left and the product is computed over the
-  wrong subexpression: `(sizeof(int32_t) * n) / m` is 9, not
-  `sizeof(int32_t) * (n / m)` = 8. The LLVM backend emits `sdiv` before
-  `mul` from the tree and gets 8.
-- This is the residue of the defect fixed for the source-level case: the
-  parentheses a *programmer* writes now survive as `ValueSubexpr`
-  (`do_cvalue_subexpr`), so `sizeof([n - (n - m)]Int32)` is emitted
-  correctly. Nothing protects a grouping the backend itself introduced,
-  because there is no `subexpr` node to carry it.
-- The root cause is in cshape, not in the Modest tree: `str_cvalue`
-  parenthesises an operand only when `precedence < ext_precedence`, and
-  every binary class passes its own precedence for *both* operands. For the
-  right operand of a left-associative operator the test has to be `<=`.
-- Fix: in cshape, pass `ext_precedence=self.precedence + 1` for the right
-  operand of every binary class (`CValueMul` … `CValueLogicalOr`,
-  `CValueStringConcat`). The `-Wbitwise-op-parentheses` workaround in the
-  two shift classes stays as it is — it raises the threshold further and
-  does not conflict.
-- Coverage: none yet. Reproduce with the snippet above; `n` and `m` must be
-  run-time values, and the division must not divide evenly.

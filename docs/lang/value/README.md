@@ -36,12 +36,17 @@ From loosest to tightest binding:
 | 13 | postfix: call `()`, index `[]`, slice `[:]`, access `.` |
 | 14 | literals, names, `(...)` |
 
+Every binary level is left-associative — a chain groups from the left, and
+that holds for `or`, `and`, `|`, `^` and `&` as well as for arithmetic.
+
 Binding examples (lower level = binds tighter):
 
 ```modest
 w & mask == 0            // (w & mask) == 0   — bitwise tighter than ==
 a == 1 and b == 2        // (a == 1) and (b == 2)
 w << n + 1               // w << (n + 1)     — arithmetic tighter than shift
+10 - 3 - 2               // (10 - 3) - 2 = 5 — left-associative
+s ^ 0x0F ^ 0x30          // (s ^ 0x0F) ^ 0x30
 ```
 
 ## Value categories

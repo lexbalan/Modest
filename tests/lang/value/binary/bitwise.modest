@@ -200,9 +200,9 @@ func testMasking () -> Bool {
 		return false
 	}
 
-	// Parenthesised on the left because `^` groups to the right, and the
-	// resulting literal pair does not compile today — BUGS.md #28.
-	if (state ^ 0x0F) ^ 0x0F != state {
+	// `^` is left-associative, so the chain meets one literal at a time; a
+	// literal pair on its own would not compile today — BUGS.md #28.
+	if state ^ 0x0F ^ 0x0F != state {
 		printf("toggling four bits twice did not restore the value\n")
 		return false
 	}

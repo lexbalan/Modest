@@ -373,9 +373,8 @@ func(args)                         // call
 ### Precedence
 
 Loosest to tightest — each level binds tighter than the one above it.
-Levels 3 and 7-10 are left-associative (`10 - 3 - 2` is `5`); `or`, `and`,
-<code>&#124;</code>, `^` and `&` group to the right, which for these operators
-makes no difference to the result.
+Every binary level is left-associative: `10 - 3 - 2` is `5`, and a chain of
+`or`, `and`, <code>&#124;</code>, `^` or `&` groups the same way.
 
 | # | Operators | |
 |---|---|---|

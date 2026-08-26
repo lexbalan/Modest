@@ -7,6 +7,7 @@
 // EXPECT-OUT: passed: offsetof
 // EXPECT-OUT: passed: narrowing
 // EXPECT-OUT: passed: mixing
+// EXPECT-OUT: passed: run-time volume
 // EXPECT-OUT: passed: sizeof/alignof/lengthof/offsetof
 //
 // Covers docs/lang/value/sizeof.md: the four layout queries and the type
@@ -149,6 +150,37 @@ func testMixing () -> Bool {
 }
 
 
+// The volume of an array is one operand of `sizeof(item) * volume`, and it
+// stays one operand when it is written without parentheses of its own: a
+// backend that emits that product as C source has to keep `n / m` together,
+// or C regroups it into `(sizeof(item) * n) / m`.  `opaque` keeps the two
+// numbers out of the fold, and the division deliberately does not divide
+// evenly - with an even division both groupings agree and prove nothing.
+func opaque (n: Size) -> Size {
+	return n
+}
+
+
+func testRuntimeVolume () -> Bool {
+	var n: Size = opaque(9)
+	var m: Size = opaque(4)
+
+	if sizeof([n / m]Int32) != 8 {
+		printf("sizeof([n / m]Int32) = %zu, expected 8\n", sizeof([n / m]Int32))
+		return false
+	}
+
+	// the same volume with the grouping spelled out
+	if sizeof([n - (n - m)]Int32) != 16 {
+		printf("sizeof([n - (n - m)]Int32) = %zu, expected 16\n", sizeof([n - (n - m)]Int32))
+		return false
+	}
+
+	printf("passed: run-time volume\n")
+	return true
+}
+
+
 func main () -> Int {
 	var result = true
 	result = testSizeof() and result
@@ -157,6 +189,7 @@ func main () -> Int {
 	result = testOffsetof() and result
 	result = testNarrowing() and result
 	result = testMixing() and result
+	result = testRuntimeVolume() and result
 
 	if not result {
 		printf("failed: sizeof/alignof/lengthof/offsetof\n")
