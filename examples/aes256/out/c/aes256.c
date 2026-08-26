@@ -9,7 +9,7 @@
 // thx: https://github.com/ilvn/aes256/tree/main
 
 static uint8_t rj_xtime(uint8_t x) {
-	const uint8_t y = 0xFF & x << 1;
+	const uint8_t y = 0xFF & (x << 1);
 	if ((x & 0x80) != 0x0) {
 		return y ^ 0x1B;
 	}
@@ -276,7 +276,7 @@ static void expandDecKey(uint8_t *k, uint8_t *rc) {
 	if ((*rc & 0x1) != 0x0) {
 		y = 0x8D;
 	}
-	*rc = *rc >> 1 ^ y;
+	*rc = (*rc >> 1) ^ y;
 	k[0] = k[0] ^ rj_sbox(k[29]) ^ *rc;
 	k[1] = k[1] ^ rj_sbox(k[30]);
 	k[2] = k[2] ^ rj_sbox(k[31]);

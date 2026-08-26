@@ -177,8 +177,7 @@ func testFoldedComparison () -> Bool {
 	}
 
 	// Written through a variable rather than as `eqFolded != (a == a)`:
-	// the C backend drops the parentheses of a same-level group, and that
-	// defect has its own reproducer in parens.modest (BUGS.md #31).
+	// grouping a comparison inside a comparison belongs to parens.modest.
 	var computedEq = a == a
 	var computedNe = a != b
 	if eqFolded != computedEq or neFolded != computedNe {

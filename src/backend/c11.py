@@ -1193,8 +1193,9 @@ def do_cvalue_deref(x, ctx):
 
 
 def do_cvalue_subexpr(x, ctx):
+	# скобки из исходника значимы: 'a - (b - c)' это не 'a - b - c'
 	v = do_cvalue(x.value)
-	return v #CValueParen(v)
+	return CValueParen(v)
 
 
 def do_cvalue_not(x, ctx):

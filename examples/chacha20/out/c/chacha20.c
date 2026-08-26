@@ -5,7 +5,7 @@
 #include <stdbool.h>
 
 static uint32_t rotl32(uint32_t x, uint32_t n) {
-	return x << n | x >> (32 - n);
+	return (x << n) | (x >> (32 - n));
 }
 
 static void quarterRound(uint32_t a, uint32_t b, uint32_t c, uint32_t d, uint32_t *__out) {
@@ -13,13 +13,13 @@ static void quarterRound(uint32_t a, uint32_t b, uint32_t c, uint32_t d, uint32_
 	uint32_t b0 = b;
 	uint32_t c0 = c;
 	uint32_t d0 = d;
-	a0 = a0 + b0;
+	a0 = (a0 + b0);
 	d0 = rotl32(d0 ^ a0, 16);
-	c0 = c0 + d0;
+	c0 = (c0 + d0);
 	b0 = rotl32(b0 ^ c0, 12);
-	a0 = a0 + b0;
+	a0 = (a0 + b0);
 	d0 = rotl32(d0 ^ a0, 8);
-	c0 = c0 + d0;
+	c0 = (c0 + d0);
 	b0 = rotl32(b0 ^ c0, 7);
 	__builtin_memcpy(__out, &(uint32_t [4]){a0, b0, c0, d0}, sizeof(uint32_t [4]));
 }
@@ -77,7 +77,7 @@ void chacha20_chacha20Block(uint32_t *_state, uint32_t *__out) {
 	uint32_t out[16];
 	uint32_t j = 0;
 	while (j < 16) {
-		out[j] = x[j] + state[j];
+		out[j] = (x[j] + state[j]);
 		++j;
 	}
 	__builtin_memcpy(__out, &out, sizeof(uint32_t [16]));

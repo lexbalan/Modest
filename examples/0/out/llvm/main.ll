@@ -66,7 +66,7 @@ declare void @llvm.stackrestore(i8*)
 %UnsignedLongLong = type %Nat64;
 %LongLongInt = type %Int64;
 %UnsignedLongLongInt = type %Nat64;
-%Float = type %Float64;
+%Float = type %Float32;
 %Double = type %Float64;
 %LongDouble = type %Float64;
 %SizeT = type %UnsignedLongInt;
@@ -136,9 +136,19 @@ declare void @perror(%ConstCharStr* %str)
 ; -- end print imports 'main' --
 ; -- strings --
 @.str1 = private constant [14 x i8] [i8 72, i8 101, i8 108, i8 108, i8 111, i8 32, i8 87, i8 111, i8 114, i8 108, i8 100, i8 33, i8 10, i8 0]
+@.str2 = private constant [18 x i8] [i8 97, i8 32, i8 45, i8 32, i8 40, i8 98, i8 32, i8 45, i8 32, i8 99, i8 41, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 ; -- endstrings --
+@a = internal global %Int32 10
+@b = internal global %Int32 6
+@c = internal global %Int32 4
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @.str1 to [0 x i8]*))
+	%2 = load %Int32, %Int32* @b
+	%3 = load %Int32, %Int32* @c
+	%4 = sub %Int32 %2, %3
+	%5 = load %Int32, %Int32* @a
+	%6 = sub %Int32 %5, %4
+	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @.str2 to [0 x i8]*), %Int32 %6)
 	ret %Int 0
 }
 

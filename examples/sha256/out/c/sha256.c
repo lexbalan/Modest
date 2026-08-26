@@ -17,7 +17,7 @@ struct context {
 
 __attribute__((always_inline))
 static inline uint32_t rotright(uint32_t a, uint32_t b) {
-	return a >> b | a << (32 - b);
+	return (a >> b) | (a << (32 - b));
 }
 
 __attribute__((always_inline))
@@ -42,12 +42,12 @@ static inline uint32_t ep1(uint32_t x) {
 
 __attribute__((always_inline))
 static inline uint32_t sig0(uint32_t x) {
-	return rotright(x, 7) ^ rotright(x, 18) ^ x >> 3;
+	return rotright(x, 7) ^ rotright(x, 18) ^ (x >> 3);
 }
 
 __attribute__((always_inline))
 static inline uint32_t sig1(uint32_t x) {
-	return rotright(x, 17) ^ rotright(x, 19) ^ x >> 10;
+	return rotright(x, 17) ^ rotright(x, 19) ^ (x >> 10);
 }
 #define INITAL_STATE { \
 	0x6A09E667, 0xBB67AE85UL, 0x3C6EF372, 0xA54FF53AUL, \
@@ -82,13 +82,13 @@ static void transform(struct context *ctx, uint8_t *data) {
 	uint32_t i = 0;
 	uint32_t j = 0;
 	while (i < 16) {
-		const uint32_t x = (uint32_t)data[j + 0] << 24 | (uint32_t)data[j + 1] << 16 | (uint32_t)data[j + 2] << 8 | (uint32_t)data[j + 3] << 0;
+		const uint32_t x = ((uint32_t)data[j + 0] << 24) | ((uint32_t)data[j + 1] << 16) | ((uint32_t)data[j + 2] << 8) | ((uint32_t)data[j + 3] << 0);
 		m[i] = x;
 		j = j + 4;
 		++i;
 	}
 	while (i < 64) {
-		m[i] = sig1(m[i - 2]) + m[i - 7] + sig0(m[i - 15]) + m[i - 16];
+		m[i] = (sig1(m[i - 2]) + m[i - 7] + sig0(m[i - 15]) + m[i - 16]);
 		++i;
 	}
 	uint32_t x[8];
@@ -100,16 +100,16 @@ static void transform(struct context *ctx, uint8_t *data) {
 		x[7] = x[6];
 		x[6] = x[5];
 		x[5] = x[4];
-		x[4] = x[3] + t1;
+		x[4] = (x[3] + t1);
 		x[3] = x[2];
 		x[2] = x[1];
 		x[1] = x[0];
-		x[0] = t1 + t2;
+		x[0] = (t1 + t2);
 		++i;
 	}
 	i = 0;
 	while (i < 8) {
-		ctx->state[i] = ctx->state[i] + x[i];
+		ctx->state[i] = (ctx->state[i] + x[i]);
 		++i;
 	}
 }
@@ -154,14 +154,14 @@ static void final(struct context *ctx, uint8_t *outHash) {
 	i = 0;
 	while (i < 4) {
 		const uint32_t sh = 24 - i * 8;
-		outHash[i + 0] = ctx->state[0] >> sh;
-		outHash[i + 4] = ctx->state[1] >> sh;
-		outHash[i + 8] = ctx->state[2] >> sh;
-		outHash[i + 12] = ctx->state[3] >> sh;
-		outHash[i + 16] = ctx->state[4] >> sh;
-		outHash[i + 20] = ctx->state[5] >> sh;
-		outHash[i + 24] = ctx->state[6] >> sh;
-		outHash[i + 28] = ctx->state[7] >> sh;
+		outHash[i + 0] = (ctx->state[0] >> sh);
+		outHash[i + 4] = (ctx->state[1] >> sh);
+		outHash[i + 8] = (ctx->state[2] >> sh);
+		outHash[i + 12] = (ctx->state[3] >> sh);
+		outHash[i + 16] = (ctx->state[4] >> sh);
+		outHash[i + 20] = (ctx->state[5] >> sh);
+		outHash[i + 24] = (ctx->state[6] >> sh);
+		outHash[i + 28] = (ctx->state[7] >> sh);
 		++i;
 	}
 }

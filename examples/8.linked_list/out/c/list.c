@@ -105,7 +105,7 @@ struct list_node *list_node_get(struct list_list *list, int32_t pos) {
 		}
 	} else {
 		node = list->tail;
-		const uint32_t n = (uint32_t)abs(-pos) - 1;
+		const uint32_t n = ((uint32_t)abs(-pos)) - 1;
 		if (n > list->size) {
 			return NULL;
 		}

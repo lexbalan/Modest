@@ -2,7 +2,6 @@
 // BACKENDS: c11, llvm, modest
 // EXPECT-EXIT: 0
 // EXPECT-OUT: passed: parentheses
-// EXPECTED-FAIL(c11): BUGS.md#31 the C backend drops same-level parentheses
 //
 // Parentheses are part of the expression, not a hint: `a - (b - c)` is not
 // `a - b - c` and the two do not have the same value.  Every check below
@@ -10,12 +9,11 @@
 // otherwise have, and compares the result with the value written out by
 // hand.
 //
-// The C backend re-emits binary expressions as source text and adds
-// parentheses only where the precedence *levels* differ, so a same-level
-// group on the right of a left-associative operator is silently regrouped
-// to the left by the C compiler.  The operands here are run-time values —
-// nothing about this is a folding problem, and the resulting arithmetic is
-// simply wrong.
+// A backend that re-emits binary expressions as source text has to carry the
+// grouping over: a same-level group on the right of a left-associative
+// operator is regrouped to the left by the C compiler unless the parentheses
+// survive.  The operands here are run-time values — nothing about this is a
+// folding problem, and losing the grouping simply makes the arithmetic wrong.
 
 include "libc/ctypes64"
 include "libc/stdio"

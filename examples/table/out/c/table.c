@@ -71,7 +71,7 @@ static void printRow(char **raw_row, uint32_t *sz, uint32_t nCols) {
 			printf(" %s", s);
 		}
 		uint32_t k = 0;
-		while (k < sz[j] - len) {
+		while (k < (sz[j] - len)) {
 			printf(" ");
 			++k;
 		}

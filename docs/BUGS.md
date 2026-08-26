@@ -612,45 +612,6 @@ var f: Word8 = 0xF0
 - Coverage: `tests/lang/value/binary/narrow_width.modest`, marked
   `EXPECTED-FAIL(c11)`.
 
-## 31. C backend drops parentheses, changing what the expression means
-
-```modest
-var a = opaque(1)
-var b = opaque(2)
-var c = opaque(3)
-
-a - (b - c)      // c11: -4      llvm: 2
-```
-
-```c
-printf("%d\n", a - b - c);        // the parentheses are gone
-```
-
-- Not a folding problem: the operands are run-time values. `do_cvalue_bin`
-  (`src/backend/c11.py`) re-emits `left op right` as source text — see
-  BUGS.md #10 for the other half of that decision — and adds parentheses
-  only when the two operators sit at *different* precedence levels. A
-  same-level subexpression on the right of a left-associative operator
-  loses its grouping, and C regroups it to the left.
-- `a - (b - c)` becomes `a - b - c`, `a / (b / c)` the same way. So does a
-  comparison against a comparison: `t != (a == a)` is emitted as
-  `t != a == a`, which C reads as `(t != a) == a`.
-- Different-level groupings are emitted correctly — `(a + b) * c`,
-  `(w & m) == 0`, `(t or f) and f` all keep their parentheses — which is
-  why this survived: the classic C-precedence traps are the ones handled.
-- Silent and value-changing, on ordinary arithmetic over variables. This is
-  the most dangerous shape a backend bug can have.
-- The LLVM backend is unaffected: it emits one instruction per operation
-  from the tree, so grouping cannot be lost. The `modest` backend re-emits
-  source text and has the same defect (`src/backend/modest.py`), where it
-  matters less — see the note on that backend in BUGS.md #10.
-- Fix: parenthesise from the tree rather than from the precedence table —
-  wrap a binary operand whenever it is itself a binary operation of the
-  same level, or simply wrap every non-atomic operand and let the C
-  compiler's own reader deal with the noise.
-- Coverage: `tests/lang/value/binary/parens.modest`, marked
-  `EXPECTED-FAIL(c11)`.
-
 ## 32. Compile-time `%` uses floored remainder, run time uses truncated
 
 ```modest
@@ -678,3 +639,44 @@ negTen % three     // folded: 2, computed at run time: -1
   `math.fmod` semantics: `abs(a) % abs(b)` carrying the sign of `a`.
 - Coverage: `tests/lang/value/binary/fold_remainder.modest`, marked
   `EXPECTED-FAIL(llvm)`.
+
+## 33. Backend-built expressions lose the grouping of their operands
+
+```modest
+var n = opaque(9)
+var m = opaque(4)
+
+sizeof([n / m]Int32)      // c11: 9      llvm: 8
+```
+
+```c
+printf("%zu\n", sizeof(int32_t) * n / m);   // the volume is no longer a unit
+```
+
+- `sizeof` of an array is `sizeof(item) * volume`, and with a run-time
+  volume the C backend has to write that product out: a VLA type is
+  optional in C11 and rejected outright by MISRA, so `cvalue_sizeof_type`
+  (`src/backend/c11.py:1354`) emits `CValueMul(sizeof(item), volume)`
+  instead of `sizeof(item [n])`.
+- The volume expression is dropped into the right operand as-is. When it is
+  itself an operation of the same precedence level — `n / m`, `n * m`,
+  `n % m` — C regroups it to the left and the product is computed over the
+  wrong subexpression: `(sizeof(int32_t) * n) / m` is 9, not
+  `sizeof(int32_t) * (n / m)` = 8. The LLVM backend emits `sdiv` before
+  `mul` from the tree and gets 8.
+- This is the residue of the defect fixed for the source-level case: the
+  parentheses a *programmer* writes now survive as `ValueSubexpr`
+  (`do_cvalue_subexpr`), so `sizeof([n - (n - m)]Int32)` is emitted
+  correctly. Nothing protects a grouping the backend itself introduced,
+  because there is no `subexpr` node to carry it.
+- The root cause is in cshape, not in the Modest tree: `str_cvalue`
+  parenthesises an operand only when `precedence < ext_precedence`, and
+  every binary class passes its own precedence for *both* operands. For the
+  right operand of a left-associative operator the test has to be `<=`.
+- Fix: in cshape, pass `ext_precedence=self.precedence + 1` for the right
+  operand of every binary class (`CValueMul` … `CValueLogicalOr`,
+  `CValueStringConcat`). The `-Wbitwise-op-parentheses` workaround in the
+  two shift classes stays as it is — it raises the threshold further and
+  does not conflict.
+- Coverage: none yet. Reproduce with the snippet above; `n` and `m` must be
+  run-time values, and the division must not divide evenly.
