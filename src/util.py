@@ -79,11 +79,18 @@ def int_zext(x, width_from, width_to):
 
 
 
-def str_fractional(x):
+def str_fractional(x, width=None):
 	def str_always_float(s):
 		if not '.' in s:
 			return s + '.0'
 		return s
+	# в голом float ширина FloatX не сохраняется, поэтому кратчайшую запись,
+	# которая читается обратно в то же самое значение, ищем сами
+	if width is not None and width < 64 and isinstance(x, float):
+		for p in range(1, 18):
+			s = '%.*g' % (p, x)
+			if pack_float(s, width) == x:
+				return str_always_float(s)
 	return str_always_float(decimal_to_str(fractional_to_decimal(x)))
 
 
@@ -116,17 +123,15 @@ def pack_int(value, width, signed=False):
     return truncated
 
 
-## принимает на вход Decimal, int, etc.
-## возвращает 32 или 64 битное представление float числа
-#def pack_float(val, width):
-#	z = None
-#	if width <= 16:
-#		z = struct.unpack('<e', struct.pack('<e', val))[0]
-#	elif width <= 32:
-#		z = struct.unpack('<f', struct.pack('<f', val))[0]
-#	elif width <= 64:
-#		z = struct.unpack('<d', struct.pack('<d', val))[0]
-#	return z
+# принимает на вход Fraction, Decimal, int, float
+# возвращает ближайшее представимое floatX - то, что даст железо
+def pack_float(val, width):
+	f = float(val)
+	if width <= 16:
+		return struct.unpack('<e', struct.pack('<e', f))[0]
+	elif width <= 32:
+		return struct.unpack('<f', struct.pack('<f', f))[0]
+	return struct.unpack('<d', struct.pack('<d', f))[0]
 
 
 #def unpak_float_to_hex(fval, width):
@@ -137,13 +142,10 @@ def pack_int(value, width, signed=False):
 
 
 def fractional_to_decimal(f):
-	#print(f.__class__)
-	#print(f.numerator)
-	#print(f.denominator)
-	import numpy
-	if isinstance(f, numpy.float64):
+	# у FloatX asset это float (см. Value.set_asset), у Rational - Fraction
+	if isinstance(f, float):
 		return Decimal(str(f))
-	assert(isinstance(f, Fraction) or isinstance(f, int) or isinstance(f, numpy.float64))
+	assert(isinstance(f, Fraction) or isinstance(f, int))
 	return Decimal(f.numerator) / Decimal(f.denominator)
 
 

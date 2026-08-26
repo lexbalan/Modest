@@ -36,8 +36,7 @@ def fixed_to_number(a, fraction):
 
 
 # asset бывает Fraction (Rational), int (IntX/NatX/Integer)
-# или numpy.floatXX (FloatX); numpy.float32 не наследует float,
-# поэтому через float() (!)
+# или float (FloatX)
 def to_fraction(x):
 	if isinstance(x, Fraction):
 		return x
@@ -105,7 +104,7 @@ def value_fixed_cons(t, v, method, ti):
 	cmodule_use('use_fixed_point')
 	nv = ValueCons(t, t, v, method, ti=ti)
 
-	# numbers.Real покрывает int / Fraction / numpy.floatXX разом,
+	# numbers.Real покрывает int / Fraction / float разом,
 	# и отсекает asset у ValueDefault ('<default>') и агрегатов (list)
 	if v.is_immediate() and isinstance(v.asset, numbers.Real):
 		nv.set_asset(fixed_cons_immediate(t, v, ti))

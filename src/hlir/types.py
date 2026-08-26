@@ -4,21 +4,6 @@ from util import *
 
 
 
-#
-# Проблема - numpy единственный кто может обеспечить должные float32 & float64
-# но он грузится чертовски медленно, и приходиться делать вот так, чтобы лишний раз его не загружать
-#
-_np_cache = None
-
-# numpy() only by request (because it is too heavy)
-def get_np():
-	global _np_cache
-	if _np_cache is None:
-		import numpy as _np_cache
-		_np_cache.seterr(divide='ignore', invalid='ignore')
-	return _np_cache
-
-
 
 class TokenInfo:
 	def __init__(self, source, fpos, line, lpos, spaces, tabs, length):
@@ -1827,12 +1812,7 @@ class Value(Entity):
 					# у FixedX asset это сырое хранилище (см. value/fixed.py)
 					a = pack_int(int(a), width=t.width, signed=True)
 				elif t.is_float():
-					# numpy капец как замедляет компиляцию своей долгой загрузкой
-					# но он пока лучший в плвне создания floatXX
-					if t.width == 32:
-						a = get_np().float32(a)
-					elif t.width == 64:
-						a = get_np().float64(a)
+					a = pack_float(a, t.width)
 			except:
 				pass
 

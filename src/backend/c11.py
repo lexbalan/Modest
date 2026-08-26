@@ -446,7 +446,7 @@ def do_cvalue_literal_string(chars, width):
 
 
 def do_cvalue_literal_rational(v, ctx):
-	sstr = str_fractional(v.asset)
+	sstr = str_fractional(v.asset, v.type.width if v.type.is_float() else None)
 	return CValueIdentifier(sstr)
 
 
