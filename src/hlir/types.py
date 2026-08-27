@@ -1912,43 +1912,43 @@ class Value(Entity):
 		return isinstance(self, ValueBin)
 
 	def is_logic_or(self):
-		return self.isBin() and self.op == HLIR_VALUE_OP_LOGIC_OR
+		return self.is_bin() and self.op == HLIR_VALUE_OP_LOGIC_OR
 
 	def is_logic_and(self):
-		return self.isBin() and self.op == HLIR_VALUE_OP_LOGIC_AND
+		return self.is_bin() and self.op == HLIR_VALUE_OP_LOGIC_AND
 
 	def is_logic_xor(self):
-		return self.isBin() and self.op == HLIR_VALUE_OP_LOGIC_XOR
+		return self.is_bin() and self.op == HLIR_VALUE_OP_LOGIC_XOR
 
 	def is_logic_not(self):
 		return isinstance(self, ValueNot) and self.value.type.is_bool()
 
-	def is_logic_or(self):
-		return self.isBin() and self.op == HLIR_VALUE_OP_OR
+	def is_or(self):
+		return self.is_bin() and self.op == HLIR_VALUE_OP_OR
 
 	def is_and(self):
-		return self.isBin() and self.op == HLIR_VALUE_OP_AND
+		return self.is_bin() and self.op == HLIR_VALUE_OP_AND
 
 	def is_xor(self):
-		return self.isBin() and self.op == HLIR_VALUE_OP_XOR
+		return self.is_bin() and self.op == HLIR_VALUE_OP_XOR
 
 	def is_not(self):
 		return isinstance(self, ValueNot) #and not self.value.type.is_bool()
 
 	def is_add(self):
-		return self.isBin() and self.op == HLIR_VALUE_OP_ADD
+		return self.is_bin() and self.op == HLIR_VALUE_OP_ADD
 
 	def is_sub(self):
-		return self.isBin() and self.op == HLIR_VALUE_OP_SUB
+		return self.is_bin() and self.op == HLIR_VALUE_OP_SUB
 
 	def is_mul(self):
-		return self.isBin() and self.op == HLIR_VALUE_OP_MUL
+		return self.is_bin() and self.op == HLIR_VALUE_OP_MUL
 
 	def is_div(self):
-		return self.isBin() and self.op == HLIR_VALUE_OP_DIV
+		return self.is_bin() and self.op == HLIR_VALUE_OP_DIV
 
 	def is_rem(self):
-		return self.isBin() and self.op == HLIR_VALUE_OP_REM
+		return self.is_bin() and self.op == HLIR_VALUE_OP_REM
 
 	def is_neg(self):
 		return isinstance(self, ValueNeg)
@@ -1963,22 +1963,22 @@ class Value(Entity):
 		return isinstance(self, ValueShr)
 
 	def is_lt(self):
-		return self.isBin() and self.op == HLIR_VALUE_OP_LT
+		return self.is_bin() and self.op == HLIR_VALUE_OP_LT
 
 	def is_gt(self):
-		return self.isBin() and self.op == HLIR_VALUE_OP_GT
+		return self.is_bin() and self.op == HLIR_VALUE_OP_GT
 
 	def is_le(self):
-		return self.isBin() and self.op == HLIR_VALUE_OP_LE
+		return self.is_bin() and self.op == HLIR_VALUE_OP_LE
 
 	def is_ge(self):
-		return self.isBin() and self.op == HLIR_VALUE_OP_GE
+		return self.is_bin() and self.op == HLIR_VALUE_OP_GE
 
 	def is_eq(self):
-		return self.isBin() and self.op == HLIR_VALUE_OP_EQ
+		return self.is_bin() and self.op == HLIR_VALUE_OP_EQ
 
 	def is_ne(self):
-		return self.isBin() and self.op == HLIR_VALUE_OP_NE
+		return self.is_bin() and self.op == HLIR_VALUE_OP_NE
 
 	def is_cons(self):
 		return isinstance(self, ValueCons)

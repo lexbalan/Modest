@@ -3184,8 +3184,6 @@ def get_bin_opcode(op, t):
 	opmap = {
 		HLIR_VALUE_OP_LOGIC_AND: 'and',
 		HLIR_VALUE_OP_LOGIC_OR: 'or',
-		HLIR_VALUE_OP_SHL: 'shl',
-		HLIR_VALUE_OP_SHL: 'shr',
 		HLIR_VALUE_OP_BITWISE_AND: 'and',
 		HLIR_VALUE_OP_BITWISE_OR: 'or',
 		HLIR_VALUE_OP_BITWISE_XOR: 'xor',
