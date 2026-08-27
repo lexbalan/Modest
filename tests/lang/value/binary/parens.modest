@@ -1,31 +1,90 @@
 // TEST: run
 // BACKENDS: c11, llvm, modest
 // EXPECT-EXIT: 0
+// EXPECT-OUT: passed: arithmetic grouping
+// EXPECT-OUT: passed: float grouping
+// EXPECT-OUT: passed: bitwise grouping
+// EXPECT-OUT: passed: shift grouping
+// EXPECT-OUT: passed: logical grouping
+// EXPECT-OUT: passed: unary and construction grouping
+// EXPECT-OUT: passed: nesting
+// EXPECT-OUT: passed: grouping in every context
 // EXPECT-OUT: passed: parentheses
 //
 // Parentheses are part of the expression, not a hint: `a - (b - c)` is not
 // `a - b - c` and the two do not have the same value.  Every check below
-// groups a subexpression against the associativity its operator would
-// otherwise have, and compares the result with the value written out by
-// hand.
+// groups a subexpression against the precedence or the associativity its
+// operator would otherwise have, and compares the result with the value
+// written out by hand.
 //
 // A backend that re-emits binary expressions as source text has to carry the
-// grouping over: a same-level group on the right of a left-associative
-// operator is regrouped to the left by the C compiler unless the parentheses
-// survive.  The operands here are run-time values — nothing about this is a
-// folding problem, and losing the grouping simply makes the arithmetic wrong.
+// grouping over.  There are two ways to lose it, and both are checked here:
+//
+//   - a same-level group on the right of a left-associative operator —
+//     every level is left-associative (see README.md), so `a - (b - c)` is
+//     regrouped to the left by the C compiler unless the parentheses
+//     survive;
+//   - a looser operator grouped into a tighter context — `(a | b) >> n`,
+//     `-(a + b)`, `Nat8 (big / 2)`, `not (a == b)`.  The second of these is
+//     the quiet one: in C `!a == b` compiles, and computes something else.
+//
+// The operands are run-time values — nothing here is a folding problem
+// (comptime.modest has that side), and losing the grouping simply makes the
+// arithmetic wrong.  The last group repeats one shape in each place an
+// expression can appear, because the backend reaches those through
+// different paths.
 
 include "libc/ctypes64"
 include "libc/stdio"
 include "libc/stdlib"
 
 
+type Boxed = {
+	value: Int32
+}
+
+
+// The parentheses only matter for a value the compiler cannot see through,
+// so every operand enters through one of these.
 func opaque (n: Int32) -> Int32 {
 	return n
 }
 
 
-func main () -> Int {
+func opaqueWord (w: Word32) -> Word32 {
+	return w
+}
+
+
+func opaqueNat (n: Nat8) -> Nat8 {
+	return n
+}
+
+
+func opaqueNat32 (n: Nat32) -> Nat32 {
+	return n
+}
+
+
+func opaqueBool (b: Bool) -> Bool {
+	return b
+}
+
+
+func opaqueFloat (f: Float64) -> Float64 {
+	return f
+}
+
+
+func twice (n: Int32) -> Int32 {
+	return n * 2
+}
+
+
+// `-` `/` `%` are the operators where the grouping of two operands of the
+// same level is visible in the answer; `+` and `*` give the same value
+// either way and would prove nothing.
+func testArithmeticGrouping () -> Bool {
 	var a = opaque(1)
 	var b = opaque(2)
 	var c = opaque(3)
@@ -33,7 +92,14 @@ func main () -> Int {
 	// 1 - (2 - 3) = 2.  Regrouped to the left it is 1 - 2 - 3 = -4.
 	if a - (b - c) != 2 {
 		printf("a - (b - c) = %d, expected 2\n", a - (b - c))
-		return exitFailure
+		return false
+	}
+
+	// A tighter operator inside the group instead of the same one:
+	// 1 - (2 + 3) = -4, while 1 - 2 + 3 = 2.
+	if a - (b + c) != -4 {
+		printf("a - (b + c) = %d, expected -4\n", a - (b + c))
+		return false
 	}
 
 	// The same shape one level down: 24 / (12 / 2) = 4, not 24 / 12 / 2 = 1.
@@ -42,32 +108,442 @@ func main () -> Int {
 	var two = opaque(2)
 	if big / (mid / two) != 4 {
 		printf("24 / (12 / 2) = %d, expected 4\n", big / (mid / two))
-		return exitFailure
+		return false
+	}
+
+	// 24 / (12 * 2) = 1, while 24 / 12 * 2 = 4.
+	if big / (mid * two) != 1 {
+		printf("24 / (12 * 2) = %d, expected 1\n", big / (mid * two))
+		return false
+	}
+
+	// `*` with a truncating division on its right: 3 * (7 / 2) = 9, and
+	// 3 * 7 / 2 = 10.  The two differ only because `/` throws the
+	// remainder away, which is exactly what makes it a check.
+	var three = opaque(3)
+	var seven = opaque(7)
+	if three * (seven / two) != 9 {
+		printf("3 * (7 / 2) = %d, expected 9\n", three * (seven / two))
+		return false
 	}
 
 	// And with `%`, which shares the level of `*` and `/`:
-	// 100 % (7 * 2) = 2, while 100 % 7 * 2 = 8.
+	// 100 % (7 * 2) = 2, while 100 % 7 * 2 = 4.
 	var hundred = opaque(100)
-	var seven = opaque(7)
 	if hundred % (seven * two) != 2 {
 		printf("100 %% (7 * 2) = %d, expected 2\n", hundred % (seven * two))
-		return exitFailure
+		return false
+	}
+
+	// 100 % (7 % 4) = 100 % 3 = 1, while 100 % 7 % 4 = 2 % 4 = 2.
+	var four = opaque(4)
+	if hundred % (seven % four) != 1 {
+		printf("100 %% (7 %% 4) = %d, expected 1\n", hundred % (seven % four))
+		return false
+	}
+
+	// The other direction: a looser operator pulled into a tighter one.
+	// (1 + 2) * 3 = 9, and without the parentheses 1 + 2 * 3 = 7.
+	if (a + b) * c != 9 {
+		printf("(1 + 2) * 3 = %d, expected 9\n", (a + b) * c)
+		return false
+	}
+
+	// (24 - 12) / 2 = 6, against 24 - 12 / 2 = 18.
+	if (big - mid) / two != 6 {
+		printf("(24 - 12) / 2 = %d, expected 6\n", (big - mid) / two)
+		return false
+	}
+
+	// (1 + 2) % 3 = 0, against 1 + 2 % 3 = 3.
+	if (a + b) % c != 0 {
+		printf("(1 + 2) %% 3 = %d, expected 0\n", (a + b) % c)
+		return false
+	}
+
+	printf("passed: arithmetic grouping\n")
+	return true
+}
+
+
+// The same two shapes on Float64, which reaches the backend as a different
+// value kind.  The operands are powers of two, exact in binary, so the
+// equality checks are honest.
+func testFloatGrouping () -> Bool {
+	var x = opaqueFloat(1.0)
+	var y = opaqueFloat(2.0)
+	var z = opaqueFloat(4.0)
+
+	// 1.0 - (2.0 - 4.0) = 3.0, and 1.0 - 2.0 - 4.0 = -5.0.
+	if x - (y - z) != 3.0 {
+		printf("1.0 - (2.0 - 4.0) = %f, expected 3.0\n", x - (y - z))
+		return false
+	}
+
+	// 1.0 / (2.0 / 4.0) = 2.0, and 1.0 / 2.0 / 4.0 = 0.125.
+	if x / (y / z) != 2.0 {
+		printf("1.0 / (2.0 / 4.0) = %f, expected 2.0\n", x / (y / z))
+		return false
+	}
+
+	// (1.0 + 2.0) / 4.0 = 0.75, against 1.0 + 2.0 / 4.0 = 1.5.
+	if (x + y) / z != 0.75 {
+		printf("(1.0 + 2.0) / 4.0 = %f, expected 0.75\n", (x + y) / z)
+		return false
+	}
+
+	printf("passed: float grouping\n")
+	return true
+}
+
+
+// `&`, `^` and `|` are each associative, so a chain of one operator gives
+// the same answer whichever way it groups.  What the parentheses change is
+// the mix: `&` binds tighter than `^`, and `^` tighter than `|`, so every
+// check here is a looser operator pulled inside a tighter one.
+//
+// The operands are Word32 rather than Word8 so that `~` has room for its
+// answer: on a narrow Word the C backend widens before complementing, which
+// is a width bug and not a grouping one (narrow_width.modest owns it).
+func testBitwiseGrouping () -> Bool {
+	var a = opaqueWord(0x06)
+	var b = opaqueWord(0x03)
+	var c = opaqueWord(0x0C)
+
+	// 0x06 & (0x03 | 0x0C) = 0x06 & 0x0F = 0x06.
+	// Without the group: (0x06 & 0x03) | 0x0C = 0x02 | 0x0C = 0x0E.
+	if a & (b | c) != 0x06 {
+		printf("a & (b | c) = 0x%x, expected 0x06\n", a & (b | c))
+		return false
+	}
+
+	// 0x06 ^ (0x03 | 0x0C) = 0x06 ^ 0x0F = 0x09, against
+	// (0x06 ^ 0x03) | 0x0C = 0x05 | 0x0C = 0x0D.
+	if a ^ (b | c) != 0x09 {
+		printf("a ^ (b | c) = 0x%x, expected 0x09\n", a ^ (b | c))
+		return false
+	}
+
+	// (0x06 | 0x03) & 0x0C = 0x07 & 0x0C = 0x04, against
+	// 0x06 | (0x03 & 0x0C) = 0x06 | 0x00 = 0x06.
+	if (a | b) & c != 0x04 {
+		printf("(a | b) & c = 0x%x, expected 0x04\n", (a | b) & c)
+		return false
+	}
+
+	// (0x06 | 0x03) ^ 0x0C = 0x07 ^ 0x0C = 0x0B, against
+	// 0x06 | (0x03 ^ 0x0C) = 0x06 | 0x0F = 0x0F.
+	if (a | b) ^ c != 0x0B {
+		printf("(a | b) ^ c = 0x%x, expected 0x0B\n", (a | b) ^ c)
+		return false
+	}
+
+	// (0x06 ^ 0x03) & 0x0C = 0x05 & 0x0C = 0x04, against
+	// 0x06 ^ (0x03 & 0x0C) = 0x06 ^ 0x00 = 0x06.
+	if (a ^ b) & c != 0x04 {
+		printf("(a ^ b) & c = 0x%x, expected 0x04\n", (a ^ b) & c)
+		return false
+	}
+
+	// `~` is a unary operator and binds tighter than every binary one, so
+	// the group is the whole point: ~(0x06 & 0x03) = ~0x02 = 0xFFFFFFFD,
+	// while ~0x06 & 0x03 = 0xFFFFFFF9 & 0x03 = 0x01.
+	if ~(a & b) != 0xFFFFFFFD {
+		printf("~(a & b) = 0x%x, expected 0xFFFFFFFD\n", ~(a & b))
+		return false
+	}
+
+	// ~(0x06 | 0x03) = ~0x07 = 0xFFFFFFF8, against
+	// ~0x06 | 0x03 = 0xFFFFFFFB.
+	if ~(a | b) != 0xFFFFFFF8 {
+		printf("~(a | b) = 0x%x, expected 0xFFFFFFF8\n", ~(a | b))
+		return false
+	}
+
+	printf("passed: bitwise grouping\n")
+	return true
+}
+
+
+// Shifts bind tighter than `&`, `^` and `|`, so a bitwise group on the left
+// of a shift needs its parentheses — in C too, which is what makes losing
+// them a silent wrong answer rather than a compile error.
+func testShiftGrouping () -> Bool {
+	var w = opaqueWord(0x06)
+	var m = opaqueWord(0x03)
+	var c = opaqueWord(0x0C)
+	var n = opaqueNat(1)
+
+	// (0x06 | 0x03) >> 1 = 0x07 >> 1 = 0x03, against
+	// 0x06 | (0x03 >> 1) = 0x06 | 0x01 = 0x07.
+	if (w | m) >> n != 0x03 {
+		printf("(w | m) >> n = 0x%x, expected 0x03\n", (w | m) >> n)
+		return false
+	}
+
+	// (0x06 ^ 0x03) << 1 = 0x05 << 1 = 0x0A, against
+	// 0x06 ^ (0x03 << 1) = 0x06 ^ 0x06 = 0x00.
+	if (w ^ m) << n != 0x0A {
+		printf("(w ^ m) << n = 0x%x, expected 0x0A\n", (w ^ m) << n)
+		return false
+	}
+
+	// (0x06 & 0x0C) << 1 = 0x04 << 1 = 0x08, against
+	// 0x06 & (0x0C << 1) = 0x06 & 0x18 = 0x00.
+	if (w & c) << n != 0x08 {
+		printf("(w & c) << n = 0x%x, expected 0x08\n", (w & c) << n)
+		return false
+	}
+
+	// The count is an expression of its own, and it groups on its own
+	// terms: (1 + 1) * 2 = 4, so 0x06 << 4 = 0x60.  Written without the
+	// parentheses the count would be 1 + 1 * 2 = 3 and the answer 0x30.
+	var one = opaqueNat(1)
+	var two = opaqueNat(2)
+	if w << ((n + one) * two) != 0x60 {
+		printf("w << ((n + one) * two) = 0x%x, expected 0x60\n",
+			w << ((n + one) * two))
+		return false
+	}
+
+	printf("passed: shift grouping\n")
+	return true
+}
+
+
+func testLogicalGrouping () -> Bool {
+	var t = opaqueBool(true)
+	var f = opaqueBool(false)
+	var a = opaque(1)
+	var b = opaque(2)
+
+	// `and` binds tighter than `or`, so the group is what puts `or` first:
+	// (true or false) and false = false, while true or (false and false)
+	// is true.
+	if (t or f) and f {
+		printf("(t or f) and f was true, expected false\n")
+		return false
+	}
+
+	// `not` is tighter than both: not (true and false) = true, while
+	// (not true) and false = false.
+	var negated = not (t and f)
+	if not negated {
+		printf("not (t and f) was false, expected true\n")
+		return false
+	}
+
+	// The quiet one.  `not (a == b)` must reach C as `!(a == b)`; dropping
+	// the group gives `!a == b`, which compiles there and computes
+	// (1 == 0) == 2 — false, where the answer is true.
+	var differ = not (a == b)
+	if not differ {
+		printf("not (a == b) was false for 1 and 2, expected true\n")
+		return false
+	}
+
+	// The same trap through an ordering operator: `!a < b` would be
+	// 0 < 2, which is true, where not (1 < 2) is false.
+	var notLess = not (a < b)
+	if notLess {
+		printf("not (a < b) was true for 1 and 2, expected false\n")
+		return false
 	}
 
 	// Two comparisons of the same level: `t != (a == a)` compares a Bool
 	// with a Bool.  Regrouped as `(t != a) == a` it does not even mean the
 	// same thing about the same types.
-	var t = true
 	if t != (a == a) {
 		printf("t != (a == a) was true, expected false\n")
-		return exitFailure
+		return false
 	}
+
+	printf("passed: logical grouping\n")
+	return true
+}
+
+
+// Unary operators and construction both bind tighter than every binary
+// operator, so a binary expression under either of them lives entirely
+// inside its parentheses.
+func testUnaryAndConstructionGrouping () -> Bool {
+	var a = opaque(1)
+	var b = opaque(2)
+
+	// -(1 + 2) = -3, while -1 + 2 = 1.
+	if -(a + b) != -3 {
+		printf("-(a + b) = %d, expected -3\n", -(a + b))
+		return false
+	}
+
+	// -(1 - 2) = 1, while -1 - 2 = -3.
+	if -(a - b) != 1 {
+		printf("-(a - b) = %d, expected 1\n", -(a - b))
+		return false
+	}
+
+	// Construction takes the value next to it, not the expression around
+	// it, so the group decides whether the division happens before the
+	// conversion or after it.  Float64 (7 / 2) converts a truncated 3;
+	// Float64 7 / 2 converts first and then divides in Float64 — 3.5.
+	var seven = opaque(7)
+	if Float64 (seven / 2) != 3.0 {
+		printf("Float64 (seven / 2) = %f, expected 3.0\n", Float64 (seven / 2))
+		return false
+	}
+
+	// The ungrouped form is genuinely the other number, not the same one
+	// written differently.
+	if Float64 seven / 2 != 3.5 {
+		printf("Float64 seven / 2 = %f, expected 3.5\n", Float64 seven / 2)
+		return false
+	}
+
+	printf("passed: unary and construction grouping\n")
+	return true
+}
+
+
+// Groups inside groups, and groups that change nothing: a backend that
+// emits parentheses has to be right about both, since a dropped pair and a
+// pair too many are equally wrong.
+func testNesting () -> Bool {
+	var a = opaque(1)
+	var b = opaque(2)
+	var c = opaque(3)
+	var d = opaque(4)
 
 	// Subtraction nested twice, where both groupings are visible at once:
 	// (1 - (2 - 3)) - (2 - 3) = 3.
 	if (a - (b - c)) - (b - c) != 3 {
 		printf("(a - (b - c)) - (b - c) = %d, expected 3\n",
 			(a - (b - c)) - (b - c))
+		return false
+	}
+
+	// Nested to the right instead: 1 - (2 - (3 - 4)) = -2, against
+	// 1 - 2 - 3 - 4 = -8.
+	if a - (b - (c - d)) != -2 {
+		printf("a - (b - (c - d)) = %d, expected -2\n", a - (b - (c - d)))
+		return false
+	}
+
+	// Three deep, mixing the levels: 1 - (2 - (3 * (4 - 2))) = 5.
+	if a - (b - (c * (d - b))) != 5 {
+		printf("a - (b - (c * (d - b))) = %d, expected 5\n",
+			a - (b - (c * (d - b))))
+		return false
+	}
+
+	// Redundant parentheses are allowed and change nothing: all three of
+	// these are 1 - 2 - 3 = -4.
+	if ((a - b)) - c != -4 or (a) - (b) - (c) != -4 or (a - b - c) != -4 {
+		printf("redundant parentheses changed the value: %d/%d/%d\n",
+			((a - b)) - c, (a) - (b) - (c), (a - b - c))
+		return false
+	}
+
+	// A group around the left operand where the associativity already put
+	// it — also a no-op, and also worth saying out loud.
+	if (a - b) - c != a - b - c {
+		printf("(a - b) - c disagreed with a - b - c\n")
+		return false
+	}
+
+	printf("passed: nesting\n")
+	return true
+}
+
+
+// One shape — `a - (b - c)`, which is 2 where the flat form is -4 — in
+// every place an expression can stand.  Each of these reaches the backend
+// through a different path, and the group has to survive all of them.
+func testGroupingInContexts () -> Bool {
+	var a = opaque(1)
+	var b = opaque(2)
+	var c = opaque(3)
+
+	// Assignment.
+	var assigned: Int32 = 0
+	assigned = a - (b - c)
+	if assigned != 2 {
+		printf("assigned a - (b - c) = %d, expected 2\n", assigned)
+		return false
+	}
+
+	// Initializer.
+	var initialized = a - (b - c)
+	if initialized != 2 {
+		printf("initialized a - (b - c) = %d, expected 2\n", initialized)
+		return false
+	}
+
+	// Call argument.
+	if twice(a - (b - c)) != 4 {
+		printf("twice(a - (b - c)) = %d, expected 4\n", twice(a - (b - c)))
+		return false
+	}
+
+	// Index expression.
+	var arr: [4]Int32 = [10, 20, 30, 40]
+	if arr[a - (b - c)] != 30 {
+		printf("arr[a - (b - c)] = %d, expected 30\n", arr[a - (b - c)])
+		return false
+	}
+
+	// Element of an array literal.
+	var elements: [2]Int32 = [a - (b - c), 0]
+	if elements[0] != 2 {
+		printf("[a - (b - c), 0][0] = %d, expected 2\n", elements[0])
+		return false
+	}
+
+	// Field of a record literal.
+	var boxed: Boxed = {value = a - (b - c)}
+	if boxed.value != 2 {
+		printf("{value = a - (b - c)}.value = %d, expected 2\n", boxed.value)
+		return false
+	}
+
+	// Return value, and a loop condition — the two places the expression
+	// is emitted somewhere other than the middle of a statement.
+	if regrouped(a, b, c) != 2 {
+		printf("return a - (b - c) = %d, expected 2\n", regrouped(a, b, c))
+		return false
+	}
+
+	var spins: Int32 = 0
+	while spins < a - (b - c) {
+		spins = spins + 1
+	}
+	if spins != 2 {
+		printf("while spins < a - (b - c) ran %d times, expected 2\n", spins)
+		return false
+	}
+
+	printf("passed: grouping in every context\n")
+	return true
+}
+
+
+func regrouped (a: Int32, b: Int32, c: Int32) -> Int32 {
+	return a - (b - c)
+}
+
+
+func main () -> Int {
+	var result = true
+	result = testArithmeticGrouping() and result
+	result = testFloatGrouping() and result
+	result = testBitwiseGrouping() and result
+	result = testShiftGrouping() and result
+	result = testLogicalGrouping() and result
+	result = testUnaryAndConstructionGrouping() and result
+	result = testNesting() and result
+	result = testGroupingInContexts() and result
+
+	if not result {
+		printf("failed: parentheses\n")
 		return exitFailure
 	}
 

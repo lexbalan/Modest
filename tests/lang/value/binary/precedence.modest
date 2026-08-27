@@ -19,10 +19,13 @@
 //
 // Two levels are not where a C habit puts them.  `&`, `^` and `|` bind
 // *tighter* than `==`, so `w & mask == 0` needs no parentheses and means
-// what it looks like; in C the same line is `w & (mask == 0)`.  And the
-// three bitwise operators group to the right rather than to the left, which
-// changes no result — but does decide which subexpression the type checker
-// sees first, and with two literals there it stops compiling (BUGS.md #28).
+// what it looks like; in C the same line is `w & (mask == 0)`.  Every level
+// is left-associative, the bitwise ones included, so a chain meets one
+// literal at a time — a literal pair on its own would not compile today
+// (BUGS.md #28).
+//
+// Precedence decides how an unparenthesised expression groups; what happens
+// when the parentheses are written down is parens.modest.
 
 include "libc/ctypes64"
 include "libc/stdio"
