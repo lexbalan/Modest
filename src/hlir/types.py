@@ -2307,7 +2307,7 @@ class ValueRef(Value):
 			# не можно поставить 0 тк иначе значение будет трактоваться как zero
 			# и LLVM printer его не всунет в композитный тип (пропустит insertelement)
 			# поэтому временно заткнул единицей, но вообще нужно будет обдумать
-			self.asset = 1
+			self.set_asset(1)
 
 
 
@@ -2396,7 +2396,7 @@ class ValueAccessModule(Value):
 		self.id = id
 		self.value = value
 		self.stage = value.stage
-		self.asset = value.asset
+		self.set_asset(value.asset)
 		self.is_lvalue = True
 
 

@@ -76,7 +76,7 @@ def value_record_cons(t, v, method, ti):
 	nv = ValueCons(t, t, v, method, ti=ti)
 
 	if t.is_unit():
-		nv.asset = []
+		nv.set_asset([])
 		stage = HLIR_VALUE_STAGE_COMPILETIME
 		return nv
 
