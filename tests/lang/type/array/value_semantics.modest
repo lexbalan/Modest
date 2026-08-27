@@ -1,0 +1,196 @@
+// TEST: run
+// BACKENDS: c11, llvm, modest
+// EXPECT-EXIT: 0
+// EXPECT-OUT: passed: array assignment copies
+// EXPECT-OUT: passed: array argument copies
+// EXPECT-OUT: passed: array return copies
+// EXPECT-OUT: passed: array inside a record copies
+// EXPECT-OUT: passed: array call result
+// EXPECT-OUT: passed: array value semantics
+//
+// An array in Modest is an ordinary value: there is no array decay.  It is
+// assigned, passed and returned by value, and the whole content is copied
+// every time — the one place where the language parts ways with C most
+// visibly, and the one the backends have the most work to do about (a
+// by-value parameter becomes a pointer plus a local copy, an array return
+// becomes an out-parameter, assignment becomes a memcpy).
+//
+// Every check here is the same question asked in a different position: after
+// the copy, does writing to one of the two arrays leave the other alone?  A
+// backend that let the array decay to a pointer would share the storage and
+// fail these, while still passing every test that only reads.
+
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+
+
+type Buffer = {
+	tag: Int32
+	data: [3]Int32
+}
+
+
+// The parameter is a copy the callee owns.  Parameters are immutable, so
+// writing to it needs a `var` of its own — which is a second copy, and the
+// caller's array is two removes away from anything that happens here.
+func clobber (v: [3]Int32) -> Int32 {
+	var w = v
+	w[0] = 999
+	return w[0] + v[0]
+}
+
+
+func firstOf (v: [3]Int32) -> Int32 {
+	return v[0]
+}
+
+
+func makeTriple (x: Int32) -> [3]Int32 {
+	var r: [3]Int32 = [x, x + 1, x + 2]
+	return r
+}
+
+
+func testAssignment () -> Bool {
+	var a: [4]Int32 = [1, 2, 3, 4]
+	var b: [4]Int32 = []
+
+	b = a
+	if b[0] != 1 or b[3] != 4 {
+		printf("b = [%d ... %d] after b = a, expected [1 ... 4]\n", b[0], b[3])
+		return false
+	}
+
+	// The copy is real: b has its own storage.
+	b[0] = 100
+	if a[0] != 1 {
+		printf("a[0] = %d after writing to b, expected 1\n", a[0])
+		return false
+	}
+
+	// ... and so does a.
+	a[3] = 40
+	if b[3] != 4 {
+		printf("b[3] = %d after writing to a, expected 4\n", b[3])
+		return false
+	}
+
+	printf("passed: array assignment copies\n")
+	return true
+}
+
+
+func testArgument () -> Bool {
+	var a: [3]Int32 = [1, 2, 3]
+
+	// The callee writes 999 over element 0 of its own copy, and returns that
+	// plus the element it was given: 999 + 1.
+	let got = clobber(a)
+	if got != 1000 {
+		printf("clobber(a) = %d, expected 1000\n", got)
+		return false
+	}
+
+	if a[0] != 1 {
+		printf("a[0] = %d after clobber(a), expected 1\n", a[0])
+		return false
+	}
+
+	printf("passed: array argument copies\n")
+	return true
+}
+
+
+func testReturn () -> Bool {
+	var t: [3]Int32 = makeTriple(10)
+	if t[0] != 10 or t[1] != 11 or t[2] != 12 {
+		printf("makeTriple(10) = [%d, %d, %d], expected [10, 11, 12]\n", t[0], t[1], t[2])
+		return false
+	}
+
+	// Two calls give two independent arrays, not two views of one.
+	var u: [3]Int32 = makeTriple(20)
+	t[0] = 0
+	if u[0] != 20 {
+		printf("u[0] = %d after writing to t, expected 20\n", u[0])
+		return false
+	}
+
+	printf("passed: array return copies\n")
+	return true
+}
+
+
+func testInsideRecord () -> Bool {
+	var x = Buffer {tag = 1, data = [1, 2, 3]}
+	var y = x
+
+	// A record is copied by value, and the array field goes with it —
+	// the field is content, not a pointer to shared content.
+	y.data[0] = 99
+	if x.data[0] != 1 {
+		printf("x.data[0] = %d after writing to y, expected 1\n", x.data[0])
+		return false
+	}
+	if y.data[0] != 99 {
+		printf("y.data[0] = %d, expected 99\n", y.data[0])
+		return false
+	}
+
+	// The field is an array value in its own right: it assigns as one.
+	var out: [3]Int32 = x.data
+	out[1] = 88
+	if x.data[1] != 2 {
+		printf("x.data[1] = %d after writing to the copy, expected 2\n", x.data[1])
+		return false
+	}
+	if out[1] != 88 {
+		printf("out[1] = %d, expected 88\n", out[1])
+		return false
+	}
+
+	printf("passed: array inside a record copies\n")
+	return true
+}
+
+
+func testCallResult () -> Bool {
+	// A returned array is a value like any other, so it can be indexed
+	// where it stands, without a variable to hold it first.
+	if makeTriple(5)[0] != 5 {
+		printf("makeTriple(5)[0] = %d, expected 5\n", makeTriple(5)[0])
+		return false
+	}
+	if makeTriple(5)[2] != 7 {
+		printf("makeTriple(5)[2] = %d, expected 7\n", makeTriple(5)[2])
+		return false
+	}
+
+	// ... or handed straight on to something that takes an array by value.
+	if firstOf(makeTriple(30)) != 30 {
+		printf("firstOf(makeTriple(30)) = %d, expected 30\n", firstOf(makeTriple(30)))
+		return false
+	}
+
+	printf("passed: array call result\n")
+	return true
+}
+
+
+func main () -> Int {
+	var result = true
+	result = testAssignment() and result
+	result = testArgument() and result
+	result = testReturn() and result
+	result = testInsideRecord() and result
+	result = testCallResult() and result
+
+	if not result {
+		printf("failed: array value semantics\n")
+		return exitFailure
+	}
+
+	printf("passed: array value semantics\n")
+	return exitSuccess
+}

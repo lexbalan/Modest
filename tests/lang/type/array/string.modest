@@ -1,0 +1,177 @@
+// TEST: run
+// BACKENDS: c11, llvm, modest
+// EXPECT-EXIT: 0
+// EXPECT-OUT: passed: string is an array
+// EXPECT-OUT: passed: string literal as an array value
+// EXPECT-OUT: passed: string through a pointer
+// EXPECT-OUT: passed: character buffer
+// EXPECT-OUT: passed: strings as arrays
+//
+// The string types are not a separate kind of thing: `Str8` is `[]Char8`,
+// an unsized array of characters, and everything that holds for arrays
+// holds for it.  Which means a string is normally reached through a
+// pointer — `*Str8` — because an unsized array has no length to make a
+// variable of, and that `s[0]` is an ordinary index returning a `Char8`.
+//
+// A string literal, in turn, is a `[N]CharX` array value holding exactly
+// the characters written, so it goes into a sized array of characters and
+// obeys the usual fill rules: an exact length keeps just the characters, a
+// longer one zero-fills the tail.  Zero-termination belongs to the string
+// *types*, and is added where a string value is constructed — checked here
+// through the pointer, where it is what makes `%s` and `strlen` work.
+
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+include "libc/string"
+
+
+func firstChar (s: *Str8) -> Char8 {
+	return s[0]
+}
+
+
+func testStringIsArray () -> Bool {
+	let s: *Str8 = "Hello"
+
+	// Indexing a string is indexing an array of characters.
+	if s[0] != Char8 'H' {
+		printf("s[0] = %c, expected H\n", s[0])
+		return false
+	}
+	if s[4] != Char8 'o' {
+		printf("s[4] = %c, expected o\n", s[4])
+		return false
+	}
+
+	// A `*Str8` parameter is a pointer to an unsized array, so it takes a
+	// string of any length — nothing about the length is in the type.
+	if firstChar("Hello") != Char8 'H' or firstChar("xyz") != Char8 'x' {
+		printf("firstChar = %c and %c, expected H and x\n",
+			firstChar("Hello"), firstChar("xyz"))
+		return false
+	}
+
+	printf("passed: string is an array\n")
+	return true
+}
+
+
+func testLiteralAsArray () -> Bool {
+	// Exactly as long as the literal: the array holds the characters and
+	// nothing else.
+	var exact: [5]Char8 = "Hello"
+	if exact[0] != Char8 'H' or exact[4] != Char8 'o' {
+		printf("exact = %c ... %c, expected H ... o\n", exact[0], exact[4])
+		return false
+	}
+	if lengthof(exact) != 5 {
+		printf("lengthof(exact) = %d, expected 5\n", Int32 lengthof(exact))
+		return false
+	}
+
+	// Longer: the tail is zero-filled, like any array that is constructed
+	// from something shorter than itself.
+	var padded: [8]Char8 = "Hello"
+	if padded[4] != Char8 'o' {
+		printf("padded[4] = %c, expected o\n", padded[4])
+		return false
+	}
+	if padded[5] != Char8 0 or padded[7] != Char8 0 {
+		printf("padded[5] and padded[7] are not zero\n")
+		return false
+	}
+
+	// Being arrays of the same type and length, two of them compare.
+	var same: [5]Char8 = "Hello"
+	var other: [5]Char8 = "World"
+	if not (exact == same) {
+		printf("exact == same is false for two identical strings\n")
+		return false
+	}
+	if not (exact != other) {
+		printf("exact != other is false for \"Hello\" and \"World\"\n")
+		return false
+	}
+
+	printf("passed: string literal as an array value\n")
+	return true
+}
+
+
+func testThroughPointer () -> Bool {
+	let s: *Str8 = "Hello"
+
+	// A string value is zero-terminated where it is constructed, so the
+	// storage behind the pointer has one character more than the literal.
+	if s[5] != Char8 0 {
+		printf("s[5] is not the terminator\n")
+		return false
+	}
+
+	// Which is what the C library needs to see.
+	if strlen(s) != 5 {
+		printf("strlen(s) is not 5\n")
+		return false
+	}
+
+	printf("passed: string through a pointer\n")
+	return true
+}
+
+
+func testBuffer () -> Bool {
+	// A writable string is a sized character array, addressed as a string
+	// when something wants one.
+	var buf: [8]Char8 = []
+	buf[0] = Char8 'H'
+	buf[1] = Char8 'i'
+
+	// The rest is still zero from `= []`, so the buffer is already a valid
+	// zero-terminated string.
+	let s: *Str8 = &buf
+	if strlen(s) != 2 {
+		printf("strlen(&buf) is not 2\n")
+		return false
+	}
+	if s[0] != Char8 'H' or s[1] != Char8 'i' {
+		printf("&buf reads back as %c%c, expected Hi\n", s[0], s[1])
+		return false
+	}
+
+	// Writing through the string pointer reaches the buffer, the way it
+	// does through a pointer to any other array.
+	s[1] = Char8 'a'
+	if buf[1] != Char8 'a' {
+		printf("buf[1] = %c after writing through the pointer, expected a\n", buf[1])
+		return false
+	}
+
+	// And the buffer copies by value, being an ordinary array.
+	var copy: [8]Char8 = buf
+	copy[0] = Char8 'X'
+	if buf[0] != Char8 'H' {
+		printf("buf[0] = %c after writing to the copy, expected H\n", buf[0])
+		return false
+	}
+
+	printf("passed: character buffer\n")
+	return true
+}
+
+
+func main () -> Int {
+	var result = true
+	result = testStringIsArray() and result
+	result = testLiteralAsArray() and result
+	result = testThroughPointer() and result
+	result = testBuffer() and result
+
+	if not result {
+		printf("failed: strings as arrays\n")
+		return exitFailure
+	}
+
+	printf("passed: strings as arrays\n")
+	return exitSuccess
+}

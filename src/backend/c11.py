@@ -774,7 +774,7 @@ def do_cvalue_cons(x, ctx):
 	elif t.is_fixed(): cv = do_cvalue_cons_fixed(x, ctx)
 	elif t.is_integer(): cv = do_cvalue(x.value, ctx)
 	else:
-		assert(False, "do_cvalue_cons: not implemented for type %s" % str(t))
+		1/0
 	#elif type.is_branded(): return do_cvalue_cast(x.type, x.value, ctx)
 	assert(cv != None)
 	return cv
@@ -1343,8 +1343,8 @@ def do_cvalue_eq(x, logic, ctx):
 		ctype_pointer_to_chars = CTypePointer(CTypeIdentifier("char"))
 		ctype_pointer_to_chars.specifiers = ['const']
 		lx = CValueCall(CValueIdentifier("__builtin_strcmp"), [
-			CValueCast(ctype_pointer_to_chars, do_cvalue_as_ptr(left)), #, parr_relax=True)),
-			CValueCast(ctype_pointer_to_chars, do_cvalue_as_ptr(right)) #, parr_relax=True))
+			CValueCast(ctype_pointer_to_chars, do_cvalue_as_ptr(left)),
+			CValueCast(ctype_pointer_to_chars, do_cvalue_as_ptr(right))
 		])
 		rx = CValueInteger(0)
 
@@ -2677,29 +2677,30 @@ def do_cvalue_mem(x):
 
 
 def do_cvalue_as_ptr(x, parr_relax=False):
+
+	# cv = do_cvalue_mem(x)
+	# if x.type.is_array():
+	# 	return cv
+	# return CValueReference(cv)
+
 	if x.is_deref():
-		# Если это взятие адреса - просто вернем значение
-		return do_cvalue(x.value)
+		return do_cvalue(x.value)  # Если это разыменовывание - просто вернем его аргумент (это указатель)
 
-	# Результат вызова в C не lvalue: `&f()` не компилируется.  Кладем его
-	# в составной литерал-массив из одного элемента - тот является lvalue,
-	# живет до конца блока и сам распадается в указатель.  Литерал остается
-	# ВНУТРИ выражения, поэтому ленивость `and`/`or` не страдает
-	#
-	# Массив возвращается через sret и сам отдает указатель на буфер -
-	# брать адрес еще раз не нужно
-	if x.is_call() and x.type.is_sized_array():
-		return do_cvalue(x)
+	if x.is_call():
+		if x.type.is_sized_array():
+			return do_cvalue(x)
 
-	if x.is_call() and x.type.is_record():
-		item = do_cvalue(x)
-		item.nl = 0
-		ctype = CTypeArray(do_ctype(x.type), CValueInteger(1))
-		return CValueCast(ctype, CValueArray([item]))
+		if x.type.is_record():
+			item = do_cvalue(x)
+			item.nl = 0
+			ctype = CTypeArray(do_ctype(x.type), CValueInteger(1))
+			return CValueCast(ctype, CValueArray([item]))
 
 	if parr_relax and x.type.is_array():
 		root = get_root_value(x)
-		if root.is_var() or (root.is_const() and not const_as_macro(root)) or root.is_array() or root.is_access_record():
+		if root.is_array():
+			return do_cvalue_mem(x)
+		if root.is_var() or (root.is_const() and not const_as_macro(root)) or root.is_access_record():
 			return do_cvalue(root)
 		if ARRAY_AS_POINTER and root.is_const() and const_as_macro(root):
 			return do_cvalue_mem(x)

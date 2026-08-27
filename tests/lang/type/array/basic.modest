@@ -1,0 +1,253 @@
+// TEST: run
+// BACKENDS: c11, llvm, modest
+// EXPECT-EXIT: 0
+// EXPECT-OUT: passed: array literal
+// EXPECT-OUT: passed: array indexing
+// EXPECT-OUT: passed: array zero fill
+// EXPECT-OUT: passed: array length and size
+// EXPECT-OUT: passed: array equality
+// EXPECT-OUT: passed: array element types
+// EXPECT-OUT: passed: module level arrays
+// EXPECT-OUT: passed: array basics
+//
+// The shape of an array type and the ways a value of it is built and read.
+// Length is part of the type, so `lengthof` and `sizeof` are compile-time
+// facts about the type, not about the storage; indexing is from zero and
+// takes any NatX, not only a literal.
+//
+// The two fill forms are both here because they differ: a generic array
+// literal has to match the length exactly, while explicit construction to a
+// longer array zero-fills the tail, and `= []` zero-fills all of it.
+//
+// Equality is included because an array is an ordinary value type: `==`
+// compares element by element, like it does field by field for a record.
+
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+
+
+type Point = {
+	x: Int32
+	y: Int32
+}
+
+
+// Module-level arrays: one with a value, one left to zero-init.
+const primes: [4]Int32 = [2, 3, 5, 7]
+var counters: [3]Int32
+
+
+func testLiteral () -> Bool {
+	// A generic array literal takes the element type from the declaration.
+	var a: [5]Int32 = [1, 2, 3, 4, 5]
+	if a[0] != 1 or a[4] != 5 {
+		printf("a = [%d ... %d], expected [1 ... 5]\n", a[0], a[4])
+		return false
+	}
+
+	// The elements are ordinary expressions, not just literals.
+	let n: Int32 = 10
+	var b: [3]Int32 = [n, n * 2, n + a[0]]
+	if b[0] != 10 or b[1] != 20 or b[2] != 11 {
+		printf("b = [%d, %d, %d], expected [10, 20, 11]\n", b[0], b[1], b[2])
+		return false
+	}
+
+	// The type is inferred from the declared type of the variable, so the
+	// same literal serves any element type it converts to.
+	var c: [3]Float64 = [1, 2, 3]
+	if c[1] != 2.0 {
+		printf("c[1] = %f, expected 2.0\n", c[1])
+		return false
+	}
+
+	printf("passed: array literal\n")
+	return true
+}
+
+
+func testIndexing () -> Bool {
+	var a: [5]Int32 = [10, 20, 30, 40, 50]
+
+	// Indexed from zero.
+	if a[0] != 10 {
+		printf("a[0] = %d, expected 10\n", a[0])
+		return false
+	}
+
+	// The index is a value, not necessarily a constant.
+	var i: Nat32 = 3
+	if a[i] != 40 {
+		printf("a[3] = %d, expected 40\n", a[i])
+		return false
+	}
+
+	// ... and an expression of one.
+	if a[i - 1] != 30 {
+		printf("a[i - 1] = %d, expected 30\n", a[i - 1])
+		return false
+	}
+
+	// Walking the whole thing: the bound comes from the type itself.
+	var sum: Int32 = 0
+	var k: Nat32 = 0
+	while k < lengthof(a) {
+		sum = sum + a[k]
+		++k
+	}
+	if sum != 150 {
+		printf("sum = %d, expected 150\n", sum)
+		return false
+	}
+
+	printf("passed: array indexing\n")
+	return true
+}
+
+
+func testZeroFill () -> Bool {
+	// `= []` fills the whole array with the element's default value.
+	var a: [4]Int32 = []
+	if a[0] != 0 or a[1] != 0 or a[2] != 0 or a[3] != 0 {
+		printf("a = [%d, %d, %d, %d], expected all zero\n", a[0], a[1], a[2], a[3])
+		return false
+	}
+
+	// Explicit construction to a longer array zero-fills the tail.  A bare
+	// literal cannot do this — as a generic array it has to match the length.
+	var b: [4]Int32 = [4]Int32 [7, 8]
+	if b[0] != 7 or b[1] != 8 {
+		printf("b[0:2] = [%d, %d], expected [7, 8]\n", b[0], b[1])
+		return false
+	}
+	if b[2] != 0 or b[3] != 0 {
+		printf("b[2:4] = [%d, %d], expected the zero-filled tail\n", b[2], b[3])
+		return false
+	}
+
+	printf("passed: array zero fill\n")
+	return true
+}
+
+
+func testLengthAndSize () -> Bool {
+	var a: [5]Int32 = [1, 2, 3, 4, 5]
+
+	// Both are properties of the type, and both fold at compile time.
+	if lengthof(a) != 5 {
+		printf("lengthof(a) = %d, expected 5\n", Int32 lengthof(a))
+		return false
+	}
+	if sizeof(a) != 5 * sizeof(Int32) {
+		printf("sizeof(a) = %d, expected 20\n", Int32 sizeof(a))
+		return false
+	}
+
+	// Which means the type alone is enough — no value needed.
+	if lengthof([10]Int32) != 10 {
+		printf("lengthof([10]Int32) = %d, expected 10\n", Int32 lengthof([10]Int32))
+		return false
+	}
+	if sizeof([10]Int16) != 20 {
+		printf("sizeof([10]Int16) = %d, expected 20\n", Int32 sizeof([10]Int16))
+		return false
+	}
+
+	printf("passed: array length and size\n")
+	return true
+}
+
+
+func testEquality () -> Bool {
+	var a: [4]Int32 = [1, 2, 3, 4]
+	var b: [4]Int32 = [1, 2, 3, 4]
+	var c: [4]Int32 = [1, 9, 3, 4]
+
+	// Element by element, across the whole array.
+	if not (a == b) {
+		printf("a == b is false for two identical arrays\n")
+		return false
+	}
+	// The difference is in the middle: a comparison that only looked at the
+	// first or the last element would miss it.
+	if not (a != c) {
+		printf("a != c is false, but a[1] = %d and c[1] = %d\n", a[1], c[1])
+		return false
+	}
+
+	printf("passed: array equality\n")
+	return true
+}
+
+
+func testElementTypes () -> Bool {
+	// An array holds any type, including ones that are not numbers.
+	var flags: [3]Bool = [true, false, true]
+	if not flags[0] or flags[1] or not flags[2] {
+		printf("flags = [%d, %d, %d], expected [1, 0, 1]\n",
+			Int32 (Word8 flags[0]), Int32 (Word8 flags[1]), Int32 (Word8 flags[2]))
+		return false
+	}
+
+	var points: [2]Point = [{x = 1, y = 2}, {x = 3, y = 4}]
+	if points[1].x != 3 or points[1].y != 4 {
+		printf("points[1] = {%d, %d}, expected {3, 4}\n", points[1].x, points[1].y)
+		return false
+	}
+
+	var n1: Int32 = 11
+	var n2: Int32 = 22
+	var ptrs: [2]*Int32 = [&n1, &n2]
+	if *ptrs[0] != 11 or *ptrs[1] != 22 {
+		printf("*ptrs = [%d, %d], expected [11, 22]\n", *ptrs[0], *ptrs[1])
+		return false
+	}
+
+	printf("passed: array element types\n")
+	return true
+}
+
+
+func testModuleLevel () -> Bool {
+	if primes[0] != 2 or primes[3] != 7 {
+		printf("primes = [%d ... %d], expected [2 ... 7]\n", primes[0], primes[3])
+		return false
+	}
+
+	// A module-level array with no initializer is zero, like any other
+	// module-level variable.
+	if counters[0] != 0 or counters[2] != 0 {
+		printf("counters = [%d, ..., %d], expected all zero\n", counters[0], counters[2])
+		return false
+	}
+
+	counters[1] = 5
+	if counters[1] != 5 {
+		printf("counters[1] = %d, expected 5\n", counters[1])
+		return false
+	}
+
+	printf("passed: module level arrays\n")
+	return true
+}
+
+
+func main () -> Int {
+	var result = true
+	result = testLiteral() and result
+	result = testIndexing() and result
+	result = testZeroFill() and result
+	result = testLengthAndSize() and result
+	result = testEquality() and result
+	result = testElementTypes() and result
+	result = testModuleLevel() and result
+
+	if not result {
+		printf("failed: array basics\n")
+		return exitFailure
+	}
+
+	printf("passed: array basics\n")
+	return exitSuccess
+}

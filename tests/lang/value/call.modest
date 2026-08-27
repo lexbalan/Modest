@@ -10,6 +10,7 @@
 // EXPECT-OUT: passed: record argument
 // EXPECT-OUT: passed: array argument
 // EXPECT-OUT: passed: composite arguments
+// EXPECT-OUT: passed: literal arguments
 // EXPECT-OUT: passed: nested composite arguments
 // EXPECT-OUT: passed: laid out arguments
 // EXPECT-OUT: passed: returned array
@@ -264,6 +265,56 @@ func testCompositeArguments () -> Bool {
 }
 
 
+func cornerOf (m: [2][3]Int32) -> Int32 {
+	return m[1][2]
+}
+
+
+// A literal has no storage of its own either, so it raises the same question
+// a returned array does, in the same place: an argument list is not somewhere
+// a value can be left lying.  Nothing here needs a name to hold it — the
+// literal is written where it is used and travels by value from there.
+func testLiteralArguments () -> Bool {
+	// Constructed to the parameter's type, right in the argument list.
+	if sumOf([3]Int32 [1, 2, 3]) != 6 {
+		printf("sumOf([3]Int32 [1, 2, 3]) = %d, expected 6\n",
+			sumOf([3]Int32 [1, 2, 3]))
+		return false
+	}
+
+	// The same literal generic, taking its element type from the parameter.
+	if sumOf([1, 2, 3]) != 6 {
+		printf("sumOf([1, 2, 3]) = %d, expected 6\n", sumOf([1, 2, 3]))
+		return false
+	}
+
+	// An element type that is an array of its own.
+	if cornerOf([2][3]Int32 [[1, 2, 3], [4, 5, 6]]) != 6 {
+		printf("cornerOf([[1, 2, 3], [4, 5, 6]]) = %d, expected 6\n",
+			cornerOf([2][3]Int32 [[1, 2, 3], [4, 5, 6]]))
+		return false
+	}
+
+	// And one whose elements are records, each a literal in turn — the form
+	// that already worked for a record on its own, one level up.
+	let pts = [2]Point [Point {x = 7, y = 0}, Point {x = 8, y = 0}]
+	if firstOf([2]Point [Point {x = 7, y = 0}, Point {x = 8, y = 0}]) != firstOf(pts) {
+		printf("a literal argument differs from the same literal named\n")
+		return false
+	}
+
+	// A literal argument inside a call that is itself an argument.
+	if twice(sumOf([1, 2, 3])) != 12 {
+		printf("twice(sumOf([1, 2, 3])) = %d, expected 12\n",
+			twice(sumOf([1, 2, 3])))
+		return false
+	}
+
+	printf("passed: literal arguments\n")
+	return true
+}
+
+
 type Boxed = {
 	tag: Int32
 	data: [3]Int32
@@ -470,6 +521,7 @@ func main () -> Int {
 	result = testRecordArgument() and result
 	result = testArrayArgument() and result
 	result = testCompositeArguments() and result
+	result = testLiteralArguments() and result
 	result = testNestedCompositeArguments() and result
 	result = testLaidOutArguments() and result
 	result = testReturnedArray() and result

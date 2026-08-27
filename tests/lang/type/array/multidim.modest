@@ -1,0 +1,252 @@
+// TEST: run
+// BACKENDS: c11, llvm, modest
+// EXPECT-EXIT: 0
+// EXPECT-OUT: passed: matrix literal
+// EXPECT-OUT: passed: matrix indexing
+// EXPECT-OUT: passed: row is a value
+// EXPECT-OUT: passed: matrix length and size
+// EXPECT-OUT: passed: matrix by value
+// EXPECT-OUT: passed: three dimensions
+// EXPECT-OUT: passed: multi-dimensional arrays
+//
+// There is no separate multi-dimensional array type: `[2][3]Int32` is an
+// array of two `[3]Int32`, and everything follows from that one fact.  The
+// checks below are the places where it shows:
+//
+//   - the literal nests, one level per dimension;
+//   - `m[i]` is a `[3]Int32` — a value, so it copies, assigns and is
+//     returned like any other array, and `m[i][j]` is that value indexed;
+//   - `lengthof(m)` is 2 while `lengthof(m[0])` is 3, and the size is the
+//     product, because the storage is contiguous with nothing in between.
+//
+// The rows being values rather than pointers is what separates this from C,
+// so it is checked the same way as in value_semantics.modest: write to the
+// copy, then look at the original.
+
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+
+
+func rowOf (m: [2][3]Int32, i: Nat32) -> [3]Int32 {
+	return m[i]
+}
+
+
+func sumOf (m: [2][3]Int32) -> Int32 {
+	var s: Int32 = 0
+	var i: Nat32 = 0
+	while i < lengthof(m) {
+		var j: Nat32 = 0
+		while j < lengthof(m[0]) {
+			s = s + m[i][j]
+			++j
+		}
+		++i
+	}
+	return s
+}
+
+
+func testLiteral () -> Bool {
+	var m: [2][3]Int32 = [[1, 2, 3], [4, 5, 6]]
+	if m[0][0] != 1 or m[1][2] != 6 {
+		printf("m = [[%d ...], [... %d]], expected [[1 ...], [... 6]]\n", m[0][0], m[1][2])
+		return false
+	}
+
+	// `= []` zero-fills every level.
+	var z: [2][3]Int32 = []
+	if z[0][0] != 0 or z[1][2] != 0 {
+		printf("z = [[%d ...], [... %d]], expected all zero\n", z[0][0], z[1][2])
+		return false
+	}
+
+	printf("passed: matrix literal\n")
+	return true
+}
+
+
+func testIndexing () -> Bool {
+	var m: [2][3]Int32 = [[1, 2, 3], [4, 5, 6]]
+
+	// Row first, then column — `m[1][2]` is the third element of the second
+	// row, not the other way round.
+	if m[1][0] != 4 {
+		printf("m[1][0] = %d, expected 4\n", m[1][0])
+		return false
+	}
+
+	// Writing goes to one element and leaves its neighbours alone, which is
+	// the interesting half: the rows sit next to each other in one block.
+	m[0][2] = 30
+	if m[0][2] != 30 {
+		printf("m[0][2] = %d, expected 30\n", m[0][2])
+		return false
+	}
+	if m[1][0] != 4 {
+		printf("m[1][0] = %d after writing m[0][2], expected 4\n", m[1][0])
+		return false
+	}
+
+	// Run-time indices on both levels.
+	var i: Nat32 = 1
+	var j: Nat32 = 1
+	if m[i][j] != 5 {
+		printf("m[i][j] = %d, expected 5\n", m[i][j])
+		return false
+	}
+
+	printf("passed: matrix indexing\n")
+	return true
+}
+
+
+func testRowIsValue () -> Bool {
+	var m: [2][3]Int32 = [[1, 2, 3], [4, 5, 6]]
+
+	// A row assigns out as a value — and copies.
+	var row: [3]Int32 = m[0]
+	row[0] = 99
+	if m[0][0] != 1 {
+		printf("m[0][0] = %d after writing to the copied row, expected 1\n", m[0][0])
+		return false
+	}
+
+	// ... and assigns in, replacing the whole row at once.
+	m[0] = [7, 8, 9]
+	if m[0][0] != 7 or m[0][1] != 8 or m[0][2] != 9 {
+		printf("m[0] = [%d, %d, %d], expected [7, 8, 9]\n", m[0][0], m[0][1], m[0][2])
+		return false
+	}
+	if m[1][0] != 4 {
+		printf("m[1][0] = %d after replacing row 0, expected 4\n", m[1][0])
+		return false
+	}
+
+	// A row is returned from a function like any other array.
+	var got = rowOf(m, 1)
+	if got[0] != 4 or got[2] != 6 {
+		printf("rowOf(m, 1) = [%d ... %d], expected [4 ... 6]\n", got[0], got[2])
+		return false
+	}
+
+	// Two rows compare element by element, being arrays.
+	var same: [2][3]Int32 = [[7, 8, 9], [4, 5, 6]]
+	if not (m == same) {
+		printf("m == same is false for two identical matrices\n")
+		return false
+	}
+
+	printf("passed: row is a value\n")
+	return true
+}
+
+
+func testLengthAndSize () -> Bool {
+	var m: [2][3]Int32 = [[1, 2, 3], [4, 5, 6]]
+
+	// The outer length counts rows; the inner one counts their elements.
+	if lengthof(m) != 2 {
+		printf("lengthof(m) = %d, expected 2\n", Int32 lengthof(m))
+		return false
+	}
+	if lengthof(m[0]) != 3 {
+		printf("lengthof(m[0]) = %d, expected 3\n", Int32 lengthof(m[0]))
+		return false
+	}
+
+	// Contiguous, with no per-row overhead: the size is just the product.
+	if sizeof(m) != 6 * sizeof(Int32) {
+		printf("sizeof(m) = %d, expected 24\n", Int32 sizeof(m))
+		return false
+	}
+	if sizeof([2][3]Int32) != sizeof(m) {
+		printf("sizeof([2][3]Int32) = %d, expected %d\n",
+			Int32 sizeof([2][3]Int32), Int32 sizeof(m))
+		return false
+	}
+
+	printf("passed: matrix length and size\n")
+	return true
+}
+
+
+func testByValue () -> Bool {
+	var m: [2][3]Int32 = [[1, 2, 3], [4, 5, 6]]
+
+	if sumOf(m) != 21 {
+		printf("sumOf(m) = %d, expected 21\n", sumOf(m))
+		return false
+	}
+
+	// The whole matrix is copied on the way in, rows and all.
+	var n: [2][3]Int32 = m
+	n[1][1] = 500
+	if m[1][1] != 5 {
+		printf("m[1][1] = %d after writing to the copy, expected 5\n", m[1][1])
+		return false
+	}
+	if sumOf(m) != 21 {
+		printf("sumOf(m) = %d after writing to the copy, expected 21\n", sumOf(m))
+		return false
+	}
+
+	printf("passed: matrix by value\n")
+	return true
+}
+
+
+func testThreeDimensions () -> Bool {
+	var c: [2][2][2]Int32 = [[[1, 2], [3, 4]], [[5, 6], [7, 8]]]
+
+	if c[0][0][0] != 1 or c[1][1][1] != 8 {
+		printf("c = [%d ... %d], expected [1 ... 8]\n", c[0][0][0], c[1][1][1])
+		return false
+	}
+	if c[1][0][1] != 6 {
+		printf("c[1][0][1] = %d, expected 6\n", c[1][0][1])
+		return false
+	}
+
+	// Nothing new at three levels: still an array of arrays of arrays.
+	if lengthof(c) != 2 or lengthof(c[0]) != 2 or lengthof(c[0][0]) != 2 {
+		printf("lengths = [%d, %d, %d], expected [2, 2, 2]\n",
+			Int32 lengthof(c), Int32 lengthof(c[0]), Int32 lengthof(c[0][0]))
+		return false
+	}
+	if sizeof(c) != 8 * sizeof(Int32) {
+		printf("sizeof(c) = %d, expected 32\n", Int32 sizeof(c))
+		return false
+	}
+
+	// A middle level is a value too.
+	var plane: [2][2]Int32 = c[1]
+	plane[0][0] = 50
+	if c[1][0][0] != 5 {
+		printf("c[1][0][0] = %d after writing to the copied plane, expected 5\n", c[1][0][0])
+		return false
+	}
+
+	printf("passed: three dimensions\n")
+	return true
+}
+
+
+func main () -> Int {
+	var result = true
+	result = testLiteral() and result
+	result = testIndexing() and result
+	result = testRowIsValue() and result
+	result = testLengthAndSize() and result
+	result = testByValue() and result
+	result = testThreeDimensions() and result
+
+	if not result {
+		printf("failed: multi-dimensional arrays\n")
+		return exitFailure
+	}
+
+	printf("passed: multi-dimensional arrays\n")
+	return exitSuccess
+}

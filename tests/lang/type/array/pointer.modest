@@ -1,0 +1,250 @@
+// TEST: run
+// BACKENDS: c11, llvm, modest
+// EXPECT-EXIT: 0
+// EXPECT-OUT: passed: pointer to array indexing
+// EXPECT-OUT: passed: whole array through a pointer
+// EXPECT-OUT: passed: unsized array parameter
+// EXPECT-OUT: passed: pointer into a matrix
+// EXPECT-OUT: passed: sharing an array instead of copying
+// EXPECT-OUT: passed: pointer to array
+//
+// Arrays are copied everywhere by default (see value_semantics.modest), so
+// sharing one is something you ask for, by passing a pointer.  Two pointer
+// types do it:
+//
+//   *[N]T   knows the length — `lengthof` works, and it converts to
+//   *[]T    which does not, and so takes an array of any length, the way a
+//           C function taking `T *` does, except the count travels as an
+//           argument instead of being guessed.
+//
+// A pointer to array auto-derefs on indexing: `p[3]`, never `(*p)[3]`.  That
+// is the point of the type — writing through it reaches the caller's array,
+// which is what every check below confirms.  `*p = value` still means the
+// whole array, not its first element.
+
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+
+
+// The length is not in the type, so the caller has to say how long it is.
+func fill (v: *[]Int32, n: Nat32, x: Int32) -> Unit {
+	var k: Nat32 = 0
+	while k < n {
+		v[k] = x
+		++k
+	}
+}
+
+
+func sum (v: *[]Int32, n: Nat32) -> Int32 {
+	var s: Int32 = 0
+	var k: Nat32 = 0
+	while k < n {
+		s = s + v[k]
+		++k
+	}
+	return s
+}
+
+
+// The length is in the type here, so it does not need an argument.
+func doubleAll (v: *[4]Int32) -> Unit {
+	var k: Nat32 = 0
+	while k < 4 {
+		v[k] = v[k] * 2
+		++k
+	}
+}
+
+
+func sumMatrix (m: *[2][3]Int32) -> Int32 {
+	var s: Int32 = 0
+	var i: Nat32 = 0
+	while i < 2 {
+		var j: Nat32 = 0
+		while j < 3 {
+			s = s + m[i][j]
+			++j
+		}
+		++i
+	}
+	return s
+}
+
+
+func testIndexing () -> Bool {
+	var a: [4]Int32 = [10, 20, 30, 40]
+	let p = &a
+
+	// Auto-deref: the index applies to the pointed-to array.
+	if p[0] != 10 or p[3] != 40 {
+		printf("p = [%d ... %d], expected [10 ... 40]\n", p[0], p[3])
+		return false
+	}
+
+	// Writing through the pointer reaches the array itself — nothing was
+	// copied on the way in.
+	p[2] = 99
+	if a[2] != 99 {
+		printf("a[2] = %d after p[2] = 99, expected 99\n", a[2])
+		return false
+	}
+
+	var i: Nat32 = 1
+	p[i] = 21
+	if a[1] != 21 {
+		printf("a[1] = %d after p[i] = 21, expected 21\n", a[1])
+		return false
+	}
+
+	printf("passed: pointer to array indexing\n")
+	return true
+}
+
+
+func testWholeArray () -> Bool {
+	var a: [4]Int32 = [1, 2, 3, 4]
+	var b: [4]Int32 = [9, 9, 9, 9]
+	let p = &b
+
+	// `*p` is the array, so this replaces all four elements at once — the
+	// same by-value copy an ordinary assignment does.
+	*p = a
+	if b[0] != 1 or b[3] != 4 {
+		printf("b = [%d ... %d] after *p = a, expected [1 ... 4]\n", b[0], b[3])
+		return false
+	}
+
+	// And it was a copy: a is not tied to b afterwards.
+	b[0] = 100
+	if a[0] != 1 {
+		printf("a[0] = %d after writing to b, expected 1\n", a[0])
+		return false
+	}
+
+	printf("passed: whole array through a pointer\n")
+	return true
+}
+
+
+func testUnsized () -> Bool {
+	var a: [4]Int32 = [1, 2, 3, 4]
+
+	// *[4]Int32 converts to *[]Int32: the length is dropped, so it goes on
+	// as an argument.  This is the one place the count has to be right.
+	if sum(&a, lengthof(a)) != 10 {
+		printf("sum(&a, 4) = %d, expected 10\n", sum(&a, lengthof(a)))
+		return false
+	}
+
+	fill(&a, lengthof(a), 7)
+	if a[0] != 7 or a[3] != 7 {
+		printf("a = [%d ... %d] after fill, expected all 7\n", a[0], a[3])
+		return false
+	}
+
+	// The same function serves an array of a different length — that is
+	// what the unsized type is for.
+	var b: [2]Int32 = [5, 6]
+	if sum(&b, lengthof(b)) != 11 {
+		printf("sum(&b, 2) = %d, expected 11\n", sum(&b, lengthof(b)))
+		return false
+	}
+
+	// The conversion is also available as an explicit construction, and
+	// through a variable of the unsized pointer type.
+	let p: *[]Int32 = &b
+	let q = *[]Int32 &b
+	if p[1] != 6 or q[1] != 6 {
+		printf("p[1] = %d, q[1] = %d, expected 6 and 6\n", p[1], q[1])
+		return false
+	}
+
+	printf("passed: unsized array parameter\n")
+	return true
+}
+
+
+func testMatrix () -> Bool {
+	var m: [2][3]Int32 = [[1, 2, 3], [4, 5, 6]]
+
+	if sumMatrix(&m) != 21 {
+		printf("sumMatrix(&m) = %d, expected 21\n", sumMatrix(&m))
+		return false
+	}
+
+	// A row has an address of its own, and it is a pointer to array like
+	// any other — the row is a `[3]Int32` sitting inside the matrix.
+	let row = &m[1]
+	if row[0] != 4 or row[2] != 6 {
+		printf("row = [%d ... %d], expected [4 ... 6]\n", row[0], row[2])
+		return false
+	}
+
+	row[1] = 50
+	if m[1][1] != 50 {
+		printf("m[1][1] = %d after writing through the row pointer, expected 50\n", m[1][1])
+		return false
+	}
+
+	// A row also passes as an unsized array, being contiguous.
+	if sum(&m[0], 3) != 6 {
+		printf("sum(&m[0], 3) = %d, expected 6\n", sum(&m[0], 3))
+		return false
+	}
+
+	printf("passed: pointer into a matrix\n")
+	return true
+}
+
+
+func testSharing () -> Bool {
+	var a: [4]Int32 = [1, 2, 3, 4]
+
+	// The whole reason to write `*[N]T` in a signature: the callee edits
+	// the caller's array rather than a copy of it.
+	doubleAll(&a)
+	if a[0] != 2 or a[1] != 4 or a[2] != 6 or a[3] != 8 {
+		printf("a = [%d, %d, %d, %d], expected [2, 4, 6, 8]\n", a[0], a[1], a[2], a[3])
+		return false
+	}
+
+	// Twice, to be sure it is the same storage both times.
+	doubleAll(&a)
+	if a[3] != 16 {
+		printf("a[3] = %d after doubling twice, expected 16\n", a[3])
+		return false
+	}
+
+	// The pointer is a value: it can be copied, and both copies point at
+	// the same array.
+	let p = &a
+	let q = p
+	q[0] = 1
+	if a[0] != 1 {
+		printf("a[0] = %d after writing through a copied pointer, expected 1\n", a[0])
+		return false
+	}
+
+	printf("passed: sharing an array instead of copying\n")
+	return true
+}
+
+
+func main () -> Int {
+	var result = true
+	result = testIndexing() and result
+	result = testWholeArray() and result
+	result = testUnsized() and result
+	result = testMatrix() and result
+	result = testSharing() and result
+
+	if not result {
+		printf("failed: pointer to array\n")
+		return exitFailure
+	}
+
+	printf("passed: pointer to array\n")
+	return exitSuccess
+}

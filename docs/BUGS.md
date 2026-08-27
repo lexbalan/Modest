@@ -281,6 +281,20 @@ printf("%d\n", - -x)         // same
 - Both triggers are unary operators applied to something above level 13 of the
   precedence table, which is a syntax error by itself; the point is that the
   compiler must say so instead of hanging.
+- The hang is not confined to exotic expressions. Any argument that fails to
+  parse reaches it, including one that looks completely ordinary:
+
+  ```modest
+  const K: Int32 = 5
+  printf("%d\n", K)           // mcc spins forever
+  ```
+
+  Here the malformed argument comes from #29 — `K` starts with a capital, so
+  in a value position it parses as a type and the argument list is left
+  standing on `)`. Two errors are printed (`unexpected token1 ')'`, then
+  `expected separator`) and only then does `parse_args` start looping, so the
+  diagnostics are not even the last thing the user sees. A guard here would
+  turn a hang into a (still misleading, see #29) error message.
 
 ## 21. Uninitialized-value check is bypassed by index and field access
 
@@ -569,6 +583,17 @@ var y = Xx + 1           // error: undefined type
   the use site with the wrong word. `const MASK: Word8 = 0x0F` is the
   spelling a C programmer reaches for first, and nothing says why it
   cannot work.
+- Worse, a capitalized name used as a call argument does not merely give the
+  wrong diagnostic — it hangs the compiler, because the unparsed argument
+  trips #20:
+
+  ```modest
+  const K: Int32 = 5
+  printf("%d\n", K)           // mcc spins forever after two errors
+  ```
+
+  `const K` / `const MASK` is exactly the spelling a C programmer writes
+  first, so this is the likely first encounter with both bugs at once.
 - Fix: reject the capitalized name where it is defined, with the rule in
   the message — the check belongs next to the identifier class the lexer
   already computes.
