@@ -3,7 +3,9 @@
 // EXPECT-EXIT: 0
 // EXPECT-OUT: passed: scalar equality
 // EXPECT-OUT: passed: record equality
+// EXPECT-OUT: passed: record from a call
 // EXPECT-OUT: passed: array equality
+// EXPECT-OUT: passed: array from a call
 // EXPECT-OUT: passed: pointer equality
 // EXPECT-OUT: passed: ordering
 // EXPECT-OUT: passed: ordering edges
@@ -104,6 +106,22 @@ func testScalarEquality () -> Bool {
 
 // A record compares field by field, and nesting does not stop it: the
 // difference below is as deep as this file goes.
+// How many times `makePoint` has been entered — a returned record has to
+// be compared exactly once, and this is the only way to see it.
+var pointCalls: Int32 = 0
+
+
+func makePoint () -> Point {
+	pointCalls = pointCalls + 1
+	return Point {x = 1, y = 2}
+}
+
+
+func makeOtherPoint () -> Point {
+	return Point {x = 1, y = 3}
+}
+
+
 func testRecordEquality () -> Bool {
 	var p: Point = {x = 1, y = 2}
 	var q: Point = {x = 1, y = 2}
@@ -141,6 +159,65 @@ func testRecordEquality () -> Bool {
 	// and comparing it is a bug of its own — see record_padding.modest.
 
 	printf("passed: record equality\n")
+	return true
+}
+
+
+// A record that comes back from a call is compared like any other value,
+// but it is the one shape that has no storage of its own.  Comparing a
+// record means comparing every byte of it, and that needs an address: the
+// C backend calls memcmp, and in C the result of a call has no address at
+// all.  So the backend has to put it somewhere — exactly once, because a
+// call evaluated twice would be a different bug wearing the same result.
+func testRecordFromCall () -> Bool {
+	var p: Point = {x = 1, y = 2}
+
+	// On the left.
+	pointCalls = 0
+	if not (makePoint() == p) or makePoint() != p {
+		printf("a returned record does not equal the value it holds\n")
+		return false
+	}
+	if pointCalls != 2 {
+		printf("two calls on the left ran %d times, expected 2\n", pointCalls)
+		return false
+	}
+
+	// On the right — the operand the backend reaches second.
+	pointCalls = 0
+	if not (p == makePoint()) or p != makePoint() {
+		printf("a returned record does not equal the value it holds\n")
+		return false
+	}
+	if pointCalls != 2 {
+		printf("two calls on the right ran %d times, expected 2\n", pointCalls)
+		return false
+	}
+
+	// Both sides at once: two results, neither of which has a name.
+	pointCalls = 0
+	if not (makePoint() == makePoint()) {
+		printf("two equal returned records do not compare equal\n")
+		return false
+	}
+	if pointCalls != 2 {
+		printf("a call on each side ran %d times, expected 2\n", pointCalls)
+		return false
+	}
+
+	// Against a literal, which is the other value with no storage.
+	if not (makePoint() == Point {x = 1, y = 2}) {
+		printf("a returned record does not equal an equal literal\n")
+		return false
+	}
+
+	// And a difference in the last field is still seen through the call.
+	if makePoint() == makeOtherPoint() or not (makePoint() != makeOtherPoint()) {
+		printf("{1, 2} returned equals {1, 3} returned\n")
+		return false
+	}
+
+	printf("passed: record from a call\n")
 	return true
 }
 
@@ -200,6 +277,81 @@ func testArrayEquality () -> Bool {
 	}
 
 	printf("passed: array equality\n")
+	return true
+}
+
+
+// How many times `makeHash` has been entered — the array counterpart of
+// pointCalls above.
+var hashCalls: Int32 = 0
+
+
+func makeHash () -> [4]Word8 {
+	hashCalls = hashCalls + 1
+	return [1, 2, 3, 4]
+}
+
+
+// Differs from makeHash() in the last element and nowhere else.
+func makeOtherHash () -> [4]Word8 {
+	return [1, 2, 3, 5]
+}
+
+
+// An array from a call is the same story as a record from a call, one step
+// further: C cannot return an array at all, so the result comes back
+// through storage the caller lends the callee.  In a comparison there is no
+// storage to lend — and, as with the record, the value must be fetched
+// exactly once.
+func testArrayFromCall () -> Bool {
+	var h: [4]Word8 = [1, 2, 3, 4]
+
+	// On the left.
+	hashCalls = 0
+	if not (makeHash() == h) or makeHash() != h {
+		printf("a returned array does not equal the value it holds\n")
+		return false
+	}
+	if hashCalls != 2 {
+		printf("two calls on the left ran %d times, expected 2\n", hashCalls)
+		return false
+	}
+
+	// On the right — the operand the backend reaches second.
+	hashCalls = 0
+	if not (h == makeHash()) or h != makeHash() {
+		printf("a returned array does not equal the value it holds\n")
+		return false
+	}
+	if hashCalls != 2 {
+		printf("two calls on the right ran %d times, expected 2\n", hashCalls)
+		return false
+	}
+
+	// Both sides at once: two results, neither of which has a name.
+	hashCalls = 0
+	if not (makeHash() == makeHash()) {
+		printf("two equal returned arrays do not compare equal\n")
+		return false
+	}
+	if hashCalls != 2 {
+		printf("a call on each side ran %d times, expected 2\n", hashCalls)
+		return false
+	}
+
+	// Against a literal, which is the other value with no storage.
+	if not (makeHash() == [1, 2, 3, 4]) {
+		printf("a returned array does not equal an equal literal\n")
+		return false
+	}
+
+	// And a difference in the last element is still seen through the call.
+	if makeHash() == makeOtherHash() or not (makeHash() != makeOtherHash()) {
+		printf("[1, 2, 3, 4] returned equals [1, 2, 3, 5] returned\n")
+		return false
+	}
+
+	printf("passed: array from a call\n")
 	return true
 }
 
@@ -372,7 +524,9 @@ func main () -> Int {
 	var result = true
 	result = testScalarEquality() and result
 	result = testRecordEquality() and result
+	result = testRecordFromCall() and result
 	result = testArrayEquality() and result
+	result = testArrayFromCall() and result
 	result = testPointerEquality() and result
 	result = testOrdering() and result
 	result = testOrderingEdges() and result

@@ -12,13 +12,16 @@
 // EXPECT-OUT: passed: composite arguments
 // EXPECT-OUT: passed: nested composite arguments
 // EXPECT-OUT: passed: laid out arguments
+// EXPECT-OUT: passed: returned array
 // EXPECT-OUT: passed: call
 //
 // Covers the call expression end to end: how arguments are written
 // (positional, named, defaulted), how they are typed (implicit
 // construction), how the callee is named (directly, through a pointer to
 // function), and how composite arguments travel — by value, like every
-// other value in Modest.
+// other value in Modest.  The last case is the other direction: a result
+// that is an array, which is the one return type C cannot express and the
+// backend has to carry itself.
 
 include "libc/ctypes64"
 include "libc/stdio"
@@ -356,6 +359,106 @@ func testLaidOutArguments () -> Bool {
 }
 
 
+// How many times `makeTriple` has been entered.  A call is one call
+// wherever it stands: a result that has to be put somewhere first must not
+// be fetched twice on the way.
+var tripleCalls: Int32 = 0
+
+
+func makeTriple (first: Int32) -> [3]Int32 {
+	tripleCalls = tripleCalls + 1
+	return [first, first + 1, first + 2]
+}
+
+
+// Differs from makeTriple(1) in the last element and nowhere else.
+func makeTripleEndingIn (last: Int32) -> [3]Int32 {
+	return [1, 2, last]
+}
+
+
+func passThrough (first: Int32) -> [3]Int32 {
+	return makeTriple(first)
+}
+
+
+func sumOf (t: [3]Int32) -> Int32 {
+	return t[0] + t[1] + t[2]
+}
+
+
+// An array is the one result C has no way to return, so the backend passes
+// the caller's storage in and fills it.  That makes every place a call can
+// stand a separate question: a variable being initialized or assigned has
+// storage to lend, an argument or an index or a comparison has none.
+func testReturnedArray () -> Bool {
+	var expected: [3]Int32 = [1, 2, 3]
+
+	// Storage that already exists and has a name.
+	var a = makeTriple(1)
+	if a != expected {
+		printf("a returned array does not survive initialization\n")
+		return false
+	}
+
+	a = makeTriple(1)
+	if a != expected {
+		printf("a returned array does not survive assignment\n")
+		return false
+	}
+
+	// Storage that does not: the result goes straight into an argument,
+	// an index, a comparison.
+	if sumOf(makeTriple(1)) != 6 {
+		printf("sumOf(makeTriple(1)) = %d, expected 6\n", sumOf(makeTriple(1)))
+		return false
+	}
+
+	if makeTriple(1)[1] != 2 {
+		printf("makeTriple(1)[1] = %d, expected 2\n", makeTriple(1)[1])
+		return false
+	}
+
+	if not (makeTriple(1) == expected) or makeTriple(1) != expected {
+		printf("a returned array does not equal the value it holds\n")
+		return false
+	}
+
+	// Returning the call of another function: the result is the caller's
+	// to begin with, and nothing is copied on the way out.
+	if passThrough(1) != expected {
+		printf("a returned array does not survive being passed through\n")
+		return false
+	}
+
+	// Two calls in one expression, each with storage of its own.
+	if not (makeTriple(1) == makeTripleEndingIn(3)) {
+		printf("two equal returned arrays do not compare equal\n")
+		return false
+	}
+
+	// And a difference in the last element is still seen through the call.
+	if makeTriple(1) == makeTripleEndingIn(4) {
+		printf("[1, 2, 3] returned equals [1, 2, 4] returned\n")
+		return false
+	}
+
+	// One call is one call.
+	tripleCalls = 0
+	if sumOf(makeTriple(1)) != 6 or makeTriple(1)[0] != 1 {
+		printf("a returned array is wrong when its calls are counted\n")
+		return false
+	}
+	if tripleCalls != 2 {
+		printf("two calls ran %d times, expected 2\n", tripleCalls)
+		return false
+	}
+
+	printf("passed: returned array\n")
+	return true
+}
+
+
 func main () -> Int {
 	var result = true
 	result = testPositional() and result
@@ -369,6 +472,7 @@ func main () -> Int {
 	result = testCompositeArguments() and result
 	result = testNestedCompositeArguments() and result
 	result = testLaidOutArguments() and result
+	result = testReturnedArray() and result
 
 	if not result {
 		printf("failed: call\n")

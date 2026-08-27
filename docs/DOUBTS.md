@@ -32,3 +32,47 @@ remember both exist.
   the def's value instead of going through the attribute bag, so there's
   one source of truth and the printer doesn't need special-case handling
   to preserve it?
+
+## 2. An array-returning call zeroes its buffer before the callee fills it
+
+A function that returns an array is compiled with an sret parameter and
+gives that same pointer back, so the call stays an expression
+(`src/backend/c11.py:189`). Where the call stands in a value position there
+is no storage to lend it, and the backend supplies one with a compound
+literal (`do_cvalue_call`, `src/backend/c11.py:1067`):
+
+```c
+__builtin_memcmp(makeVec((Vec3){0}), &v, sizeof(Vec3)) == 0
+```
+
+C has no compound literal without an initializer, so `(Vec3){0}` zeroes the
+buffer immediately before the callee overwrites every byte of it.
+
+- Cost: real, and it survives optimization. With a 1024-element array and a
+  callee the optimizer cannot see into, clang at `-O2` emits a `bzero` of
+  4 KiB and then the call that fills the same memory. For the small arrays
+  in the tree today it is noise; it scales with the array.
+- The shape that has no such cost is an uninitialized temporary declared at
+  the top of the enclosing C block, used through the comma operator:
+  `(makeVec(__tmp1), __tmp1)`. That needs a small pool of block-scoped
+  temporaries in the function context — machinery the C backend does not
+  have at all today, which is the only reason it is not doing this.
+- Whatever replaces the literal must keep the call **inside** the
+  expression. Hoisting it into a statement before the expression would make
+  it unconditional as the right operand of `and` / `or`, and C's `&&` / `||`
+  is the only reason this backend short-circuits — see
+  `OPENQUESTIONS.md` #4. Declaring the temporary is fine; moving the call
+  is not.
+- The same compound-literal trick gives a record returned by a call an
+  address for `memcmp` (`do_cvalue_as_ptr`, `src/backend/c11.py:2694`), and
+  there the initializer is the call itself — no wasted store. Only the
+  array path pays.
+- Open question: introduce block-scoped temporaries and use them for both,
+  or keep the literal and accept the zeroing for what are, in practice,
+  small arrays?
+- Where it stands: the literal stays, deliberately (2026-08-27). Nothing in
+  the tree returns an array big enough for the zeroing to matter, and the
+  temporaries are a machinery the backend would carry forever for a cost
+  nobody is paying yet. What would reopen it: an array-returning function
+  whose result is measurably large, or a second place in the backend that
+  needs a temporary anyway — at that point the pool earns itself twice.

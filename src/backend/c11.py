@@ -187,10 +187,12 @@ def do_ctype_func(t, specs=[]):
 		else:
 			to=do_ctype(t.to)
 	else:
-		# Если f возвращает массив по значению, вернем void и добавим __out - pointer to array
-		to=CTypeIdentifier('void')
+		# Если f возвращает массив по значению, добавим __out - pointer to array,
+		# и его же вернем как результат: тогда вызов остается ВЫРАЖЕНИЕМ и годится
+		# всюду, где нужно значение - в аргумент, в индексацию, в сравнение
 		sret_ctype = do_ctype(TypePointer(t.to), is_param=True)
 		params.append(CField(id='__out', type=sret_ctype, specifiers=[]))
+		to=do_ctype(TypePointer(t.to), is_param=True)
 
 	return CTypeFunction(to=to, params=params, specifiers=specs, extra_args=t.extra_args)
 
@@ -1052,8 +1054,20 @@ def do_cvalue_cons_fixed(x, ctx):
 	
 
 
-def do_cvalue_call(x, ctx):
-	return doo_call(x.func, x.args, ctx)
+def do_cvalue_call(x, ctx, sret=None):
+	cv = doo_call(x.func, x.args, ctx)
+
+	# Массив возвращается через sret-параметр, и в позиции значения буфер
+	# взять неоткуда - подставляем составной литерал.  Он lvalue, живет до
+	# конца блока и остается ВНУТРИ выражения, так что ленивость `and`/`or`
+	# не страдает.  Там, где буфер уже есть (`a = f()`, `return f()`), его
+	# передают явно через sret
+	if x.type.is_sized_array():
+		if sret == None:
+			sret = CValueCast(do_ctype(x.type), CValueArray([]))
+		cv.args.append(sret)
+
+	return cv
 
 
 
@@ -1660,7 +1674,15 @@ def do_cstmt_return(x):
 	global cfunc
 
 	if cfunc.type.to.is_sized_array():
-		return CStmtExpr(
+		# `return f()`: буфер вызываемой функции - наш собственный __out,
+		# копировать нечего
+		if x.value.is_call():
+			return CStmtReturn(
+				do_cvalue_call(x.value, ctx=[], sret=CValueIdentifier("__out"))
+			)
+
+		# memcpy отдает dst, так что он же и есть результат
+		return CStmtReturn(
 			cvalue_memcpy(
 				CValueIdentifier("__out"),
 				do_cvalue_as_ptr(x.value),
@@ -2658,6 +2680,22 @@ def do_cvalue_as_ptr(x, parr_relax=False):
 	if x.is_deref():
 		# Если это взятие адреса - просто вернем значение
 		return do_cvalue(x.value)
+
+	# Результат вызова в C не lvalue: `&f()` не компилируется.  Кладем его
+	# в составной литерал-массив из одного элемента - тот является lvalue,
+	# живет до конца блока и сам распадается в указатель.  Литерал остается
+	# ВНУТРИ выражения, поэтому ленивость `and`/`or` не страдает
+	#
+	# Массив возвращается через sret и сам отдает указатель на буфер -
+	# брать адрес еще раз не нужно
+	if x.is_call() and x.type.is_sized_array():
+		return do_cvalue(x)
+
+	if x.is_call() and x.type.is_record():
+		item = do_cvalue(x)
+		item.nl = 0
+		ctype = CTypeArray(do_ctype(x.type), CValueInteger(1))
+		return CValueCast(ctype, CValueArray([item]))
 
 	if parr_relax and x.type.is_array():
 		root = get_root_value(x)
