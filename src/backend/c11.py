@@ -14,7 +14,7 @@ from cshape import *
 from util import trace
 
 
-ARRAY_AS_POINTER = True
+PTR_TO_ARR_AS_PTR_TO_ITEM = True
 
 
 def camel_to_lower_snake(name: str) -> str:
@@ -82,12 +82,16 @@ def is_global_public(x):
 	return False
 
 
-# Печатаем указатель на массив как указатель на его элемент
-# ТОЛЬКО когда это указатель на строку!
 def need_ptr_to_item_instead_of_ptr_to_array(t):
-	if ARRAY_AS_POINTER:
-		return t.is_array()# and not t.is_array_of_array()
-	return t.is_array_of_char()
+	if t.is_array_of_char():
+		# Если это указатель на массив символов (строку) - печатаем как указатель на элемент
+		# Поскольку в си строки печатаются как указатели на char, а не как массивы char[n]
+		return True
+
+	if t.is_array():
+		return PTR_TO_ARR_AS_PTR_TO_ITEM
+
+	return False
 
 
 
@@ -1075,9 +1079,9 @@ def do_cvalue_arg(av):
 	if av.type.is_array() and not av.type.is_array_of_char():
 		# Если в функцию передается массив по значению - передаем указатель на него ⚠️
 		# тк функции си не умеют получать массивы по значению
-		a = do_cvalue_as_ptr(av, parr_relax=POINTER_TO_ARRAY_RELAX)
+		a = do_cvalue_ptr_to_x(av, parr_relax=POINTER_TO_ARRAY_RELAX)
 	else:
-		if not ARRAY_AS_POINTER:
+		if not PTR_TO_ARR_AS_PTR_TO_ITEM:
 			if av.type.is_pointer_to_array():
 				if POINTER_TO_ARRAY_RELAX:
 					if not av.type.to.is_array_of_char():
@@ -1179,7 +1183,7 @@ def do_cvalue_ref(x, ctx):
 	value = x.value
 	cv = do_cvalue(value, ctx=ctx)
 
-	if ARRAY_AS_POINTER:
+	if PTR_TO_ARR_AS_PTR_TO_ITEM:
 		if x.type.is_pointer_to_array() and value.type.is_array():
 			if not value.is_slice():
 				return cv
@@ -1192,11 +1196,11 @@ def do_cvalue_ref(x, ctx):
 
 	cv = CValueReference(cv)
 
-	if not ARRAY_AS_POINTER:
+	if not PTR_TO_ARR_AS_PTR_TO_ITEM:
 		if value.is_slice():
 			# "ref to slice" in C is just pointer to array item,
 			# therefore we need cast it to pointer to result array
-			cv = CValueCast(do_ctype(x.type), cv)
+			return CValueCast(do_ctype(x.type), cv)
 
 	return cv
 
@@ -1263,7 +1267,7 @@ def do_cvalue_lengthof(array_value):
 		return do_cvalue(array_value.type.volume)
 
 	lengthof_arg = do_cvalue(array_value)
-	if ARRAY_AS_POINTER:
+	if PTR_TO_ARR_AS_PTR_TO_ITEM:
 		if array_value.is_deref():
 			return do_cvalue(array_value.type.volume)
 
@@ -1276,7 +1280,13 @@ def do_cvalue_lengthof_value(x, ctx):
 	return cv
 
 
+# У массива размер берём из типа, а не из самого значения: массив живёт в C
+# как указатель на элемент (PTR_TO_ARR_AS_PTR_TO_ITEM, срез, параметр), и
+# `sizeof x` дал бы размер элемента либо указателя, а не массива.
+# Ср. llvm.do_eval_sizeof_value - там размер всегда считается по типу
 def do_cvalue_sizeof_value(x, ctx):
+	if x.ofvalue.type.is_array():
+		return cvalue_sizeof_type(x.ofvalue.type)
 	return CValueSizeofValue(do_cvalue(x.ofvalue))
 
 def do_cvalue_sizeof_type(x, ctx):
@@ -1331,8 +1341,8 @@ def do_cvalue_eq(x, logic, ctx):
 	rx = None
 	if left.type.is_aggregate():
 		# сравниваем массивы / записи
-		a = do_cvalue_as_ptr(left)
-		b = do_cvalue_as_ptr(right)
+		a = do_cvalue_ptr_to_x(left)
+		b = do_cvalue_ptr_to_x(right)
 		sz = get_cvalue_size_for(left, right, ti=x.ti)
 		lx = cvalue_memcmp(a, b, sz)
 		rx = CValueInteger(0)
@@ -1343,8 +1353,8 @@ def do_cvalue_eq(x, logic, ctx):
 		ctype_pointer_to_chars = CTypePointer(CTypeIdentifier("char"))
 		ctype_pointer_to_chars.specifiers = ['const']
 		lx = CValueCall(CValueIdentifier("__builtin_strcmp"), [
-			CValueCast(ctype_pointer_to_chars, do_cvalue_as_ptr(left)),
-			CValueCast(ctype_pointer_to_chars, do_cvalue_as_ptr(right))
+			CValueCast(ctype_pointer_to_chars, do_cvalue_ptr_to_x(left)),
+			CValueCast(ctype_pointer_to_chars, do_cvalue_ptr_to_x(right))
 		])
 		rx = CValueInteger(0)
 
@@ -1406,7 +1416,7 @@ def cvalue_malloc(size):
 
 def do_cvalue_new(x, ctx):
 	sizeof = cvalue_sizeof_type(x.value.type)
-	xvalue = do_cvalue_as_ptr(x.value)
+	xvalue = do_cvalue_ptr_to_x(x.value)
 	return CValueCast(do_ctype(x.type), cvalue_memcpy(cvalue_malloc(sizeof), xvalue, sizeof))
 
 
@@ -1626,8 +1636,8 @@ def do_assign_array(left, right, ti):
 	if l_root.type.of.get_size() == right.type.of.get_size():
 		return assign_by_memcopy(left, right)
 
-	cleft = do_cvalue_as_ptr(left)
-	cright = do_cvalue_as_ptr(right)
+	cleft = do_cvalue_ptr_to_x(left)
+	cright = do_cvalue_ptr_to_x(right)
 	slen = None
 	if left.is_var() or left.is_const():
 		slen = do_cvalue_lengthof(left)
@@ -1685,7 +1695,7 @@ def do_cstmt_return(x):
 		return CStmtReturn(
 			cvalue_memcpy(
 				CValueIdentifier("__out"),
-				do_cvalue_as_ptr(x.value),
+				do_cvalue_ptr_to_x(x.value),
 				cvalue_sizeof_type(x.value.type)
 			)
 		)
@@ -2676,12 +2686,8 @@ def do_cvalue_mem(x):
 
 
 
-def do_cvalue_as_ptr(x, parr_relax=False):
+def do_cvalue_ptr_to_x(x, parr_relax=False):
 
-	# cv = do_cvalue_mem(x)
-	# if x.type.is_array():
-	# 	return cv
-	# return CValueReference(cv)
 
 	if x.is_deref():
 		return do_cvalue(x.value)  # Если это разыменовывание - просто вернем его аргумент (это указатель)
@@ -2696,20 +2702,20 @@ def do_cvalue_as_ptr(x, parr_relax=False):
 			ctype = CTypeArray(do_ctype(x.type), CValueInteger(1))
 			return CValueCast(ctype, CValueArray([item]))
 
-	if parr_relax and x.type.is_array():
+	if x.type.is_array() and parr_relax:
 		root = get_root_value(x)
 		if root.is_array():
 			return do_cvalue_mem(x)
-		if root.is_var() or (root.is_const() and not const_as_macro(root)) or root.is_access_record():
-			return do_cvalue(root)
-		if ARRAY_AS_POINTER and root.is_const() and const_as_macro(root):
+		if PTR_TO_ARR_AS_PTR_TO_ITEM and root.is_const() and const_as_macro(root):
 			return do_cvalue_mem(x)
+		if root.is_var() or (root.is_const() and not const_as_macro(root)) or root.is_access_record():
+			return do_cvalue(root)	
 
 	cv = do_cvalue_mem(x)
 	cv = CValueReference(cv)
 
 	# Если взяли адрес у array item - нужно привести его к *[]
-	if not ARRAY_AS_POINTER:
+	if not PTR_TO_ARR_AS_PTR_TO_ITEM:
 		if x.is_slice():
 			cv = CValueCast(CTypePointer(do_ctype(x.type)), cv)
 
@@ -2720,7 +2726,7 @@ def do_cvalue_as_ptr(x, parr_relax=False):
 
 
 def do_memzero(value):
-	return CStmtExpr(cvalue_memzero(do_cvalue_as_ptr(value), cvalue_sizeof_type(value.type)))
+	return CStmtExpr(cvalue_memzero(do_cvalue_ptr_to_x(value), cvalue_sizeof_type(value.type)))
 
 
 def assign_by_memcopy(left, right):
@@ -2730,8 +2736,8 @@ def assign_by_memcopy(left, right):
 
 	return CStmtExpr(
 		cvalue_memcpy(
-			do_cvalue_as_ptr(left),
-			do_cvalue_as_ptr(right),
+			do_cvalue_ptr_to_x(left),
+			do_cvalue_ptr_to_x(right),
 			cvalue_sizeof_type(left.type)
 		)
 	)

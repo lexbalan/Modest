@@ -2,6 +2,7 @@
 // BACKENDS: c11, llvm, modest
 // EXPECT-EXIT: 0
 // EXPECT-OUT: passed: sizeof
+// EXPECT-OUT: passed: sizeof of an array value
 // EXPECT-OUT: passed: alignof
 // EXPECT-OUT: passed: lengthof
 // EXPECT-OUT: passed: offsetof
@@ -46,6 +47,53 @@ func testSizeof () -> Bool {
 	}
 
 	printf("passed: sizeof\n")
+	return true
+}
+
+
+// An array reaches C as a pointer to its first item - through a pointer to
+// the array, as a slice, as an argument passed by value - so a backend that
+// asks the emitted value for its size would answer with the size of one item
+// or of a pointer.  The size of an array value is the size of its type.
+func arraySize (a: [10]Int32) -> Size {
+	return sizeof(a)
+}
+
+
+func derefSize (p: *[10]Int32) -> Size {
+	return sizeof(*p)
+}
+
+
+func testSizeofArrayValue () -> Bool {
+	var arr: [10]Int32 = []
+
+	if sizeof(arr) != 40 {
+		printf("sizeof(arr) = %zu, expected 40\n", sizeof(arr))
+		return false
+	}
+
+	// through a pointer to the array
+	let p = &arr
+	if sizeof(*p) != 40 or derefSize(&arr) != 40 {
+		printf("sizeof(*p) = %zu, derefSize = %zu, expected 40\n",
+			sizeof(*p), derefSize(&arr))
+		return false
+	}
+
+	// an array argument keeps the size of its own type
+	if arraySize(arr) != 40 {
+		printf("arraySize(arr) = %zu, expected 40\n", arraySize(arr))
+		return false
+	}
+
+	// a slice is an array of its own volume
+	if sizeof(arr[2:6]) != 16 {
+		printf("sizeof(arr[2:6]) = %zu, expected 16\n", sizeof(arr[2:6]))
+		return false
+	}
+
+	printf("passed: sizeof of an array value\n")
 	return true
 }
 
@@ -184,6 +232,7 @@ func testRuntimeVolume () -> Bool {
 func main () -> Int {
 	var result = true
 	result = testSizeof() and result
+	result = testSizeofArrayValue() and result
 	result = testAlignof() and result
 	result = testLengthof() and result
 	result = testOffsetof() and result

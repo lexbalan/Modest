@@ -15,6 +15,10 @@ offsetof(<#Type.field#>)                        // field offset in bytes
 ## Semantics
 
 - `sizeof` / `alignof` accept a type name or a value expression.
+- The size of a value is the size of its type, whatever form the value
+  takes: an array gives its whole self as a variable, as a slice, as an
+  argument, and through a pointer — `sizeof(*p)` for `p: *[10]Int32` is
+  40, not 4.
 - `lengthof` applies to array types and array values; for `[N]T` it is
   `N`.
 - `offsetof` takes a record type and a field: `offsetof(Point.y)`.

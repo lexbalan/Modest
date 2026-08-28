@@ -677,7 +677,11 @@ class Type(Entity):
 
 		for a in atts:
 			k = a['kind']
-			nt.attributes[k] = {}
+
+			# сам атрибут ставится всегда (const, restrict, zarray - факт
+			# наличия и есть всё их содержание); ниже - только те, что
+			# несут вдобавок отдельное поле типа
+			nt.addAttribute(k, {})
 
 			# handle record layout attributes
 			if k == 'layout':
@@ -687,21 +691,12 @@ class Type(Entity):
 					error("unsupported layout", a['ti'])
 				#info("set layout '%s'" % layout, a['ti'])
 				nt.layout = layout
-				if layout == 'packed':
-					nt.addAttribute(k)
 
 			if k == 'fraction':
 				nt.fraction = int(a['args'][0]['value']['str'])
 
-			if k == 'zarray':
-				# zero terminated array
-				nt.addAttribute(k)
-
 			if k == 'branded':
 				nt.brand = get_brand()
-
-			if k == 'volatile':
-				nt.addAttribute('volatile', {})
 
 			# Для C некоторые атрибуты типа массива -
 			# это атрибуты типа его элементов
@@ -996,7 +991,7 @@ class Type(Entity):
 		return False
 
 
-	# array of char not always is Str (!) see zarray att
+	# array of char not always is Str (!) see zarray attribute
 	def is_pointer_to_str(self):
 		if self.is_pointer():
 			return self.to.is_array_of_char()
@@ -1006,7 +1001,7 @@ class Type(Entity):
 	# Str8, Str16, Str32
 	def is_str(self):
 		if self.is_array_of_char():
-			return 'zarray' in self.att
+			return self.hasAttribute('zarray')
 		return False
 
 
@@ -1151,7 +1146,7 @@ class Type(Entity):
 		# использую для C чтобы можно было более строго проверить типы
 		# напр для явного приведения в беканде C *volatile uint32_t -> uint32_t
 		if 'att_checking' in opt:
-			if a.attributes != b.att:
+			if a.attributes != b.attributes:
 				return False
 
 		# дженерик и не дженерик типы не равны
@@ -2044,7 +2039,7 @@ class Value(Entity):
 
 	def copy(self):
 		v = copy.copy(self)
-		v.attributes = copy.copy(self.att)
+		v.attributes = copy.copy(self.attributes)
 		return v
 
 
