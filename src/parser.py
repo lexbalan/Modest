@@ -458,7 +458,7 @@ class Parser:
 				'isa': 'ast_type',
 				'kind': 'pointer',
 				'to': to,
-				'ti': TextInfo(start=start_ti, mid=start_ti, end=t['ti'])
+				'ti': TextInfo(start=start_ti, mid=start_ti, end=to['ti'])
 			}
 
 		elif self.look("{") or self.match("record"):
@@ -738,7 +738,7 @@ class Parser:
 					'anno': [],
 					'ti': ti
 				}
-			if self.match("<="):
+			elif self.match("<="):
 				self.skipn("\n")
 				r = self.expr_value_6()
 				ti.start = v['ti']

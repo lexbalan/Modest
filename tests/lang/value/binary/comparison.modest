@@ -22,6 +22,17 @@
 // `unsuitable value type '...' for 'lt' operation` — so the ban itself
 // cannot be written here, only its consequence: they still compare equal.
 //
+// Chained comparison is not a third half: `a < b < c` parses left to
+// right, like every other level, and then fails on types — the `<` on the
+// right has a Bool on its left and a number on its right.  All four
+// ordering operators have to chain the same way, which is what `<` and `>`
+// stopped doing when they were written with an `if` of their own instead
+// of an `elif` (fixed 2026-08-28 in `expr_value_5`); the four mixed forms
+// `a < b <= c` and friends went further and crashed the compiler with a
+// self-referential TextInfo.  None of that is expressible here — a chain
+// is a compile error either way, and the suite has no negative-compile
+// mode.
+//
 // Where a composite is compared, the check is written so that the values
 // differ in the *last* place they could — the last field, the last element,
 // the innermost member.  A comparison that stops early passes a test that
