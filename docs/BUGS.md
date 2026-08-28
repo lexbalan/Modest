@@ -30,22 +30,41 @@ let s = a[2:2]
 Generates `int32_t s[2 - 2];`, which clang only accepts as a GNU
 extension (`-Wzero-length-array` under `-pedantic`). Array size comes
 straight from the slice's `volume` expression with no zero-length case;
-see `do_ctype_array_volume` in `src/backend/c11.py:210`. Reproduced by
-`testEmptySlice` in `tests/slice/src/main.modest` (passes, but only because
-`-pedantic` warnings aren't treated as errors).
+see `do_ctype_array_volume` in `src/backend/c11.py:210`. No reproducer in the
+suite — the old `tests/slice` was not carried over into `tests/lang/`.
 
-## 7. Postfix operators after a slice are silently dropped
+## 7. C backend emits `arr[from][i]` for a postfix operator on a slice
 
 ```modest
-let x = arr[1:3][0]
-// compiles; x becomes the slice, [0] vanishes
+var a: [5]Int32 = [1, 2, 3, 4, 5]
+let x = a[1:4][0]                // 2
 ```
 
-- Cause: `expr_value_11` returns immediately after parsing a slice instead of
-  continuing the postfix loop; the trailing `[0]` is then parsed as a
-  standalone array-literal statement and discarded by codegen.
-- Expected: postfix ops after a slice apply to the slice result (or are
-  rejected with a diagnostic).
+Generates `const int32_t x = a[1][0];`, which clang rejects —
+*subscripted value is not an array, pointer, or vector*. The same for a
+slice of a slice (`a[1:5][1:3][0]` becomes `a[1][1][0]`) and for a field
+of a sliced record (`ps[1:3][0].x` becomes `ps[1][0].x`).
+
+- Cause: `do_cvalue_slice` (`src/backend/c11.py:1130`) prints a slice as
+  the lvalue of its first element, `a[from]`. That is what the slice's
+  other uses want — they all take its address (`&a[from]`) and copy —
+  but it is not an array object, so when `do_cvalue_index` /
+  `do_cvalue_access` put another `[i]` or `.field` on it, they subscript
+  a scalar.
+- The LLVM backend is right here: it bitcasts the element pointer to a
+  pointer to the slice's array type and indexes through that
+  (`%10 = bitcast %Int32* %9 to [2 x %Int32]*`), so it prints 2. The
+  `modest` backend re-emits the source and is unaffected.
+- Fix, probably: when the left side of an index or an access is a slice,
+  fold the slice's start into the index (`a[from + i]`), or do what LLVM
+  does and go through a pointer to the slice's type.
+- The parser half of this bug was fixed on 2026-08-28: `expr_value_11`
+  returned instead of continuing the postfix loop after a slice, so
+  everything after `a[1:4]` was re-read as a new statement — `[0]` became
+  a stray array literal that codegen dropped (`{0};` in the output), and
+  `a[1:4][1:3]` was a cascade of syntax errors.
+- Reproducer: `tests/lang/value/slice/postfix.modest`, marked
+  `EXPECTED-FAIL(c11)`.
 
 ## 8. Unterminated record type hangs the compiler
 

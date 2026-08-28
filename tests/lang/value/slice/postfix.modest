@@ -1,0 +1,129 @@
+// TEST: run
+// BACKENDS: c11, llvm, modest
+// EXPECTED-FAIL(c11): BUGS.md#7 postfix after a slice emits arr[from][i]
+// EXPECT-EXIT: 0
+// EXPECT-OUT: passed: index after slice
+// EXPECT-OUT: passed: slice after slice
+// EXPECT-OUT: passed: access after slice
+// EXPECT-OUT: passed: postfix after slice
+//
+// A slice is a value of array type, so the postfix operators go on working
+// after it: `a[1:4][0]` is the first element of the slice, not the slice.
+// The parser used to stop the postfix loop at the slice and leave the rest
+// of the expression behind, where it was re-read as a new statement — an
+// array literal that codegen dropped, so `a[1:4][0]` silently compiled to
+// the whole slice.
+//
+// Every check goes through `opaque` so the indices are run-time values and
+// the answer cannot be folded out of the program.
+
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+
+
+type Point = {
+	x: Int32
+	y: Int32
+}
+
+
+func opaque (n: Int32) -> Int32 {
+	return n
+}
+
+
+func testIndexAfterSlice () -> Bool {
+	var a: [5]Int32 = [1, 2, 3, 4, 5]
+
+	// a[1:4] is [2, 3, 4], so its element 0 is 2 and its element 2 is 4.
+	if a[1:4][0] != 2 {
+		printf("a[1:4][0] = %d, expected 2\n", a[1:4][0])
+		return false
+	}
+
+	if a[1:4][2] != 4 {
+		printf("a[1:4][2] = %d, expected 4\n", a[1:4][2])
+		return false
+	}
+
+	// The index is an expression of its own and is added to the start of
+	// the slice, not to the start of the array.
+	var i = opaque(1)
+	if a[2:5][i] != 4 {
+		printf("a[2:5][i] = %d for i = 1, expected 4\n", a[2:5][i])
+		return false
+	}
+
+	// An open left bound still shifts nothing: a[:3][2] is a[2].
+	if a[:3][2] != 3 {
+		printf("a[:3][2] = %d, expected 3\n", a[:3][2])
+		return false
+	}
+
+	printf("passed: index after slice\n")
+	return true
+}
+
+
+func testSliceAfterSlice () -> Bool {
+	var a: [6]Int32 = [1, 2, 3, 4, 5, 6]
+
+	// a[1:5] is [2, 3, 4, 5]; slicing it again with [1:3] gives [3, 4],
+	// whose first element is 3 — the offsets add up.
+	if a[1:5][1:3][0] != 3 {
+		printf("a[1:5][1:3][0] = %d, expected 3\n", a[1:5][1:3][0])
+		return false
+	}
+
+	if a[1:5][1:3][1] != 4 {
+		printf("a[1:5][1:3][1] = %d, expected 4\n", a[1:5][1:3][1])
+		return false
+	}
+
+	// A slice of the whole thing changes nothing at all.
+	if a[0:6][2:4][1] != 4 {
+		printf("a[0:6][2:4][1] = %d, expected 4\n", a[0:6][2:4][1])
+		return false
+	}
+
+	printf("passed: slice after slice\n")
+	return true
+}
+
+
+func testAccessAfterSlice () -> Bool {
+	var ps: [3]Point = [{x = 1, y = 2}, {x = 3, y = 4}, {x = 5, y = 6}]
+
+	// The element of a slice is an ordinary record, so `.x` follows it —
+	// this is the shape that used to report "expected record or pointer to
+	// record", the `.x` having attached itself to a stray array literal.
+	if ps[1:3][0].x != 3 {
+		printf("ps[1:3][0].x = %d, expected 3\n", ps[1:3][0].x)
+		return false
+	}
+
+	if ps[1:3][1].y != 6 {
+		printf("ps[1:3][1].y = %d, expected 6\n", ps[1:3][1].y)
+		return false
+	}
+
+	printf("passed: access after slice\n")
+	return true
+}
+
+
+func main () -> Int {
+	var result = true
+	result = testIndexAfterSlice() and result
+	result = testSliceAfterSlice() and result
+	result = testAccessAfterSlice() and result
+
+	if not result {
+		printf("failed: postfix after slice\n")
+		return exitFailure
+	}
+
+	printf("passed: postfix after slice\n")
+	return exitSuccess
+}

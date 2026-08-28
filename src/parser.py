@@ -1306,7 +1306,7 @@ class Parser:
 						'anno': [],
 						'ti': TextInfo(start=v['ti'], mid=mid_ti, end=end_ti)
 					}
-					return v
+					continue
 
 				v = {
 					'isa': 'ast_value',
