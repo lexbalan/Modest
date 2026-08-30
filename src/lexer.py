@@ -43,10 +43,16 @@ class Lexer:
 			self.text = f.read()
 		self.pos = 0
 		self.start = None
+		self.line_start_position = 0
 
 		tokens = []
 		while True:
 			if self.peep() == EOF:
+				# end-of-input sentinel: a real token, so that tokenInfo()
+				# works and diagnostics can point at the end of the file
+				self.start = self.getTextPosition()
+				self.line_start_position = self.line_fpos
+				tokens.append((None, '', self.getTokenInfoAt(self.start, length=0)))
 				return tokens
 
 			self.start = self.getTextPosition()
@@ -82,7 +88,6 @@ class Lexer:
 					tokens.append(token)
 				break
 
-		tokens.append((None, ''))
 		return None
 
 

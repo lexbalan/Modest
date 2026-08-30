@@ -66,19 +66,6 @@ of a sliced record (`ps[1:3][0].x` becomes `ps[1][0].x`).
 - Reproducer: `tests/lang/value/slice/postfix.modest`, marked
   `EXPECTED-FAIL(c11)`.
 
-## 8. Unterminated record type hangs the compiler
-
-```modest
-type Broken = {
-	x: Int32
-// EOF here — mcc spins forever, no diagnostic
-```
-
-- Cause: the field loop in `parse_type_record` (`src/parser.py`) has no
-  end-of-input check; at EOF `parse_stmt_field` keeps producing empty
-  identifiers without consuming anything.
-- Expected: `error: expected '}'` (unexpected end of file) and exit.
-
 ## 10. C backend re-emits binary expressions as source text, discarding the compile-time fold
 
 ```modest
@@ -283,37 +270,38 @@ error: for use 'unsafe' operator required -funsafe option
 - Docs updated to match the current behaviour: `docs/CHEATSHEET.md`
   (construction rules), `docs/lang/value/cons.md`, `docs/USAGE.md`.
 
-## 20. Malformed expression in a call argument hangs the parser
+## 20. Malformed expression in a call argument makes `parse_args` spin
 
 ```modest
-let w = Word32 0x0F
-printf("%d\n", ~ Word64 w)   // mcc spins forever, no diagnostic
-printf("%d\n", - -x)         // same
+const K: Int32 = 5
+printf("%d\n", K)             // no hang any more, but see below
 ```
 
-- The same expressions outside a call report normally: `let r = ~ Word64 w`
-  gives `error: unexpected token1 'Word64'`, and `let r = (~ Word64 w)` too.
-  Only the argument list loops.
-- Cause: `parse_args` (`src/parser.py`) has no progress or end-of-input guard —
-  when `expr_value` stops without consuming the offending token, the loop keeps
-  re-parsing it. Same shape as #8 (unterminated record type).
-- Both triggers are unary operators applied to something above level 13 of the
-  precedence table, which is a syntax error by itself; the point is that the
-  compiler must say so instead of hanging.
-- The hang is not confined to exotic expressions. Any argument that fails to
-  parse reaches it, including one that looks completely ordinary:
-
-  ```modest
-  const K: Int32 = 5
-  printf("%d\n", K)           // mcc spins forever
-  ```
-
-  Here the malformed argument comes from #29 — `K` starts with a capital, so
+- Cause: `parse_args` (`src/parser.py`) has no progress guard — when
+  `expr_value` stops without consuming the offending token, the loop keeps
+  re-parsing it.
+- The malformed argument here comes from #29 — `K` starts with a capital, so
   in a value position it parses as a type and the argument list is left
   standing on `)`. Two errors are printed (`unexpected token1 ')'`, then
-  `expected separator`) and only then does `parse_args` start looping, so the
-  diagnostics are not even the last thing the user sees. A guard here would
-  turn a hang into a (still misleading, see #29) error message.
+  `expected separator`) and only then does `parse_args` start spinning, so the
+  diagnostics are not the last thing the user sees.
+- Since the lexer got a real end-of-input token (2026-08-30), this no longer
+  hangs: the loop drains the rest of the file, then hits `MAX_ERRORS` at EOF
+  and exits. That is termination by accident, not a fix — the loop still makes
+  no progress, and the user gets ten copies of `unexpected token1
+  'end-of-file'` instead of one useful message. `parse_args` still needs a
+  no-progress guard.
+- The original triggers no longer reproduce at all:
+
+  ```modest
+  let w = Word32 0x0F
+  printf("%d\n", ~ Word64 w)  // compiles cleanly now
+  ```
+
+  Both were unary operators applied above level 13 of the precedence table;
+  verified 2026-08-30 that this compiles without a diagnostic. Whether it
+  *should* is a separate question — see #29 for the remaining half of the
+  misleading-diagnostic story.
 
 ## 21. Uninitialized-value check is bypassed by index and field access
 

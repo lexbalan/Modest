@@ -228,6 +228,11 @@ class Parser:
 				self.skip("}")
 				break
 
+			if self.is_end():
+				end_ti = self.tokenInfo()
+				error("expected '}' (unexpected end of file)", self.textInfo())
+				break
+
 			access_modifier = self.parse_access_modifier()
 			f = self.parse_stmt_field()
 			for ff in f:
@@ -309,7 +314,9 @@ class Parser:
 				# FIXIT: очень тупо все это, но пока для начальных тестов канает
 				cc = 1
 				while cc > 0:
-					if self.match('['):
+					if self.is_end():
+						return False
+					elif self.match('['):
 						cc += 1
 					elif self.match(']'):
 						cc -= 1
@@ -383,6 +390,9 @@ class Parser:
 		arghack = False
 		fields = []
 		while not self.match(")"):
+			if self.is_end():
+				error("expected ')' (unexpected end of file)", self.textInfo())
+				break
 			if self.is_identifier():
 				f = self.parse_stmt_field()
 				if isinstance(f, list):
@@ -930,7 +940,7 @@ class Parser:
 	def expr_value_10(self):
 		start_ti = self.textInfo()
 		if self.match("*"):
-			v = self.expr_value_10()
+			v = self.expr_value_9()
 			return {
 				'isa': 'ast_value',
 				'kind': HLIR_VALUE_OP_DEREF,
@@ -940,7 +950,7 @@ class Parser:
 			}
 
 		elif self.match("&"):
-			v = self.expr_value_11()
+			v = self.expr_value_9()
 			return {
 				'isa': 'ast_value',
 				'kind': HLIR_VALUE_OP_REF,
@@ -950,7 +960,7 @@ class Parser:
 			}
 
 		elif self.match("not"):
-			v = self.expr_value_11()
+			v = self.expr_value_9()
 			return {
 				'isa': 'ast_value',
 				'kind': HLIR_VALUE_OP_LOGIC_NOT,
@@ -960,7 +970,7 @@ class Parser:
 			}
 
 		elif self.match("~"):
-			v = self.expr_value_11()
+			v = self.expr_value_9()
 			return {
 				'isa': 'ast_value',
 				'kind': HLIR_VALUE_OP_BITWISE_NOT,
@@ -970,7 +980,7 @@ class Parser:
 			}
 
 		elif self.match("+"):
-			v = self.expr_value_11()
+			v = self.expr_value_9()
 			return {
 				'isa': 'ast_value',
 				'kind': HLIR_VALUE_OP_POS,
@@ -980,7 +990,7 @@ class Parser:
 			}
 
 		elif self.match("-"): #or self.match("−"):
-			v = self.expr_value_11()
+			v = self.expr_value_9()
 			return {
 				'isa': 'ast_value',
 				'kind': HLIR_VALUE_OP_NEG,
@@ -1342,6 +1352,9 @@ class Parser:
 		self.need("[")
 		ti_end = self.tokenInfo()
 		while not self.match("]"):
+			if self.is_end():
+				error("expected ']' (unexpected end of file)", self.textInfo())
+				break
 			#self.skip_tokens_class(['nl'])
 			nl_cnt = self.skip_blanks()
 
@@ -1393,6 +1406,9 @@ class Parser:
 		self.need("{")
 		ti_end = self.textInfo()
 		while not self.match("}"):
+			if self.is_end():
+				error("expected '}' (unexpected end of file)", self.textInfo())
+				break
 			#self.skip_tokens_class(['nl'])
 			nl_cnt = self.skip_blanks()
 
@@ -2088,7 +2104,8 @@ class Parser:
 			ti_mid = self.textInfo()
 			self.skip(":")
 			t = self.expr_type()
-			ti_end = t['ti'].end
+			if t != None:
+				ti_end = t['ti'].end
 		else:
 			t = None
 
@@ -2237,6 +2254,8 @@ class Parser:
 
 		args = []
 		while not self.match("\n"):
+			if self.is_end():
+				break
 			a = self.expr_value()
 			args.append(a)
 			if not self.match(","):
