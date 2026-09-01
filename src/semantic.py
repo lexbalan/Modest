@@ -53,7 +53,7 @@ from value.cons import value_cons_implicit, value_cons_implicit_check, value_con
 
 
 from symtab import Symtab
-from util import nbits_for_num, nbytes_for_bits
+from util import nbits_for_num, nbytes_for_bits, python_div, python_rem
 
 
 
@@ -823,7 +823,6 @@ def do_bin_immediate_fixed(op, l, r):
 	return fixed_from_number(q, fraction)
 
 
-
 def do_bin_immediate(op, l, r, ti):
 	ops = {
 		HLIR_VALUE_OP_LOGIC_OR: lambda a, b: a or b,
@@ -838,7 +837,7 @@ def do_bin_immediate(op, l, r, ti):
 		HLIR_VALUE_OP_ADD: lambda a, b: a + b,
 		HLIR_VALUE_OP_SUB: lambda a, b: a - b,
 		HLIR_VALUE_OP_MUL: lambda a, b: a * b,
-		HLIR_VALUE_OP_DIV: lambda a, b: l.asset / r.asset,
+		HLIR_VALUE_OP_DIV: lambda a, b: a / b,
 		HLIR_VALUE_OP_REM: lambda a, b: a % b,
 	}
 
@@ -852,6 +851,16 @@ def do_bin_immediate(op, l, r, ti):
 	# эти две операции сворачиваем через точное значение
 	if l.type.is_fixed() and (op in [HLIR_VALUE_OP_MUL, HLIR_VALUE_OP_DIV]):
 		return do_bin_immediate_fixed(op, l, r)
+
+	# У целых '/' усекает к нулю, а '%' это остаток от такого деления
+	# (docs/lang/value/binary.md) - так считают оба backend'а в run time.
+	# В Python и то и другое по полу, и на операндах разных знаков
+	# свертка расходится с run time: -10 / 3 это -3, а не -4, и
+	# -10 % 3 это -1, а не 2
+	if l.type.is_integral():
+		if op == HLIR_VALUE_OP_DIV: return python_div(l.asset, r.asset)
+		if op == HLIR_VALUE_OP_REM: return python_rem(op, l.asset, r.asset)
+
 
 	asset = None
 	if op in [HLIR_VALUE_OP_EQ, HLIR_VALUE_OP_NE]:

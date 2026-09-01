@@ -66,49 +66,6 @@ of a sliced record (`ps[1:3][0].x` becomes `ps[1][0].x`).
 - Reproducer: `tests/lang/value/slice/postfix.modest`, marked
   `EXPECTED-FAIL(c11)`.
 
-## 10. C backend re-emits binary expressions as source text, discarding the compile-time fold
-
-```modest
-const y: Float64 = 22 / 7
-printf("%f\n", y)   // prints 3.000000, expected ~3.142857
-```
-
-- `do_bin_immediate` (`src/semantic.py:791-825`) folds constants
-  correctly at the HLIR level: `DIV` on two `Integer` literals uses
-  Python's true division (`l.asset / r.asset`, `semantic.py:809`), so
-  the compile-time `.asset` on the `ValueBin` node is the right value
-  (a fraction, not truncated). But the C backend never reads it —
-  `do_cvalue_bin` (`src/backend/c11.py:1364-1395`) unconditionally
-  re-emits `x.left op x.right` as source text for *every* binary op,
-  folded or not, and lets the C compiler redo the arithmetic. C sees
-  `22 / 7` as plain integer division and truncates to `3`.
-- One side effect: `Integer / Integer` folding also leaves the node in
-  an inconsistent state — the result type is narrowed to `Integer`
-  (`semantic.py:773-776`, via `nbits_for_num(asset)` truncating the
-  float `asset` with `int(x)`) while `.asset` itself is a fractional
-  Python `float`, not a whole number.
-- Another side effect: it silently caps `Rational` precision at
-  whatever the target compiler's own float arithmetic gives. `3.14 +
-  0.5` folds to an exact `Fraction` internally, but the C backend
-  re-emits `3.14 + 0.5` as text and lets C redo the addition in
-  `double`, so raising `rationalPrecision` (see
-  `docs/lang/type/generic.md#rational-precision`) only helps a single
-  literal, never the result of an operation.
-- Expected: the C backend should use the folded `.asset` for
-  compile-time-stage `ValueBin` nodes instead of re-emitting operands,
-  or otherwise guarantee the emitted C expression reproduces the value
-  the compiler already computed.
-- **C-only.** The LLVM backend does not have this bug — verified by
-  reading the emitted IR for the same `22 / 7` example: it inlines the
-  already-folded value directly, `call ... @printf(..., %Float64
-  3.1428571428571428)`, no division instruction at all. LLVM IR gives
-  every constant an explicit type at its use site, so there is no
-  macro-substitution layer and no target-language arithmetic to
-  silently redo the fold. The modest self-backend (`-mbackend=modest`)
-  is not applicable either way — it re-emits Modest source text
-  (`const y: Float64 = 22 / 7`, unchanged) without evaluating anything;
-  recompiling that output with `-mbackend=c11` hits this bug again.
-
 ## 12. LLVM backend does not apply C's default argument promotion to variadic calls
 
 ```modest
@@ -637,34 +594,6 @@ var f: Word8 = 0xF0
   a temporary of the operand type.
 - Coverage: `tests/lang/value/binary/narrow_width.modest`, marked
   `EXPECTED-FAIL(c11)`.
-
-## 32. Compile-time `%` uses floored remainder, run time uses truncated
-
-```modest
-const negTen: Int32 = -10
-const three: Int32 = 3
-
-negTen % three     // folded: 2, computed at run time: -1
-```
-
-- `docs/lang/value/binary.md`: integer division truncates and `%` is the
-  remainder that truncation leaves, so `-10 % 3` is `-1`. That is what both
-  backends compute at run time, and what C and LLVM IR both do.
-- The fold does not agree. The table in `do_bin_immediate`
-  (`src/semantic.py:842`) maps the operator onto Python's `%`, which is
-  *floored*: `-10 % 3` is `2` in Python and `10 % -3` is `-2`. Only the
-  signs differ from the run-time answer — with both operands positive the
-  two definitions coincide, which is why nothing noticed.
-- Visible under llvm, where the folded value is what gets emitted. Under
-  c11 the same expression comes out right by accident: that backend
-  re-emits the operands as C source text and lets C recompute them
-  (BUGS.md #10), and C truncates.
-- `/` does not have the problem: the fold divides and the result is
-  truncated toward zero before it is used.
-- Fix: fold `%` as `a - (a // b) * b` with truncating division — or
-  `math.fmod` semantics: `abs(a) % abs(b)` carrying the sign of `a`.
-- Coverage: `tests/lang/value/binary/fold_remainder.modest`, marked
-  `EXPECTED-FAIL(llvm)`.
 
 ## 33. A malformed type crashes the compiler after reporting the error
 

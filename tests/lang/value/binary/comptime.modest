@@ -3,6 +3,7 @@
 // EXPECT-EXIT: 0
 // EXPECT-OUT: passed: folded arithmetic
 // EXPECT-OUT: passed: folded truncation
+// EXPECT-OUT: passed: folded at full width
 // EXPECT-OUT: passed: folded bitwise
 // EXPECT-OUT: passed: folded comparison
 // EXPECT-OUT: passed: folded in initializers
@@ -43,6 +44,15 @@ func check (name: *ConstCharStr, folded: Int32, computed: Int32) -> Bool {
 		return true
 	}
 	printf("%s: folded %d, computed %d\n", name, folded, computed)
+	return false
+}
+
+
+func check64 (name: *ConstCharStr, folded: Int64, computed: Int64) -> Bool {
+	if folded == computed {
+		return true
+	}
+	printf("%s: folded %lld, computed %lld\n", name, folded, computed)
 	return false
 }
 
@@ -104,9 +114,11 @@ func testFoldedTruncation () -> Bool {
 	ok = check("10 / -3", ten / negThree, opaque(10) / c) and ok
 	ok = check("-10 / -3", negTen / negThree, a / c) and ok
 
-	// `%` over operands of unlike sign folds differently from the way it
-	// computes — that is BUGS.md #32, and it lives in fold_remainder.modest.
+	// The sign of a remainder follows the dividend, not the divisor.  Every
+	// pair of unlike signs is in fold_remainder.modest; these two are the
+	// reminder that `%` belongs to the same truncation as `/`.
 	ok = check("10 % 3", ten % three, opaque(10) % b) and ok
+	ok = check("-10 % 3", negTen % three, a % b) and ok
 
 	// A quotient that truncates to zero, and the remainder that keeps
 	// everything.
@@ -120,6 +132,52 @@ func testFoldedTruncation () -> Bool {
 	}
 
 	printf("passed: folded truncation\n")
+	return true
+}
+
+
+// A fold has to stay exact all the way to the top of the type's range.  The
+// tempting shortcut for truncating division is `int(a / b)` in the compiler's
+// own language — but that divides in floating point, and a double carries 53
+// bits of mantissa against Int64's 64.  Everything below is chosen to be
+// wrong under that shortcut and right under integer division: 2^62 + 1 has a
+// 1 in the bit a double cannot hold, so `int(a / 1)` already loses it.
+const wide: Int64 = 4611686018427387905      // 2^62 + 1
+const negWide: Int64 = -4611686018427387905
+const oneW: Int64 = 1
+const threeW: Int64 = 3
+
+func testFoldedWidth () -> Bool {
+	var ok = true
+
+	var w = opaque64(4611686018427387905)
+	var negW = opaque64(-4611686018427387905)
+	var b = opaque64(3)
+
+	// Dividing by one changes nothing — and that is already enough to lose
+	// the low bit in floating point.
+	ok = check64("(2^62 + 1) / 1", wide / oneW, opaque64(wide)) and ok
+
+	// A real quotient, and the same one with the sign that makes floor and
+	// truncation disagree.
+	ok = check64("(2^62 + 1) / 3", wide / threeW, w / b) and ok
+	ok = check64("-(2^62 + 1) / 3", negWide / threeW, negW / b) and ok
+
+	// The remainder is derived from that quotient, so it has to survive the
+	// same width.
+	ok = check64("(2^62 + 1) % 3", wide % threeW, w % b) and ok
+	ok = check64("-(2^62 + 1) % 3", negWide % threeW, negW % b) and ok
+
+	// The defining identity, at a width where an inexact quotient could not
+	// possibly satisfy it.
+	ok = check64("(w / 3) * 3 + w % 3",
+		(wide / threeW) * threeW + wide % threeW, w) and ok
+
+	if not ok {
+		return false
+	}
+
+	printf("passed: folded at full width\n")
 	return true
 }
 
@@ -255,6 +313,11 @@ func opaque (n: Int32) -> Int32 {
 }
 
 
+func opaque64 (n: Int64) -> Int64 {
+	return n
+}
+
+
 func opaqueWord (w: Word32) -> Word32 {
 	return w
 }
@@ -269,6 +332,7 @@ func main () -> Int {
 	var result = true
 	result = testFoldedArithmetic() and result
 	result = testFoldedTruncation() and result
+	result = testFoldedWidth() and result
 	result = testFoldedBitwise() and result
 	result = testFoldedComparison() and result
 	result = testFoldedInitializers() and result

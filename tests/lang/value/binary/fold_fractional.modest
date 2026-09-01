@@ -1,0 +1,149 @@
+// TEST: run
+// BACKENDS: c11, llvm, modest
+// EXPECT-EXIT: 0
+// EXPECT-OUT: passed: integer division under a fractional target
+// EXPECT-OUT: passed: exact fold reaches the program
+// EXPECT-OUT: passed: rational operands
+// EXPECT-OUT: passed: fold fractional
+//
+// A fold whose result is fractional, and the two ways a backend can lose it.
+//
+// The first is the type of the operands.  `22 / 7` is `Integer / Integer`
+// whatever it is assigned to — a target type is not pushed back into the
+// literals — so it divides as integers and the answer is `3`, not `3.14…`.
+// Writing `22.0 / 7` is what asks for the other one.
+//
+// The second is who does the arithmetic.  The compiler folds `Rational` in
+// exact fractions and rounds once, at the end; a backend that re-emits the
+// operands and lets the target language add them up again rounds twice and
+// lands on a different number.  `0.1 + 0.2` is the shortest case where the
+// two answers differ: exactly 3/10 rounds to 0.299999999999999988898, while
+// two doubles added give 0.300000000000000044409.
+//
+// Every check compares against a value the compiler cannot see through, so
+// nothing here tests the compiler against itself.
+
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+
+
+// The compiler cannot see through a call, so what comes back is a value the
+// backend had to emit and the program had to load.
+func opaque (x: Float64) -> Float64 {
+	return x
+}
+
+
+func opaque32 (x: Float32) -> Float32 {
+	return x
+}
+
+
+func check (name: *ConstCharStr, folded: Float64, computed: Float64) -> Bool {
+	if folded == computed {
+		return true
+	}
+	printf("%s: folded %.20f, computed %.20f\n", name, folded, computed)
+	return false
+}
+
+
+// `22 / 7` under a `Float64` target is still integer division.
+const intQuotient: Float64 = 22 / 7
+const intScaled: Float64 = 22 / 7 * 70
+const negQuotient: Float64 = -22 / 7
+
+func testIntegerDivision () -> Bool {
+	var ok = true
+
+	ok = check("22 / 7", intQuotient, opaque(3.0)) and ok
+
+	// The truncation happens before the multiplication, not after: 3 * 70,
+	// not 22 * 70 / 7.
+	ok = check("22 / 7 * 70", intScaled, opaque(210.0)) and ok
+
+	// And it truncates toward zero, so the negative quotient is -3.
+	ok = check("-22 / 7", negQuotient, opaque(-3.0)) and ok
+
+	if not ok {
+		return false
+	}
+
+	printf("passed: integer division under a fractional target\n")
+	return true
+}
+
+
+const sum: Float64 = 0.1 + 0.2
+const third: Float64 = 1.0 / 3.0
+
+func testExactFold () -> Bool {
+	var ok = true
+
+	// The fold is exact, so it lands on the same double as the literal.
+	ok = check("0.1 + 0.2", sum, opaque(0.3)) and ok
+
+	// The control, and the reason this file exists: adding the two doubles
+	// at run time gives a different number.  If a backend re-emits the
+	// operands instead of the folded value, `sum` becomes this one.
+	if sum == opaque(0.1) + opaque(0.2) {
+		printf("0.1 + 0.2: fold was recomputed in double\n")
+		ok = false
+	}
+
+	// A quotient whose exact value does not fit any float: rounded once
+	// here, rounded once at run time, the same both times.
+	ok = check("1.0 / 3.0", third, opaque(1.0) / opaque(3.0)) and ok
+
+	if not ok {
+		return false
+	}
+
+	printf("passed: exact fold reaches the program\n")
+	return true
+}
+
+
+// A `Rational` operand makes the whole operation `Rational` — this is the
+// division that does *not* truncate.
+const ratQuotient: Float64 = 22.0 / 7
+const ratMixed: Float64 = 22 / 7.0
+const ratNarrow: Float32 = 22.0 / 7
+
+func testRationalOperands () -> Bool {
+	var ok = true
+
+	ok = check("22.0 / 7", ratQuotient, opaque(22.0) / opaque(7.0)) and ok
+	ok = check("22 / 7.0", ratMixed, opaque(22.0) / opaque(7.0)) and ok
+
+	// Narrowed to Float32 the value is rounded again, and has to match a
+	// Float32 division.  Compared as Float64 so that printing a failure
+	// does not depend on how a Float32 travels through printf.
+	var narrow = opaque32(22.0) / opaque32(7.0)
+	ok = check("22.0 / 7 as Float32",
+		Float64(ratNarrow), Float64(narrow)) and ok
+
+	if not ok {
+		return false
+	}
+
+	printf("passed: rational operands\n")
+	return true
+}
+
+
+func main () -> Int {
+	var result = true
+	result = testIntegerDivision() and result
+	result = testExactFold() and result
+	result = testRationalOperands() and result
+
+	if not result {
+		printf("failed: fold fractional\n")
+		return exitFailure
+	}
+
+	printf("passed: fold fractional\n")
+	return exitSuccess
+}

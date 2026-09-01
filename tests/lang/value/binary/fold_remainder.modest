@@ -2,19 +2,19 @@
 // BACKENDS: c11, llvm, modest
 // EXPECT-EXIT: 0
 // EXPECT-OUT: passed: fold remainder
-// EXPECTED-FAIL(llvm): BUGS.md#32 the fold of `%` is floored, run time truncates
 //
 // `%` is the remainder left by a division that truncates toward zero, so
-// its sign follows the dividend: `-10 % 3` is `-1`, not `2`.  Both backends
-// compute that at run time.  The compile-time fold uses Python's `%`
-// instead, which floors, and the two disagree on every pair of operands
-// whose signs differ.
+// its sign follows the dividend: `-10 % 3` is `-1`, not `2`.  That is what
+// both backends compute at run time, and the compile-time fold has to agree.
+//
+// It is the easiest place in the fold to get wrong: the compiler is written
+// in Python, whose `//` and `%` *floor* instead — `-10 % 3` is `2` there,
+// and `10 % -3` is `-2`.  Only the signs differ, so with both operands
+// positive the two definitions coincide and nothing notices.
 //
 // Each check computes the same remainder twice — once from constants the
 // compiler folds, once from values it has to call a function to get — and
-// requires them to be equal.  Under c11 they agree by accident: that
-// backend re-emits the operands as C source text and lets C redo the
-// arithmetic (BUGS.md #10), so the fold never reaches the program.
+// requires them to be equal.
 
 include "libc/ctypes64"
 include "libc/stdio"

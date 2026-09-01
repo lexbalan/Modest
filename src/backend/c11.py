@@ -737,9 +737,10 @@ def do_cvalue_cons_record(x, ctx):
 # - макрос считает в double, а свертка - в точных Fraction. Для Fixed32 это
 #   неразличимо (хранилище <= 32 бит против 53 бит мантиссы), а вот на
 #   Fixed64 результаты расходятся на младший бит
-# - произвольное выражение под макрос не отдаем: его пересчитает уже
-#   компилятор C, со своей семантикой (BUGS.md #10). Только литерал
-#   и константа, т.е. ровно то, что человек и написал в исходнике
+# - произвольное выражение под макрос не отдаем: его пересчитал бы уже
+#   компилятор C, со своей семантикой и своим округлением, а свертка у
+#   нас точная. Только литерал и константа, т.е. ровно то, что человек
+#   и написал в исходнике
 # - и только то, что известно на этапе компиляции: is_const() в этом
 #   бэкенде верен и для параметров функции, а они значения рантаймовые
 def fixed_cons_via_macro(value, x):
@@ -776,7 +777,10 @@ def do_cvalue_cons(x, ctx):
 	elif t.is_pointer(): cv = do_cvalue_cons_pointer(x, ctx)
 	elif t.is_variant(): cv = do_cvalue_cons_variant(x, ctx)
 	elif t.is_fixed(): cv = do_cvalue_cons_fixed(x, ctx)
+	# у Integer и Rational нет своего представления в C: печатаем то,
+	# из чего конструируем, а ширину и точность задаст объемлющий cons
 	elif t.is_integer(): cv = do_cvalue(x.value, ctx)
+	elif t.is_rational(): cv = do_cvalue(x.value, ctx)
 	else:
 		1/0
 	#elif type.is_branded(): return do_cvalue_cast(x.type, x.value, ctx)
@@ -1532,6 +1536,23 @@ def do_cvalue_bin(x, ctx):
 	if x.type.is_fixed() and x.op in [HLIR_VALUE_OP_MUL, HLIR_VALUE_OP_DIV]:
 		return do_cvalue_fixed_bin(x, ctx)
 
+	# Rational свернут точно (Fraction), FloatX - с округлением один раз.
+	# Переизлучать операнды текстом значит отдать эту арифметику C, а он
+	# пересчитает ее в double и вернет другое число: '0.1 + 0.2' у нас
+	# 0.29999999999999998890, а у C 0.30000000000000004441.
+	# Печатаем свернутое, но само выражение оставляем рядом комментарием:
+	# в исходнике человек написал 'totalVolume / elementVolume', и по
+	# голому 3.125 в .c этого уже не видно
+	if x.is_immediate() and (x.asset != None) and x.type.is_fractional():
+		cv = do_cvalue_literal_rational(x, ctx)
+		cv.mark = str_cvalue(do_cvalue_bin_expr(x, ctx))
+		return cv
+
+	return do_cvalue_bin_expr(x, ctx)
+
+
+# Выражение как оно есть, без учета свертки
+def do_cvalue_bin_expr(x, ctx):
 	left = do_cvalue(x.left)
 	right = do_cvalue(x.right)
 

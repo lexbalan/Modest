@@ -54,9 +54,8 @@ described in [README.md](./README.md).
 `c11.py` builds C source via [`cshape`](https://pypi.org/project/cshape/) —
 a standalone, dependency-free C AST + printer (`CType*`/`CValue*`/`CStmt*`
 → C11 text) split out of this repo so it can be reused outside Modest.
-Published on PyPI (see `requirements.txt`); source lives at
-`/Users/alexbalan/p/cshape`, installed editable in this project's venv for
-active co-development.
+Installed from PyPI as an ordinary dependency (see `requirements.txt`);
+`bootstrap.sh` / `bootstrap.bat` pull it into the project's venv.
 
 ### `src/value/` — Compile-Time Value Operations
 

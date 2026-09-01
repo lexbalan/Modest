@@ -79,10 +79,12 @@ const pi = 3.14159265358979323846264338327950288419716939937510582097494459
 - The **LLVM backend** rounds every `Rational`/`Float` constant to
   `Float64` immediately during code generation, so `rationalPrecision`
   has no effect there.
-- Compound expressions (`3.14 + 0.5`) are currently re-emitted as source
-  text to the backend rather than as their exact folded value, so
-  `precision` does not carry through an operation — only a bare literal.
-  This is a known limitation, tracked separately.
+- Compound expressions carry through: `3.14 + 0.5` is folded as an exact
+  `Fraction` and written out at `precision` digits, the same as a bare
+  literal. The arithmetic is never handed back to the C compiler to redo
+  — that would round twice and land on a different number (`0.1 + 0.2`
+  is `0.29999999999999998890` folded exactly, `0.30000000000000004441`
+  added as two doubles).
 
 ## See also
 
