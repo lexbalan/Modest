@@ -7,7 +7,7 @@ from common import get_setting
 from error import info, warning, error, fatal
 from util import align_bits_up
 from pprint import pprint
-from util import str_fractional
+from util import str_fractional, pack_float
 
 
 f = None
@@ -487,11 +487,14 @@ def print_rational(x):
 	asset = x['asset']
 	type = x['type']
 	if type.is_rational():
-		return out(str_fractional(asset))
+		return out(str_fractional(asset, 64))
 	# LLVM имеет дурацкую особенность - даже если создаешь float32,
 	# ты должен передать ему float64 константу, которую он сам обрежет
-	# а float32 литерал он не принимает принципиально
-	out("%.16f" % float(asset))
+	# а float32 литерал он не принимает принципиально.
+	# (!) Поэтому сперва округляем до ширины ТИПА, а печатаем в ширине
+	# double: иначе напечатанное не будет точно представимо во float32,
+	# и LLVM откажется его принимать
+	out(str_fractional(pack_float(asset, type.width), 64))
 
 
 def llvm_print_value_num(x):

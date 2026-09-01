@@ -452,7 +452,9 @@ def do_cvalue_literal_string(chars, width):
 
 
 def do_cvalue_literal_rational(v, ctx):
-	sstr = str_fractional(v.asset, v.type.width if v.type.is_float() else None)
+	# у Rational нет своего представления в C - литерал читается как double,
+	# поэтому и печатаем его в ширине double
+	sstr = str_fractional(v.asset, v.type.width if v.type.is_float() else 64)
 	return CValueIdentifier(sstr)
 
 

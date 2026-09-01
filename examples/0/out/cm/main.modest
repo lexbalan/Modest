@@ -5,9 +5,12 @@ include "stdio"
 include "libc/ctypes64"
 include "libc/stdio"
 
+const c1 = 0.1000000000000000001
+const c2 = 0.2
+
 @nonstatic
 func main () -> Int {
-	printf("Hello World!\n")
+	printf("Hello World! %f\n", c1 + c2)
 	return 0
 }
 

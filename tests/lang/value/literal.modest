@@ -184,6 +184,45 @@ func testRational () -> Bool {
 		return false
 	}
 
+	// A literal may carry more digits than a Float64 holds.  What reaches
+	// the program is the double it rounds to, and the shortest spelling of
+	// that same double is the same value - the extra digits are not more
+	// precision, only more digits.
+	var longDigits: Float64 = 0.1000000000000000001
+	if longDigits != 0.1 {
+		printf("longDigits = %.20f, expected 0.1\n", longDigits)
+		return false
+	}
+
+	// Magnitudes no backend can print without an exponent.  A literal needs
+	// a fraction part on the way out too ('1.0e-20', never '1e-20'), or it
+	// does not read back as a fractional number at all.
+	var tiny: Float64 = 0.00000000000000000001
+	if tiny * 100000000000000000000.0 != 1.0 {
+		printf("tiny = %e, expected 1e-20\n", tiny)
+		return false
+	}
+
+	var huge: Float64 = 100000000000000000000000.0
+	if huge / 100000000000000000000000.0 != 1.0 {
+		printf("huge = %e, expected 1e23\n", huge)
+		return false
+	}
+
+	// Float32 holds fewer digits than this literal, so it is rounded on the
+	// way in - and what a backend prints has to be a value Float32 can hold
+	// exactly, or LLVM refuses the constant outright.
+	var narrow: Float32 = 0.1
+	if Float64(narrow) == 0.1 {
+		printf("narrow = %.20f, expected it to round to Float32\n",
+			Float64(narrow))
+		return false
+	}
+	if Float64(narrow) - 0.1 > 0.000_001 or 0.1 - Float64(narrow) > 0.000_001 {
+		printf("narrow = %.20f, expected about 0.1\n", Float64(narrow))
+		return false
+	}
+
 	printf("passed: rational literals\n")
 	return true
 }

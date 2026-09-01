@@ -79,18 +79,30 @@ def int_zext(x, width_from, width_to):
 
 
 
+# width - ширина, в которой напечатанное должно уцелеть. И C, и LLVM читают
+# литерал как double, так что дальше 17-й значащей цифры печатать нечего:
+# компилятор их все равно отбросит, и длинная запись не точнее, а только выглядит
+# точнее. У Rational своего представления там нет, он едет тем же double
+# (width=64); точной дробью он остается внутри компилятора.
+# width=None - печатать как есть, без привязки к железу (modest-бэкенд).
 def str_fractional(x, width=None):
 	def str_always_float(s):
-		if not '.' in s:
-			return s + '.0'
-		return s
+		# дробная часть нужна всегда: LLVM без точки прочитает '1e-20'
+		# как целое 1 и споткнется на остатке
+		mantissa, e, exp = s.partition('e')
+		if not '.' in mantissa:
+			mantissa += '.0'
+		return mantissa + e + exp
+
 	# в голом float ширина FloatX не сохраняется, поэтому кратчайшую запись,
 	# которая читается обратно в то же самое значение, ищем сами
-	if width is not None and width < 64 and isinstance(x, float):
+	if width is not None:
+		val = pack_float(x, width)
 		for p in range(1, 18):
-			s = '%.*g' % (p, x)
-			if pack_float(s, width) == x:
+			s = '%.*g' % (p, val)
+			if pack_float(s, width) == val:
 				return str_always_float(s)
+
 	return str_always_float(decimal_to_str(fractional_to_decimal(x)))
 
 
@@ -131,7 +143,10 @@ def pack_float(val, width):
 		return struct.unpack('<e', struct.pack('<e', f))[0]
 	elif width <= 32:
 		return struct.unpack('<f', struct.pack('<f', f))[0]
-	return struct.unpack('<d', struct.pack('<d', f))[0]
+	elif width <= 64:
+		return struct.unpack('<d', struct.pack('<d', f))[0]
+	else:
+		assert False, "Unsupported float width: {}".format(width)
 
 
 #def unpak_float_to_hex(fval, width):
