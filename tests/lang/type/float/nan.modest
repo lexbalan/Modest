@@ -1,0 +1,140 @@
+// TEST: run
+// BACKENDS: c11, llvm, modest
+// EXPECT-EXIT: 0
+// EXPECT-OUT: passed: NaN equality
+// EXPECT-OUT: passed: NaN ordering
+// EXPECT-OUT: passed: NaN propagation
+// EXPECT-OUT: passed: NaN
+// EXPECTED-FAIL(llvm): BUGS.md#35 `!=` on floats is an ordered compare
+//
+// Not-a-number, and the one property that makes it observable without any
+// library: it is the only value not equal to itself.
+//
+// The two backends disagree.  C's `!=` on floats is an *unordered* compare
+// — true whenever either operand is NaN — and the C backend inherits that
+// by printing `a != b` as C.  The LLVM backend emits `fcmp one`, the
+// *ordered* one, which is false for NaN, so `nan != nan` comes out false
+// there and every check below that rests on it fails.  `==` agrees in both
+// (`fcmp oeq` is false for NaN, and so is C's `==`); it is only the
+// negative form that parts.
+//
+// NaN is built here rather than named: the language has no literal for it,
+// and 0.0/0.0 at run time is the shortest way to one.  Kept apart from
+// runtime.modest so that this divergence does not mark the whole type
+// broken.
+
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+
+
+@inline
+func makeNaN () -> Float64 {
+	var zero: Float64 = 0.0
+	return zero / zero
+}
+
+
+func testEquality () -> Bool {
+	var nan = makeNaN()
+
+	// The defining property: not equal to itself, in both spellings.
+	if nan == nan {
+		printf("NaN == NaN is true, expected false\n")
+		return false
+	}
+
+	if not (nan != nan) {
+		printf("NaN != NaN is false, expected true\n")
+		return false
+	}
+
+	// And not equal to anything else either, in both spellings.
+	var one: Float64 = 1.0
+	if nan == one or not (nan != one) {
+		printf("NaN compares equal to 1.0\n")
+		return false
+	}
+
+	printf("passed: NaN equality\n")
+	return true
+}
+
+
+// NaN is unordered: every one of the four ordering operators is false
+// against it, including the two that hold for equal operands.
+func testOrdering () -> Bool {
+	var nan = makeNaN()
+	var one: Float64 = 1.0
+
+	if nan < one or nan > one or nan <= one or nan >= one {
+		printf("NaN compares as ordered against 1.0\n")
+		return false
+	}
+
+	if one < nan or one > nan or one <= nan or one >= nan {
+		printf("1.0 compares as ordered against NaN\n")
+		return false
+	}
+
+	// `<=` and `>=` are false against itself too, where a number would
+	// make both true.
+	if nan <= nan or nan >= nan {
+		printf("NaN <= NaN or NaN >= NaN is true, expected false\n")
+		return false
+	}
+
+	printf("passed: NaN ordering\n")
+	return true
+}
+
+
+// Arithmetic carries NaN through: once it is in, every result is one.
+func testPropagation () -> Bool {
+	var nan = makeNaN()
+	var one: Float64 = 1.0
+
+	var sum = nan + one
+	var product = nan * one
+	var quotient = nan / one
+
+	if sum == sum or product == product or quotient == quotient {
+		printf("NaN did not propagate through + * /\n")
+		return false
+	}
+
+	// Infinity minus infinity is a NaN of its own, with no NaN operand.
+	var zero: Float64 = 0.0
+	var inf = one / zero
+	var undefined = inf - inf
+	if undefined == undefined {
+		printf("inf - inf = %f, expected NaN\n", undefined)
+		return false
+	}
+
+	// Constructing it to a narrower float keeps it a NaN.
+	var narrow: Float32 = Float32 nan
+	if narrow == narrow {
+		printf("NaN through Float32 is no longer NaN\n")
+		return false
+	}
+
+	printf("passed: NaN propagation\n")
+	return true
+}
+
+
+func main () -> Int {
+	var result = true
+	result = testEquality() and result
+	result = testOrdering() and result
+	result = testPropagation() and result
+
+	if not result {
+		printf("failed: NaN\n")
+		return exitFailure
+	}
+
+	printf("passed: NaN\n")
+	return exitSuccess
+}

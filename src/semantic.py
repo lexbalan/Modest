@@ -180,7 +180,7 @@ def init():
 	builtinSymtab.type_add('Nat128', typeNat128)
 	#builtinSymtab.type_add('Nat256', typeNat256)
 
-	#builtinSymtab.type_add('Float16', typeFloat16)
+	builtinSymtab.type_add('Float16', typeFloat16)
 	builtinSymtab.type_add('Float32', typeFloat32)
 	builtinSymtab.type_add('Float64', typeFloat64)
 

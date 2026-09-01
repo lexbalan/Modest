@@ -64,7 +64,12 @@ def type_char_create(width, ti=None):
 def type_float_create(width, ti=None):
 	width = align_bits_up(width)
 	id = Id('Float%d' % width)
-	if width == 32:
+	if width == 16:
+		# _Float16 - C23; clang/gcc знают его и до C23, но не на всякой
+		# машине (нет на ppc64le, wasm, msp430). То же допущение, что и
+		# у __int128 в Word128/Int128 выше.
+		id.c = '_Float16'
+	elif width == 32:
 		id.c = 'float'
 	else:
 		id.c = 'double'
@@ -126,6 +131,7 @@ typeChar8 = type_char_create(width=8)
 typeChar16 = type_char_create(width=16)
 typeChar32 = type_char_create(width=32)
 
+typeFloat16 = type_float_create(width=16)
 typeFloat32 = type_float_create(width=32)
 typeFloat64 = type_float_create(width=64)
 

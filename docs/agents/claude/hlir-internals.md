@@ -38,7 +38,7 @@ Type
 | `HLIR_TYPE_KIND_INT` | Int8..Int256 |
 | `HLIR_TYPE_KIND_NAT` | Nat8..Nat256 |
 | `HLIR_TYPE_KIND_WORD` | Word8..Word256 |
-| `HLIR_TYPE_KIND_FLOAT` | Float32, Float64 |
+| `HLIR_TYPE_KIND_FLOAT` | Float16, Float32, Float64 |
 | `HLIR_TYPE_KIND_FIXED` | Fixed32, Fixed64 |
 | `HLIR_TYPE_KIND_CHAR` | Char8, Char16, Char32 |
 | `HLIR_TYPE_KIND_BOOL` | Bool |
@@ -59,7 +59,7 @@ typeWord8..256
 typeInt8..256
 typeNat8..256
 typeChar8/16/32
-typeFloat32/64
+typeFloat16/32/64
 typeFixed32/64
 typeByte          # alias for typeWord8
 ```

@@ -1,0 +1,185 @@
+// TEST: run
+// BACKENDS: c11, llvm
+// EXPECT-EXIT: 0
+// EXPECT-OUT: passed: Float32 bits
+// EXPECT-OUT: passed: Float64 bits
+// EXPECT-OUT: passed: bits to float
+// EXPECT-OUT: passed: float bits
+// EXPECTED-FAIL: BUGS.md#36 FloatX <-> WordX converts numerically
+//
+// The storage of a FloatX, which is the one place IEEE 754 is visible to
+// the last bit.
+//
+// `docs/lang/value/cons.md` is explicit about how to get at it: "`FloatY <->
+// WordX` reinterprets bits (like `memcpy`), never converts numerically",
+// and the construction table gives `WordX <- FloatY` as explicit and
+// `FloatX <- WordY` as unsafe.  Neither backend does that.  The C backend
+// prints a numeric cast — `(uint32_t)f`, so `1.0` arrives as `1` instead of
+// `0x3F800000` — and the LLVM backend prints `cast %Float32 %3 to %Word32`,
+// which is not an instruction, so the module does not even assemble.  A
+// third path, the compile-time fold, takes the compiler down with a
+// traceback; that one has no reproducer here, because a crash would hide
+// everything below it.
+//
+// Every constant below is the IEEE 754 encoding of the value beside it:
+// sign in the top bit, then the exponent biased by 127 (Float32) or 1023
+// (Float64), then the significand with its leading 1 left out.
+//
+// `modest` is not in BACKENDS: it stops after code generation, so it would
+// pass this file without ever running it.
+
+pragma unsafe
+
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+
+
+func check32 (name: *ConstCharStr, got: Word32, expected: Word32) -> Bool {
+	if got == expected {
+		return true
+	}
+	printf("%s = 0x%08x, expected 0x%08x\n", name, got, expected)
+	return false
+}
+
+
+func check64 (name: *ConstCharStr, got: Word64, expected: Word64) -> Bool {
+	if got == expected {
+		return true
+	}
+	printf("%s = 0x%016llx, expected 0x%016llx\n", name, got, expected)
+	return false
+}
+
+
+// Float32: 1 sign bit, 8 exponent bits, 23 significand bits.
+func testFloat32 () -> Bool {
+	var ok = true
+
+	// 1.0 = +1.0 * 2^0: exponent 127, significand all zero.
+	var one: Float32 = 1.0
+	ok = check32("1.0", Word32 one, 0x3F800000) and ok
+
+	// Halving takes one off the exponent, and doubling adds one.
+	var half: Float32 = 0.5
+	ok = check32("0.5", Word32 half, 0x3F000000) and ok
+
+	var two: Float32 = 2.0
+	ok = check32("2.0", Word32 two, 0x40000000) and ok
+
+	// The sign is the top bit and nothing else: -2.0 is 2.0 with it set.
+	var negTwo: Float32 = -2.0
+	ok = check32("-2.0", Word32 negTwo, 0xC0000000) and ok
+
+	// Positive zero is the one float whose encoding is all zero bits.
+	var zero: Float32 = 0.0
+	ok = check32("0.0", Word32 zero, 0x00000000) and ok
+
+	// 0.1 is periodic in binary, so it is the nearest Float32 to it.
+	var tenth: Float32 = 0.1
+	ok = check32("0.1", Word32 tenth, 0x3DCCCCCD) and ok
+
+	if not ok {
+		return false
+	}
+
+	printf("passed: Float32 bits\n")
+	return true
+}
+
+
+// Float64: 1 sign bit, 11 exponent bits, 52 significand bits.
+func testFloat64 () -> Bool {
+	var ok = true
+
+	var one: Float64 = 1.0
+	ok = check64("1.0", Word64 one, 0x3FF0000000000000) and ok
+
+	var half: Float64 = 0.5
+	ok = check64("0.5", Word64 half, 0x3FE0000000000000) and ok
+
+	var negTwo: Float64 = -2.0
+	ok = check64("-2.0", Word64 negTwo, 0xC000000000000000) and ok
+
+	var zero: Float64 = 0.0
+	ok = check64("0.0", Word64 zero, 0x0000000000000000) and ok
+
+	var tenth: Float64 = 0.1
+	ok = check64("0.1", Word64 tenth, 0x3FB999999999999A) and ok
+
+	// The widening of 1.0 is a re-encoding, not a copy of the bits: the
+	// Float32 pattern read as a Float64 would be a denormal near zero.
+	var narrow: Float32 = 1.0
+	var wide: Float64 = Float64 narrow
+	ok = check64("Float64 of Float32 1.0", Word64 wide, 0x3FF0000000000000) and ok
+
+	if not ok {
+		return false
+	}
+
+	printf("passed: Float64 bits\n")
+	return true
+}
+
+
+// The other direction, which is the only way to write the values IEEE 754
+// has and the language has no literal for.
+func testFromBits () -> Bool {
+	var one: Float32 = unsafe Float32 Word32 0x3F800000
+	if Float64 one != 1.0 {
+		printf("0x3F800000 = %f, expected 1.0\n", Float64 one)
+		return false
+	}
+
+	// Exponent all ones, significand zero: infinity.
+	var inf: Float32 = unsafe Float32 Word32 0x7F800000
+	var big: Float32 = 100000000000000000000000000000.0
+	if not (inf > big) {
+		printf("0x7F800000 is not above a finite value\n")
+		return false
+	}
+
+	// Exponent all ones with a non-zero significand: a NaN, which is not
+	// equal to itself.
+	var nan: Float32 = unsafe Float32 Word32 0x7FC00000
+	if nan == nan {
+		printf("0x7FC00000 equals itself, expected NaN\n")
+		return false
+	}
+
+	// The smallest positive denormal: exponent zero, significand 1.
+	var tiny: Float32 = unsafe Float32 Word32 0x00000001
+	var zero: Float32 = 0.0
+	if not (tiny > zero) {
+		printf("0x00000001 is not above zero\n")
+		return false
+	}
+
+	// Round trip: bits out, bits back.
+	var half: Float64 = 0.5
+	var again: Float64 = unsafe Float64 Word64 half
+	if again != 0.5 {
+		printf("0.5 through Word64 = %f, expected 0.5\n", again)
+		return false
+	}
+
+	printf("passed: bits to float\n")
+	return true
+}
+
+
+func main () -> Int {
+	var result = true
+	result = testFloat32() and result
+	result = testFloat64() and result
+	result = testFromBits() and result
+
+	if not result {
+		printf("failed: float bits\n")
+		return exitFailure
+	}
+
+	printf("passed: float bits\n")
+	return exitSuccess
+}

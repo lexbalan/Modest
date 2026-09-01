@@ -1,0 +1,410 @@
+// TEST: run
+// BACKENDS: c11, llvm, modest
+// EXPECT-OUT: passed: half layout
+// EXPECT-OUT: passed: half storage
+// EXPECT-OUT: passed: half rounding
+// EXPECT-OUT: passed: half width change
+// EXPECT-OUT: passed: half from integer
+// EXPECT-OUT: passed: half to integer
+// EXPECT-OUT: passed: half arithmetic
+// EXPECT-OUT: passed: half specials
+// EXPECT-OUT: passed: half aggregates
+// EXPECT-OUT: passed: Float16
+//
+// `Float16` — IEEE 754 binary16, the narrowest float the language has.  It
+// is the same type as the rest of `FloatX` in every respect the language
+// cares about; what is worth pinning down is the width itself, because 11
+// bits of significand make the rounding visible in ordinary decimal
+// constants where Float32 and Float64 hide it.
+//
+// The backends reach it by different names — `_Float16` in C11, `half` in
+// LLVM — and neither is universally available: `_Float16` is missing on
+// ppc64le, wasm and msp430, the same assumption `__int128` makes behind
+// `Word128`.  On a target that has it, the two must agree to the bit, so
+// every value below is one both backends have to produce.
+//
+// Every Float16 is printed through Float64: a float narrower than a double
+// cannot be passed to a variadic call at its own width (BUGS.md #12 is the
+// Float32 side of the same thing).
+//
+// Two of the type's neighbours are not here.  A literal outside binary16's
+// range takes the LLVM backend down instead of becoming an infinity
+// (BUGS.md #39, range.modest), and so does `Fixed32 <- Float16`, whose
+// scale does not fit the source width (BUGS.md #40, fixed.modest).  Unary
+// `-` is avoided throughout for BUGS.md #34, the way runtime.modest one
+// directory up avoids it — this file subtracts from zero instead.
+
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+
+
+type HVec = {
+	x: Float16
+	y: Float16
+}
+
+
+func take (h: Float16) -> Float16 {
+	return h
+}
+
+
+func testLayout () -> Bool {
+	if sizeof(Float16) != 2 or alignof(Float16) != 2 {
+		printf("sizeof/alignof Float16 = %d/%d, expected 2/2\n",
+			Int32 sizeof(Float16), Int32 alignof(Float16))
+		return false
+	}
+
+	// Half the width of a Float32, a quarter of a Float64 — the point of
+	// having the type at all.
+	if sizeof(Float16) * 2 != sizeof(Float32) or sizeof(Float16) * 4 != sizeof(Float64) {
+		printf("Float16 is not half a Float32\n")
+		return false
+	}
+
+	var h: Float16 = 1.5
+	if sizeof(h) != 2 {
+		printf("sizeof(h) = %d, expected 2\n", Int32 sizeof(h))
+		return false
+	}
+
+	printf("passed: half layout\n")
+	return true
+}
+
+
+// The two ends of the range that fits in those two bytes: 65504 is the
+// largest finite binary16, 6.103515625e-5 the smallest normal one.
+func testStorage () -> Bool {
+	var max: Float16 = 65504.0
+	if Float64 max != 65504.0 {
+		printf("max = %f, expected 65504.0\n", Float64 max)
+		return false
+	}
+
+	var min: Float16 = 0.00006103515625
+	if Float64 min != 0.00006103515625 {
+		printf("min normal = %.10f, expected 0.00006103515625\n", Float64 min)
+		return false
+	}
+
+	// Below the smallest normal the type keeps going, with fewer bits of
+	// significand each step: 2^-24 is the smallest denormal there is.
+	var denormal: Float16 = 0.000000059604644775390625
+	var zero: Float16 = 0.0
+	if not (denormal > zero) {
+		printf("the smallest denormal collapsed to zero\n")
+		return false
+	}
+
+	if Float64 denormal != 0.000000059604644775390625 {
+		printf("denormal = %.24f, expected 2^-24\n", Float64 denormal)
+		return false
+	}
+
+	printf("passed: half storage\n")
+	return true
+}
+
+
+// A Rational literal is rounded once, to the width of the target — and at
+// this width the result of that rounding is something you can write down.
+// 0.1 is 0.0999755859375 in binary16, 1/3 is 0.333251953125, and both are
+// exact in a Float64, so the comparison below is not itself approximate.
+func testRounding () -> Bool {
+	var tenth: Float16 = 0.1
+	if Float64 tenth != 0.0999755859375 {
+		printf("0.1 = %.16f, expected 0.0999755859375\n", Float64 tenth)
+		return false
+	}
+
+	// The same value arrived at by division rather than by rounding a
+	// literal: one fdiv at the width of the type, not at Float64 and then
+	// narrowed.
+	var one: Float16 = 1.0
+	var three: Float16 = 3.0
+	var third = one / three
+	if Float64 third != 0.333251953125 {
+		printf("1/3 = %.16f, expected 0.333251953125\n", Float64 third)
+		return false
+	}
+
+	// Values that do fit stay exact — the halves and quarters that every
+	// binary float holds.
+	var quarter: Float16 = 0.25
+	if Float64 quarter != 0.25 {
+		printf("0.25 = %f, expected 0.25\n", Float64 quarter)
+		return false
+	}
+
+	printf("passed: half rounding\n")
+	return true
+}
+
+
+// `FloatX <- FloatY` in both directions.  Widening is exact by
+// construction: every binary16 is a binary32 and a binary64.  Narrowing is
+// the rounding above, reached from a value that was not a literal.
+func testWidthChange () -> Bool {
+	var h: Float16 = 0.5
+	var f: Float32 = Float32 h
+	var d: Float64 = Float64 h
+	if f != 0.5 or d != 0.5 {
+		printf("widened = %f / %f, expected 0.5 in both\n", Float64 f, d)
+		return false
+	}
+
+	var wide: Float64 = 0.1
+	var narrowed: Float16 = Float16 wide
+	if Float64 narrowed != 0.0999755859375 {
+		printf("narrowed = %.16f, expected 0.0999755859375\n", Float64 narrowed)
+		return false
+	}
+
+	// Down and back up again is not the identity, which is the whole
+	// difference between this type and a Float32.
+	if Float64(Float16(wide)) == wide {
+		printf("round trip through Float16 was exact, expected a loss\n")
+		return false
+	}
+
+	// Through the middle width the loss is the same one: narrowing is to
+	// nearest at each step, and 0.1 lands on the same binary16 either way.
+	var viaF32: Float16 = Float16 Float32 wide
+	if Float64 viaF32 != 0.0999755859375 {
+		printf("0.1 via Float32 = %.16f, expected 0.0999755859375\n", Float64 viaF32)
+		return false
+	}
+
+	printf("passed: half width change\n")
+	return true
+}
+
+
+// `IntY` and `NatY` are explicit sources here as at any other width.  2048
+// is where the integers stop being consecutive: above 2^11 the spacing is
+// 2, so 2049 has nowhere to land and becomes 2048.
+func testFromInteger () -> Bool {
+	var n8: Nat8 = 255
+	if Float64(Float16 n8) != 255.0 {
+		printf("Nat8 255 -> Float16 = %f, expected 255.0\n", Float64(Float16 n8))
+		return false
+	}
+
+	var exact: Int32 = 2048
+	if Float64(Float16 exact) != 2048.0 {
+		printf("2048 -> Float16 = %f, expected 2048.0\n", Float64(Float16 exact))
+		return false
+	}
+
+	var odd: Int32 = 2049
+	if Float64(Float16 odd) != 2048.0 {
+		printf("2049 -> Float16 = %f, expected 2048.0\n", Float64(Float16 odd))
+		return false
+	}
+
+	// One step lower the integers are still consecutive.
+	var low: Int32 = 2047
+	if Float64(Float16 low) != 2047.0 {
+		printf("2047 -> Float16 = %f, expected 2047.0\n", Float64(Float16 low))
+		return false
+	}
+
+	printf("passed: half from integer\n")
+	return true
+}
+
+
+// The other direction truncates toward zero, as it does from any float.
+// Float16 is also the one width where an `Int32` target works: the check
+// that refuses `Int32 <- Float64` (BUGS.md #37) compares the two widths,
+// and here the float is the narrower of the two.
+func testToInteger () -> Bool {
+	var f: Float16 = 2.75
+	var g: Float16 = -2.75
+
+	if Int16 f != 2 or Int16 g != -2 {
+		printf("Int16 truncation = %d / %d, expected 2 / -2\n",
+			Int32 Int16 f, Int32 Int16 g)
+		return false
+	}
+
+	if Int32 f != 2 or Int32 g != -2 {
+		printf("Int32 truncation = %d / %d, expected 2 / -2\n", Int32 f, Int32 g)
+		return false
+	}
+
+	if Int64 f != 2 {
+		printf("Int64 2.75 = %lld, expected 2\n", Int64 f)
+		return false
+	}
+
+	// `NatX` reads a float the same way.
+	if Nat32 f != 2 {
+		printf("Nat32 2.75 = %u, expected 2\n", Nat32 f)
+		return false
+	}
+
+	printf("passed: half to integer\n")
+	return true
+}
+
+
+// Arithmetic and ordering, at the width of the type.  A Float16 is a
+// complete numeric type, not a storage format that promotes on use.
+func testArithmetic () -> Bool {
+	var a: Float16 = 1.5
+	var b: Float16 = 2.25
+
+	if Float64(a + b) != 3.75 or Float64(b - a) != 0.75 {
+		printf("a+b / b-a = %f / %f, expected 3.75 / 0.75\n",
+			Float64(a + b), Float64(b - a))
+		return false
+	}
+
+	if Float64(a * b) != 3.375 or Float64(b / a) != 1.5 {
+		printf("a*b / b/a = %f / %f, expected 3.375 / 1.5\n",
+			Float64(a * b), Float64(b / a))
+		return false
+	}
+
+	// Negated by subtracting from zero; unary `-` is BUGS.md #34.
+	var zero: Float16 = 0.0
+	if Float64(zero - a) != -1.5 {
+		printf("zero - a = %f, expected -1.5\n", Float64(zero - a))
+		return false
+	}
+
+	if not (a < b) or not (b > a) or a == b or not (a != b) {
+		printf("ordering of 1.5 and 2.25 came out wrong\n")
+		return false
+	}
+
+	// The intermediate does not silently widen: 2048+1 is 2049 in a
+	// Float32, and 2048 in this one, because the sum is rounded at 16 bits
+	// before it is compared.
+	var big: Float16 = 2048.0
+	var one: Float16 = 1.0
+	if Float64(big + one) != 2048.0 {
+		printf("2048+1 = %f, expected 2048.0 at this width\n", Float64(big + one))
+		return false
+	}
+
+	printf("passed: half arithmetic\n")
+	return true
+}
+
+
+// The range is small enough that ordinary arithmetic reaches its edges,
+// which is where the difference from a wider float shows at run time
+// rather than in the rounding of a constant.
+func testSpecials () -> Bool {
+	var max: Float16 = 65504.0
+	var two: Float16 = 2.0
+
+	// Doubling the largest finite value overflows to infinity — the same
+	// product is an ordinary number in a Float32.
+	var overflowed = max * two
+	if not (overflowed > max) {
+		printf("65504 * 2 did not overflow past the finite range\n")
+		return false
+	}
+
+	if Float64 overflowed <= 65504.0 {
+		printf("65504 * 2 = %f, expected infinity\n", Float64 overflowed)
+		return false
+	}
+
+	// Infinity is stable, at this width as at any other.
+	var one: Float16 = 1.0
+	if Float64(overflowed + one) != Float64 overflowed {
+		printf("infinity is not stable under +\n")
+		return false
+	}
+
+	// Underflow goes the other way: the smallest denormal halved is zero.
+	var tiny: Float16 = 0.000000059604644775390625
+	var half: Float16 = 0.5
+	var zero: Float16 = 0.0
+	if tiny * half != zero {
+		printf("2^-24 / 2 = %.24f, expected 0.0\n", Float64(tiny * half))
+		return false
+	}
+
+	printf("passed: half specials\n")
+	return true
+}
+
+
+// Two bytes each, packed with no padding between them, and passed by value
+// through a call like any other number.
+func testAggregates () -> Bool {
+	var v: HVec = {x = 3.0, y = 4.0}
+	if sizeof(HVec) != 4 {
+		printf("sizeof(HVec) = %d, expected 4\n", Int32 sizeof(HVec))
+		return false
+	}
+
+	if Float64(v.x * v.x + v.y * v.y) != 25.0 {
+		printf("lenSq = %f, expected 25.0\n", Float64(v.x * v.x + v.y * v.y))
+		return false
+	}
+
+	v.y = 0.5
+	if Float64 v.y != 0.5 {
+		printf("v.y = %f, expected 0.5\n", Float64 v.y)
+		return false
+	}
+
+	var arr: [4]Float16 = [0.5, 1.5, 2.0, 0.25]
+	if sizeof(arr) != 8 {
+		printf("sizeof([4]Float16) = %d, expected 8\n", Int32 sizeof(arr))
+		return false
+	}
+
+	if Float64(arr[0] + arr[1] + arr[2] + arr[3]) != 4.25 {
+		printf("array sum = %f, expected 4.25\n",
+			Float64(arr[0] + arr[1] + arr[2] + arr[3]))
+		return false
+	}
+
+	// A Rational literal becomes a Float16 at the call, and the value
+	// comes back at the same width.
+	if Float64 take(1.5) != 1.5 {
+		printf("take(1.5) = %f, expected 1.5\n", Float64 take(1.5))
+		return false
+	}
+
+	// One that does not fit is rounded on the way in, not at Float64.
+	if Float64 take(0.1) != 0.0999755859375 {
+		printf("take(0.1) = %.16f, expected 0.0999755859375\n", Float64 take(0.1))
+		return false
+	}
+
+	printf("passed: half aggregates\n")
+	return true
+}
+
+
+func main () -> Int {
+	var result = true
+	result = testLayout() and result
+	result = testStorage() and result
+	result = testRounding() and result
+	result = testWidthChange() and result
+	result = testFromInteger() and result
+	result = testToInteger() and result
+	result = testArithmetic() and result
+	result = testSpecials() and result
+	result = testAggregates() and result
+
+	if not result {
+		printf("failed: Float16\n")
+		return exitFailure
+	}
+
+	printf("passed: Float16\n")
+	return exitSuccess
+}

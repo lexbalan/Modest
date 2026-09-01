@@ -627,3 +627,250 @@ AssertionError
   disagreed with the parse that follows it.
 - Expected: stop at the error that was already reported, the way every
   other bad definition does.
+
+## 34. LLVM backend negates a float with the integer `sub`
+
+```modest
+var a: Float64 = 1.5
+printf("%f\n", -a)          // c11: -1.500000    llvm: does not assemble
+```
+
+```
+%3 = sub %Float64 0.0, %2   // error: invalid operand type for instruction
+```
+
+- `docs/lang/type/base.md` gives `FloatX` the `math` class, which includes
+  unary `-`. The C backend prints `-a` and is right; the LLVM backend is
+  not.
+- Cause: `do_eval_neg` (`src/backend/llvm.py:2088`) builds the negation as
+  `0 - x` and hands `llvm_eval_binary` the opcode `'sub'` as a literal
+  string, with no float case. The binary path next to it does have one —
+  `select_bin_opcode_f(opp, 'f' + opp, t)` in `select_bin_opcode`
+  (`src/backend/llvm.py:3212`) — so `a - b` on floats correctly emits
+  `fsub` and only the unary form is wrong. Affects `Float32` and `Float64`
+  alike.
+- The same function has a second failure mode, on the literal `-0.0`:
+
+  ```modest
+  var z: Float64 = -0.0       // llvm: TypeError, compiler traceback
+  ```
+
+  ```
+  File "src/backend/llvm.py", line 208, in get_id_str
+      return x.id.prefix + x.id.llvm
+  TypeError: can only concatenate str (not "NoneType") to str
+  ```
+
+  Cause: `do_eval_cons` (`src/backend/llvm.py:1857`) decides whether a
+  constant was folded with `if x.asset:` — a *truthiness* test. A folded
+  `-0.0` is falsy in Python, so the emitter misses the literal path it
+  takes for every other constant (`-2.25` is emitted as `store %Float64
+  -2.25`), falls through to `do_reval` of the negation, and reaches
+  `do_eval_neg` with a still-generic `Rational` zero, whose type has no
+  LLVM id. `var z: Int32 = -0` goes the same way and emits `sext`
+  constexprs that clang no longer accepts. The test should be
+  `if x.asset != None:`, as `do_value_neg` (`src/semantic.py:936`)
+  already writes it.
+- Expected: `fsub` for a float operand, and a folded zero emitted as the
+  literal it is.
+- Coverage: `tests/lang/type/float/negation.modest`, marked
+  `EXPECTED-FAIL(llvm)`.
+
+## 35. Backends disagree about `!=` on a NaN
+
+```modest
+var zero: Float64 = 0.0
+var nan = zero / zero
+if nan != nan { printf("NaN\n") }    // c11: prints    llvm: does not
+```
+
+- IEEE 754 makes NaN the one value not equal to itself, and that is the
+  only way to detect one without a library. C's `!=` on floats is an
+  *unordered* compare — true whenever either operand is NaN — and the C
+  backend inherits it by printing `a != b` as C.
+- Cause: `select_bin_opcode` (`src/backend/llvm.py:3203`) maps both `==`
+  and `!=` through `'fcmp o' + opp`, which gives `fcmp one` — *ordered*
+  and not equal, false for NaN. For `==` the ordered form is right
+  (`fcmp oeq` and C's `==` are both false for NaN); only `!=` needs the
+  unordered one, `fcmp une`.
+- `<`, `>`, `<=`, `>=` are ordered in C too, so `fcmp o<cc>` is right for
+  all four and they agree between the backends.
+- Expected: `fcmp une` for `!=`, leaving `==` as it is.
+- Coverage: `tests/lang/type/float/nan.modest`, marked
+  `EXPECTED-FAIL(llvm)`.
+
+## 36. `FloatX` ↔ `WordX` converts numerically instead of reinterpreting bits
+
+```modest
+var f: Float32 = 1.0
+printf("0x%08x\n", Word32 f)        // c11: 0x00000001, expected 0x3F800000
+
+var w: Word32 = 0x3F800000
+var g: Float32 = unsafe Float32 w
+printf("%f\n", Float64 g)           // c11: 1065353216.0, expected 1.0
+```
+
+- `docs/lang/value/cons.md` states the rule twice: "`FloatY ↔ WordX`
+  reinterprets bits (like `memcpy`), never converts numerically", and the
+  construction table gives `WordX ← FloatY` as explicit, `FloatX ← WordY`
+  as unsafe. `docs/CHEATSHEET.md` repeats it. Nothing implements it.
+- The C backend prints an ordinary C cast — `(uint32_t)f` — so the value is
+  rounded rather than reinterpreted, and a negative float is worse than
+  wrong: `Word32 (-2.0)` is undefined behaviour in C and comes out `0`.
+- The LLVM backend does not get that far in the `Float → Word` direction:
+  it prints `%4 = cast %Float32 %3 to %Word32`, and `cast` has not been an
+  LLVM instruction since 2.9, so the module does not assemble. The
+  `Word → Float` direction assembles and is numeric, like C.
+- The compile-time fold is a third path and a third failure. `unsafe Word32
+  one` on a `const Float32` dies in `value_word_cons`
+  (`src/value/word.py:54`), which passes the folded float to `int_zext`:
+
+  ```
+  File "src/util.py", line 52, in int_to_bitstring
+      return format(x & (2**width - 1), '0%db' % width)
+  TypeError: unsupported operand type(s) for &: 'float' and 'int'
+  ```
+
+- Expected: both directions move the bits — `memcpy` or a union in C, a
+  `bitcast` in LLVM IR — and the fold packs and unpacks the IEEE 754
+  encoding (`struct.pack`) rather than treating the asset as an integer.
+- This is the only way to reach the values IEEE 754 has and the language
+  has no literal for: infinity, NaN, a denormal. Nothing else in the
+  language names them.
+- Coverage: `tests/lang/type/float/bits.modest`, marked `EXPECTED-FAIL`.
+  It uses run-time values only — a compile-time one would crash the
+  compiler and hide the rest of the file.
+
+## 37. `IntX` from a wider `FloatY` is rejected as an integer overflow
+
+```modest
+var f: Float64 = 2.75
+var i: Int32 = Int32 f        // error: integer overflow
+                              // info: attempt to construct `Int32` from `Float64`
+```
+
+- `docs/lang/value/cons.md` puts no width condition on a float source:
+  `IntY` needs `Y≤X` to be implicit and `unsafe` above it, but `FloatY`
+  is explicit at any width, and `NatX` reads the same way. `Int64 ←
+  Float64` and `Int32 ← Float32` work; everything narrower does not.
+- Cause: `value_int_cons` (`src/value/int.py:56`) takes `from_width =
+  v.type.width` and rejects `from_width > to_width` for any source. For an
+  integer source that is the documented rule; for a float it compares two
+  unrelated things — a `Float64` holding `3.0` fits an `Int8`, one holding
+  a googol fits nothing — so the width of the float says nothing about
+  whether the value fits. `value_nat_cons` (`src/value/nat.py`) has the
+  same shape.
+- The line just above it is meant to handle exactly this case —
+  `if v.is_immediate() and v.type.is_float(): from_width =
+  nbits_for_num(int(v.value))`, i.e. ask the *value*, not the type — but
+  it only runs for a folded float, and it crashes when it does:
+
+  ```modest
+  const c: Float64 = 2.75
+  var i: Int64 = Int64 c      // AttributeError: 'ValueConst' object has no attribute 'value'
+  ```
+
+  The attribute is `asset`, not `value`; `value_int_cons` uses `v.asset`
+  correctly four lines further down. So the fold path has never run.
+- Expected: for a float source, check the value where there is one and
+  otherwise let it through — the conversion truncates at run time, which
+  is what the table promises. Whether an out-of-range float should be an
+  error, a trap or undefined is a language question worth settling at the
+  same time; C leaves it undefined.
+- Coverage: `tests/lang/type/float/narrow_int.modest`, marked
+  `EXPECTED-FAIL`. The working half of the table is
+  `tests/lang/type/float/cons.modest`, which passes.
+
+## 38. `%` on a float is accepted, and the C backend emits invalid C
+
+```modest
+var a: Float64 = 5.0
+var b: Float64 = 2.0
+printf("%f\n", a % b)
+```
+
+```
+c11:  invalid operands to binary expression ('double' and 'double')
+llvm: 1.000000
+```
+
+- `docs/lang/value/binary.md` restricts `%` to integers ("`%`: integers
+  only"), and `docs/lang/type/base.md` gives `FloatX` the classes `equ`,
+  `ord` and `math` without `rem`. The frontend does not enforce either:
+  the operation is accepted and handed to the backends.
+- The C backend prints it as C's `%`, which does not exist for `double`,
+  so the module does not compile — the error surfaces from clang, naming C
+  types the author never wrote. The LLVM backend prints `frem` and
+  computes a correct floating-point remainder.
+- So the same program is a compile error one way and a working program the
+  other, and neither matches the documentation.
+- Expected: reject `%` on a `FloatX` operand in the frontend, next to where
+  the bitwise operators are rejected for it (`unsuitable value type
+  'Float64' for 'bitwise-and' operation` is already the diagnostic for
+  `a & b`). If the language would rather have the operation, it needs a
+  line in `binary.md` and a `fmod` in the C backend — but that is a
+  language decision, not a backend one.
+- No reproducer in the suite: a positive test cannot assert an operation
+  the language does not have.
+
+## 39. LLVM backend dies on a float literal past the target's range
+
+```modest
+var m: Float16 = 70000.0     // c11: inf     llvm: OverflowError, traceback
+```
+
+```
+File "src/util.py", line 143, in pack_float
+    return struct.unpack('<e', struct.pack('<e', f))[0]
+OverflowError: float too large to pack with e format
+```
+
+- `pack_float` (`src/util.py:139`) rounds a folded constant to the width
+  of its type before the LLVM backend prints it — the comment at
+  `print_rational` (`src/backend/llvm.py:497`) explains why it must. For a
+  value outside the target's range `struct.pack` raises instead of
+  returning an infinity, and nothing catches it.
+- Not specific to `Float16`: the `'<f'` branch one line below does the same
+  for a `Float32` literal above 3.4e38. Binary16 is simply where an
+  ordinary five-digit number reaches it, since the largest finite one is
+  65504.
+- The C backend prints the literal as C and lets the compiler round it, so
+  the same source gives `inf` there. Two backends, one traceback and one
+  answer.
+- What the *language* should do here is a separate question, worth settling
+  with the fix: `docs/lang/value/cons.md` makes a compile-time integer
+  overflow an error (`Nat8 256` does not compile), and the same argument
+  could be made for a float literal that does not fit. IEEE 754 says
+  infinity. Either is defensible; a Python traceback is neither.
+- Coverage: `tests/lang/type/float/float16/range.modest`, marked
+  `EXPECTED-FAIL(llvm)`. It asserts the IEEE answer, which is what the
+  working backend already gives.
+
+## 40. LLVM backend builds the `FixedX` scale in the source float's width
+
+```modest
+var h: Float16 = 1.5
+var x: Fixed32 = Fixed32 h   // c11: 1.5   llvm: OverflowError, traceback
+```
+
+- A `FixedX` value is the number multiplied by `2^fraction`, so the
+  conversion in multiplies by that scale — 65536 for the default 16.16
+  `Fixed32`. The run-time path in `src/backend/llvm.py` emits
+  `f = llvm_eval_binary('fmul', v, scale)` with `scale` created at the
+  *source* float's type. 65536 is not a binary16 — the largest one is
+  65504 — so the compiler dies packing the constant (through the same
+  `pack_float` as #39) before the product is ever emitted.
+- Even with #39 fixed this stays wrong: the scale would become `inf` and
+  the product with it, and any `Float16` source would convert to garbage.
+  The multiply has to happen at a width that holds `2^fraction`.
+- `do_eval_from_fixed`, the function immediately below, has the mirror of
+  this reasoning written out — "делим в ширине ИСТОЧНИКА: сузить раньше
+  деления - потерять целую часть" — and gets the way out right. Only the
+  way in was left at the source width.
+- Float32 and Float64 hide it: 65536.0 and 2^32 are exact in both, so the
+  scale fits and the product is right. `Float16` is the only source that
+  fails, which is why the reproducer lives under `float16/`.
+- The C backend is unaffected: it calls `__fixed32_from_float64`, which
+  takes a `double` whatever the source was.
+- Coverage: `tests/lang/type/float/float16/fixed.modest`, marked
+  `EXPECTED-FAIL(llvm)`.

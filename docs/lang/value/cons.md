@@ -45,8 +45,12 @@ Key behaviors:
   reinterpretation.
 - signed → `WordX` zero-extends, **not** sign-extends.
 - `FloatY ↔ WordX` reinterprets bits (like `memcpy`), never converts
-  numerically.
-- `FloatY → IntX/NatX` truncates the fraction.
+  numerically. **Not implemented**: both backends convert numerically
+  instead, and the LLVM one emits IR that does not assemble
+  (`docs/BUGS.md` #36).
+- `FloatY → IntX/NatX` truncates the fraction. **Partly implemented**:
+  a float wider than the integer is refused as `integer overflow`, so only
+  `Int64 ← Float64` and `Int32 ← Float32` work (`docs/BUGS.md` #37).
 - Operands of binary operations are **not** promoted implicitly —
   construct explicitly to a common type first
   (see [binary](./binary.md)).

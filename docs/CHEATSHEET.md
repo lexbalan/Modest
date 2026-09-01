@@ -24,7 +24,7 @@ Int8, Int16, Int32, Int64, Int128  // signed integers
 Nat8, Nat16, Nat32, Nat64, Nat128  // unsigned integers
 Word8, Word16, Word32, Word64, Word128  // bitwise integers
 Char8, Char16, Char32              // characters
-Float32, Float64                   // floating point
+Float16, Float32, Float64          // floating point (Float16 needs a target that has it)
 Fixed32, Fixed64                   // fixed-point — run-time * and / not rescaled by the LLVM backend (BUGS.md #25)
 Str8, Str16, Str32                 // aliases for: []Char8, []Char16, []Char32 (string values are passed as *Str8)
 Int, Nat, Word                     // target-width integer aliases (builtin)

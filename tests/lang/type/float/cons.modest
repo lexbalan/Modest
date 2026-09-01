@@ -1,0 +1,266 @@
+// TEST: run
+// BACKENDS: c11, llvm, modest
+// EXPECT-EXIT: 0
+// EXPECT-OUT: passed: float from literal
+// EXPECT-OUT: passed: float from integer
+// EXPECT-OUT: passed: float width change
+// EXPECT-OUT: passed: float to integer
+// EXPECT-OUT: passed: float and fixed
+// EXPECT-OUT: passed: float construction
+//
+// The construction table of docs/lang/value/cons.md as it applies to
+// `FloatX`: what reaches a float, and what a float reaches.
+//
+//     FloatX  <-  Rational, Integer, FloatY   implicit
+//             <-  IntY, NatY, FixedY          explicit
+//             <-  WordY                       unsafe, bit reinterpret
+//     IntX    <-  FloatY                      explicit, truncates
+//     NatX    <-  FloatY                      explicit, truncates
+//
+// Two rows of that table are not exercised here, because they do not work:
+// the `WordY` reinterpretation is a numeric conversion in both backends
+// (BUGS.md #36, reproducer in bits.modest), and `IntX <- FloatY` is
+// rejected whenever the float is the wider of the two (BUGS.md #37,
+// reproducer in narrow_int.modest).  What this file checks is every
+// direction that does hold today, so that a change to construction has to
+// come past it.
+//
+// Every Float32 is printed through Float64: the LLVM backend passes a
+// Float32 to a variadic call at the wrong width (BUGS.md #12).
+
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+
+
+func takesFloat (f: Float64) -> Float64 {
+	return f
+}
+
+
+func givesFloat () -> Float64 {
+	return 1.5           // Rational literal, constructed at the return
+}
+
+
+// `Rational` and `Integer` are compile-time types: they have no width of
+// their own and take the one the target asks for.  Nothing is written in
+// the source to make that happen.
+func testFromLiteral () -> Bool {
+	var a: Float64 = 0.25
+	var b: Float32 = 0.25
+	if a != 0.25 or Float64 b != 0.25 {
+		printf("0.25 = %f / %f, expected 0.25 in both\n", a, Float64 b)
+		return false
+	}
+
+	// An integer literal is as good a source as a rational one.
+	var c: Float64 = 7
+	var d: Float32 = 7
+	if c != 7.0 or Float64 d != 7.0 {
+		printf("7 = %f / %f, expected 7.0 in both\n", c, Float64 d)
+		return false
+	}
+
+	// The same construction happens at a call and at a return, where the
+	// target type comes from the signature rather than from a declaration.
+	if takesFloat(2.5) != 2.5 {
+		printf("takesFloat(2.5) = %f, expected 2.5\n", takesFloat(2.5))
+		return false
+	}
+
+	if givesFloat() != 1.5 {
+		printf("givesFloat() = %f, expected 1.5\n", givesFloat())
+		return false
+	}
+
+	// And in an array literal, one element at a time.
+	var arr: [3]Float32 = [0.5, 1, 2.5]
+	if Float64(arr[0] + arr[1] + arr[2]) != 4.0 {
+		printf("array = %f, expected 4.0\n", Float64(arr[0] + arr[1] + arr[2]))
+		return false
+	}
+
+	printf("passed: float from literal\n")
+	return true
+}
+
+
+// `IntY` and `NatY` are explicit sources, at any width — a float has room
+// for every integer the language has, give or take the rounding that
+// runtime.modest pins down.
+func testFromInteger () -> Bool {
+	var i8: Int8 = -128
+	var i16: Int16 = -32768
+	var i32: Int32 = -7
+	var i64: Int64 = -1234567890
+
+	if Float64 i8 != -128.0 or Float64 i16 != -32768.0 {
+		printf("Int8/Int16 -> Float64 = %f/%f, expected -128.0/-32768.0\n",
+			Float64 i8, Float64 i16)
+		return false
+	}
+
+	if Float64 i32 != -7.0 or Float64 i64 != -1234567890.0 {
+		printf("Int32/Int64 -> Float64 = %f/%f, expected -7.0/-1234567890.0\n",
+			Float64 i32, Float64 i64)
+		return false
+	}
+
+	var n8: Nat8 = 255
+	var n32: Nat32 = 4000000000
+	if Float64 n8 != 255.0 or Float64 n32 != 4000000000.0 {
+		printf("Nat8/Nat32 -> Float64 = %f/%f, expected 255.0/4000000000.0\n",
+			Float64 n8, Float64 n32)
+		return false
+	}
+
+	// A narrower float is just as valid a target; 2^24 is the largest
+	// integer it still holds exactly.
+	var wide: Int32 = 16777216
+	if Float64 Float32 wide != 16777216.0 {
+		printf("Int32 -> Float32 = %f, expected 16777216.0\n", Float64 Float32 wide)
+		return false
+	}
+
+	printf("passed: float from integer\n")
+	return true
+}
+
+
+// `FloatY -> FloatX` goes both ways implicitly.  Widening is exact by
+// construction; narrowing rounds to what the target holds, which is a real
+// conversion and not a truncation of bits.
+func testWidthChange () -> Bool {
+	var narrow: Float32 = 1.5
+	var wide: Float64 = Float64 narrow
+	if wide != 1.5 {
+		printf("Float32 -> Float64 = %f, expected 1.5\n", wide)
+		return false
+	}
+
+	// A value both formats hold survives the round trip untouched.
+	var back: Float32 = Float32 wide
+	if Float64 back != 1.5 {
+		printf("round trip = %f, expected 1.5\n", Float64 back)
+		return false
+	}
+
+	// One that only Float64 holds does not: 2^24 + 1 rounds down to 2^24
+	// on the way into Float32, and stays there on the way back.
+	var exact: Float64 = 16777217.0
+	var rounded: Float64 = Float64 Float32 exact
+	if rounded != 16777216.0 {
+		printf("2^24 + 1 through Float32 = %f, expected 16777216.0\n", rounded)
+		return false
+	}
+
+	// Rounding is to nearest, not toward zero: 0.1 in Float32 is slightly
+	// above the Float64 value, so it does not simply lose the low bits.
+	var tenth: Float64 = 0.1
+	if Float64 Float32 tenth == tenth {
+		printf("0.1 survives Float32, expected it to round\n")
+		return false
+	}
+
+	printf("passed: float width change\n")
+	return true
+}
+
+
+// `FloatY -> IntX` and `FloatY -> NatX` truncate the fraction — toward
+// zero, so a negative rounds up rather than down.
+func testToInteger () -> Bool {
+	var pos: Float64 = 2.75
+	var neg: Float64 = -2.75
+
+	if Int64 pos != 2 {
+		printf("Int64 2.75 = %lld, expected 2\n", Int64 pos)
+		return false
+	}
+
+	if Int64 neg != -2 {
+		printf("Int64 -2.75 = %lld, expected -2 (toward zero)\n", Int64 neg)
+		return false
+	}
+
+	// Just under one is zero in both directions — nothing is rounded up.
+	var almost: Float64 = 0.999
+	var almostNeg: Float64 = -0.999
+	if Int64 almost != 0 or Int64 almostNeg != 0 {
+		printf("Int64 of +-0.999 = %lld/%lld, expected 0/0\n",
+			Int64 almost, Int64 almostNeg)
+		return false
+	}
+
+	// An exact value keeps its whole part.
+	var whole: Float64 = -1000000.0
+	if Int64 whole != -1000000 {
+		printf("Int64 -1000000.0 = %lld, expected -1000000\n", Int64 whole)
+		return false
+	}
+
+	// `NatX` takes a float too, and truncates the same way.
+	if Nat64 pos != 2 {
+		printf("Nat64 2.75 = %llu, expected 2\n", Nat64 pos)
+		return false
+	}
+
+	// At equal widths the narrower float works the same.
+	var f32: Float32 = -3.5
+	if Int32 f32 != -3 {
+		printf("Int32 -3.5 = %d, expected -3\n", Int32 f32)
+		return false
+	}
+
+	printf("passed: float to integer\n")
+	return true
+}
+
+
+// `FixedX` is the other fractional type, and the two convert into each
+// other: the construction removes or applies the fixed point's scale.
+func testFixed () -> Bool {
+	var f: Float64 = 1.5
+	var x: Fixed32 = Fixed32 f
+	if Float64 x != 1.5 {
+		printf("Float64 -> Fixed32 -> Float64 = %f, expected 1.5\n", Float64 x)
+		return false
+	}
+
+	// A quarter is exact in both, so the round trip is exact too.
+	var q: Float64 = -0.25
+	if Float64 Fixed64 q != -0.25 {
+		printf("-0.25 through Fixed64 = %f, expected -0.25\n", Float64 Fixed64 q)
+		return false
+	}
+
+	// The scale is applied on the way in, not the bits: a Fixed32 built
+	// from 1.5 is worth 1.5, and arithmetic on it agrees.
+	var one: Fixed32 = 1.0
+	if Float64(x + one) != 2.5 {
+		printf("Fixed32 1.5 + 1.0 = %f, expected 2.5\n", Float64(x + one))
+		return false
+	}
+
+	printf("passed: float and fixed\n")
+	return true
+}
+
+
+func main () -> Int {
+	var result = true
+	result = testFromLiteral() and result
+	result = testFromInteger() and result
+	result = testWidthChange() and result
+	result = testToInteger() and result
+	result = testFixed() and result
+
+	if not result {
+		printf("failed: float construction\n")
+		return exitFailure
+	}
+
+	printf("passed: float construction\n")
+	return exitSuccess
+}

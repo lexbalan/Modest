@@ -1015,7 +1015,9 @@ def str_type(t):
 		print_int_type_for(t.width)
 
 	elif t.is_float():
-		if t.width <= 32:
+		if t.width <= 16:
+			return "half"
+		elif t.width <= 32:
 			return "float"
 		else:
 			return "double"
@@ -3124,6 +3126,7 @@ def run(module, outname):
 	lo("%Nat64 = type i64")
 	lo("%Nat128 = type i128")
 	lo("%Nat256 = type i256")
+	lo("%Float16 = type half")
 	lo("%Float32 = type float")
 	lo("%Float64 = type double")
 	lo("%Fixed32 = type i32")

@@ -1,0 +1,83 @@
+// TEST: run
+// BACKENDS: c11, llvm, modest
+// EXPECT-EXIT: 0
+// EXPECT-OUT: passed: float to a narrower integer
+// EXPECT-OUT: passed: narrow int from float
+// EXPECTED-FAIL: BUGS.md#37 IntX <- FloatY rejected when the float is wider
+//
+// `IntX <- FloatY` and `NatX <- FloatY` where the float is the wider of the
+// two — `Int32` from a `Float64`, the shape most rounding code is written
+// in.
+//
+// The construction table in `docs/lang/value/cons.md` puts no width
+// condition on the float source: `IntY` needs `Y<=X` to be implicit and is
+// unsafe above it, but `FloatY` is explicit at any width, and rightly so —
+// a width comparison between the two says nothing, since a Float64 holding
+// 3.0 fits an Int8 while one holding 1e300 fits nothing.
+//
+// `value_int_cons` (`src/value/int.py`) compares them anyway, so every line
+// below is rejected with `integer overflow` before a backend sees it.  The
+// working half of the same table — `Int64 <- Float64`, `Int32 <- Float32`,
+// and the truncation-toward-zero they perform — is in cons.modest, which
+// passes.
+//
+// A compile-time float source is worse than rejected: `Int64 (Float64 2.75)`
+// reads `v.value` on a `ValueConst` and takes the compiler down with an
+// AttributeError.  It is not written out here, because a crash would stop
+// the file before the diagnostics below are reported.
+
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+
+
+func testNarrowInt () -> Bool {
+	var f: Float64 = 2.75
+
+	// The whole point of the construction: a Float64 result landing in the
+	// Int32 that the rest of the program is written in.
+	var i32: Int32 = Int32 f
+	if i32 != 2 {
+		printf("Int32 2.75 = %d, expected 2\n", i32)
+		return false
+	}
+
+	var neg: Float64 = -2.75
+	if Int32 neg != -2 {
+		printf("Int32 -2.75 = %d, expected -2\n", Int32 neg)
+		return false
+	}
+
+	// Narrower still, and from the narrower float too — the rejection is
+	// about the two widths, not about Float64 in particular.
+	var f32: Float32 = 100.5
+	if Int16 f32 != 100 {
+		printf("Int16 100.5 = %d, expected 100\n", Int16 f32)
+		return false
+	}
+
+	if Int8 f != 2 {
+		printf("Int8 2.75 = %d, expected 2\n", Int8 f)
+		return false
+	}
+
+	// `NatX` is the same rule and the same rejection.
+	if Nat32 f != 2 {
+		printf("Nat32 2.75 = %u, expected 2\n", Nat32 f)
+		return false
+	}
+
+	printf("passed: float to a narrower integer\n")
+	return true
+}
+
+
+func main () -> Int {
+	if not testNarrowInt() {
+		printf("failed: narrow int from float\n")
+		return exitFailure
+	}
+
+	printf("passed: narrow int from float\n")
+	return exitSuccess
+}

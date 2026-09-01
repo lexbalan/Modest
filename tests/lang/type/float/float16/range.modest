@@ -1,0 +1,112 @@
+// TEST: run
+// BACKENDS: c11, llvm, modest
+// EXPECT-OUT: passed: half range edge
+// EXPECT-OUT: passed: half overflow
+// EXPECT-OUT: passed: Float16 range
+// EXPECTED-FAIL(llvm): BUGS.md#39 a literal past the float's range crashes pack_float
+//
+// A `Rational` literal larger than the target float can hold.
+//
+// 65504 is the largest finite binary16, so `65505.0` is already past the
+// range and `70000.0` well past it.  IEEE 754 rounds to nearest and lands
+// on infinity, which is what the C backend produces.  The LLVM backend does
+// not produce anything: `pack_float` (`src/util.py:143`) packs the folded
+// constant with `struct.pack('<e', ...)`, which raises `OverflowError`
+// rather than returning an infinity, and the traceback reaches the user.
+//
+// The same fault is in the `'<f'` branch one line below — a Float32 literal
+// above 3.4e38 dies the same way — but binary16 is where an ordinary
+// five-digit number reaches it.
+//
+// What the *language* should do with an out-of-range float literal is not
+// settled: `docs/lang/value/cons.md` makes a compile-time integer overflow
+// an error (`Nat8 256` does not compile), and the same argument could be
+// made here.  This file asserts the IEEE answer, which is the one backend
+// that works already gives.  If the language decides on a diagnostic
+// instead, this test turns into a negative one — but a Python traceback is
+// not either answer.
+
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+
+
+// Right up against the edge, everything is an ordinary finite number.
+func testEdge () -> Bool {
+	var max: Float16 = 65504.0
+	var below: Float16 = 65472.0        // the next representable one down
+
+	if not (below < max) {
+		printf("65472 is not below 65504\n")
+		return false
+	}
+
+	// Exactly halfway between the two rounds to even — and it is 65472
+	// that has the even significand (0x7BFE), not the maximum.
+	var halfway: Float16 = 65488.0
+	if Float64 halfway != 65472.0 {
+		printf("65488 = %f, expected it to round to 65472.0\n", Float64 halfway)
+		return false
+	}
+
+	printf("passed: half range edge\n")
+	return true
+}
+
+
+// One step past it, and further.
+func testOverflow () -> Bool {
+	var max: Float16 = 65504.0
+
+	// 65520 is the first value that rounds up rather than down — halfway
+	// to the exponent that does not exist.
+	var just: Float16 = 65520.0
+	if not (Float64 just > 65504.0) {
+		printf("65520 = %f, expected infinity\n", Float64 just)
+		return false
+	}
+
+	var over: Float16 = 70000.0
+	if not (over > max) {
+		printf("70000 is not above the finite range\n")
+		return false
+	}
+
+	// Infinite, not merely large: it absorbs everything finite.
+	var one: Float16 = 1.0
+	if Float64(over + one) != Float64 over {
+		printf("70000 + 1 differs from 70000, expected infinity\n")
+		return false
+	}
+
+	if Float64 over != Float64 just {
+		printf("70000 and 65520 differ, expected both to be infinity\n")
+		return false
+	}
+
+	// A Float64 holds the same literal as an ordinary number, so the
+	// overflow belongs to the target width and not to the literal.
+	var wide: Float64 = 70000.0
+	if wide != 70000.0 {
+		printf("Float64 70000.0 = %f, expected 70000.0\n", wide)
+		return false
+	}
+
+	printf("passed: half overflow\n")
+	return true
+}
+
+
+func main () -> Int {
+	var result = true
+	result = testEdge() and result
+	result = testOverflow() and result
+
+	if not result {
+		printf("failed: Float16 range\n")
+		return exitFailure
+	}
+
+	printf("passed: Float16 range\n")
+	return exitSuccess
+}

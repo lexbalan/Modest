@@ -1,0 +1,108 @@
+// TEST: run
+// BACKENDS: c11, llvm, modest
+// EXPECT-OUT: passed: half to fixed
+// EXPECT-OUT: passed: half from fixed
+// EXPECT-OUT: passed: Float16 and fixed
+// EXPECTED-FAIL(llvm): BUGS.md#40 the Float->Fixed scale is built in the source width
+//
+// `FixedX <-> Float16`, the one pair in the construction table where the
+// two types have a scale between them.
+//
+// A `FixedX` value is the number multiplied by `2^fraction`, so the
+// conversion in has to multiply by that scale — 65536 for the default
+// 16.16 `Fixed32`.  The LLVM backend builds the scale constant in the
+// *source* float's width (`do_eval_cons_fixed`'s run-time path, the
+// `fmul` in `src/backend/llvm.py`), and 65536 is not a binary16: the
+// largest one is 65504.  The compiler dies packing it, before the question
+// of what the product would have been even arises.
+//
+// The function right below it, `do_eval_from_fixed`, has the mirror of this
+// reasoning written out in a comment — "делим в ширине ИСТОЧНИКА: сузить
+// раньше деления - потерять целую часть" — and gets the direction out
+// right; only the direction in was left at the source width.  The C backend
+// has no such problem: `__fixed32_from_float64` takes a double whatever the
+// source was.
+//
+// Float32 and Float64 hide it, which is why this file is here and not in
+// cons.modest one directory up: 65536.0 is exact in both of them, so the
+// scale happens to fit and the product happens to be right.
+
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+
+
+func testToFixed () -> Bool {
+	var h: Float16 = 1.5
+	var x: Fixed32 = Fixed32 h
+	if Float64 x != 1.5 {
+		printf("Fixed32 <- Float16 1.5 = %f, expected 1.5\n", Float64 x)
+		return false
+	}
+
+	// A value with a fraction that both types hold exactly: binary16 has
+	// 11 bits of significand, 16.16 has 16 bits after the point.
+	var q: Float16 = -0.375
+	if Float64 Fixed32 q != -0.375 {
+		printf("Fixed32 <- Float16 -0.375 = %f, expected -0.375\n",
+			Float64 Fixed32 q)
+		return false
+	}
+
+	// Fixed64 has a scale of 2^32, which is further outside binary16 still.
+	var w: Float16 = 2.25
+	if Float64 Fixed64 w != 2.25 {
+		printf("Fixed64 <- Float16 2.25 = %f, expected 2.25\n", Float64 Fixed64 w)
+		return false
+	}
+
+	printf("passed: half to fixed\n")
+	return true
+}
+
+
+// The way back removes the scale.  It is the direction that already
+// divides at the source width, so this half is right — but it cannot be
+// reached under the LLVM backend without the half above.
+func testFromFixed () -> Bool {
+	var x: Fixed32 = 1.5
+	var h: Float16 = Float16 x
+	if Float64 h != 1.5 {
+		printf("Float16 <- Fixed32 1.5 = %f, expected 1.5\n", Float64 h)
+		return false
+	}
+
+	// A fixed value finer than binary16 is rounded on the way, like any
+	// other narrowing: 1/16384 is below the resolution at this magnitude.
+	var fine: Fixed32 = 1.0001220703125
+	if Float64 Float16 fine != 1.0 {
+		printf("Float16 <- Fixed32 1.0001220703125 = %.16f, expected 1.0\n",
+			Float64 Float16 fine)
+		return false
+	}
+
+	// Round trip through a Fixed32 keeps a value both types hold.
+	var start: Float16 = 0.75
+	if Float64 Float16 Fixed32 start != 0.75 {
+		printf("0.75 round trip = %f, expected 0.75\n", Float64 Float16 Fixed32 start)
+		return false
+	}
+
+	printf("passed: half from fixed\n")
+	return true
+}
+
+
+func main () -> Int {
+	var result = true
+	result = testToFixed() and result
+	result = testFromFixed() and result
+
+	if not result {
+		printf("failed: Float16 and fixed\n")
+		return exitFailure
+	}
+
+	printf("passed: Float16 and fixed\n")
+	return exitSuccess
+}

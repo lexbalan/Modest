@@ -1,0 +1,400 @@
+// TEST: run
+// BACKENDS: c11, llvm, modest
+// EXPECT-EXIT: 0
+// EXPECT-OUT: passed: float layout
+// EXPECT-OUT: passed: float values
+// EXPECT-OUT: passed: float arithmetic
+// EXPECT-OUT: passed: float ordering
+// EXPECT-OUT: passed: float precision
+// EXPECT-OUT: passed: float specials
+// EXPECT-OUT: passed: float aggregates
+// EXPECT-OUT: passed: float
+//
+// Float32/Float64 as docs/lang/type/base.md declares them: IEEE 754, with
+// the operation classes `equ`, `ord` and `math` — and without `rem` or
+// `bitwise`.  This is the type at run time; cons.modest is the construction
+// table around it, and bits.modest is its storage.
+//
+// Two things shape how the checks below are written.
+//
+// A Float32 never reaches printf directly: the LLVM backend does not widen
+// it to double for a variadic call (BUGS.md #12), so every value printed
+// here is constructed to Float64 first.  That is also what the language
+// wants — there is no implicit promotion between FloatX widths, so the two
+// types never mix in one expression either.
+//
+// Equality on a float is honest only where the value is exact, so the
+// arithmetic checks use halves and quarters, which both formats hold to the
+// last bit.  Where rounding is the point — testPrecision — the check is that
+// two different literals collapse onto the same value, which is exact by
+// construction.
+//
+// A rational literal has no exponent form: `dec ::= digit+ ('.' digit+)?`
+// in docs/EBNF.txt, so `1.0e10` does not parse.  Large and small magnitudes
+// are written out in full here.
+//
+// Unary `-` on a float is not here either — it is broken under the LLVM
+// backend (BUGS.md #34), so it has its own file, negation.modest, and this
+// one negates by subtracting from zero where it needs to.  Keeping it out
+// means one backend bug does not mark the whole type broken.
+
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+
+
+type Vec = {
+	x: Float32
+	y: Float32
+}
+
+
+func lenSq (v: Vec) -> Float32 {
+	return v.x * v.x + v.y * v.y
+}
+
+
+func scaled (f: Float64, by: Float64) -> Float64 {
+	return f * by
+}
+
+
+// IEEE 754 single and double: 4 and 8 bytes, each aligned to its own size.
+func testLayout () -> Bool {
+	if sizeof(Float32) != 4 or sizeof(Float64) != 8 {
+		printf("sizeof Float32/Float64 = %zu/%zu, expected 4/8\n",
+			sizeof(Float32), sizeof(Float64))
+		return false
+	}
+
+	if alignof(Float32) != 4 or alignof(Float64) != 8 {
+		printf("alignof Float32/Float64 = %zu/%zu, expected 4/8\n",
+			alignof(Float32), alignof(Float64))
+		return false
+	}
+
+	// The width belongs to the type, not to the variable it lands in.
+	var f: Float32 = 1.5
+	var d: Float64 = 1.5
+	if sizeof(f) != 4 or sizeof(d) != 8 {
+		printf("sizeof(f)/sizeof(d) = %zu/%zu, expected 4/8\n", sizeof(f), sizeof(d))
+		return false
+	}
+
+	printf("passed: float layout\n")
+	return true
+}
+
+
+// A rational literal keeps its fraction on the way into a FloatX variable,
+// and an integer literal keeps its magnitude.
+func testValues () -> Bool {
+	var half: Float64 = 0.5
+	if half != 0.5 {
+		printf("half = %f, expected 0.5\n", half)
+		return false
+	}
+
+	var neg: Float64 = -2.25
+	if neg != -2.25 {
+		printf("neg = %f, expected -2.25\n", neg)
+		return false
+	}
+
+	var whole: Float64 = 42
+	if whole != 42.0 {
+		printf("whole = %f, expected 42.0\n", whole)
+		return false
+	}
+
+	var zero: Float64 = 0
+	if zero != 0.0 {
+		printf("zero = %f, expected 0.0\n", zero)
+		return false
+	}
+
+	// The same literals adapt to the narrower type: `Rational` and
+	// `Integer` are compile-time generic and take the shape of the target.
+	var h32: Float32 = 0.5
+	var w32: Float32 = 42
+	if Float64 h32 != 0.5 or Float64 w32 != 42.0 {
+		printf("h32/w32 = %f/%f, expected 0.5/42.0\n", Float64 h32, Float64 w32)
+		return false
+	}
+
+	printf("passed: float values\n")
+	return true
+}
+
+
+// The `math` class: `+ - * /` and unary `-`.  Division is the operation
+// that separates a float from an integer — it keeps the fraction.
+func testArithmetic () -> Bool {
+	var a: Float64 = 1.5
+	var b: Float64 = 0.5
+
+	if a + b != 2.0 {
+		printf("a + b = %f, expected 2.0\n", a + b)
+		return false
+	}
+
+	if a - b != 1.0 {
+		printf("a - b = %f, expected 1.0\n", a - b)
+		return false
+	}
+
+	if a * b != 0.75 {
+		printf("a * b = %f, expected 0.75\n", a * b)
+		return false
+	}
+
+	if a / b != 3.0 {
+		printf("a / b = %f, expected 3.0\n", a / b)
+		return false
+	}
+
+	// 1 / 4 is 0 for an integer and a quarter here.
+	var one: Float64 = 1.0
+	var four: Float64 = 4.0
+	if one / four != 0.25 {
+		printf("one / four = %f, expected 0.25\n", one / four)
+		return false
+	}
+
+	// Negating by subtraction; unary `-` itself is in negation.modest.
+	var zero: Float64 = 0.0
+	if zero - a != -1.5 {
+		printf("zero - a = %f, expected -1.5\n", zero - a)
+		return false
+	}
+
+	// Float32 is the same arithmetic at the narrower width.
+	var c: Float32 = 1.5
+	var d: Float32 = 0.5
+	if Float64(c + d) != 2.0 or Float64(c * d) != 0.75 or Float64(c / d) != 3.0 {
+		printf("Float32 arithmetic: %f %f %f, expected 2.0 0.75 3.0\n",
+			Float64(c + d), Float64(c * d), Float64(c / d))
+		return false
+	}
+
+	printf("passed: float arithmetic\n")
+	return true
+}
+
+
+// The `equ` and `ord` classes.
+func testOrdering () -> Bool {
+	var a: Float64 = 1.5
+	var b: Float64 = 2.5
+	var a2: Float64 = 1.5
+
+	if not (a < b) or not (b > a) or not (a <= a2) or not (a >= a2) {
+		printf("ordering of 1.5 and 2.5 is wrong\n")
+		return false
+	}
+
+	if not (a == a2) or a != a2 {
+		printf("1.5 does not equal 1.5\n")
+		return false
+	}
+
+	if a == b or not (a != b) {
+		printf("1.5 equals 2.5\n")
+		return false
+	}
+
+	// Ordering has to look below the binary point, not at the whole part.
+	var q: Float64 = 1.25
+	if not (q < a) {
+		printf("1.25 is not less than 1.5\n")
+		return false
+	}
+
+	// A negative compares below every positive, and -2.5 below -1.5.
+	var na: Float64 = -1.5
+	var nb: Float64 = -2.5
+	if not (nb < na) or not (na < a) {
+		printf("negative ordering is wrong\n")
+		return false
+	}
+
+	var c: Float32 = 1.5
+	var e: Float32 = 2.5
+	if not (c < e) or c == e {
+		printf("Float32 ordering is wrong\n")
+		return false
+	}
+
+	printf("passed: float ordering\n")
+	return true
+}
+
+
+// What each width can and cannot hold.  A significand of 24 bits stops
+// Float32 at 2^24, one of 53 bits stops Float64 at 2^53: the first integer
+// that does not fit is the one just above, and it rounds onto its neighbour.
+func testPrecision () -> Bool {
+	var f32a: Float32 = 16777216.0        // 2^24
+	var f32b: Float32 = 16777217.0        // 2^24 + 1, not representable
+	if f32a != f32b {
+		printf("Float32 holds 2^24 + 1, expected it to round\n")
+		return false
+	}
+
+	// One step lower, the two are still distinct.
+	var f32c: Float32 = 8388608.0         // 2^23
+	var f32d: Float32 = 8388609.0
+	if f32c == f32d {
+		printf("Float32 cannot separate 2^23 and 2^23 + 1\n")
+		return false
+	}
+
+	var f64a: Float64 = 9007199254740992.0    // 2^53
+	var f64b: Float64 = 9007199254740993.0    // 2^53 + 1, not representable
+	if f64a != f64b {
+		printf("Float64 holds 2^53 + 1, expected it to round\n")
+		return false
+	}
+
+	// The extra 29 bits are what Float64 buys: it separates the pair that
+	// collapsed in Float32 above.
+	var wide1: Float64 = 16777216.0
+	var wide2: Float64 = 16777217.0
+	if wide1 == wide2 {
+		printf("Float64 cannot separate 2^24 and 2^24 + 1\n")
+		return false
+	}
+
+	// A tenth is periodic in binary, so it is rounded into either width —
+	// and the two roundings differ.
+	var tenth32: Float32 = 0.1
+	var tenth64: Float64 = 0.1
+	if Float64 tenth32 == tenth64 {
+		printf("0.1 rounds the same into Float32 and Float64\n")
+		return false
+	}
+
+	// Rounded, but not far: the two agree to well inside a millionth.
+	var delta = Float64 tenth32 - tenth64
+	if delta > 0.000_001 or 0.0 - delta > 0.000_001 {
+		printf("Float32 0.1 = %.20f, expected it near 0.1\n", Float64 tenth32)
+		return false
+	}
+
+	printf("passed: float precision\n")
+	return true
+}
+
+
+// IEEE 754 is more than the finite numbers.  Every value here is built at
+// run time — a division by zero folded at compile time is a different
+// question, and this file is about what the backends emit.
+//
+// NaN is not here: the two backends disagree about `!=` on it
+// (BUGS.md #35), so it has its own file, nan.modest.
+func testSpecials () -> Bool {
+	var one: Float64 = 1.0
+	var zero: Float64 = 0.0
+
+	// Infinity is above every finite value, and stays infinite.
+	var inf = one / zero
+	var big: Float64 = 100000000000000000000000000000.0
+	if not (inf > big) {
+		printf("1.0 / 0.0 is not above a finite value\n")
+		return false
+	}
+
+	if inf + one != inf or inf * inf != inf {
+		printf("infinity is not stable under + and *\n")
+		return false
+	}
+
+	if not (zero - inf < zero - big) {
+		printf("-infinity is not below a finite negative\n")
+		return false
+	}
+
+	// Zero has a sign, which equality does not see.  The negative one is
+	// built rather than written: the literal `-0.0` crashes the LLVM
+	// backend (BUGS.md #34), and a product carries the sign just as well.
+	var negOne: Float64 = -1.0
+	var negZero = zero * negOne
+	if zero != negZero {
+		printf("-0.0 does not equal 0.0\n")
+		return false
+	}
+
+	// ...but division does: it separates the two infinities.
+	if one / negZero == inf {
+		printf("1.0 / -0.0 equals 1.0 / 0.0, expected opposite infinities\n")
+		return false
+	}
+
+	printf("passed: float specials\n")
+	return true
+}
+
+
+// A float is a value like any other: it goes into an array, into a record
+// field, through a parameter and back out of a return.
+func testAggregates () -> Bool {
+	var arr: [4]Float64 = [1.5, 2.5, 0.5, 3.0]
+	if arr[0] + arr[1] + arr[2] + arr[3] != 7.5 {
+		printf("array sum = %f, expected 7.5\n", arr[0] + arr[1] + arr[2] + arr[3])
+		return false
+	}
+
+	arr[2] = -0.5
+	if arr[2] != -0.5 {
+		printf("arr[2] = %f, expected -0.5\n", arr[2])
+		return false
+	}
+
+	// A record of Float32 packs to two of them, with no padding to add.
+	var v: Vec = {x = 3.0, y = 4.0}
+	if sizeof(Vec) != 8 {
+		printf("sizeof(Vec) = %zu, expected 8\n", sizeof(Vec))
+		return false
+	}
+
+	if Float64 lenSq(v) != 25.0 {
+		printf("lenSq = %f, expected 25.0\n", Float64 lenSq(v))
+		return false
+	}
+
+	v.y = 0.5
+	if Float64 v.y != 0.5 {
+		printf("v.y = %f, expected 0.5\n", Float64 v.y)
+		return false
+	}
+
+	// A literal argument becomes a Float64 at the call, and the returned
+	// value is one too.
+	if scaled(1.5, 2.0) != 3.0 {
+		printf("scaled(1.5, 2.0) = %f, expected 3.0\n", scaled(1.5, 2.0))
+		return false
+	}
+
+	printf("passed: float aggregates\n")
+	return true
+}
+
+
+func main () -> Int {
+	var result = true
+	result = testLayout() and result
+	result = testValues() and result
+	result = testArithmetic() and result
+	result = testOrdering() and result
+	result = testPrecision() and result
+	result = testSpecials() and result
+	result = testAggregates() and result
+
+	if not result {
+		printf("failed: float\n")
+		return exitFailure
+	}
+
+	printf("passed: float\n")
+	return exitSuccess
+}

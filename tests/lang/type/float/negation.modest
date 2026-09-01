@@ -1,0 +1,117 @@
+// TEST: run
+// BACKENDS: c11, llvm, modest
+// EXPECT-EXIT: 0
+// EXPECT-OUT: passed: float unary minus
+// EXPECT-OUT: passed: signed zero
+// EXPECT-OUT: passed: float negation
+// EXPECTED-FAIL(llvm): BUGS.md#34 float negation emits an integer `sub`
+//
+// Unary `-` on a float, and the negative zero it produces.
+//
+// `docs/lang/type/base.md` gives `FloatX` the `math` class, which includes
+// unary `-`, and IEEE 754 gives zero a sign that survives it.  Neither
+// works under the LLVM backend: negating a run-time float emits
+// `sub %Float64 0.0, %x` where the instruction has to be `fsub`, and the
+// literal `-0.0` takes the compiler down with a traceback.  The C backend
+// is right about both.
+//
+// This is its own file so that one backend bug does not mark the whole type
+// broken — runtime.modest negates by subtracting from zero instead, and
+// says so where it does.
+
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+
+
+func testUnaryMinus () -> Bool {
+	var a: Float64 = 1.5
+	if -a != -1.5 {
+		printf("-a = %f, expected -1.5\n", -a)
+		return false
+	}
+
+	// Negating a whole expression, not just a name.  (Written with the
+	// parentheses: two prefix operators in a row do not parse, BUGS.md #27.)
+	if -(a + a) != -3.0 {
+		printf("-(a + a) = %f, expected -3.0\n", -(a + a))
+		return false
+	}
+
+	// A negative operand comes back positive.
+	var neg: Float64 = -2.25
+	if -neg != 2.25 {
+		printf("-neg = %f, expected 2.25\n", -neg)
+		return false
+	}
+
+	// Negation binds tighter than the arithmetic around it.
+	var b: Float64 = 0.5
+	if -a * b != -0.75 {
+		printf("-a * b = %f, expected -0.75\n", -a * b)
+		return false
+	}
+
+	// The narrower width negates the same way.
+	var f32: Float32 = 1.5
+	if Float64 -f32 != -1.5 {
+		printf("-f32 = %f, expected -1.5\n", Float64 -f32)
+		return false
+	}
+
+	printf("passed: float unary minus\n")
+	return true
+}
+
+
+// Zero carries a sign in IEEE 754.  Equality cannot see it — the standard
+// says the two zeros compare equal — so the only way to observe it is to
+// divide by it and look at which infinity comes back.
+func testSignedZero () -> Bool {
+	var zero: Float64 = 0.0
+	var negZero: Float64 = -0.0
+
+	if zero != negZero {
+		printf("-0.0 does not equal 0.0\n")
+		return false
+	}
+
+	var one: Float64 = 1.0
+	var posInf = one / zero
+	var negInf = one / negZero
+
+	if posInf == negInf {
+		printf("1.0 / -0.0 equals 1.0 / 0.0, expected opposite infinities\n")
+		return false
+	}
+
+	if not (negInf < posInf) {
+		printf("-infinity is not below +infinity\n")
+		return false
+	}
+
+	// Negating a zero gives the other one, so the sign is not lost in the
+	// operation either.
+	if one / -zero == posInf {
+		printf("1.0 / -zero equals 1.0 / zero, expected opposite infinities\n")
+		return false
+	}
+
+	printf("passed: signed zero\n")
+	return true
+}
+
+
+func main () -> Int {
+	var result = true
+	result = testUnaryMinus() and result
+	result = testSignedZero() and result
+
+	if not result {
+		printf("failed: float negation\n")
+		return exitFailure
+	}
+
+	printf("passed: float negation\n")
+	return exitSuccess
+}

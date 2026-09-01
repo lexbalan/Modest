@@ -12,7 +12,7 @@ Primitive built-in types.
 | `Int8/16/32/64/128` | 1–16 | equ, ord, math, rem | signed integers |
 | `Nat8/16/32/64/128` | 1–16 | equ, ord, math, rem | unsigned integers |
 | `Char8/16/32` | 1–4 | equ | characters (UTF-8/16/32 code units) |
-| `Float32/64` | 4–8 | equ, ord, math | IEEE 754 |
+| `Float16/32/64` | 2–8 | equ, ord, math | IEEE 754 |
 | `Fixed32/64` | 4–8 | equ, ord, math | fixed-point (experimental) |
 
 Operation classes:
@@ -53,6 +53,20 @@ Target-width aliases (resolved from target config): `Int`, `Nat`, `Word`,
 > `@fraction`'s argument. See `docs/BUGS.md` (#25),
 > `tests/lang/type/fixed/runtime.modest` (the type at run time) and
 > `tests/lang/type/fixed/comptime.modest` (the compile-time fold).
+
+> `FloatX` is IEEE 754 and complete for arithmetic, ordering and the
+> conversions to and from the other numeric types. `Float16` is binary16 in
+> both backends — `_Float16` in C11, `half` in LLVM — and reaches only the
+> targets that have it: it is absent on ppc64le, wasm and msp430, the same
+> way `__int128` behind `Word128` is. Several things around `FloatX` do not
+> hold: `FloatX` ↔ `WordX` converts numerically instead of
+> reinterpreting bits, an `IntX`/`NatX` narrower than the float is refused,
+> and the LLVM backend gets unary `-` and `!=` on a NaN wrong, dies on a
+> literal outside the target's range, and builds the `FixedX` scale at the
+> source float's width — which only a `Float16` source is narrow enough to
+> expose. See `docs/BUGS.md` (#34–#37, #39, #40) and
+> `tests/lang/type/float/`, where each has a marked reproducer next to the
+> files that pass.
 
 ## Examples
 
