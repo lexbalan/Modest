@@ -1,0 +1,169 @@
+// TEST: run
+// BACKENDS: c11, llvm, modest
+// EXPECT-EXIT: 0
+// EXPECT-OUT: passed: fields in order
+// EXPECT-OUT: passed: padding before an aligned field
+// EXPECT-OUT: passed: alignment of the record
+// EXPECT-OUT: passed: a record field keeps its own layout
+// EXPECT-OUT: passed: record layout
+//
+// Where the fields of a record sit.  The rule is the C one: fields keep
+// the order they are written in, each starts at the next offset its own
+// type is aligned to, and the record is aligned to the widest alignment
+// among them.  Whatever that leaves between two fields is padding — bytes
+// of the record that belong to no field.
+//
+// `offsetof` is how a program asks, and it is a compile-time fact about
+// the type: no value of it has to exist.  It takes one field of one record
+// — `offsetof(Nest.p)` — and not a path through a nested one.
+//
+// `sizeof` is the same kind of fact, and is checked here only for records
+// whose size is a power of two: the LLVM backend rounds every other one up
+// (BUGS.md#41, reproducer in `size.modest`).
+
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+
+
+type Point = {
+	x: Int32
+	y: Int32
+}
+
+// One byte, three of padding, then the aligned Nat32.
+type Header = {
+	tag: Word8
+	len: Nat32
+}
+
+// The alignment of the whole comes from the widest field, and the tail is
+// padded out to it.
+type Wide = {
+	a: Word8
+	b: Float64
+	c: Word8
+}
+
+type Nest = {
+	h: Header
+	p: Point
+}
+
+
+func testOrder () -> Bool {
+	// The first field is at zero, always.
+	if offsetof(Point.x) != 0 {
+		printf("offsetof(Point.x) = %zu, expected 0\n", offsetof(Point.x))
+		return false
+	}
+	// The next follows it, in the order the type is written in.
+	if offsetof(Point.y) != 4 {
+		printf("offsetof(Point.y) = %zu, expected 4\n", offsetof(Point.y))
+		return false
+	}
+	if sizeof(Point) != 8 {
+		printf("sizeof(Point) = %zu, expected 8\n", sizeof(Point))
+		return false
+	}
+
+	printf("passed: fields in order\n")
+	return true
+}
+
+
+func testPadding () -> Bool {
+	if offsetof(Header.tag) != 0 {
+		printf("offsetof(Header.tag) = %zu, expected 0\n", offsetof(Header.tag))
+		return false
+	}
+
+	// `len` needs a multiple of 4, so three bytes go unused after `tag`.
+	if offsetof(Header.len) != 4 {
+		printf("offsetof(Header.len) = %zu, expected 4\n", offsetof(Header.len))
+		return false
+	}
+
+	// Which the record pays for: 5 bytes of fields, 8 bytes of record.
+	if sizeof(Header) != 8 {
+		printf("sizeof(Header) = %zu, expected 8\n", sizeof(Header))
+		return false
+	}
+	if sizeof(Header) == sizeof(Word8) + sizeof(Nat32) {
+		printf("sizeof(Header) is the sum of its fields, expected padding\n")
+		return false
+	}
+
+	printf("passed: padding before an aligned field\n")
+	return true
+}
+
+
+func testAlignment () -> Bool {
+	// The widest field decides for the record.
+	if alignof(Wide) != alignof(Float64) {
+		printf("alignof(Wide) = %zu, expected %zu\n", alignof(Wide), alignof(Float64))
+		return false
+	}
+
+	// ... and pushes the field that needs it to the next multiple.
+	if offsetof(Wide.a) != 0 or offsetof(Wide.b) != 8 {
+		printf("Wide.a at %zu, Wide.b at %zu, expected 0 and 8\n",
+			offsetof(Wide.a), offsetof(Wide.b))
+		return false
+	}
+	// The field after it starts right where it ends: alignment applies to
+	// the field's own type, and `c` is a single byte.
+	if offsetof(Wide.c) != 16 {
+		printf("offsetof(Wide.c) = %zu, expected 16\n", offsetof(Wide.c))
+		return false
+	}
+
+	printf("passed: alignment of the record\n")
+	return true
+}
+
+
+func testNested () -> Bool {
+	// A record field is laid out as itself and then placed as a whole, so
+	// the padding inside `Header` is inside `Nest` too.
+	if offsetof(Nest.h) != 0 {
+		printf("offsetof(Nest.h) = %zu, expected 0\n", offsetof(Nest.h))
+		return false
+	}
+	if offsetof(Nest.p) != sizeof(Header) {
+		printf("offsetof(Nest.p) = %zu, expected %zu\n", offsetof(Nest.p), sizeof(Header))
+		return false
+	}
+	if sizeof(Nest) != sizeof(Header) + sizeof(Point) {
+		printf("sizeof(Nest) = %zu, expected %zu\n", sizeof(Nest),
+			sizeof(Header) + sizeof(Point))
+		return false
+	}
+
+	// And the alignment travels with it.
+	if alignof(Nest) != alignof(Header) {
+		printf("alignof(Nest) = %zu, expected %zu\n", alignof(Nest), alignof(Header))
+		return false
+	}
+
+	printf("passed: a record field keeps its own layout\n")
+	return true
+}
+
+
+func main () -> Int {
+	var result = true
+	result = testOrder() and result
+	result = testPadding() and result
+	result = testAlignment() and result
+	result = testNested() and result
+
+	if not result {
+		printf("failed: record layout\n")
+		return exitFailure
+	}
+
+	printf("passed: record layout\n")
+	return exitSuccess
+}

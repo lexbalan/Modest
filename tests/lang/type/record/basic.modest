@@ -1,0 +1,238 @@
+// TEST: run
+// BACKENDS: c11, llvm, modest
+// EXPECT-EXIT: 0
+// EXPECT-OUT: passed: record construction
+// EXPECT-OUT: passed: omitted fields
+// EXPECT-OUT: passed: field access
+// EXPECT-OUT: passed: anonymous record type
+// EXPECT-OUT: passed: record equality
+// EXPECT-OUT: passed: module level records
+// EXPECT-OUT: passed: record basics
+//
+// The shape of a record type and the ways a value of it is built and read.
+// A record is a value type with named fields: it is constructed from a
+// record literal, its fields are places that read and assign like any
+// variable, and two records of the same type compare field by field.
+//
+// The two construction forms are both here because they differ in what
+// carries the type: `Point {x = 1, y = 2}` names it, `p = {x = 1, y = 2}`
+// takes it from the target.  What they build is the same value.
+//
+// Field names are the only way in — there is no positional literal — so a
+// literal that omits a field is not an error: the field takes its default.
+// That is what makes `{}` a complete value of any record type.
+
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+
+
+// The newline-separated form.
+type Point = {
+	x: Int32
+	y: Int32
+}
+
+// The inline form: the same type, written on one line.
+type Extent = {w: Int32, h: Int32}
+
+type Mixed = {
+	n: Int32
+	f: Float64
+	flag: Bool
+	p: *Int32
+}
+
+
+// Module-level records: one with a value, one left to zero-init.
+const origin: Point = {x = 0, y = 0}
+var cursor: Point
+
+
+func testConstruction () -> Bool {
+	// Explicit: the type is named by the literal itself.
+	var a = Point {x = 1, y = 2}
+	if a.x != 1 or a.y != 2 {
+		printf("a = {%d, %d}, expected {1, 2}\n", a.x, a.y)
+		return false
+	}
+
+	// Implicit: the type comes from the declaration.
+	var b: Point = {x = 3, y = 4}
+	if b.x != 3 or b.y != 4 {
+		printf("b = {%d, %d}, expected {3, 4}\n", b.x, b.y)
+		return false
+	}
+
+	// The inline form of the type is a type like any other.
+	var s: Extent = {w = 640, h = 480}
+	if s.w != 640 or s.h != 480 {
+		printf("s = {%d, %d}, expected {640, 480}\n", s.w, s.h)
+		return false
+	}
+
+	// The field values are ordinary expressions, and the order in the
+	// literal is the writer's, not the type's.
+	let n: Int32 = 10
+	var c: Point = {y = n * 2, x = n + 1}
+	if c.x != 11 or c.y != 20 {
+		printf("c = {%d, %d}, expected {11, 20}\n", c.x, c.y)
+		return false
+	}
+
+	printf("passed: record construction\n")
+	return true
+}
+
+
+func testOmittedFields () -> Bool {
+	// A field the literal leaves out takes the default value of its type.
+	var a: Point = {x = 5}
+	if a.x != 5 or a.y != 0 {
+		printf("a = {%d, %d}, expected {5, 0}\n", a.x, a.y)
+		return false
+	}
+
+	// `{}` omits everything, so it fills the whole record.
+	var b: Point = {}
+	if b.x != 0 or b.y != 0 {
+		printf("b = {%d, %d}, expected {0, 0}\n", b.x, b.y)
+		return false
+	}
+
+	// Every field type has such a default: 0, 0.0, false, nil.
+	var m: Mixed = {}
+	if m.n != 0 or m.f != 0.0 or m.flag or not (m.p == nil) {
+		printf("m = {%d, %f, %d, %d}, expected the zero of every field\n",
+			m.n, m.f, Int32 (Word8 m.flag), Int32 (Word8 (m.p == nil)))
+		return false
+	}
+
+	printf("passed: omitted fields\n")
+	return true
+}
+
+
+func testFieldAccess () -> Bool {
+	var p: Point = {x = 1, y = 2}
+
+	// A field is a place: it is assigned to, and read back.
+	p.x = 100
+	if p.x != 100 {
+		printf("p.x = %d after p.x = 100\n", p.x)
+		return false
+	}
+
+	// ... and it works with the operators that need a place.
+	++p.y
+	if p.y != 3 {
+		printf("p.y = %d after ++p.y, expected 3\n", p.y)
+		return false
+	}
+
+	// Through a pointer the access derefs itself: `pp.x`, not `(*pp).x`.
+	var pp: *Point = &p
+	if pp.x != 100 {
+		printf("pp.x = %d, expected 100\n", pp.x)
+		return false
+	}
+	pp.x = 7
+	if p.x != 7 {
+		printf("p.x = %d after pp.x = 7, expected 7\n", p.x)
+		return false
+	}
+
+	printf("passed: field access\n")
+	return true
+}
+
+
+func testAnonymousType () -> Bool {
+	// A record type does not have to be named to be used.
+	var v: {u: Int32, w: Int32} = {u = 8, w = 9}
+	if v.u != 8 or v.w != 9 {
+		printf("v = {%d, %d}, expected {8, 9}\n", v.u, v.w)
+		return false
+	}
+
+	v.u = 80
+	if v.u != 80 {
+		printf("v.u = %d after v.u = 80\n", v.u)
+		return false
+	}
+
+	printf("passed: anonymous record type\n")
+	return true
+}
+
+
+func testEquality () -> Bool {
+	var a: Point = {x = 1, y = 2}
+	var b: Point = {x = 1, y = 2}
+	var c: Point = {x = 1, y = 9}
+
+	// Field by field, across the whole record.
+	if not (a == b) {
+		printf("a == b is false for two identical records\n")
+		return false
+	}
+	// The difference is in the second field: a comparison that only looked
+	// at the first would miss it.
+	if not (a != c) {
+		printf("a != c is false, but a.y = %d and c.y = %d\n", a.y, c.y)
+		return false
+	}
+
+	// A literal is a value, so it compares like one.
+	if not (a == Point {x = 1, y = 2}) {
+		printf("a == Point {x = 1, y = 2} is false\n")
+		return false
+	}
+
+	printf("passed: record equality\n")
+	return true
+}
+
+
+func testModuleLevel () -> Bool {
+	if origin.x != 0 or origin.y != 0 {
+		printf("origin = {%d, %d}, expected {0, 0}\n", origin.x, origin.y)
+		return false
+	}
+
+	// A module-level record with no initializer is zero, like any other
+	// module-level variable.
+	if cursor.x != 0 or cursor.y != 0 {
+		printf("cursor = {%d, %d}, expected {0, 0}\n", cursor.x, cursor.y)
+		return false
+	}
+
+	cursor.x = 12
+	cursor.y = 34
+	if cursor.x != 12 or cursor.y != 34 {
+		printf("cursor = {%d, %d}, expected {12, 34}\n", cursor.x, cursor.y)
+		return false
+	}
+
+	printf("passed: module level records\n")
+	return true
+}
+
+
+func main () -> Int {
+	var result = true
+	result = testConstruction() and result
+	result = testOmittedFields() and result
+	result = testFieldAccess() and result
+	result = testAnonymousType() and result
+	result = testEquality() and result
+	result = testModuleLevel() and result
+
+	if not result {
+		printf("failed: record basics\n")
+		return exitFailure
+	}
+
+	printf("passed: record basics\n")
+	return exitSuccess
+}

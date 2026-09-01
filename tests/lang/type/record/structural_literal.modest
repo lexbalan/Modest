@@ -1,0 +1,75 @@
+// TEST: run
+// BACKENDS: c11, llvm
+// EXPECT-EXIT: 0
+// EXPECT-OUT: passed: a named literal under the other name
+// EXPECT-OUT: passed: structural literal
+// EXPECTED-FAIL(c11): BUGS.md#46 a named record literal breaks the RAWCAST macro
+//
+// A record literal that names its type, used where a structurally
+// identical type of another name is expected: `var v: Vec2 = Point {...}`.
+//
+// Structurally the two are one type (`structural.modest`), so this is the
+// same value written the long way round.  The C backend converts between
+// the two C structs with its `RAWCAST` macro, and hands it the compound
+// literal — whose braces carry commas, which the preprocessor reads as
+// more macro arguments.  The result does not compile.
+//
+// A literal with no type name in front of it is unaffected: it is built at
+// the target's type in the first place, with no conversion to emit.
+
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+
+
+type Point = {
+	x: Int32
+	y: Int32
+}
+
+type Vec2 = {
+	x: Int32
+	y: Int32
+}
+
+
+func sumVec (v: Vec2) -> Int32 {
+	return v.x + v.y
+}
+
+
+func testNamedLiteral () -> Bool {
+	// A literal for the one name, into a variable of the other.
+	var w: Vec2 = Point {x = 5, y = 6}
+	if w.x != 5 or w.y != 6 {
+		printf("w = {%d, %d}, expected {5, 6}\n", w.x, w.y)
+		return false
+	}
+
+	// The same as an argument.
+	if sumVec(Point {x = 1, y = 1}) != 2 {
+		printf("sumVec(Point {1, 1}) = %d, expected 2\n", sumVec(Point {x = 1, y = 1}))
+		return false
+	}
+
+	// And as an operand.
+	var p: Point = {x = 1, y = 2}
+	if not (p == Vec2 {x = 1, y = 2}) {
+		printf("p == Vec2 {x = 1, y = 2} is false\n")
+		return false
+	}
+
+	printf("passed: a named literal under the other name\n")
+	return true
+}
+
+
+func main () -> Int {
+	if not testNamedLiteral() {
+		printf("failed: structural literal\n")
+		return exitFailure
+	}
+
+	printf("passed: structural literal\n")
+	return exitSuccess
+}

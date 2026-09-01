@@ -1,0 +1,202 @@
+// TEST: run
+// BACKENDS: c11, llvm, modest
+// EXPECT-EXIT: 0
+// EXPECT-OUT: passed: default of the field's type
+// EXPECT-OUT: passed: declared defaults
+// EXPECT-OUT: passed: declared default is only a fallback
+// EXPECT-OUT: passed: composite defaults
+// EXPECT-OUT: passed: record defaults
+//
+// What a field is worth when the literal does not say.
+//
+// Two layers answer that.  Without a declaration the field falls back to
+// the default value of its type — `0`, `0.0`, `false`, `nil`, `[]`.  With
+// `f: T = value` in the record type the field carries its own default, and
+// that is what an omitting literal gets instead.
+//
+// The declared default is a property of the *type*, not of one literal:
+// every construction that omits the field sees it, including `{}`, a
+// literal that fills other fields, and a literal nested inside another.
+// And it is only a fallback — a literal that names the field always wins,
+// including when it names it with the same value the field type's own
+// default would have given.
+//
+// What is *not* here is the nested record: a record-typed field with no
+// declared default, and the defaults of a literal written inside another
+// literal.  Both are broken — BUGS.md#44 — and `defaults_nested.modest`
+// is their reproducer.
+
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+
+
+const baseWidth: Int32 = 20
+
+
+type Plain = {
+	n: Int32
+	f: Float64
+	flag: Bool
+	p: *Int32
+	arr: [3]Int32
+}
+
+type Declared = {
+	n: Int32 = 42
+	f: Float64 = 1.5
+	flag: Bool = true
+	arr: [3]Int32 = [1, 2, 3]
+	computed: Int32 = 2 * 10 + 1
+	fromConst: Int32 = baseWidth
+}
+
+type Inner = {
+	a: Int32 = 3
+	b: Int32 = 4
+}
+
+type Outer = {
+	tag: Int32
+	// A record-typed field with a default of its own: the whole nested
+	// value is what the field falls back to.
+	in: Inner = {a = 9, b = 8}
+}
+
+
+func testTypeDefault () -> Bool {
+	var p: Plain = {}
+
+	if p.n != 0 or p.f != 0.0 {
+		printf("p.n = %d, p.f = %f, expected 0 and 0.0\n", p.n, p.f)
+		return false
+	}
+	if p.flag {
+		printf("p.flag is true, expected false\n")
+		return false
+	}
+	if not (p.p == nil) {
+		printf("p.p is not nil\n")
+		return false
+	}
+	if p.arr[0] != 0 or p.arr[1] != 0 or p.arr[2] != 0 {
+		printf("p.arr = [%d, %d, %d], expected all zero\n", p.arr[0], p.arr[1], p.arr[2])
+		return false
+	}
+
+	printf("passed: default of the field's type\n")
+	return true
+}
+
+
+func testDeclaredDefaults () -> Bool {
+	var d: Declared = {}
+
+	if d.n != 42 or d.f != 1.5 {
+		printf("d.n = %d, d.f = %f, expected 42 and 1.5\n", d.n, d.f)
+		return false
+	}
+	if not d.flag {
+		printf("d.flag is false, expected the declared true\n")
+		return false
+	}
+
+	// The default is an expression, folded once for the type.
+	if d.computed != 21 {
+		printf("d.computed = %d, expected 21\n", d.computed)
+		return false
+	}
+	// ... and it can name what is already in scope.
+	if d.fromConst != baseWidth {
+		printf("d.fromConst = %d, expected %d\n", d.fromConst, baseWidth)
+		return false
+	}
+
+	printf("passed: declared defaults\n")
+	return true
+}
+
+
+func testDefaultIsFallback () -> Bool {
+	// A literal that names the field wins over the declared default.
+	var a: Declared = {n = 7}
+	if a.n != 7 {
+		printf("a.n = %d, expected the literal's 7\n", a.n)
+		return false
+	}
+	// ... and the fields it does not name still get theirs.
+	if a.f != 1.5 or a.computed != 21 {
+		printf("a.f = %f, a.computed = %d, expected 1.5 and 21\n", a.f, a.computed)
+		return false
+	}
+
+	// Including when the literal asks for what the *type's* default would
+	// have been: the declared default does not come back.
+	var b: Declared = {n = 0, flag = false}
+	if b.n != 0 {
+		printf("b.n = %d, expected 0\n", b.n)
+		return false
+	}
+	if b.flag {
+		printf("b.flag is true, but the literal set it to false\n")
+		return false
+	}
+
+	printf("passed: declared default is only a fallback\n")
+	return true
+}
+
+
+func testCompositeDefaults () -> Bool {
+	var d: Declared = {}
+
+	// An array-typed field defaults to a whole array.
+	if d.arr[0] != 1 or d.arr[1] != 2 or d.arr[2] != 3 {
+		printf("d.arr = [%d, %d, %d], expected [1, 2, 3]\n", d.arr[0], d.arr[1], d.arr[2])
+		return false
+	}
+
+	// A record-typed field defaults to a whole record.
+	var o: Outer = {}
+	if o.in.a != 9 or o.in.b != 8 {
+		printf("o.in = {%d, %d}, expected the declared {9, 8}\n", o.in.a, o.in.b)
+		return false
+	}
+
+	// The same when the literal fills the other field and omits this one.
+	var o2: Outer = {tag = 1}
+	if o2.tag != 1 or o2.in.a != 9 or o2.in.b != 8 {
+		printf("o2 = {%d, {%d, %d}}, expected {1, {9, 8}}\n", o2.tag, o2.in.a, o2.in.b)
+		return false
+	}
+
+	// A default that is a whole array is a whole array: writing to one
+	// record's copy leaves the next construction alone.
+	var e: Declared = {}
+	e.arr[1] = 99
+	var f: Declared = {}
+	if f.arr[1] != 2 {
+		printf("f.arr[1] = %d after writing to e, expected 2\n", f.arr[1])
+		return false
+	}
+
+	printf("passed: composite defaults\n")
+	return true
+}
+
+
+func main () -> Int {
+	var result = true
+	result = testTypeDefault() and result
+	result = testDeclaredDefaults() and result
+	result = testDefaultIsFallback() and result
+	result = testCompositeDefaults() and result
+
+	if not result {
+		printf("failed: record defaults\n")
+		return exitFailure
+	}
+
+	printf("passed: record defaults\n")
+	return exitSuccess
+}

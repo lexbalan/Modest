@@ -1,0 +1,153 @@
+// TEST: run
+// BACKENDS: c11, llvm
+// EXPECT-EXIT: 0
+// EXPECT-OUT: passed: every field at offset zero
+// EXPECT-OUT: passed: the size of the largest field
+// EXPECT-OUT: passed: the fields share the storage
+// EXPECT-OUT: passed: a union field inside a record
+// EXPECT-OUT: passed: union layout
+// EXPECTED-FAIL(llvm): BUGS.md#43 @layout("union") is ignored, the fields do not overlap
+//
+// `@layout("union")` puts every field of the record at offset 0 — the C
+// union.  The fields are then one storage under several names: writing
+// one is reading the others, which is the whole point of asking for it.
+//
+// The C backend emits a real `union`.  The LLVM backend does not look at
+// the layout at all and emits its ordinary struct, so the fields end up
+// side by side: `offsetof` gives the wrong answer, `sizeof` is the sum
+// rather than the maximum, and the aliasing the type was written for does
+// not happen.
+//
+// The checks below never depend on byte order: they either write all the
+// bytes to one value, or write and read the same width.
+
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+
+
+type Color = @layout("union") {
+	rgba: Word32
+	n: Nat32
+	bytes: [4]Word8
+}
+
+type Pixel = {
+	at: Nat32
+	color: Color
+}
+
+
+func testOffsets () -> Bool {
+	if offsetof(Color.rgba) != 0 {
+		printf("offsetof(Color.rgba) = %zu, expected 0\n", offsetof(Color.rgba))
+		return false
+	}
+	if offsetof(Color.n) != 0 {
+		printf("offsetof(Color.n) = %zu, expected 0\n", offsetof(Color.n))
+		return false
+	}
+	if offsetof(Color.bytes) != 0 {
+		printf("offsetof(Color.bytes) = %zu, expected 0\n", offsetof(Color.bytes))
+		return false
+	}
+
+	printf("passed: every field at offset zero\n")
+	return true
+}
+
+
+func testSize () -> Bool {
+	// As wide as its widest field, not as wide as all of them together.
+	if sizeof(Color) != 4 {
+		printf("sizeof(Color) = %zu, expected 4\n", sizeof(Color))
+		return false
+	}
+
+	printf("passed: the size of the largest field\n")
+	return true
+}
+
+
+func testAliasing () -> Bool {
+	var c: Color = {}
+
+	// Same width, same storage: what goes in as a Word32 comes out as the
+	// Nat32 next to it.
+	c.rgba = Word32 5
+	if c.n != 5 {
+		printf("c.n = %u after c.rgba = 5, expected 5\n", c.n)
+		return false
+	}
+
+	// All four bytes to one value: the Word32 over them is that value
+	// repeated, whichever end the target starts from.
+	c.bytes[0] = 0xAA
+	c.bytes[1] = 0xAA
+	c.bytes[2] = 0xAA
+	c.bytes[3] = 0xAA
+	if c.rgba != 0xAAAAAAAA {
+		printf("c.rgba = %x after filling the bytes with AA\n", Nat32 c.rgba)
+		return false
+	}
+
+	// ... and back the other way.
+	c.rgba = 0x00000000
+	if c.bytes[0] != 0x00 or c.bytes[3] != 0x00 {
+		printf("c.bytes = [%x ... %x] after c.rgba = 0\n",
+			Nat32 c.bytes[0], Nat32 c.bytes[3])
+		return false
+	}
+	c.n = 0xFFFFFFFF
+	if c.bytes[0] != 0xFF or c.bytes[3] != 0xFF {
+		printf("c.bytes = [%x ... %x] after c.n = 0xFFFFFFFF\n",
+			Nat32 c.bytes[0], Nat32 c.bytes[3])
+		return false
+	}
+
+	printf("passed: the fields share the storage\n")
+	return true
+}
+
+
+func testInsideRecord () -> Bool {
+	// A union is a record: it is a field of another record like any other.
+	var p: Pixel = {}
+
+	if sizeof(Pixel) != sizeof(Nat32) + sizeof(Color) {
+		printf("sizeof(Pixel) = %zu, expected %zu\n", sizeof(Pixel),
+			sizeof(Nat32) + sizeof(Color))
+		return false
+	}
+
+	p.at = 7
+	p.color.n = 0xFFFFFFFF
+	if p.at != 7 {
+		printf("p.at = %u after writing p.color, expected 7\n", p.at)
+		return false
+	}
+	if p.color.bytes[2] != 0xFF {
+		printf("p.color.bytes[2] = %x, expected FF\n", Nat32 p.color.bytes[2])
+		return false
+	}
+
+	printf("passed: a union field inside a record\n")
+	return true
+}
+
+
+func main () -> Int {
+	var result = true
+	result = testOffsets() and result
+	result = testSize() and result
+	result = testAliasing() and result
+	result = testInsideRecord() and result
+
+	if not result {
+		printf("failed: union layout\n")
+		return exitFailure
+	}
+
+	printf("passed: union layout\n")
+	return exitSuccess
+}

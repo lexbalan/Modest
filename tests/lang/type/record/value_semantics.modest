@@ -1,0 +1,271 @@
+// TEST: run
+// BACKENDS: c11, llvm, modest
+// EXPECT-EXIT: 0
+// EXPECT-OUT: passed: assignment copies
+// EXPECT-OUT: passed: argument copies
+// EXPECT-OUT: passed: return copies
+// EXPECT-OUT: passed: nested records copy whole
+// EXPECT-OUT: passed: records in an array copy
+// EXPECT-OUT: passed: a pointer shares instead
+// EXPECT-OUT: passed: record value semantics
+//
+// A record is a value: it is assigned, passed and returned by value, and
+// the whole content is copied every time.  `*Point` is how one is shared
+// instead — the language has no other way to reach the same record twice.
+//
+// Every check below is the same question asked in a different position:
+// after the copy, does writing to one of the two records leave the other
+// alone?  A backend that passed a record as a pointer would share the
+// storage and fail these, while still passing everything that only reads.
+//
+// The nested cases are here because the copy has to be deep in the only
+// sense a value type has: a record field and an array field are content,
+// not a reference to content, so they travel with the copy.
+
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+
+
+type Point = {
+	x: Int32
+	y: Int32
+}
+
+type Body = {
+	pos: Point
+	tag: Int32
+	marks: [3]Int32
+}
+
+
+// The parameter is a copy the callee owns.  Parameters are immutable, so
+// writing to it needs a `var` of its own — a second copy, leaving the
+// caller's record two removes from anything that happens here.
+func clobber (p: Point) -> Int32 {
+	var q = p
+	q.x = 999
+	return q.x + p.x
+}
+
+
+func makePoint (n: Int32) -> Point {
+	var p: Point = {x = n, y = n + 1}
+	return p
+}
+
+
+// The pointer is the other choice: the callee reaches the caller's record.
+func bump (p: *Point) -> Unit {
+	p.x = p.x + 100
+}
+
+
+func testAssignment () -> Bool {
+	var a: Point = {x = 1, y = 2}
+	var b: Point = {}
+
+	b = a
+	if b.x != 1 or b.y != 2 {
+		printf("b = {%d, %d} after b = a, expected {1, 2}\n", b.x, b.y)
+		return false
+	}
+
+	// The copy is real: b has its own storage.
+	b.x = 100
+	if a.x != 1 {
+		printf("a.x = %d after writing to b, expected 1\n", a.x)
+		return false
+	}
+
+	// ... and so does a.
+	a.y = 20
+	if b.y != 2 {
+		printf("b.y = %d after writing to a, expected 2\n", b.y)
+		return false
+	}
+
+	printf("passed: assignment copies\n")
+	return true
+}
+
+
+func testArgument () -> Bool {
+	var a: Point = {x = 1, y = 2}
+
+	// The callee writes 999 over its own copy and returns that plus the
+	// field it was given: 999 + 1.
+	let got = clobber(a)
+	if got != 1000 {
+		printf("clobber(a) = %d, expected 1000\n", got)
+		return false
+	}
+
+	if a.x != 1 {
+		printf("a.x = %d after clobber(a), expected 1\n", a.x)
+		return false
+	}
+
+	printf("passed: argument copies\n")
+	return true
+}
+
+
+func testReturn () -> Bool {
+	var p = makePoint(10)
+	if p.x != 10 or p.y != 11 {
+		printf("makePoint(10) = {%d, %d}, expected {10, 11}\n", p.x, p.y)
+		return false
+	}
+
+	// Two calls give two independent records, not two views of one.
+	var q = makePoint(20)
+	p.x = 0
+	if q.x != 20 {
+		printf("q.x = %d after writing to p, expected 20\n", q.x)
+		return false
+	}
+
+	// A returned record is a value where it stands: its fields are readable
+	// without a variable to hold it first.
+	if makePoint(5).y != 6 {
+		printf("makePoint(5).y = %d, expected 6\n", makePoint(5).y)
+		return false
+	}
+
+	printf("passed: return copies\n")
+	return true
+}
+
+
+func testNested () -> Bool {
+	var a: Body = {pos = {x = 1, y = 2}, tag = 7, marks = [1, 2, 3]}
+	var b = a
+
+	// The record field is content: the copy has its own.
+	b.pos.x = 99
+	if a.pos.x != 1 {
+		printf("a.pos.x = %d after writing to b, expected 1\n", a.pos.x)
+		return false
+	}
+
+	// So is the array field.
+	b.marks[0] = 88
+	if a.marks[0] != 1 {
+		printf("a.marks[0] = %d after writing to b, expected 1\n", a.marks[0])
+		return false
+	}
+
+	// A field that is a record is a record value in its own right: it
+	// assigns as one, and that assignment copies too.
+	var out: Point = a.pos
+	out.y = 77
+	if a.pos.y != 2 {
+		printf("a.pos.y = %d after writing to the copy, expected 2\n", a.pos.y)
+		return false
+	}
+
+	// ... and in the other direction, into the field.
+	a.pos = makePoint(30)
+	if a.pos.x != 30 or a.pos.y != 31 {
+		printf("a.pos = {%d, %d}, expected {30, 31}\n", a.pos.x, a.pos.y)
+		return false
+	}
+	if b.pos.x != 99 {
+		printf("b.pos.x = %d, expected the untouched 99\n", b.pos.x)
+		return false
+	}
+
+	printf("passed: nested records copy whole\n")
+	return true
+}
+
+
+func testInArray () -> Bool {
+	var ps: [3]Point = [{x = 1, y = 1}, {x = 2, y = 2}, {x = 3, y = 3}]
+
+	// An element is a record value: reading it out gives a copy.
+	var e: Point = ps[1]
+	e.x = 20
+	if ps[1].x != 2 {
+		printf("ps[1].x = %d after writing to the copy, expected 2\n", ps[1].x)
+		return false
+	}
+
+	// Writing one back is a copy in the other direction.
+	ps[2] = ps[0]
+	ps[0].y = 10
+	if ps[2].y != 1 {
+		printf("ps[2].y = %d after writing to ps[0], expected 1\n", ps[2].y)
+		return false
+	}
+
+	// The whole array copies with its elements.
+	var qs: [3]Point = ps
+	qs[0].x = 50
+	if ps[0].x != 1 {
+		printf("ps[0].x = %d after writing to qs, expected 1\n", ps[0].x)
+		return false
+	}
+
+	printf("passed: records in an array copy\n")
+	return true
+}
+
+
+func testPointerShares () -> Bool {
+	var a: Point = {x = 1, y = 2}
+	var pp: *Point = &a
+
+	// Through the pointer there is one record, not two.
+	bump(pp)
+	if a.x != 101 {
+		printf("a.x = %d after bump(pp), expected 101\n", a.x)
+		return false
+	}
+
+	// Assigning through the pointer writes the record it points at.
+	*pp = makePoint(60)
+	if a.x != 60 or a.y != 61 {
+		printf("a = {%d, %d} after *pp = makePoint(60), expected {60, 61}\n", a.x, a.y)
+		return false
+	}
+
+	// But copying the pointed-at record out is still a copy.
+	var b: Point = *pp
+	b.x = 0
+	if a.x != 60 {
+		printf("a.x = %d after writing to the copy, expected 60\n", a.x)
+		return false
+	}
+
+	// Two pointers to one record see each other's writes.
+	var qq: *Point = &a
+	qq.y = 5
+	if pp.y != 5 {
+		printf("pp.y = %d after qq.y = 5, expected 5\n", pp.y)
+		return false
+	}
+
+	printf("passed: a pointer shares instead\n")
+	return true
+}
+
+
+func main () -> Int {
+	var result = true
+	result = testAssignment() and result
+	result = testArgument() and result
+	result = testReturn() and result
+	result = testNested() and result
+	result = testInArray() and result
+	result = testPointerShares() and result
+
+	if not result {
+		printf("failed: record value semantics\n")
+		return exitFailure
+	}
+
+	printf("passed: record value semantics\n")
+	return exitSuccess
+}

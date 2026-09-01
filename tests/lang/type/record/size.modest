@@ -1,0 +1,121 @@
+// TEST: run
+// BACKENDS: c11, llvm
+// EXPECT-EXIT: 0
+// EXPECT-OUT: passed: sizeof a record
+// EXPECT-OUT: passed: equality of a 12-byte record
+// EXPECT-OUT: passed: zero-filling an array of them
+// EXPECT-OUT: passed: record size
+// EXPECTED-FAIL(llvm): BUGS.md#41 a record's size is rounded up to a power of two
+//
+// How big a record is: the offset past its last field, rounded up to the
+// record's own alignment.  Three `Int32` make 12 bytes, and 12 is what
+// both `sizeof` and everything built on it have to say.
+//
+// The LLVM backend says 16.  `TypeRecord` computes the real size when it
+// lays the fields out, but never stores it — the base `Type` derives one
+// from the bit width instead, through `nbytes_for_bits`, which rounds up
+// to a power of two.  The C backend hides this by writing `sizeof(struct
+// point3)` out and letting the C compiler answer.
+//
+// The size is not only reported, it is used, so the same four bytes come
+// back twice more: `==` compares `sizeof` bytes and reads four past the
+// record (two identical records come out unequal), and `= []` memsets
+// `sizeof` bytes per element and writes past the array.  A record whose
+// size is already a power of two — `{x, y}` — shows none of this, which
+// is why most of the record tests never trip over it.
+
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+
+
+type Point3 = {
+	x: Int32
+	y: Int32
+	z: Int32
+}
+
+
+func testSizeof () -> Bool {
+	if sizeof(Point3) != 12 {
+		printf("sizeof(Point3) = %zu, expected 12\n", sizeof(Point3))
+		return false
+	}
+
+	// The parts it is made of are agreed on: the last field ends at 12.
+	if alignof(Point3) != 4 {
+		printf("alignof(Point3) = %zu, expected 4\n", alignof(Point3))
+		return false
+	}
+	if offsetof(Point3.z) != 8 {
+		printf("offsetof(Point3.z) = %zu, expected 8\n", offsetof(Point3.z))
+		return false
+	}
+
+	// An array of them is that size per element, with nothing between.
+	if sizeof([2]Point3) != 24 {
+		printf("sizeof([2]Point3) = %zu, expected 24\n", sizeof([2]Point3))
+		return false
+	}
+
+	printf("passed: sizeof a record\n")
+	return true
+}
+
+
+func testEquality () -> Bool {
+	// No padding anywhere in this type: every byte belongs to a field, and
+	// the two records hold the same values in all three.
+	var a: Point3 = {x = 1, y = 2, z = 3}
+	var b: Point3 = {x = 1, y = 2, z = 3}
+
+	if not (a == b) {
+		printf("a == b is false for two identical records\n")
+		return false
+	}
+	if a != b {
+		printf("a != b is true for two identical records\n")
+		return false
+	}
+
+	printf("passed: equality of a 12-byte record\n")
+	return true
+}
+
+
+func testZeroFill () -> Bool {
+	var before: Int32 = 111
+	var ps: [2]Point3 = []
+	var after: Int32 = 222
+
+	if ps[0].x != 0 or ps[1].z != 0 {
+		printf("ps = [{%d, ...}, {..., %d}], expected all zero\n", ps[0].x, ps[1].z)
+		return false
+	}
+
+	// The fill is 24 bytes; a 32-byte one would run off the end of the
+	// array and into whatever the frame put next to it.
+	if before != 111 or after != 222 {
+		printf("guards = %d, %d, expected 111 and 222\n", before, after)
+		return false
+	}
+
+	printf("passed: zero-filling an array of them\n")
+	return true
+}
+
+
+func main () -> Int {
+	var result = true
+	result = testSizeof() and result
+	result = testEquality() and result
+	result = testZeroFill() and result
+
+	if not result {
+		printf("failed: record size\n")
+		return exitFailure
+	}
+
+	printf("passed: record size\n")
+	return exitSuccess
+}

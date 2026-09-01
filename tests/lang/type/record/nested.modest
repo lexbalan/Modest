@@ -1,0 +1,302 @@
+// TEST: run
+// BACKENDS: c11, llvm, modest
+// EXPECT-EXIT: 0
+// EXPECT-OUT: passed: records inside records
+// EXPECT-OUT: passed: anonymous record field
+// EXPECT-OUT: passed: arrays and records nest both ways
+// EXPECT-OUT: passed: a record that points at its own type
+// EXPECT-OUT: passed: pointer to function field
+// EXPECT-OUT: passed: address of a nested field
+// EXPECT-OUT: passed: nested records
+//
+// What a record can be built out of, and how the result is reached.
+//
+// A field holds any type, records and arrays included, and the access
+// chains: `s.to.x` is one read, `t.leg.from.y = 1` is one write, and
+// nothing in between is a temporary that could swallow the assignment.
+// The chain mixes with indexing, and a pointer field derefs itself, so a
+// linked structure reads as `n.next.next.value`.
+//
+// The one type a field cannot have is a function type — a record holds a
+// *pointer* to function instead, which is called through the same chain.
+//
+// Copying is what `value_semantics.modest` is for; this is about reaching
+// the parts.
+
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+
+
+type Point = {
+	x: Int32
+	y: Int32
+}
+
+type Segment = {
+	from: Point
+	to: Point
+}
+
+type World = {
+	name: Int32
+	body: {
+		speed: Int32
+		mass: Int32
+	}
+}
+
+type Track = {
+	id: Int32
+	leg: Segment
+}
+
+// The sizes are picked so that `sizeof(Grid)` is a power of two: an array
+// of records is zero-filled with a memset whose length the LLVM backend
+// rounds up (BUGS.md#41), and a 40-byte Grid would be written past.
+type Grid = {
+	rows: [2][2]Int32
+	corners: [2]Point
+}
+
+type Node = {
+	value: Int32
+	next: *Node
+}
+
+type Op = {
+	tag: Int32
+	fn: *(a: Int32) -> Int32
+}
+
+
+func twice (a: Int32) -> Int32 {
+	return a * 2
+}
+
+
+func negate (a: Int32) -> Int32 {
+	return 0 - a
+}
+
+
+func testRecordsInRecords () -> Bool {
+	var s: Segment = {from = {x = 1, y = 2}, to = {x = 3, y = 4}}
+
+	if s.from.x != 1 or s.to.y != 4 {
+		printf("s = {{%d, ...}, {..., %d}}, expected 1 and 4\n", s.from.x, s.to.y)
+		return false
+	}
+
+	// The chain is a place, so it assigns.
+	s.to.x = 30
+	if s.to.x != 30 {
+		printf("s.to.x = %d after the assignment, expected 30\n", s.to.x)
+		return false
+	}
+	// ... and it reached only what it named.
+	if s.from.x != 1 or s.to.y != 4 {
+		printf("s = {{%d, ...}, {..., %d}}, the write touched a neighbour\n",
+			s.from.x, s.to.y)
+		return false
+	}
+
+	// Three levels deep: the segment inside a record of segments.
+	var t: Track = {id = 1, leg = {from = {x = 5, y = 6}, to = {x = 7, y = 8}}}
+	if t.leg.from.x != 5 or t.leg.to.y != 8 {
+		printf("t.leg = {{%d, ...}, {..., %d}}, expected 5 and 8\n",
+			t.leg.from.x, t.leg.to.y)
+		return false
+	}
+	t.leg.from.y = 60
+	if t.leg.from.y != 60 or t.leg.from.x != 5 {
+		printf("t.leg.from = {%d, %d}, expected {5, 60}\n", t.leg.from.x, t.leg.from.y)
+		return false
+	}
+
+	printf("passed: records inside records\n")
+	return true
+}
+
+
+func testAnonymousField () -> Bool {
+	var w: World = {}
+
+	// The field's type is written where the field is; it is a record type
+	// like any other, and its value is built the same way.
+	w.body = {speed = 3, mass = 4}
+	if w.body.speed != 3 or w.body.mass != 4 {
+		printf("w.body = {%d, %d}, expected {3, 4}\n", w.body.speed, w.body.mass)
+		return false
+	}
+
+	// It copies out into a variable of the same shape.
+	var b: {speed: Int32, mass: Int32} = w.body
+	b.speed = 30
+	if w.body.speed != 3 {
+		printf("w.body.speed = %d after writing to the copy, expected 3\n", w.body.speed)
+		return false
+	}
+
+	printf("passed: anonymous record field\n")
+	return true
+}
+
+
+func testArraysAndRecords () -> Bool {
+	// A record holding arrays, one of them an array of records.
+	var g: Grid = {rows = [[1, 2], [3, 4]], corners = [{x = 0, y = 0}, {x = 9, y = 9}]}
+
+	if g.rows[1][1] != 4 {
+		printf("g.rows[1][1] = %d, expected 4\n", g.rows[1][1])
+		return false
+	}
+	if g.corners[1].x != 9 {
+		printf("g.corners[1].x = %d, expected 9\n", g.corners[1].x)
+		return false
+	}
+
+	// Indexing and field access are links in one chain, in any order.
+	g.corners[0].y = 4
+	g.rows[0][0] = 10
+	if g.corners[0].y != 4 or g.rows[0][0] != 10 {
+		printf("g.corners[0].y = %d, g.rows[0][0] = %d, expected 4 and 10\n",
+			g.corners[0].y, g.rows[0][0])
+		return false
+	}
+
+	// The other way round: an array of records holding arrays.
+	var gs: [2]Grid = []
+	gs[1].rows[0][1] = 5
+	gs[1].corners[0].x = 6
+	if gs[1].rows[0][1] != 5 or gs[1].corners[0].x != 6 {
+		printf("gs[1] = {%d, %d}, expected 5 and 6\n", gs[1].rows[0][1], gs[1].corners[0].x)
+		return false
+	}
+	if gs[0].rows[0][1] != 0 {
+		printf("gs[0].rows[0][1] = %d, expected the untouched 0\n", gs[0].rows[0][1])
+		return false
+	}
+
+	printf("passed: arrays and records nest both ways\n")
+	return true
+}
+
+
+func testSelfReference () -> Bool {
+	// A record cannot contain itself, but it can point at its own type.
+	var c: Node = {value = 3, next = nil}
+	var b: Node = {value = 2, next = &c}
+	var a: Node = {value = 1, next = &b}
+
+	// Each `.next` derefs on its way through.
+	if a.next.value != 2 or a.next.next.value != 3 {
+		printf("chain = %d, %d, expected 2 and 3\n", a.next.value, a.next.next.value)
+		return false
+	}
+	if not (a.next.next.next == nil) {
+		printf("the tail of the chain is not nil\n")
+		return false
+	}
+
+	// Writing through the chain reaches the record it names, not a copy.
+	a.next.next.value = 30
+	if c.value != 30 {
+		printf("c.value = %d after a.next.next.value = 30\n", c.value)
+		return false
+	}
+
+	// Walking it: the usual reason the field is there.
+	var sum: Int32 = 0
+	var p: *Node = &a
+	while not (p == nil) {
+		sum = sum + p.value
+		p = p.next
+	}
+	if sum != 33 {
+		printf("sum = %d, expected 33\n", sum)
+		return false
+	}
+
+	printf("passed: a record that points at its own type\n")
+	return true
+}
+
+
+func testFunctionPointerField () -> Bool {
+	var op: Op = {tag = 1, fn = &twice}
+
+	// The call is one more link in the chain.
+	if op.fn(21) != 42 {
+		printf("op.fn(21) = %d, expected 42\n", op.fn(21))
+		return false
+	}
+
+	// The field is a place, so the record can be re-pointed.
+	op.fn = &negate
+	if op.fn(21) != 0 - 21 {
+		printf("op.fn(21) = %d, expected -21\n", op.fn(21))
+		return false
+	}
+
+	// The pointer is what makes this legal: a field cannot have a function
+	// type itself, only a pointer to one.
+	var chosen: *(a: Int32) -> Int32 = op.fn
+	if chosen(3) != 0 - 3 {
+		printf("chosen(3) = %d, expected -3\n", chosen(3))
+		return false
+	}
+
+	printf("passed: pointer to function field\n")
+	return true
+}
+
+
+func testAddressOfNested () -> Bool {
+	var s: Segment = {from = {x = 1, y = 2}, to = {x = 3, y = 4}}
+
+	// The address of a field that is a record: a pointer to that field's
+	// storage, not to a copy of it.
+	var pp: *Point = &s.to
+	pp.x = 300
+	if s.to.x != 300 {
+		printf("s.to.x = %d after writing through &s.to, expected 300\n", s.to.x)
+		return false
+	}
+
+	// And of a scalar field two levels in.
+	var px: *Int32 = &s.from.y
+	*px = 20
+	if s.from.y != 20 {
+		printf("s.from.y = %d after writing through &s.from.y, expected 20\n", s.from.y)
+		return false
+	}
+
+	// The neighbour is where it was.
+	if s.from.x != 1 or s.to.y != 4 {
+		printf("s = {{%d, ...}, {..., %d}}, expected 1 and 4\n", s.from.x, s.to.y)
+		return false
+	}
+
+	printf("passed: address of a nested field\n")
+	return true
+}
+
+
+func main () -> Int {
+	var result = true
+	result = testRecordsInRecords() and result
+	result = testAnonymousField() and result
+	result = testArraysAndRecords() and result
+	result = testSelfReference() and result
+	result = testFunctionPointerField() and result
+	result = testAddressOfNested() and result
+
+	if not result {
+		printf("failed: nested records\n")
+		return exitFailure
+	}
+
+	printf("passed: nested records\n")
+	return exitSuccess
+}

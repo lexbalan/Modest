@@ -1,0 +1,86 @@
+// TEST: run
+// BACKENDS: c11, llvm
+// EXPECT-EXIT: 0
+// EXPECT-OUT: passed: an array literal of records with a pointer
+// EXPECT-OUT: passed: pointer field in an array literal
+// EXPECTED-FAIL(llvm): BUGS.md#49 an array literal keeps the generic record's type
+//
+// An array literal whose elements are record literals, where the record
+// has a pointer field: `var ops: [2]Op = [{tag = 1, fn = &twice}, ...]`.
+//
+// A record literal is generic until it is built at a type, and for the
+// elements of an array literal the LLVM backend does that conversion only
+// when every field is a scalar.  With a pointer among them the element
+// keeps the literal's own type — `{i8, %Int32*}`, the `tag` still at the
+// literal's width — and the array of those is stored into an array of the
+// record, which is not IR clang will accept.
+//
+// One record at a time is fine, in both backends, and that is what
+// `nested.modest` covers; it is the array literal that is left out.
+
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+
+
+type Op = {
+	tag: Int32
+	fn: *(a: Int32) -> Int32
+}
+
+type Ref = {
+	tag: Int32
+	p: *Int32
+}
+
+
+var n: Int32 = 5
+
+
+func twice (a: Int32) -> Int32 {
+	return a * 2
+}
+
+
+func negate (a: Int32) -> Int32 {
+	return 0 - a
+}
+
+
+func testArrayLiteral () -> Bool {
+	// A dispatch table: the shape the pointer-to-function field is for.
+	var ops: [2]Op = [{tag = 1, fn = &twice}, {tag = 2, fn = &negate}]
+	if ops[0].tag != 1 or ops[1].tag != 2 {
+		printf("tags = %d, %d, expected 1 and 2\n", ops[0].tag, ops[1].tag)
+		return false
+	}
+	if ops[0].fn(5) != 10 or ops[1].fn(5) != 0 - 5 {
+		printf("calls = %d, %d, expected 10 and -5\n", ops[0].fn(5), ops[1].fn(5))
+		return false
+	}
+
+	// An ordinary pointer field is the same case.
+	var rs: [2]Ref = [{tag = 1, p = &n}, {tag = 2, p = nil}]
+	if *rs[0].p != 5 {
+		printf("*rs[0].p = %d, expected 5\n", *rs[0].p)
+		return false
+	}
+	if not (rs[1].p == nil) {
+		printf("rs[1].p is not nil\n")
+		return false
+	}
+
+	printf("passed: an array literal of records with a pointer\n")
+	return true
+}
+
+
+func main () -> Int {
+	if not testArrayLiteral() {
+		printf("failed: pointer field in an array literal\n")
+		return exitFailure
+	}
+
+	printf("passed: pointer field in an array literal\n")
+	return exitSuccess
+}

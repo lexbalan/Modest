@@ -1,0 +1,191 @@
+// TEST: run
+// BACKENDS: c11, llvm, modest
+// EXPECT-EXIT: 0
+// EXPECT-OUT: passed: two names for one type
+// EXPECT-OUT: passed: anonymous and named
+// EXPECT-OUT: passed: across a call
+// EXPECT-OUT: passed: pointers and arrays follow
+// EXPECT-OUT: passed: structural typing
+//
+// Record types are compared structurally: the name is not part of the
+// type.  Two record types with the same fields — same names, same types,
+// same order — are one type, and everything that accepts the one accepts
+// the other, with no construction in between.
+//
+// This is the property `@branded` exists to switch off (see
+// `docs/lang/type/branded.md`): a brand makes a nominal type out of a
+// structural one, and that is the only way to get two record types that
+// hold the same fields and still refuse each other.
+//
+// The three ways to be *different* are not tested here, because each is a
+// compile error rather than a program that runs: a different field name
+// (`{x, z}`), a different field type (`{x: Int64, y: Int64}`), and the
+// same fields in a different order (`{y, x}`) each fail with
+// `type mismatch`.
+//
+// Two shapes are missing for a reason of their own, each with a
+// reproducer: an *explicitly named* literal handed to the other name
+// (`structural_literal.modest`, BUGS.md#46) and a call result taken into
+// the other name (`structural_call.modest`, BUGS.md#47).
+
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+
+
+type Point = {
+	x: Int32
+	y: Int32
+}
+
+// The same fields under another name — and so the same type.
+type Vec2 = {
+	x: Int32
+	y: Int32
+}
+
+
+func sumPoint (p: Point) -> Int32 {
+	return p.x + p.y
+}
+
+
+func sumVec (v: Vec2) -> Int32 {
+	return v.x + v.y
+}
+
+
+func testTwoNames () -> Bool {
+	var p: Point = {x = 1, y = 2}
+
+	// Assignment in both directions, with nothing written between them.
+	var v: Vec2 = p
+	if v.x != 1 or v.y != 2 {
+		printf("v = {%d, %d}, expected {1, 2}\n", v.x, v.y)
+		return false
+	}
+
+	v.x = 10
+	var back: Point = v
+	if back.x != 10 or back.y != 2 {
+		printf("back = {%d, %d}, expected {10, 2}\n", back.x, back.y)
+		return false
+	}
+
+	// Comparison is between values of one type, so it works across names.
+	var same: Vec2 = {x = 10, y = 2}
+	if not (v == same) {
+		printf("v == same is false for {%d, %d} and {%d, %d}\n",
+			v.x, v.y, same.x, same.y)
+		return false
+	}
+
+	printf("passed: two names for one type\n")
+	return true
+}
+
+
+func testAnonymous () -> Bool {
+	// The anonymous type is that same type, written out instead of named.
+	var a: {x: Int32, y: Int32} = {x = 3, y = 4}
+
+	var p: Point = a
+	if p.x != 3 or p.y != 4 {
+		printf("p = {%d, %d}, expected {3, 4}\n", p.x, p.y)
+		return false
+	}
+
+	p.y = 40
+	var b: {x: Int32, y: Int32} = p
+	if b.y != 40 {
+		printf("b.y = %d, expected 40\n", b.y)
+		return false
+	}
+
+	printf("passed: anonymous and named\n")
+	return true
+}
+
+
+func testAcrossCall () -> Bool {
+	var p: Point = {x = 1, y = 2}
+	var v: Vec2 = {x = 3, y = 4}
+	var a: {x: Int32, y: Int32} = {x = 5, y = 6}
+
+	// Every one of the three names the parameter's type.
+	if sumPoint(v) != 7 {
+		printf("sumPoint(v) = %d, expected 7\n", sumPoint(v))
+		return false
+	}
+	if sumVec(p) != 3 {
+		printf("sumVec(p) = %d, expected 3\n", sumVec(p))
+		return false
+	}
+	if sumPoint(a) != 11 or sumVec(a) != 11 {
+		printf("sum(a) = %d and %d, expected 11 twice\n", sumPoint(a), sumVec(a))
+		return false
+	}
+
+	// ... and a literal needs no name at all.
+	if sumVec({x = 100, y = 1}) != 101 {
+		printf("sumVec({x = 100, y = 1}) = %d, expected 101\n", sumVec({x = 100, y = 1}))
+		return false
+	}
+
+	printf("passed: across a call\n")
+	return true
+}
+
+
+func testPointersAndArrays () -> Bool {
+	var p: Point = {x = 1, y = 2}
+
+	// A pointer to the one type is a pointer to the other.
+	var pv: *Vec2 = &p
+	pv.x = 11
+	if p.x != 11 {
+		printf("p.x = %d after writing through *Vec2, expected 11\n", p.x)
+		return false
+	}
+
+	var pp: *Point = pv
+	if pp.y != 2 {
+		printf("pp.y = %d, expected 2\n", pp.y)
+		return false
+	}
+
+	// So is an array of them.
+	var ps: [2]Point = [{x = 1, y = 1}, {x = 2, y = 2}]
+	var vs: [2]Vec2 = ps
+	if vs[1].x != 2 {
+		printf("vs[1].x = %d, expected 2\n", vs[1].x)
+		return false
+	}
+
+	// And it is still an array of values: the copy is its own.
+	vs[0].x = 100
+	if ps[0].x != 1 {
+		printf("ps[0].x = %d after writing to vs, expected 1\n", ps[0].x)
+		return false
+	}
+
+	printf("passed: pointers and arrays follow\n")
+	return true
+}
+
+
+func main () -> Int {
+	var result = true
+	result = testTwoNames() and result
+	result = testAnonymous() and result
+	result = testAcrossCall() and result
+	result = testPointersAndArrays() and result
+
+	if not result {
+		printf("failed: structural typing\n")
+		return exitFailure
+	}
+
+	printf("passed: structural typing\n")
+	return exitSuccess
+}

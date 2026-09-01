@@ -1,0 +1,142 @@
+// TEST: run
+// BACKENDS: c11, llvm
+// EXPECT-EXIT: 0
+// EXPECT-OUT: passed: no padding between fields
+// EXPECT-OUT: passed: no padding at the end
+// EXPECT-OUT: passed: the fields still read and write
+// EXPECT-OUT: passed: packed elements in an array
+// EXPECT-OUT: passed: packed layout
+// EXPECTED-FAIL: BUGS.md#42 @layout("packed") is ignored by both backends
+//
+// `@layout("packed")` lays the fields out with no padding: each starts
+// where the one before it ended, and the record is as long as its fields
+// add up to.  This is what a type describing a wire format or an on-disk
+// header is for — the offsets are the format's, not the target's.
+//
+// Neither backend does it.  The layout attribute is stored on the type
+// under the name `layout`, and the LLVM backend asks for it under the name
+// `packed` (`str_type_record`, `src/backend/llvm.py`), so its test is
+// never true and the `<{ }>` form is never emitted; the C backend has no
+// packing to emit in the first place.  Both lay the record out padded, and
+// `offsetof` answers accordingly.
+
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+
+
+// Padded, this is 1 + 3 of padding + 4 = 8.  Packed, it is 5.
+type Header = @layout("packed") {
+	tag: Word8
+	len: Nat32
+}
+
+type Triple = @layout("packed") {
+	a: Word8
+	b: Word16
+	c: Word8
+}
+
+
+func testNoPaddingBetween () -> Bool {
+	if offsetof(Header.tag) != 0 {
+		printf("offsetof(Header.tag) = %zu, expected 0\n", offsetof(Header.tag))
+		return false
+	}
+
+	// The next field starts one byte in, alignment or no alignment.
+	if offsetof(Header.len) != 1 {
+		printf("offsetof(Header.len) = %zu, expected 1\n", offsetof(Header.len))
+		return false
+	}
+
+	if offsetof(Triple.b) != 1 or offsetof(Triple.c) != 3 {
+		printf("Triple.b at %zu, Triple.c at %zu, expected 1 and 3\n",
+			offsetof(Triple.b), offsetof(Triple.c))
+		return false
+	}
+
+	printf("passed: no padding between fields\n")
+	return true
+}
+
+
+func testNoPaddingAtEnd () -> Bool {
+	// The size is the sum of the fields: nothing is added to align the
+	// record, because a packed record needs no alignment.
+	if sizeof(Header) != 5 {
+		printf("sizeof(Header) = %zu, expected 5\n", sizeof(Header))
+		return false
+	}
+	if sizeof(Triple) != 4 {
+		printf("sizeof(Triple) = %zu, expected 4\n", sizeof(Triple))
+		return false
+	}
+	if alignof(Header) != 1 {
+		printf("alignof(Header) = %zu, expected 1\n", alignof(Header))
+		return false
+	}
+
+	printf("passed: no padding at the end\n")
+	return true
+}
+
+
+func testFieldsWork () -> Bool {
+	// An unaligned field is still a field: it is constructed, read and
+	// assigned like any other.
+	var h: Header = {tag = 0x7F, len = 0x11223344}
+	if h.tag != 0x7F or h.len != 0x11223344 {
+		printf("h = {%x, %x}, expected {7F, 11223344}\n", Nat32 h.tag, h.len)
+		return false
+	}
+
+	h.len = 1
+	if h.len != 1 or h.tag != 0x7F {
+		printf("h = {%x, %u} after h.len = 1, expected {7F, 1}\n", Nat32 h.tag, h.len)
+		return false
+	}
+
+	printf("passed: the fields still read and write\n")
+	return true
+}
+
+
+func testInArray () -> Bool {
+	// Packed elements sit 5 bytes apart, which is the reason to pack them.
+	if sizeof([4]Header) != 20 {
+		printf("sizeof([4]Header) = %zu, expected 20\n", sizeof([4]Header))
+		return false
+	}
+
+	var hs: [2]Header = []
+	hs[0].tag = 1
+	hs[0].len = 10
+	hs[1].tag = 2
+	hs[1].len = 20
+	if hs[0].tag != 1 or hs[0].len != 10 or hs[1].tag != 2 or hs[1].len != 20 {
+		printf("hs = [{%x, %u}, {%x, %u}], expected [{1, 10}, {2, 20}]\n",
+			Nat32 hs[0].tag, hs[0].len, Nat32 hs[1].tag, hs[1].len)
+		return false
+	}
+
+	printf("passed: packed elements in an array\n")
+	return true
+}
+
+
+func main () -> Int {
+	var result = true
+	result = testNoPaddingBetween() and result
+	result = testNoPaddingAtEnd() and result
+	result = testFieldsWork() and result
+	result = testInArray() and result
+
+	if not result {
+		printf("failed: packed layout\n")
+		return exitFailure
+	}
+
+	printf("passed: packed layout\n")
+	return exitSuccess
+}

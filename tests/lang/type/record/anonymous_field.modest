@@ -1,0 +1,75 @@
+// TEST: run
+// BACKENDS: c11, llvm
+// EXPECT-EXIT: 0
+// EXPECT-OUT: passed: an anonymous field over a named record
+// EXPECT-OUT: passed: anonymous field dependencies
+// EXPECTED-FAIL(c11): BUGS.md#48 an anonymous record is emitted before what it contains
+//
+// An anonymous record type written as a field, whose own fields name
+// another record type: `body: {pos: Point, speed: Int32}`.
+//
+// The C backend emits one `struct` per record type, and a struct that
+// holds another by value has to come after it.  Anonymous records are
+// emitted first, ahead of every named one — including the `struct point`
+// this one holds — so the field lands on an incomplete type and clang
+// stops.  The order is what is wrong, not the type: an anonymous record
+// of scalars, or one holding a *pointer* to a named record, compiles.
+//
+// Anonymous fields as such are tested in `nested.modest`, which keeps to
+// the shapes the backends order correctly.
+
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+
+
+type Point = {
+	x: Int32
+	y: Int32
+}
+
+type World = {
+	name: Int32
+	body: {
+		pos: Point
+		speed: Int32
+	}
+}
+
+
+func testAnonymousOverNamed () -> Bool {
+	var w: World = {name = 1, body = {pos = {x = 5, y = 6}, speed = 7}}
+
+	if w.body.pos.x != 5 or w.body.speed != 7 {
+		printf("w.body = {{%d, ...}, %d}, expected 5 and 7\n", w.body.pos.x, w.body.speed)
+		return false
+	}
+
+	w.body.pos.y = 60
+	if w.body.pos.y != 60 or w.body.pos.x != 5 {
+		printf("w.body.pos = {%d, %d}, expected {5, 60}\n", w.body.pos.x, w.body.pos.y)
+		return false
+	}
+
+	// The named record travels in and out of the anonymous one by value.
+	var p: Point = w.body.pos
+	p.x = 50
+	if w.body.pos.x != 5 {
+		printf("w.body.pos.x = %d after writing to the copy, expected 5\n", w.body.pos.x)
+		return false
+	}
+
+	printf("passed: an anonymous field over a named record\n")
+	return true
+}
+
+
+func main () -> Int {
+	if not testAnonymousOverNamed() {
+		printf("failed: anonymous field dependencies\n")
+		return exitFailure
+	}
+
+	printf("passed: anonymous field dependencies\n")
+	return exitSuccess
+}

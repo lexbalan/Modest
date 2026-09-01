@@ -1,0 +1,70 @@
+// TEST: run
+// BACKENDS: c11, llvm
+// EXPECT-EXIT: 0
+// EXPECT-OUT: passed: call result under the other name
+// EXPECT-OUT: passed: structural call result
+// EXPECTED-FAIL(llvm): BUGS.md#47 a returned record keeps the callee's type name
+//
+// A function returning one record type, into a variable of a structurally
+// identical type of another name: `var p: Point = returnsVec2()`.
+//
+// Everywhere else the LLVM backend bridges the two names with a bitcast
+// through the address (`cons_composite_from_composite_by_adr`).  A call
+// result has no address to bitcast: the value arrives as `%Vec2` and is
+// stored straight into a `%Point*`, which is not IR clang will accept.
+//
+// Assignment between two such variables is what `structural.modest`
+// covers, and it works; only the call result is left out.
+
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+
+
+type Point = {
+	x: Int32
+	y: Int32
+}
+
+type Vec2 = {
+	x: Int32
+	y: Int32
+}
+
+
+func makeVec () -> Vec2 {
+	var v: Vec2 = {x = 3, y = 4}
+	return v
+}
+
+
+func testCallResult () -> Bool {
+	// The callee says Vec2, the variable says Point, and they are one type.
+	var p: Point = makeVec()
+	if p.x != 3 or p.y != 4 {
+		printf("p = {%d, %d}, expected {3, 4}\n", p.x, p.y)
+		return false
+	}
+
+	// The same through an assignment rather than an initializer.
+	var q: Point = {}
+	q = makeVec()
+	if q.x != 3 {
+		printf("q.x = %d after q = makeVec(), expected 3\n", q.x)
+		return false
+	}
+
+	printf("passed: call result under the other name\n")
+	return true
+}
+
+
+func main () -> Int {
+	if not testCallResult() {
+		printf("failed: structural call result\n")
+		return exitFailure
+	}
+
+	printf("passed: structural call result\n")
+	return exitSuccess
+}

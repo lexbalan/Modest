@@ -874,3 +874,322 @@ var x: Fixed32 = Fixed32 h   // c11: 1.5   llvm: OverflowError, traceback
   takes a `double` whatever the source was.
 - Coverage: `tests/lang/type/float/float16/fixed.modest`, marked
   `EXPECTED-FAIL(llvm)`.
+
+## 41. LLVM backend rounds a record's size up to a power of two
+
+```modest
+type Point3 = {x: Int32, y: Int32, z: Int32}
+
+sizeof(Point3)               // c11: 12      llvm: 16
+Point3 {1, 2, 3} == Point3 {1, 2, 3}   // c11: true    llvm: false
+```
+
+- `TypeRecord.__init__` computes the real size in
+  `calc_record_size_align` (`src/hlir/types.py:1651`) and uses it only to
+  set `width`; it never assigns `self.size`. The base `Type.__init__`
+  then derives one from the width through `nbytes_for_bits`, which aligns
+  the bit count up to a power of two: 96 bits of fields become 16 bytes.
+  `align` is set from the field layout and stays right, so only the size
+  is wrong, and only for a record whose size is not already a power of
+  two — which is why `{x, y}` records never show it.
+- The C backend hides it: it writes `sizeof(struct point3)` out and lets
+  the C compiler answer. The LLVM backend folds `sizeof` to a constant
+  from `t.get_size()` (`_eval_sizeof_type`, `src/backend/llvm.py:2101`)
+  and prints the wrong number.
+- The size is used as well as reported, so the same four bytes come back
+  as two more failures, both LLVM-only:
+  - `==` compares `sizeof` bytes (`llvm_memcmp`) and reads past the end of
+    the record, so two identical records differ by whatever the stack held
+    — the same reading-past-the-fields shape as #26, but from a wrong size
+    rather than from padding;
+  - `= []` on an array of records memsets `sizeof` per element and writes
+    past the array: a `[2]Point3` clears 32 bytes of a 24-byte object and
+    takes its neighbours with it.
+- Fix: keep the computed size — `self.size = record_size` — and let
+  `nbytes_for_bits` apply to the scalar types it was written for.
+- Coverage: `tests/lang/type/record/size.modest`, marked
+  `EXPECTED-FAIL(llvm)`.
+
+## 42. `@layout("packed")` is ignored by both backends
+
+```modest
+type Header = @layout("packed") {
+	tag: Word8
+	len: Nat32
+}
+
+sizeof(Header)          // 8, expected 5
+offsetof(Header.len)    // 4, expected 1
+```
+
+- The attribute is parsed and validated (`copy_with_atts` accepts
+  `exact`, `packed`, `union` and stores the string in `nt.layout`,
+  `src/hlir/types.py:687`), and then nothing reads it back for packing.
+- The LLVM backend does look, but under the wrong name:
+  `str_type_record` tests `t.hasAttribute('packed')`
+  (`src/backend/llvm.py:907`) while the attribute was added under the kind
+  `layout`, so the test is never true and the `<{ ... }>` packed form is
+  never emitted. The C backend has no packing to emit at all.
+- The layout is decided before either backend anyway:
+  `calc_record_size_align` aligns every field as it goes, with no layout
+  to consult — it runs from `TypeRecord.__init__`, before
+  `copy_with_atts` has attached one. So `sizeof` and `offsetof` would
+  stay padded even if both backends emitted the packed form.
+- `@layout("exact")` is the default layout under another name and is
+  unaffected. `union` is broken differently, see #43.
+- Coverage: `tests/lang/type/record/packed.modest`, marked
+  `EXPECTED-FAIL` on both backends.
+
+## 43. LLVM backend ignores `@layout("union")`
+
+```modest
+type Color = @layout("union") {
+	rgba: Word32
+	bytes: [4]Word8
+}
+
+offsetof(Color.bytes)   // c11: 0    llvm: 4
+sizeof(Color)           // c11: 4    llvm: 8
+```
+
+- The C backend emits `union` for a record whose `layout` is `union`
+  (`isa = 'struct' if not t.layout == 'union' else 'union'`, four places
+  in `src/backend/c11.py`). The LLVM backend never mentions `layout` and
+  emits its ordinary struct, so the fields sit side by side instead of on
+  top of each other: the aliasing the type exists for does not happen,
+  and writing one field leaves the others as they were.
+- LLVM has no union type — the C one is normally modelled as a struct
+  holding a single array of bytes the size of the largest member, with
+  each access bitcast to the field's type.
+- The offsets come from `calc_record_size_align`, which lays every record
+  out in sequence, so a fix has to reach the layout too (#42 is the same
+  gap seen from the packed side).
+- Coverage: `tests/lang/type/record/union.modest`, marked
+  `EXPECTED-FAIL(llvm)`.
+
+## 44. A record-typed field does not get its own type's defaults
+
+```modest
+type Inner = {a: Int32 = 3, b: Int32 = 4}
+type Outer = {tag: Int32, in: Inner}
+
+var x: Outer = {}            // x.in = {0, 0}, expected {3, 4}
+var z: Outer = {in = {b = 9}}  // c11: {0, 9}   llvm: {3, 9}
+```
+
+- `docs/lang/type/record.md` says an omitted field takes "the default
+  value of the field's type", and for a record type that value is `{}` of
+  it — which is not all-zero storage: it is that type's own fields, each
+  at *its* default. Both backends zero the field instead.
+- A field with a default of its own (`in: Inner = {a = 9, b = 8}`) works;
+  it is the fallback to the type's default that skips the nested type.
+- The nested literal is a second, separate failure and the backends do
+  not agree on it: given `{in = {b = 9}}` the LLVM backend completes `a`
+  from `Inner`'s default (right), the C backend zeroes it.
+- Everything else about defaults — declared defaults, expressions,
+  array-typed and record-typed defaults, a literal overriding one — works
+  and is covered in `tests/lang/type/record/defaults.modest`.
+- Coverage: `tests/lang/type/record/defaults_nested.modest`, marked
+  `EXPECTED-FAIL` on both backends.
+
+## 45. A comment after an empty record literal is a parse error
+
+```modest
+var p: Point = {}    // fills the record
+```
+
+```
+error: unexpected token1 ' fills the record'
+```
+
+- Only the empty literal is affected, and only when a comment follows it
+  on the same line: `{a = 1} // ...` and `[] // ...` both parse. Line and
+  block comments fail alike, so it is the `{}` that leaves the lexer or
+  the parser somewhere a comment cannot be read from.
+- It bites where `{}` is most natural to explain — the line that fills a
+  whole record with its defaults — and the workaround is to put the
+  comment on the line above.
+- No reproducer in the suite: a test for it would have to be a compile
+  failure, and the runner has no expectation for that yet.
+
+## 46. C backend hands a compound literal to the `RAWCAST` macro
+
+```modest
+type Point = {x: Int32, y: Int32}
+type Vec2 = {x: Int32, y: Int32}
+
+var w: Vec2 = Point {x = 5, y = 6}
+```
+
+```c
+struct vec2 w = RAWCAST(struct vec2, struct point, (struct point){.x = 5, .y = 6});
+// error: too many arguments provided to function-like macro invocation
+```
+
+- Two record types with the same fields are one Modest type but two C
+  structs, so the backend converts between them with its `RAWCAST` macro.
+  The value it passes is a compound literal, whose braces carry commas —
+  which the preprocessor reads as further macro arguments, and the
+  translation unit does not compile.
+- Every position is affected the same way: initializer, argument, and
+  operand of `==`. A literal with no type name in front of it is built at
+  the target's type in the first place, with no conversion to emit, and
+  is fine.
+- Fix: parenthesise the value in the macro's expansion site, or emit the
+  conversion as a cast through a temporary rather than as a macro.
+- Coverage: `tests/lang/type/record/structural_literal.modest`, marked
+  `EXPECTED-FAIL(c11)`.
+
+## 47. LLVM backend stores a returned record under the callee's type
+
+```modest
+type Point = {x: Int32, y: Int32}
+type Vec2 = {x: Int32, y: Int32}
+
+func makeVec () -> Vec2 { ... }
+
+var p: Point = makeVec()
+```
+
+```llvm
+store %Point %2, %Point* %1   ; %2 is a %Vec2
+; error: '%2' defined with type '%Vec2' but expected '%Point'
+```
+
+- Between two structurally identical record types the backend bridges the
+  two LLVM names by bitcasting the *address*
+  (`cons_composite_from_composite_by_adr`), which is why assignment
+  between two variables works. A call result has no address to bitcast:
+  the value arrives as `%Vec2` and is stored straight into a `%Point*`.
+- The C backend converts through `RAWCAST` and is unaffected (its own
+  trouble with that macro is #46).
+- Coverage: `tests/lang/type/record/structural_call.modest`, marked
+  `EXPECTED-FAIL(llvm)`.
+
+## 48. C backend emits an anonymous record before the type it contains
+
+```modest
+type Point = {x: Int32, y: Int32}
+
+type World = {
+	name: Int32
+	body: {pos: Point, speed: Int32}
+}
+```
+
+```c
+struct __anonymous_struct_3 {
+	struct point pos;      // error: field has incomplete type
+	int32_t speed;
+};
+struct point { ... };
+```
+
+- A struct holding another by value has to be emitted after it. Named
+  records are ordered by their dependencies; anonymous ones are all
+  written out first, ahead of every named type, including the ones their
+  fields name.
+- Only by-value fields matter: an anonymous record of scalars, or one
+  holding a *pointer* to a named record, compiles.
+- The LLVM backend orders both kinds correctly and is unaffected.
+- Coverage: `tests/lang/type/record/anonymous_field.modest`, marked
+  `EXPECTED-FAIL(c11)`.
+
+## 49. LLVM backend keeps the literal's type for an array of records with a pointer
+
+```modest
+type Ref = {tag: Int32, p: *Int32}
+
+var rs: [2]Ref = [{tag = 1, p = &n}, {tag = 2, p = nil}]
+```
+
+```llvm
+%10 = insertvalue {i8,%Int32*} zeroinitializer, i8 1, 0
+store [2 x %Ref] %14, [2 x %Ref]* %9   ; %14 is [2 x {i8,%Int32*}]
+; error: '%14' defined with type '[2 x { i8, ptr }]' but expected '[2 x %Ref]'
+```
+
+- The element of an array literal is a generic record literal, which has
+  to be built at the array's element type. With scalar fields only that
+  happens and the element comes out as `%Plain`; with a pointer among the
+  fields the element keeps the literal's own type — note the `tag` left
+  at the literal's `i8` as well — and the array of those does not store
+  into an array of the record.
+- One record at a time is fine in both backends; it is only the elements
+  of an array literal that are left generic.
+- The C backend is unaffected — it writes designated initializers, with
+  no element type to get wrong.
+- Coverage: `tests/lang/type/record/pointer_field.modest`, marked
+  `EXPECTED-FAIL(llvm)`.
+
+## 50. C backend emits an identifier that is a C keyword as it stands
+
+```modest
+var double: Int32 = 2
+var switch: Int32 = 1
+```
+
+```c
+int32_t double = 2;    // error: cannot combine with previous declaration specifier
+int32_t switch = 1;
+```
+
+- Modest's keywords are not C's, so a perfectly ordinary name — `double`,
+  `switch`, `case`, `int`, `union`, `register` — reaches the C backend as
+  an identifier and is written out unchanged. The generated translation
+  unit does not compile, and the diagnostic points at C the author never
+  wrote.
+- Functions, variables and fields are all affected.
+- The LLVM backend is unaffected: its identifiers are prefixed and quoted
+  where they need to be.
+- Fix: mangle any identifier that is a C keyword on the way out, the way
+  the backend already mangles what it has to.
+- No reproducer in the suite.
+
+## 51. A type named after a builtin redefines it in the LLVM backend
+
+```modest
+type Size = {w: Int32, h: Int32}
+```
+
+```llvm
+%Size = type i64        ; the prelude's
+%Size = type { ... }    ; error: redefinition of type
+```
+
+- `Size` is a builtin type name, and the front end lets a module define
+  its own without a word: inside that module the user's `Size` wins, and
+  `var n: Size = sizeof(Int32)` is reported as `type mismatch Size &
+  Integer(8)` — which is the shadowing working as the front end sees it.
+- The LLVM backend then emits the user's type under the same `%Size` the
+  prelude already defines, and clang refuses the file. Every builtin type
+  name is a candidate: `Size`, `Byte`, `Bool`, `File`, `Str8`.
+- The C backend is unaffected: it lowercases record tags, so `struct
+  size` does not collide with `size_t`.
+- Fix: either reject a definition that shadows a builtin type, or emit
+  user types under names that cannot collide with the prelude's.
+- No reproducer in the suite.
+
+## 52. A branded record cannot be constructed from its parent
+
+```modest
+type Point = {x: Int32, y: Int32}
+type Brand = @branded Point
+
+var p: Point = {x = 1, y = 2}
+var b: Brand = Brand p     // error: cannot construct 'Brand' from 'Point' value
+var q: Point = Point b     // error: cannot construct 'Point' from 'Brand' value
+```
+
+- `docs/lang/type/branded.md` states both directions as allowed: `B` from
+  `T` and `T` from `B`, explicitly, and that is what the whole newtype
+  pattern rests on. It holds for scalar parents — `Meters 5.0`,
+  `Float64 m` — and fails for a record parent, in both directions, in the
+  front end.
+- Constructing the brand from a literal works (`Brand {x = 1, y = 2}`),
+  so a branded record is usable, only not convertible.
+- Explicit construction between two *unbranded* records of the same
+  fields is accepted (with an `explicit cons from the same type` note),
+  which is the same code path minus the brand.
+- No reproducer in the suite: the branded type has no test file yet, and
+  `tests/lang/type/branded.modest` is where one belongs.

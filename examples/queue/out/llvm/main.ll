@@ -27,6 +27,7 @@ target triple = "arm64-apple-macosx12.0.0"
 %Nat64 = type i64
 %Nat128 = type i128
 %Nat256 = type i256
+%Float16 = type half
 %Float32 = type float
 %Float64 = type double
 %Fixed32 = type i32
