@@ -312,7 +312,7 @@ define %Int @main() {
 	%1 = alloca %Int32, align 4
 	store %Int32 42, %Int32* %1
 	%2 = alloca %Float64, align 8
-	store %Float64 3.1415899999999999, %Float64* %2
+	store %Float64 3.14159, %Float64* %2
 	%3 = alloca %Int32, align 4
 	store %Int32 10, %Int32* %3
 	store %Int32 20, %Int32* %3
@@ -328,7 +328,7 @@ define %Int @main() {
 	%10 = load %Int64, %Int64* %6
 	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([26 x i8]* @.str2 to [0 x i8]*), %Word64 %9, %Int64 %10)
 	%12 = alloca %Meters, align 8
-	store %Meters 1.8000000000000000, %Meters* %12
+	store %Meters 1.8, %Meters* %12
 	%13 = load %Meters, %Meters* %12
 	%14 = bitcast %Meters %13 to %Float64
 	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @.str3 to [0 x i8]*), %Float64 %14)
@@ -370,8 +370,8 @@ break_1:
 	%40 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @.str7 to [0 x i8]*))
 	%41 = alloca %Point
 	store %Point zeroinitializer, %Point* %41
-	%42 = insertvalue %Point zeroinitializer, %Float64 3.0000000000000000, 0
-	%43 = insertvalue %Point %42, %Float64 4.0000000000000000, 1
+	%42 = insertvalue %Point zeroinitializer, %Float64 3.0, 0
+	%43 = insertvalue %Point %42, %Float64 4.0, 1
 	%44 = alloca %Point
 	store %Point %43, %Point* %44
 	%45 = load %Point, %Point* %41
@@ -385,7 +385,7 @@ break_1:
 	store %Point* %49, %Point** %51
 	%52 = load %Point*, %Point** %51
 	%53 = getelementptr %Point, %Point* %52, %Int32 0, %Int32 0
-	store %Float64 99.0000000000000000, %Float64* %53
+	store %Float64 99.0, %Float64* %53
 	%54 = getelementptr %Point, %Point* %49, %Int32 0, %Int32 0
 	%55 = load %Float64, %Float64* %54
 	%56 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @.str9 to [0 x i8]*), %Float64 %55)

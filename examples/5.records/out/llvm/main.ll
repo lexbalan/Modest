@@ -245,12 +245,12 @@ declare void @perror(%ConstCharStr* %str)
 
 @line = internal global %Line {
 	%Point {
-		%Double 0.0000000000000000,
-		%Double 0.0000000000000000
+		%Double 0.0,
+		%Double 0.0
 	},
 	%Point {
-		%Double 1.0000000000000000,
-		%Double 1.0000000000000000
+		%Double 1.0,
+		%Double 1.0
 	}
 }
 define internal %Double @max(%Double %a, %Double %b) alwaysinline {
@@ -302,8 +302,8 @@ define internal %Double @distance(%Point %__a, %Point %__b) {
 	%20 = load %Double, %Double* %19
 	%21 = call %Double @min(%Double %18, %Double %20)
 	%22 = fsub %Double %16, %21
-	%23 = call %Double @pow(%Double %11, %Double 2.0000000000000000)
-	%24 = call %Double @pow(%Double %22, %Double 2.0000000000000000)
+	%23 = call %Double @pow(%Double %11, %Double 2.0)
+	%24 = call %Double @pow(%Double %22, %Double 2.0)
 	%25 = fadd %Double %23, %24
 	%26 = call %Double @sqrt(%Double %25)
 	ret %Double %26
@@ -324,9 +324,9 @@ define internal void @ptr_example() {
 	%1 = call i8* @malloc(%SizeT 16)
 	%2 = bitcast i8* %1 to %Point*
 	%3 = getelementptr %Point, %Point* %2, %Int32 0, %Int32 0
-	store %Double 10.0000000000000000, %Double* %3
+	store %Double 1.0e+01, %Double* %3
 	%4 = getelementptr %Point, %Point* %2, %Int32 0, %Int32 1
-	store %Double 20.0000000000000000, %Double* %4
+	store %Double 2.0e+01, %Double* %4
 	%5 = getelementptr %Point, %Point* %2, %Int32 0, %Int32 0
 	%6 = load %Double, %Double* %5
 	%7 = getelementptr %Point, %Point* %2, %Int32 0, %Int32 1

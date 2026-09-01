@@ -48,8 +48,8 @@ static double lineLength(struct line line) {
 
 static void ptr_example(void) {
 	struct point *const ptr_p = (struct point *)malloc(sizeof(struct point));
-	ptr_p->x = 10.0;
-	ptr_p->y = 20.0;
+	ptr_p->x = 1.0e+01;
+	ptr_p->y = 2.0e+01;
 	printf("point(%f, %f)\n", ptr_p->x, ptr_p->y);
 }
 

@@ -1,0 +1,325 @@
+// TEST: run
+// BACKENDS: c11, llvm, modest
+// EXPECT-EXIT: 0
+// EXPECT-OUT: passed: field as a place
+// EXPECT-OUT: passed: nested fields
+// EXPECT-OUT: passed: access through a pointer
+// EXPECT-OUT: passed: address of a field
+// EXPECT-OUT: passed: access in a postfix chain
+// EXPECT-OUT: passed: field access
+//
+// `r.field` designates a field — a *place*, not a copy of its value, and
+// the context decides what happens to it.  The same shape as `a[i]`
+// (tests/lang/value/index.modest), and it is checked the same way: one
+// expression read, assigned to, incremented and taken the address of, all
+// four reaching the same storage.
+//
+// What a record *is* — construction, defaults, layout, by-value assignment
+// — belongs to the record type; this is about the operator.  So what stays
+// here is what the access itself brings: that it nests to any depth, that a
+// pointer to record derefs itself, that `&r.field` points at the field, and
+// that the access is one link in the postfix chain, mixing freely with
+// indexing and calls.
+//
+// The one rule of the page that a running test cannot show is that a
+// `private` field of a record from *another* module is out of reach: that
+// is a compile error, and it belongs with the access modifiers.
+
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+
+
+type Point = {
+	x: Int32
+	y: Int32
+}
+
+type Segment = {
+	from: Point
+	to: Point
+}
+
+type Shape = {
+	name: Char8
+	corners: [3]Point
+}
+
+// A field cannot have a function type, but it can point at its own record.
+type Node = {
+	value: Int32
+	next: *Node
+}
+
+// A field's type may be written in place, and the fields of such an
+// anonymous record are reached by the same chain.
+type Color = {
+	rgba: Word32
+	parts: {r: Nat8, g: Nat8, b: Nat8, a: Nat8}
+}
+
+
+func makePoint (x: Int32, y: Int32) -> Point {
+	return Point {x = x, y = y}
+}
+
+
+// Takes a pointer to the field, not to the record.
+func bump (p: *Int32) -> Unit {
+	*p = *p + 100
+}
+
+
+// Auto-deref again, this time on a parameter: the caller's record is what
+// gets written.
+func moveTo (p: *Point, x: Int32, y: Int32) -> Unit {
+	p.x = x
+	p.y = y
+}
+
+
+func testPlace () -> Bool {
+	var pt: Point = {x = 1, y = 2}
+
+	// Read.
+	if pt.x != 1 or pt.y != 2 {
+		printf("pt = {%d, %d}, expected {1, 2}\n", pt.x, pt.y)
+		return false
+	}
+
+	// Written to — the same expression on the left of an assignment.
+	pt.x = 10
+	if pt.x != 10 {
+		printf("pt.x = %d after pt.x = 10\n", pt.x)
+		return false
+	}
+
+	// Read and written in one statement: the right side is the old value.
+	pt.x = pt.x + pt.y
+	if pt.x != 12 {
+		printf("pt.x = %d after pt.x = pt.x + pt.y, expected 12\n", pt.x)
+		return false
+	}
+
+	// The increment operators take a place, so a field is one of them.
+	++pt.x
+	--pt.y
+	if pt.x != 13 or pt.y != 1 {
+		printf("pt = {%d, %d}, expected {13, 1}\n", pt.x, pt.y)
+		return false
+	}
+
+	// Writing one field leaves the others alone — that is what makes them
+	// separate places and not one value read out whole.
+	var c: Color = {rgba = 0, parts = {r = 1, g = 2, b = 3, a = 4}}
+	c.parts.g = 20
+	if c.parts.r != 1 or c.parts.b != 3 or c.parts.a != 4 {
+		printf("c.parts = {%d, %d, %d, %d}, expected {1, 20, 3, 4}\n",
+			Int32 c.parts.r, Int32 c.parts.g, Int32 c.parts.b, Int32 c.parts.a)
+		return false
+	}
+
+	printf("passed: field as a place\n")
+	return true
+}
+
+
+func testNested () -> Bool {
+	var s: Segment = {from = {x = 1, y = 2}, to = {x = 3, y = 4}}
+
+	// The chain is applied left to right: `s.from` is a Point, `.x` is its
+	// field.
+	if s.from.x != 1 or s.to.y != 4 {
+		printf("s.from.x = %d and s.to.y = %d, expected 1 and 4\n",
+			s.from.x, s.to.y)
+		return false
+	}
+
+	// A place at the end of the chain, too.
+	s.to.x = 30
+	if s.to.x != 30 or s.from.x != 1 {
+		printf("s.from.x = %d and s.to.x = %d, expected 1 and 30\n",
+			s.from.x, s.to.x)
+		return false
+	}
+
+	// The inner record is itself a field, so it is assigned whole as well —
+	// and, being a value, it copies.
+	s.from = s.to
+	s.to.y = 40
+	if s.from.x != 30 or s.from.y != 4 {
+		printf("s.from = {%d, %d}, expected {30, 4}\n", s.from.x, s.from.y)
+		return false
+	}
+
+	// Anonymous record, same chain.
+	var c: Color = {rgba = 0, parts = {r = 1, g = 2, b = 3, a = 4}}
+	c.parts.a = 40
+	if c.parts.a != 40 {
+		printf("c.parts.a = %d, expected 40\n", Int32 c.parts.a)
+		return false
+	}
+
+	printf("passed: nested fields\n")
+	return true
+}
+
+
+func testThroughPointer () -> Bool {
+	var pt: Point = {x = 1, y = 2}
+	var p: *Point = &pt
+
+	// A pointer to record derefs itself on access: `p.x`, never `(*p).x`.
+	if p.x != 1 {
+		printf("p.x = %d, expected 1\n", p.x)
+		return false
+	}
+
+	// It is a place through the pointer as well, reaching the record it
+	// points at.
+	p.y = 20
+	if pt.y != 20 {
+		printf("pt.y = %d after p.y = 20, expected 20\n", pt.y)
+		return false
+	}
+
+	// Which is what a pointer parameter is for.
+	moveTo(&pt, 5, 6)
+	if pt.x != 5 or pt.y != 6 {
+		printf("pt = {%d, %d} after moveTo, expected {5, 6}\n", pt.x, pt.y)
+		return false
+	}
+
+	// A pointer field is dereferenced by the access that follows it, so a
+	// chain walks the links without a single `*`.
+	var tail: Node = {value = 2, next = nil}
+	var head: Node = {value = 1, next = &tail}
+	if head.next.value != 2 {
+		printf("head.next.value = %d, expected 2\n", head.next.value)
+		return false
+	}
+
+	head.next.value = 20
+	if tail.value != 20 {
+		printf("tail.value = %d after head.next.value = 20, expected 20\n",
+			tail.value)
+		return false
+	}
+
+	// The pointer itself is an ordinary field, and comparing it is how the
+	// end of the chain is found.
+	if head.next == nil or tail.next != nil {
+		printf("head.next and tail.next are not as linked\n")
+		return false
+	}
+
+	printf("passed: access through a pointer\n")
+	return true
+}
+
+
+func testAddressOf () -> Bool {
+	var pt: Point = {x = 1, y = 2}
+
+	// `&pt.x` points at the field, so writing through the pointer is
+	// writing into the record.
+	var px: *Int32 = &pt.x
+	*px = 10
+	if pt.x != 10 {
+		printf("pt.x = %d after a write through &pt.x, expected 10\n", pt.x)
+		return false
+	}
+
+	// It is an ordinary pointer to the field's type, and travels as one.
+	bump(&pt.y)
+	if pt.y != 102 {
+		printf("pt.y = %d after bump(&pt.y), expected 102\n", pt.y)
+		return false
+	}
+
+	// A field that is a record is addressed the same way, and the pointer
+	// reaches the fields below it.
+	var s: Segment = {from = {x = 1, y = 2}, to = {x = 3, y = 4}}
+	var pp: *Point = &s.to
+	pp.x = 30
+	if s.to.x != 30 or s.from.x != 1 {
+		printf("s.from.x = %d and s.to.x = %d, expected 1 and 30\n",
+			s.from.x, s.to.x)
+		return false
+	}
+
+	// And the address of a field can be taken through a pointer, the access
+	// auto-dereferencing before `&` takes what it found.
+	var q: *Point = &s.from
+	var qx: *Int32 = &q.x
+	*qx = 11
+	if s.from.x != 11 {
+		printf("s.from.x = %d after a write through &q.x, expected 11\n",
+			s.from.x)
+		return false
+	}
+
+	printf("passed: address of a field\n")
+	return true
+}
+
+
+func testPostfixChain () -> Bool {
+	var sh: Shape = {name = Char8 'T', corners = [{x = 1, y = 2}, {x = 3, y = 4}, {x = 5, y = 6}]}
+
+	// Access and index are the same level of the grammar, so they alternate
+	// in one chain, in either order.
+	if sh.corners[1].y != 4 {
+		printf("sh.corners[1].y = %d, expected 4\n", sh.corners[1].y)
+		return false
+	}
+
+	sh.corners[2].x = 50
+	if sh.corners[2].x != 50 or sh.corners[1].x != 3 {
+		printf("sh.corners[1].x = %d and [2].x = %d, expected 3 and 50\n",
+			sh.corners[1].x, sh.corners[2].x)
+		return false
+	}
+
+	// A call is a link of that chain too: the field of what it returned.
+	if makePoint(7, 8).y != 8 {
+		printf("makePoint(7, 8).y = %d, expected 8\n", makePoint(7, 8).y)
+		return false
+	}
+
+	// Which composes with the rest of an expression like any other value.
+	if makePoint(7, 8).x + sh.corners[0].x != 8 {
+		printf("makePoint(7, 8).x + sh.corners[0].x = %d, expected 8\n",
+			makePoint(7, 8).x + sh.corners[0].x)
+		return false
+	}
+
+	// A field is also an ordinary index expression when it holds one.
+	var idx: Shape = {name = Char8 'I', corners = [{x = 0, y = 0}, {x = 1, y = 1}, {x = 2, y = 2}]}
+	var a: [3]Int32 = [10, 20, 30]
+	if a[idx.corners[2].x] != 30 {
+		printf("a[idx.corners[2].x] = %d, expected 30\n", a[idx.corners[2].x])
+		return false
+	}
+
+	printf("passed: access in a postfix chain\n")
+	return true
+}
+
+
+func main () -> Int {
+	var result = true
+	result = testPlace() and result
+	result = testNested() and result
+	result = testThroughPointer() and result
+	result = testAddressOf() and result
+	result = testPostfixChain() and result
+
+	if not result {
+		printf("failed: field access\n")
+		return exitFailure
+	}
+
+	printf("passed: field access\n")
+	return exitSuccess
+}

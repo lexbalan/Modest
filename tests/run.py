@@ -23,6 +23,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import threading
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
 
@@ -278,8 +279,31 @@ def color(s, c, enabled):
 STATUS_COLOR = {PASS: 32, FAIL: 91, XFAIL: 33, XPASS: 91, SKIP: 90}
 
 
+class Progress:
+	"""A line per finished case, so the suite is watchable while it runs.
+
+	Cases finish out of order under -j, hence the counter: it says how far
+	along we are, the name says what has just been decided.
+	"""
+
+	def __init__(self, total, tty):
+		self.total = total
+		self.tty = tty
+		self.done = 0
+		self.lock = threading.Lock()
+
+	def finish(self, r):
+		with self.lock:
+			self.done += 1
+			tag = color('%-5s' % r.status, STATUS_COLOR[r.status], self.tty)
+			print('[%*d/%d] %s %s [%s]' % (len(str(self.total)), self.done,
+			                               self.total, tag, r.test.name, r.backend),
+			      flush=True)
+
+
 def report(results, verbose, tty):
 	counts = dict.fromkeys([PASS, FAIL, XFAIL, XPASS, SKIP], 0)
+	print()
 
 	for r in results:
 		counts[r.status] += 1
@@ -304,7 +328,6 @@ def report(results, verbose, tty):
 		if verbose and r.log:
 			print(indent(r.log))
 
-	print()
 	summary = '%d passed' % counts[PASS]
 	for st in (FAIL, XPASS, XFAIL, SKIP):
 		if counts[st]:
@@ -350,6 +373,13 @@ def discover(filt):
 	return [t for t in tests if t.path not in linked]
 
 
+def resolve(r):
+	"""An expected failure that failed is fine; one that passed is news."""
+	if r.test.xfail_reason(r.backend):
+		r.status = XFAIL if r.status == FAIL else XPASS if r.status == PASS else r.status
+	return r
+
+
 def main():
 	ap = argparse.ArgumentParser(description='Run the Modest test suite.')
 	ap.add_argument('filter', nargs='?', help='only tests whose path contains this')
@@ -381,15 +411,18 @@ def main():
 	if not cases:
 		fatal('no cases to run for the selected backends')
 
+	tty = sys.stdout.isatty()
+	progress = Progress(len(cases), tty)
+
+	def one(case):
+		r = resolve(run_case(case[0], case[1], args.keep))
+		progress.finish(r)
+		return r
+
 	with ThreadPoolExecutor(max_workers=args.jobs) as pool:
-		results = list(pool.map(lambda c: run_case(c[0], c[1], args.keep), cases))
+		results = list(pool.map(one, cases))
 
-	# An expected failure that failed is fine; one that passed is news.
-	for r in results:
-		if r.test.xfail_reason(r.backend):
-			r.status = XFAIL if r.status == FAIL else XPASS if r.status == PASS else r.status
-
-	ok = report(results, args.verbose, sys.stdout.isatty())
+	ok = report(results, args.verbose, tty)
 	return 0 if ok else 1
 
 

@@ -1,0 +1,354 @@
+// TEST: run
+// BACKENDS: c11, llvm, modest
+// EXPECT-EXIT: 0
+// EXPECT-OUT: passed: index as a place
+// EXPECT-OUT: passed: the index expression
+// EXPECT-OUT: passed: address of an element
+// EXPECT-OUT: passed: index through a pointer
+// EXPECT-OUT: passed: index step by step
+// EXPECT-OUT: passed: index of a string
+// EXPECT-OUT: passed: index
+//
+// `a[i]` designates an element — a *place*, and the context decides what
+// happens to it.  That one sentence is what is checked here: the same
+// expression is read, assigned to, incremented and taken the address of,
+// and all four reach the same storage.
+//
+// What an array *is* belongs to the array type (tests/lang/type/array/);
+// this is about the operator.  So the checks stay on what the index itself
+// brings: that the subscript is an arbitrary integer expression rather than
+// a constant, that a pointer to array indexes without a dereference, that
+// dimensions are taken one at a time, and that a string, being an array of
+// characters, is indexed like one.
+//
+// Every index that could otherwise be folded away goes through `opaque`, so
+// what the checks exercise is the run-time addressing and not the constant
+// folder.
+
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+
+
+type Point = {
+	x: Int32
+	y: Int32
+}
+
+type Buffer = {
+	used: Nat32
+	data: [4]Int32
+}
+
+
+func opaque (n: Nat32) -> Nat32 {
+	return n
+}
+
+
+// A pointer to the element, not to the array: what `&a[i]` produces.
+func bump (p: *Int32) -> Unit {
+	*p = *p + 100
+}
+
+
+func sum (v: *[]Int32, n: Nat32) -> Int32 {
+	var total: Int32 = 0
+	var i: Nat32 = 0
+	while i < n {
+		total = total + v[i]
+		++i
+	}
+	return total
+}
+
+
+func testPlace () -> Bool {
+	var a: [5]Int32 = [10, 20, 30, 40, 50]
+	let i = opaque(2)
+
+	// Read.
+	if a[i] != 30 {
+		printf("a[2] = %d, expected 30\n", a[i])
+		return false
+	}
+
+	// Written to — the same expression on the left of an assignment.
+	a[i] = 33
+	if a[i] != 33 {
+		printf("a[2] = %d after a[2] = 33\n", a[i])
+		return false
+	}
+
+	// Read and written in one statement: the right side is the old value.
+	a[i] = a[i] + 1
+	if a[i] != 34 {
+		printf("a[2] = %d after a[2] = a[2] + 1, expected 34\n", a[i])
+		return false
+	}
+
+	// The increment operators take a place, so an element is one of them.
+	++a[i]
+	--a[0]
+	if a[i] != 35 or a[0] != 9 {
+		printf("a[2] = %d and a[0] = %d, expected 35 and 9\n", a[i], a[0])
+		return false
+	}
+
+	// Writing one element leaves its neighbours alone.
+	if a[1] != 20 or a[3] != 40 {
+		printf("a[1] = %d and a[3] = %d, expected 20 and 40\n", a[1], a[3])
+		return false
+	}
+
+	// An element of an array of records is a record, and the field of it is
+	// a place in its own right.
+	var ps: [3]Point = [{x = 1, y = 2}, {x = 3, y = 4}, {x = 5, y = 6}]
+	ps[opaque(1)].x = 30
+	if ps[1].x != 30 or ps[1].y != 4 {
+		printf("ps[1] = {%d, %d}, expected {30, 4}\n", ps[1].x, ps[1].y)
+		return false
+	}
+
+	// The other way round as well: an array inside a record is indexed
+	// after the field, and the whole thing is still a place.
+	var b: Buffer = {used = 0, data = [1, 2, 3, 4]}
+	b.data[opaque(2)] = 30
+	if b.data[2] != 30 or b.data[1] != 2 {
+		printf("b.data = [.., %d, %d, ..], expected [.., 2, 30, ..]\n",
+			b.data[1], b.data[2])
+		return false
+	}
+
+	printf("passed: index as a place\n")
+	return true
+}
+
+
+func testIndexExpression () -> Bool {
+	var a: [8]Int32 = [0, 1, 2, 3, 4, 5, 6, 7]
+
+	// Any integer expression, not just a name or a literal.
+	let i = opaque(5)
+	if a[i - 2] != 3 {
+		printf("a[i - 2] = %d for i = 5, expected 3\n", a[i - 2])
+		return false
+	}
+	if a[i / 2 + 1] != 3 {
+		printf("a[i / 2 + 1] = %d for i = 5, expected 3\n", a[i / 2 + 1])
+		return false
+	}
+
+	// A call is an expression too — the index is evaluated, then used.
+	if a[opaque(7)] != 7 {
+		printf("a[opaque(7)] = %d, expected 7\n", a[opaque(7)])
+		return false
+	}
+
+	// Any integer type will do, signed or unsigned, of any width.
+	var n8: Nat8 = 4
+	var i32: Int32 = 6
+	if a[n8] != 4 or a[i32] != 6 {
+		printf("a[n8] = %d and a[i32] = %d, expected 4 and 6\n", a[n8], a[i32])
+		return false
+	}
+
+	// Including one read out of an array — an index that is itself indexed.
+	var table: [3]Nat32 = [7, 0, 3]
+	if a[table[opaque(0)]] != 7 {
+		printf("a[table[0]] = %d, expected 7\n", a[table[opaque(0)]])
+		return false
+	}
+
+	// Zero and the last position are both in range: the bounds are
+	// 0 and lengthof(a) - 1.
+	if a[0] != 0 or a[lengthof(a) - 1] != 7 {
+		printf("a[0] = %d and a[last] = %d, expected 0 and 7\n",
+			a[0], a[lengthof(a) - 1])
+		return false
+	}
+
+	printf("passed: the index expression\n")
+	return true
+}
+
+
+func testAddressOf () -> Bool {
+	var a: [5]Int32 = [10, 20, 30, 40, 50]
+
+	// `&a[i]` points at the element, so writing through the pointer is
+	// writing into the array.
+	var p: *Int32 = &a[opaque(1)]
+	*p = 21
+	if a[1] != 21 {
+		printf("a[1] = %d after a write through &a[1], expected 21\n", a[1])
+		return false
+	}
+
+	// It is an ordinary pointer to the element type, and travels as one.
+	bump(&a[3])
+	if a[3] != 140 {
+		printf("a[3] = %d after bump(&a[3]), expected 140\n", a[3])
+		return false
+	}
+
+	// `&a[0]` is the address of the array's first element, which is where
+	// the array itself starts.
+	var q: *Int32 = &a[0]
+	if *q != a[0] {
+		printf("*(&a[0]) = %d, but a[0] = %d\n", *q, a[0])
+		return false
+	}
+
+	// The element of an array of records is addressed the same way, and the
+	// pointer reaches its fields.
+	var ps: [2]Point = [{x = 1, y = 2}, {x = 3, y = 4}]
+	var pp: *Point = &ps[opaque(1)]
+	pp.x = 30
+	if ps[1].x != 30 {
+		printf("ps[1].x = %d after a write through &ps[1], expected 30\n", ps[1].x)
+		return false
+	}
+
+	printf("passed: address of an element\n")
+	return true
+}
+
+
+func testThroughPointer () -> Bool {
+	var a: [4]Int32 = [1, 2, 3, 4]
+
+	// A pointer to array derefs itself on indexing: `p[i]`, never `(*p)[i]`.
+	var p: *[4]Int32 = &a
+	if p[opaque(2)] != 3 {
+		printf("p[2] = %d, expected 3\n", p[opaque(2)])
+		return false
+	}
+
+	// And it is a place through the pointer as well, reaching the array it
+	// points at.
+	p[opaque(0)] = 11
+	if a[0] != 11 {
+		printf("a[0] = %d after p[0] = 11, expected 11\n", a[0])
+		return false
+	}
+
+	// The unsized pointer indexes the same way — the length is simply not
+	// part of its type, so it comes along separately.
+	var v: *[]Int32 = &a
+	if v[opaque(3)] != 4 {
+		printf("v[3] = %d, expected 4\n", v[opaque(3)])
+		return false
+	}
+	if sum(&a, lengthof(a)) != 20 {
+		printf("sum(&a) = %d, expected 20\n", sum(&a, lengthof(a)))
+		return false
+	}
+
+	printf("passed: index through a pointer\n")
+	return true
+}
+
+
+func testStepByStep () -> Bool {
+	var m: [2][3]Int32 = [[1, 2, 3], [4, 5, 6]]
+	let i = opaque(1)
+	let j = opaque(2)
+
+	// There is one index operator, applied twice: `m[i]` is a row, and
+	// `m[i][j]` is that row indexed.
+	if m[i][j] != 6 {
+		printf("m[1][2] = %d, expected 6\n", m[i][j])
+		return false
+	}
+
+	// A place at the end of the chain, too.
+	m[i][j] = 60
+	m[0][0] = 10
+	if m[1][2] != 60 or m[0][0] != 10 {
+		printf("m = [[%d, ..], [.., %d]], expected 10 and 60\n", m[0][0], m[1][2])
+		return false
+	}
+
+	// Only the addressed element moves.
+	if m[0][1] != 2 or m[1][0] != 4 {
+		printf("m[0][1] = %d and m[1][0] = %d, expected 2 and 4\n",
+			m[0][1], m[1][0])
+		return false
+	}
+
+	// Each step has its own length: the outer index runs over rows, the
+	// inner one over a row's elements.
+	if lengthof(m) != 2 or lengthof(m[0]) != 3 {
+		printf("lengthof(m) = %d and lengthof(m[0]) = %d, expected 2 and 3\n",
+			Int32 lengthof(m), Int32 lengthof(m[0]))
+		return false
+	}
+
+	// The address of an element of a row is a pointer to the element type.
+	bump(&m[0][opaque(1)])
+	if m[0][1] != 102 {
+		printf("m[0][1] = %d after bump(&m[0][1]), expected 102\n", m[0][1])
+		return false
+	}
+
+	printf("passed: index step by step\n")
+	return true
+}
+
+
+func testString () -> Bool {
+	// A string is an array of characters, so indexing it yields a character.
+	let s: *Str8 = "Hello"
+	if s[opaque(1)] != Char8 'e' {
+		printf("s[1] = %c, expected e\n", s[opaque(1)])
+		return false
+	}
+
+	// Indexing a string literal is indexing the array value it is, and the
+	// character that comes out is still generic — it takes the type it is
+	// wanted in.
+	let c: Char8 = "A"[0]
+	if c != Char8 65 {
+		printf("\"A\"[0] = %c, expected A\n", c)
+		return false
+	}
+
+	// A character array is written through the index like any other array.
+	var buf: [6]Char8 = "hello"
+	buf[opaque(0)] = Char8 'H'
+	if buf[0] != Char8 'H' or buf[1] != Char8 'e' {
+		printf("buf = %c%c..., expected He...\n", buf[0], buf[1])
+		return false
+	}
+
+	// Which leaves it a valid string: the terminator is still where the
+	// literal put it.
+	if buf[5] != Char8 0 {
+		printf("buf[5] is not the terminator\n")
+		return false
+	}
+	printf("buf = %s\n", &buf)
+
+	printf("passed: index of a string\n")
+	return true
+}
+
+
+func main () -> Int {
+	var result = true
+	result = testPlace() and result
+	result = testIndexExpression() and result
+	result = testAddressOf() and result
+	result = testThroughPointer() and result
+	result = testStepByStep() and result
+	result = testString() and result
+
+	if not result {
+		printf("failed: index\n")
+		return exitFailure
+	}
+
+	printf("passed: index\n")
+	return exitSuccess
+}
