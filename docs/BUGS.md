@@ -781,38 +781,6 @@ var i: Int32 = Int32 f        // error: integer overflow
   `EXPECTED-FAIL`. The working half of the table is
   `tests/lang/type/float/cons.modest`, which passes.
 
-## 38. `%` on a float is accepted, and the C backend emits invalid C
-
-```modest
-var a: Float64 = 5.0
-var b: Float64 = 2.0
-printf("%f\n", a % b)
-```
-
-```
-c11:  invalid operands to binary expression ('double' and 'double')
-llvm: 1.000000
-```
-
-- `docs/lang/value/binary.md` restricts `%` to integers ("`%`: integers
-  only"), and `docs/lang/type/base.md` gives `FloatX` the classes `equ`,
-  `ord` and `math` without `rem`. The frontend does not enforce either:
-  the operation is accepted and handed to the backends.
-- The C backend prints it as C's `%`, which does not exist for `double`,
-  so the module does not compile — the error surfaces from clang, naming C
-  types the author never wrote. The LLVM backend prints `frem` and
-  computes a correct floating-point remainder.
-- So the same program is a compile error one way and a working program the
-  other, and neither matches the documentation.
-- Expected: reject `%` on a `FloatX` operand in the frontend, next to where
-  the bitwise operators are rejected for it (`unsuitable value type
-  'Float64' for 'bitwise-and' operation` is already the diagnostic for
-  `a & b`). If the language would rather have the operation, it needs a
-  line in `binary.md` and a `fmod` in the C backend — but that is a
-  language decision, not a backend one.
-- No reproducer in the suite: a positive test cannot assert an operation
-  the language does not have.
-
 ## 39. LLVM backend dies on a float literal past the target's range
 
 ```modest

@@ -3,10 +3,7 @@
 include "libc/ctypes64"
 include "libc/stdio"
 
-const c1 = 0.1000000000000000001
-const c2 = 0.2
-
 func main () -> Int {
-	printf("Hello World! %f\n", c1 + c2)
+	printf("Hello World!\n")
 	return 0
 }
