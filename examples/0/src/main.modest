@@ -10,4 +10,3 @@ func main () -> Int {
 	printf("Hello World! %f\n", c1 + c2)
 	return 0
 }
-

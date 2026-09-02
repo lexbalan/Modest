@@ -17,9 +17,8 @@
 // the type: no value of it has to exist.  It takes one field of one record
 // — `offsetof(Nest.p)` — and not a path through a nested one.
 //
-// `sizeof` is the same kind of fact, and is checked here only for records
-// whose size is a power of two: the LLVM backend rounds every other one up
-// (BUGS.md#41, reproducer in `size.modest`).
+// `sizeof` is the same kind of fact, asked of the same type; what all that
+// padding adds up to is `size.modest` and `size_mixed.modest`.
 
 include "libc/ctypes64"
 include "libc/stdio"

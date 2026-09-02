@@ -51,9 +51,8 @@ type Track = {
 	leg: Segment
 }
 
-// The sizes are picked so that `sizeof(Grid)` is a power of two: an array
-// of records is zero-filled with a memset whose length the LLVM backend
-// rounds up (BUGS.md#41), and a 40-byte Grid would be written past.
+// Both ways round: a field that is an array, and an array whose element
+// is a record.
 type Grid = {
 	rows: [2][2]Int32
 	corners: [2]Point

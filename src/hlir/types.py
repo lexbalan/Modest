@@ -1612,7 +1612,6 @@ class TypeArray(Type):
 
 		super().__init__(generic=generic, ops=ARR_OPS, ti=ti)
 		self.incomplete = False
-		self.size=array_size
 		self.of = of
 		self.volume = volume
 		self.size = array_size
@@ -1677,9 +1676,13 @@ def calc_record_size_align(fields):
 class TypeRecord(Type):
 	def __init__(self, fields, generic=False, ti=None):
 		record_size, record_align = calc_record_size_align(fields)
-		super().__init__(generic=generic, width=(record_size * 8), ops=REC_OPS, ti=ti)
+		# размер и выравнивание записи задаёт раскладка её полей, а не ширина
+		# в битах: nbytes_for_bits округляет биты вверх до степени двойки, что
+		# верно для скалярных типов и неверно для агрегата (см. TypeArray)
+		super().__init__(generic=generic, ops=REC_OPS, ti=ti)
 		self.incomplete = False
 		self.fields = fields
+		self.size = record_size
 		self.align = record_align
 		self.layout = 'record'
 

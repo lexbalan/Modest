@@ -5,24 +5,21 @@
 // EXPECT-OUT: passed: equality of a 12-byte record
 // EXPECT-OUT: passed: zero-filling an array of them
 // EXPECT-OUT: passed: record size
-// EXPECTED-FAIL(llvm): BUGS.md#41 a record's size is rounded up to a power of two
 //
 // How big a record is: the offset past its last field, rounded up to the
 // record's own alignment.  Three `Int32` make 12 bytes, and 12 is what
 // both `sizeof` and everything built on it have to say.
 //
-// The LLVM backend says 16.  `TypeRecord` computes the real size when it
-// lays the fields out, but never stores it — the base `Type` derives one
-// from the bit width instead, through `nbytes_for_bits`, which rounds up
-// to a power of two.  The C backend hides this by writing `sizeof(struct
-// point3)` out and letting the C compiler answer.
+// The size is not only reported, it is used, so the checks below spend it
+// three ways: `sizeof` itself, `==` (which compares that many bytes), and
+// `= []` (which fills that many per element).  A size that is too big is
+// quiet in the first and destructive in the other two — the comparison
+// reads past the record, the fill writes past the array.
 //
-// The size is not only reported, it is used, so the same four bytes come
-// back twice more: `==` compares `sizeof` bytes and reads four past the
-// record (two identical records come out unequal), and `= []` memsets
-// `sizeof` bytes per element and writes past the array.  A record whose
-// size is already a power of two — `{x, y}` — shows none of this, which
-// is why most of the record tests never trip over it.
+// A record whose size is already a power of two — `{x, y}` — cannot tell
+// a computed size from a guessed one, which is why this one has three
+// fields.  `size_mixed.modest` asks the same of a heterogeneous record,
+// where the padding is what decides the number.
 
 include "libc/ctypes64"
 include "libc/stdio"

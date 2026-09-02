@@ -1,0 +1,208 @@
+// TEST: run
+// BACKENDS: c11, llvm
+// EXPECT-EXIT: 0
+// EXPECT-OUT: passed: padding inside and after the fields
+// EXPECT-OUT: passed: the widest field decides the size
+// EXPECT-OUT: passed: a nested record keeps its own size
+// EXPECT-OUT: passed: an array strides by the record's size
+// EXPECT-OUT: passed: the stride holds at run time
+// EXPECT-OUT: passed: mixed record size
+//
+// `sizeof` of a heterogeneous record.  `layout.modest` says where each
+// field sits; this says what the record costs once they all sit there —
+// which is not the sum of the fields, and not a round number either.
+//
+// Two kinds of padding make it up.  Between fields: a field starts at the
+// next offset its own type is aligned to, so a `Word8` before a `Nat32`
+// leaves three bytes unused.  After the last one: the record is rounded up
+// to its own alignment, so that an array of it keeps every element
+// aligned.  `{Word8, Float64, Word8}` ends at 17 and costs 24.
+//
+// Neither number is a power of two, which is the point of testing them —
+// a record of two `Int32` costs 8 whether the size is computed or guessed.
+
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+
+
+// 1 byte, 3 of padding, 4, 2, and 2 more of padding at the end.
+type Tagged = {
+	flag: Word8
+	count: Nat32
+	code: Word16
+}
+
+// The widest field aligns the record to 8, and the tail is padded to it.
+type Wide = {
+	lead: Word8
+	val: Float64
+	trail: Word8
+}
+
+// Two of the first: its size is what separates them, and what the pair
+// costs is twice that — not twice the next power of two.
+type Pair = {
+	first: Tagged
+	second: Tagged
+}
+
+
+func testPadding () -> Bool {
+	// 1 + 4 + 2 bytes of fields, spread over 12 bytes of record.
+	if sizeof(Tagged) != 12 {
+		printf("sizeof(Tagged) = %zu, expected 12\n", sizeof(Tagged))
+		return false
+	}
+	if alignof(Tagged) != 4 {
+		printf("alignof(Tagged) = %zu, expected 4\n", alignof(Tagged))
+		return false
+	}
+
+	// The fields it is made of agree on where the last one ends: at 10,
+	// two short of the size.  Those two bytes are the tail padding.
+	if offsetof(Tagged.code) + sizeof(Word16) != 10 {
+		printf("Tagged.code ends at %zu, expected 10\n",
+			offsetof(Tagged.code) + sizeof(Word16))
+		return false
+	}
+	if sizeof(Tagged) == sizeof(Word8) + sizeof(Nat32) + sizeof(Word16) {
+		printf("sizeof(Tagged) is the sum of its fields, expected padding\n")
+		return false
+	}
+
+	printf("passed: padding inside and after the fields\n")
+	return true
+}
+
+
+func testWidestField () -> Bool {
+	// `val` needs 8, so it starts at 8 and the record is aligned to 8.
+	// `trail` is one byte at 16, and the record is rounded from 17 to 24.
+	if sizeof(Wide) != 24 {
+		printf("sizeof(Wide) = %zu, expected 24\n", sizeof(Wide))
+		return false
+	}
+	if alignof(Wide) != 8 {
+		printf("alignof(Wide) = %zu, expected 8\n", alignof(Wide))
+		return false
+	}
+
+	// A size is always a whole number of its own alignments — that is what
+	// makes the next element of an array land aligned.
+	if sizeof(Wide) % alignof(Wide) != 0 {
+		printf("sizeof(Wide) = %zu is not a multiple of alignof = %zu\n",
+			sizeof(Wide), alignof(Wide))
+		return false
+	}
+	if sizeof(Tagged) % alignof(Tagged) != 0 {
+		printf("sizeof(Tagged) = %zu is not a multiple of alignof = %zu\n",
+			sizeof(Tagged), alignof(Tagged))
+		return false
+	}
+
+	printf("passed: the widest field decides the size\n")
+	return true
+}
+
+
+func testNested () -> Bool {
+	// A record field is placed as a whole: `second` starts where `first`
+	// ends, and the pair costs exactly the two of them.
+	if offsetof(Pair.second) != sizeof(Tagged) {
+		printf("offsetof(Pair.second) = %zu, expected %zu\n",
+			offsetof(Pair.second), sizeof(Tagged))
+		return false
+	}
+	if sizeof(Pair) != 24 {
+		printf("sizeof(Pair) = %zu, expected 24\n", sizeof(Pair))
+		return false
+	}
+
+	printf("passed: a nested record keeps its own size\n")
+	return true
+}
+
+
+func testArrayStride () -> Bool {
+	// Nothing is inserted between elements: the tail padding of the record
+	// is what keeps the next one aligned, and it is already counted.
+	if sizeof([3]Tagged) != 36 {
+		printf("sizeof([3]Tagged) = %zu, expected 36\n", sizeof([3]Tagged))
+		return false
+	}
+	if sizeof([2]Wide) != 48 {
+		printf("sizeof([2]Wide) = %zu, expected 48\n", sizeof([2]Wide))
+		return false
+	}
+	if alignof([2]Wide) != alignof(Wide) {
+		printf("alignof([2]Wide) = %zu, expected %zu\n",
+			alignof([2]Wide), alignof(Wide))
+		return false
+	}
+
+	printf("passed: an array strides by the record's size\n")
+	return true
+}
+
+
+func testStrideAtRuntime () -> Bool {
+	// The size is not only reported, it is used: `= []` fills sizeof bytes
+	// per element, and a size that is too big runs off the end.
+	var before: Nat32 = 111
+	var xs: [3]Tagged = []
+	var after: Nat32 = 222
+
+	if before != 111 or after != 222 {
+		printf("guards = %u, %u, expected 111 and 222\n", before, after)
+		return false
+	}
+
+	// And elements are that far apart, so writing one leaves the rest.
+	xs[0].count = 10
+	xs[1].count = 20
+	xs[2].count = 30
+	if xs[0].count != 10 or xs[1].count != 20 or xs[2].count != 30 {
+		printf("xs counts = %u, %u, %u, expected 10, 20, 30\n",
+			xs[0].count, xs[1].count, xs[2].count)
+		return false
+	}
+
+	// The same for the record whose alignment comes from a Float64.
+	var lo: Nat32 = 333
+	var ws: [2]Wide = []
+	var hi: Nat32 = 444
+
+	if lo != 333 or hi != 444 {
+		printf("guards = %u, %u, expected 333 and 444\n", lo, hi)
+		return false
+	}
+
+	ws[0].val = 1.5
+	ws[1].val = 2.5
+	if ws[0].val != 1.5 or ws[1].val != 2.5 {
+		printf("ws vals = %f, %f, expected 1.5 and 2.5\n", ws[0].val, ws[1].val)
+		return false
+	}
+
+	printf("passed: the stride holds at run time\n")
+	return true
+}
+
+
+func main () -> Int {
+	var result = true
+	result = testPadding() and result
+	result = testWidestField() and result
+	result = testNested() and result
+	result = testArrayStride() and result
+	result = testStrideAtRuntime() and result
+
+	if not result {
+		printf("failed: mixed record size\n")
+		return exitFailure
+	}
+
+	printf("passed: mixed record size\n")
+	return exitSuccess
+}

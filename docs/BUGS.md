@@ -875,41 +875,6 @@ var x: Fixed32 = Fixed32 h   // c11: 1.5   llvm: OverflowError, traceback
 - Coverage: `tests/lang/type/float/float16/fixed.modest`, marked
   `EXPECTED-FAIL(llvm)`.
 
-## 41. LLVM backend rounds a record's size up to a power of two
-
-```modest
-type Point3 = {x: Int32, y: Int32, z: Int32}
-
-sizeof(Point3)               // c11: 12      llvm: 16
-Point3 {1, 2, 3} == Point3 {1, 2, 3}   // c11: true    llvm: false
-```
-
-- `TypeRecord.__init__` computes the real size in
-  `calc_record_size_align` (`src/hlir/types.py:1651`) and uses it only to
-  set `width`; it never assigns `self.size`. The base `Type.__init__`
-  then derives one from the width through `nbytes_for_bits`, which aligns
-  the bit count up to a power of two: 96 bits of fields become 16 bytes.
-  `align` is set from the field layout and stays right, so only the size
-  is wrong, and only for a record whose size is not already a power of
-  two — which is why `{x, y}` records never show it.
-- The C backend hides it: it writes `sizeof(struct point3)` out and lets
-  the C compiler answer. The LLVM backend folds `sizeof` to a constant
-  from `t.get_size()` (`_eval_sizeof_type`, `src/backend/llvm.py:2101`)
-  and prints the wrong number.
-- The size is used as well as reported, so the same four bytes come back
-  as two more failures, both LLVM-only:
-  - `==` compares `sizeof` bytes (`llvm_memcmp`) and reads past the end of
-    the record, so two identical records differ by whatever the stack held
-    — the same reading-past-the-fields shape as #26, but from a wrong size
-    rather than from padding;
-  - `= []` on an array of records memsets `sizeof` per element and writes
-    past the array: a `[2]Point3` clears 32 bytes of a 24-byte object and
-    takes its neighbours with it.
-- Fix: keep the computed size — `self.size = record_size` — and let
-  `nbytes_for_bits` apply to the scalar types it was written for.
-- Coverage: `tests/lang/type/record/size.modest`, marked
-  `EXPECTED-FAIL(llvm)`.
-
 ## 42. `@layout("packed")` is ignored by both backends
 
 ```modest
