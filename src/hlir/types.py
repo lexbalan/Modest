@@ -1813,7 +1813,9 @@ class Value(Entity):
 					a = pack_int(int(a), width=t.width, signed=True)
 				elif t.is_float():
 					a = pack_float(a, t.width)
-			except:
+			except (ValueError, TypeError):
+				# int() над тем, что числом не является; переполнение
+				# диапазона сюда больше не долетает - pack_float насыщает до +/- inf
 				pass
 
 		self.asset = a

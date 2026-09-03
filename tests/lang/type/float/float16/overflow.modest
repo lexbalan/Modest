@@ -1,0 +1,43 @@
+// TEST: reject
+// BACKENDS: c11, llvm, modest
+// EXPECT-ERROR: float overflow
+// EXPECT-ERROR: `Float16` holds at most 65504.0
+// EXPECT-ERROR: float overflow
+// EXPECT-ERROR: `Float16` holds at most 65504.0
+// EXPECT-ERROR: float overflow
+// EXPECT-ERROR: `Float32` holds at most 3.4028234663852886e+38
+// EXPECT-ERROR: float overflow
+// EXPECT-ERROR: `Float16` holds at most 65504.0
+//
+// A constant that does not fit the float it is being made into.
+//
+// The rule is the one integers already follow: `Nat8 256` does not compile,
+// and neither does a float literal past its type's range.  At run time the
+// answer stays IEEE 754's — an overflowing sum is an infinity, and `unsafe`
+// asks for that answer at compile time too (`range.modest`).  Here there is
+// still someone to tell, so the compiler tells.
+//
+// The diagnostic names the edge, because that is the part nobody remembers:
+// binary16 stops at 65504, and it is 65520 — not 65505 — that first fails,
+// since everything below the halfway point still rounds back down.
+//
+// Rejection is checked per backend on purpose: this used to be the one
+// place where the two disagreed, the C one rounding the literal to an
+// infinity while the LLVM one died packing it.
+
+include "libc/ctypes64"
+
+
+func main () -> Int {
+	// The first value that rounds up rather than down, and one well past it.
+	var just: Float16 = 65520.0
+	var over: Float16 = 70000.0
+
+	// Not a Float16 quirk — binary32 has the same edge, further out.
+	var wide: Float32 = 400000000000000000000000000000000000000.0
+
+	// Folded arithmetic overflows the same way a literal does.
+	var product = (Float16 60000.0) * (Float16 60000.0)
+
+	return 0
+}

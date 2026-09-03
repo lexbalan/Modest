@@ -8,7 +8,7 @@ import re
 from hlir import *
 from error import info, warning, error, fatal
 from unicode import chars_to_utf32
-from util import str_fractional, align_bits_up, nbits_for_num
+from util import str_fractional, align_bits_up, nbits_for_num, float_special, pack_float
 from common import features, get_setting
 from cshape import *
 from util import trace
@@ -451,11 +451,29 @@ def do_cvalue_literal_string(chars, width):
 	return CValueString(sstr, width=width)
 
 
+# У бесконечности и NaN десятичного литерала в C нет. __builtin_* - это
+# константные выражения, они годятся и в статическом инициализаторе, и не
+# тянут за собой <math.h> ради одного INFINITY.
+C_SPECIAL = {
+	'inf': '__builtin_inf()',
+	'-inf': '(-__builtin_inf())',
+	'nan': '__builtin_nan("")',
+}
+
+
 def do_cvalue_literal_rational(v, ctx):
 	# у Rational нет своего представления в C - литерал читается как double,
 	# поэтому и печатаем его в ширине double
-	sstr = str_fractional(v.asset, v.type.width if v.type.is_float() else 64)
-	return CValueIdentifier(sstr)
+	width = v.type.width if v.type.is_float() else 64
+	val = pack_float(v.asset, width)
+
+	# бесконечность могла и родиться при этом округлении, а не прийти
+	# готовой, поэтому смотрим на результат, а не на исходный asset
+	special = float_special(val)
+	if special is not None:
+		return CValueIdentifier(C_SPECIAL[special])
+
+	return CValueIdentifier(str_fractional(val, width))
 
 
 def do_cvalue_literal_char(t, v, ctx):

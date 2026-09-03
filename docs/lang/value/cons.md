@@ -40,7 +40,11 @@ Per-target rules (`X`, `Y` — widths; verified against the compiler):
 
 Key behaviors:
 
-- Compile-time overflow is an error: `Nat8 256` does not compile.
+- Compile-time overflow is an error: `Nat8 256` does not compile, and
+  neither does `Float16 70000.0` — the diagnostic names the edge the type
+  actually stops at (65504 for binary16). At run time the answer stays
+  IEEE 754's: an overflowing float is an infinity, and `unsafe` asks for
+  that answer at compile time too.
 - `IntY → NatX` applies `abs()` — a numeric conversion, not bit
   reinterpretation.
 - signed → `WordX` zero-extends, **not** sign-extends.

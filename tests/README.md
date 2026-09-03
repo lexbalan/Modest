@@ -68,10 +68,11 @@ prints nothing and returns 0 also "passes" otherwise.
 
 | Directive | Default | Meaning |
 |---|---|---|
-| `TEST: run` | `run` | `run` = compile, link, execute. `build` = stop after linking |
+| `TEST: run` | `run` | `run` = compile, link, execute. `build` = stop after linking. `reject` = mcc must refuse it |
 | `BACKENDS: c11, llvm` | `c11, llvm` | which backends to run under |
 | `EXPECT-EXIT: 0` | `0` | required exit code |
 | `EXPECT-OUT: text` | — | substring that must appear in stdout; repeatable, matched **in order** |
+| `EXPECT-ERROR: text` | — | substring of a diagnostic a `reject` test must produce; repeatable, matched **in order** |
 | `LINK: other.modest` | — | extra sources compiled and linked with this one (multi-module tests) |
 | `FLAGS: -funsafe` | — | extra flags passed to `mcc` |
 | `EXPECTED-FAIL: reason` | — | known-broken; see below |
@@ -82,6 +83,32 @@ only, and it still has to pass everywhere else.
 
 `modest` is a valid backend here, but it emits Modest source rather than
 something clang can link, so for it a test stops after code generation.
+
+### Tests that must not compile
+
+Some rules are only visible when they are broken: an out-of-range literal,
+a type that does not convert, a name used where it cannot be. Those are
+`reject` tests — nothing is built or run, mcc simply has to refuse the
+source:
+
+```modest
+// TEST: reject
+// EXPECT-ERROR: float overflow
+// EXPECT-ERROR: `Float16` holds at most 65504.0
+
+include "libc/ctypes64"
+
+func main () -> Int {
+	var over: Float16 = 70000.0
+	return 0
+}
+```
+
+`EXPECT-ERROR` is what makes it a test of the rule rather than a test that
+*something* went wrong — a crash also exits non-zero. Quote enough of the
+diagnostic to tell it apart from its neighbours, and remember that a
+compiler reports several errors in one run, so a file may exercise several
+sites and match them in order.
 
 ### Known-broken tests
 

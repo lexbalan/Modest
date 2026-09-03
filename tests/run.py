@@ -63,6 +63,7 @@ class Test:
 	backends: list = field(default_factory=lambda: list(DEFAULT_BACKENDS))
 	expect_exit: int = 0
 	expect_out: list = field(default_factory=list)
+	expect_error: list = field(default_factory=list)  # diagnostics a `reject` test must produce
 	link: list = field(default_factory=list)   # extra .modest sources to link in
 	flags: list = field(default_factory=list)  # extra mcc flags
 	xfail: dict = field(default_factory=dict)  # backend (or '*') -> reason
@@ -114,8 +115,8 @@ def apply_directive(t, key, scope, value, name):
 			fatal("%s: unknown backend '%s' in %s(...)" % (name, b, key))
 
 	if key == 'TEST':
-		if value not in ('run', 'build'):
-			fatal("%s: unknown TEST mode '%s' (expected run|build)" % (name, value))
+		if value not in ('run', 'build', 'reject'):
+			fatal("%s: unknown TEST mode '%s' (expected run|build|reject)" % (name, value))
 		t.mode = value
 	elif key == 'BACKENDS':
 		t.backends = [b.strip() for b in value.split(',') if b.strip()]
@@ -126,6 +127,8 @@ def apply_directive(t, key, scope, value, name):
 		t.expect_exit = int(value)
 	elif key == 'EXPECT-OUT':
 		t.expect_out.append(value)
+	elif key == 'EXPECT-ERROR':
+		t.expect_error.append(value)
 	elif key == 'LINK':
 		t.link += [s.strip() for s in value.split(',') if s.strip()]
 	elif key == 'FLAGS':
@@ -200,6 +203,31 @@ def run_case(t, backend, keep=False):
 			shutil.rmtree(workdir, ignore_errors=True)
 
 
+def do_reject(t, backend, sources, workdir, result):
+	"""Compile the sources expecting mcc to refuse one of them."""
+	for src in sources:
+		prefix = os.path.join(workdir, os.path.splitext(os.path.basename(src))[0])
+		cmd = [MCC] + t.flags + ['-o', prefix, '-mbackend=' + backend, src]
+		code, out = run(cmd, workdir, TIMEOUT_COMPILE)
+		if code == 0:
+			continue  # this one was fine; a later source may be the bad one
+
+		# The point of a negative test is *which* diagnostic came out, not
+		# merely that something did - a crash also exits non-zero.
+		rest = out
+		for n, want in enumerate(t.expect_error):
+			i = rest.find(want)
+			if i < 0:
+				where = ['matched %d of %d diagnostics, stopped before this one'
+				         % (n, len(t.expect_error))]
+				return result(FAIL, 'diagnostics missing %r' % want,
+				              where + last_output(out), out)
+			rest = rest[i + len(want):]
+		return result(PASS)
+
+	return result(FAIL, 'mcc accepted it, expected it to be rejected')
+
+
 def do_case(t, backend, workdir):
 	def result(status, reason='', where=None, log=''):
 		return Result(t, backend, status, reason, where or [], log)
@@ -214,6 +242,11 @@ def do_case(t, backend, workdir):
 	for s in sources:
 		if not os.path.isfile(s):
 			return result(FAIL, 'missing source %s' % s)
+
+	# A `reject` test is the negative of all the rest: nothing is built or
+	# run, mcc simply has to refuse the source - and for the stated reason.
+	if t.mode == 'reject':
+		return do_reject(t, backend, sources, workdir, result)
 
 	# 1. Modest -> backend source
 	generated = []

@@ -781,44 +781,11 @@ var i: Int32 = Int32 f        // error: integer overflow
   `EXPECTED-FAIL`. The working half of the table is
   `tests/lang/type/float/cons.modest`, which passes.
 
-## 39. LLVM backend dies on a float literal past the target's range
-
-```modest
-var m: Float16 = 70000.0     // c11: inf     llvm: OverflowError, traceback
-```
-
-```
-File "src/util.py", line 143, in pack_float
-    return struct.unpack('<e', struct.pack('<e', f))[0]
-OverflowError: float too large to pack with e format
-```
-
-- `pack_float` (`src/util.py:139`) rounds a folded constant to the width
-  of its type before the LLVM backend prints it — the comment at
-  `print_rational` (`src/backend/llvm.py:497`) explains why it must. For a
-  value outside the target's range `struct.pack` raises instead of
-  returning an infinity, and nothing catches it.
-- Not specific to `Float16`: the `'<f'` branch one line below does the same
-  for a `Float32` literal above 3.4e38. Binary16 is simply where an
-  ordinary five-digit number reaches it, since the largest finite one is
-  65504.
-- The C backend prints the literal as C and lets the compiler round it, so
-  the same source gives `inf` there. Two backends, one traceback and one
-  answer.
-- What the *language* should do here is a separate question, worth settling
-  with the fix: `docs/lang/value/cons.md` makes a compile-time integer
-  overflow an error (`Nat8 256` does not compile), and the same argument
-  could be made for a float literal that does not fit. IEEE 754 says
-  infinity. Either is defensible; a Python traceback is neither.
-- Coverage: `tests/lang/type/float/float16/range.modest`, marked
-  `EXPECTED-FAIL(llvm)`. It asserts the IEEE answer, which is what the
-  working backend already gives.
-
 ## 40. LLVM backend builds the `FixedX` scale in the source float's width
 
 ```modest
 var h: Float16 = 1.5
-var x: Fixed32 = Fixed32 h   // c11: 1.5   llvm: OverflowError, traceback
+var x: Fixed32 = Fixed32 h   // c11: 1.5   llvm: 32767.999985
 ```
 
 - A `FixedX` value is the number multiplied by `2^fraction`, so the
@@ -826,11 +793,10 @@ var x: Fixed32 = Fixed32 h   // c11: 1.5   llvm: OverflowError, traceback
   `Fixed32`. The run-time path in `src/backend/llvm.py` emits
   `f = llvm_eval_binary('fmul', v, scale)` with `scale` created at the
   *source* float's type. 65536 is not a binary16 — the largest one is
-  65504 — so the compiler dies packing the constant (through the same
-  `pack_float` as #39) before the product is ever emitted.
-- Even with #39 fixed this stays wrong: the scale would become `inf` and
-  the product with it, and any `Float16` source would convert to garbage.
-  The multiply has to happen at a width that holds `2^fraction`.
+  65504 — so the scale rounds to an infinity, and the product with it.
+- The compiler used to die packing that constant; it no longer does, which
+  only makes the fault quieter. The multiply has to happen at a width that
+  holds `2^fraction`.
 - `do_eval_from_fixed`, the function immediately below, has the mirror of
   this reasoning written out — "делим в ширине ИСТОЧНИКА: сузить раньше
   деления - потерять целую часть" — and gets the way out right. Only the

@@ -28,9 +28,10 @@
 // Float32 side of the same thing).
 //
 // Two of the type's neighbours are not here.  A literal outside binary16's
-// range takes the LLVM backend down instead of becoming an infinity
-// (BUGS.md #39, range.modest), and so does `Fixed32 <- Float16`, whose
-// scale does not fit the source width (BUGS.md #40, fixed.modest).  Unary
+// range does not compile at all, which is its own pair of tests
+// (range.modest and overflow.modest), and `Fixed32 <- Float16` converts to
+// garbage, its scale not fitting the source width (BUGS.md #40,
+// fixed.modest).  Unary
 // `-` is avoided throughout for BUGS.md #34, the way runtime.modest one
 // directory up avoids it — this file subtracts from zero instead.
 

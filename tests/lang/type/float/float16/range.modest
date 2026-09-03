@@ -3,28 +3,17 @@
 // EXPECT-OUT: passed: half range edge
 // EXPECT-OUT: passed: half overflow
 // EXPECT-OUT: passed: Float16 range
-// EXPECTED-FAIL(llvm): BUGS.md#39 a literal past the float's range crashes pack_float
 //
-// A `Rational` literal larger than the target float can hold.
+// The edge of binary16, from below and from above.
 //
-// 65504 is the largest finite binary16, so `65505.0` is already past the
-// range and `70000.0` well past it.  IEEE 754 rounds to nearest and lands
-// on infinity, which is what the C backend produces.  The LLVM backend does
-// not produce anything: `pack_float` (`src/util.py:143`) packs the folded
-// constant with `struct.pack('<e', ...)`, which raises `OverflowError`
-// rather than returning an infinity, and the traceback reaches the user.
-//
-// The same fault is in the `'<f'` branch one line below — a Float32 literal
-// above 3.4e38 dies the same way — but binary16 is where an ordinary
-// five-digit number reaches it.
-//
-// What the *language* should do with an out-of-range float literal is not
-// settled: `docs/lang/value/cons.md` makes a compile-time integer overflow
-// an error (`Nat8 256` does not compile), and the same argument could be
-// made here.  This file asserts the IEEE answer, which is the one backend
-// that works already gives.  If the language decides on a diagnostic
-// instead, this test turns into a negative one — but a Python traceback is
-// not either answer.
+// 65504 is the largest finite binary16, and everything up to it is an
+// ordinary number.  Past it a literal no longer compiles at all — that is
+// `overflow.modest`, next to this file.  What is left here is the other
+// half of the same rule: how the hardware behaves right at the edge, and
+// what happens when the range is left anyway, under `unsafe`, where the
+// answer is IEEE 754's — infinity.
+
+pragma unsafe
 
 include "libc/ctypes64"
 include "libc/stdio"
@@ -49,24 +38,33 @@ func testEdge () -> Bool {
 		return false
 	}
 
+	// A Float64 holds the same numbers as ordinary ones: the edge belongs
+	// to the target width and not to the literal.
+	var wide: Float64 = 70000.0
+	if wide != 70000.0 {
+		printf("Float64 70000.0 = %f, expected 70000.0\n", wide)
+		return false
+	}
+
 	printf("passed: half range edge\n")
 	return true
 }
 
 
-// One step past it, and further.
+// Past the edge the compiler refuses the literal, so getting there at all
+// takes `unsafe` — and then the answer is the one IEEE 754 gives.
 func testOverflow () -> Bool {
 	var max: Float16 = 65504.0
 
 	// 65520 is the first value that rounds up rather than down — halfway
 	// to the exponent that does not exist.
-	var just: Float16 = 65520.0
+	var just = unsafe Float16 65520.0
 	if not (Float64 just > 65504.0) {
 		printf("65520 = %f, expected infinity\n", Float64 just)
 		return false
 	}
 
-	var over: Float16 = 70000.0
+	var over = unsafe Float16 70000.0
 	if not (over > max) {
 		printf("70000 is not above the finite range\n")
 		return false
@@ -81,14 +79,6 @@ func testOverflow () -> Bool {
 
 	if Float64 over != Float64 just {
 		printf("70000 and 65520 differ, expected both to be infinity\n")
-		return false
-	}
-
-	// A Float64 holds the same literal as an ordinary number, so the
-	// overflow belongs to the target width and not to the literal.
-	var wide: Float64 = 70000.0
-	if wide != 70000.0 {
-		printf("Float64 70000.0 = %f, expected 70000.0\n", wide)
 		return false
 	}
 

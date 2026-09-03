@@ -7,7 +7,7 @@ from common import get_setting
 from error import info, warning, error, fatal
 from util import align_bits_up
 from pprint import pprint
-from util import str_fractional, pack_float
+from util import str_fractional, pack_float, float_special
 
 
 f = None
@@ -480,21 +480,39 @@ def llvm_print_value_str(x):
 
 
 
+# У LLVM для бесконечности и NaN десятичной записи нет - только
+# шестнадцатеричная, и double-запись он принимает одинаково для half,
+# float и double, так что ширина здесь ни при чем.
+LLVM_SPECIAL = {
+	'inf': '0x7FF0000000000000',
+	'-inf': '0xFFF0000000000000',
+	'nan': '0x7FF8000000000000',
+}
+
+
 def print_rational(x):
 	# число сперва нужно причесать,
 	# так, чтобы оно могло быть четко представлено в LLVM float/double
 	# иначе LLVM не примет его и сгенерирует ошибку
 	asset = x['asset']
 	type = x['type']
-	if type.is_rational():
-		return out(str_fractional(asset, 64))
+
 	# LLVM имеет дурацкую особенность - даже если создаешь float32,
 	# ты должен передать ему float64 константу, которую он сам обрежет
 	# а float32 литерал он не принимает принципиально.
 	# (!) Поэтому сперва округляем до ширины ТИПА, а печатаем в ширине
 	# double: иначе напечатанное не будет точно представимо во float32,
 	# и LLVM откажется его принимать
-	out(str_fractional(pack_float(asset, type.width), 64))
+	# (у Rational своей ширины нет - он и так едет в double)
+	val = pack_float(asset, 64 if type.is_rational() else type.width)
+
+	# бесконечность могла и родиться при этом округлении, а не прийти
+	# готовой, поэтому смотрим на результат, а не на исходный asset
+	special = float_special(val)
+	if special is not None:
+		return out(LLVM_SPECIAL[special])
+
+	out(str_fractional(val, 64))
 
 
 def llvm_print_value_num(x):

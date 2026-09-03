@@ -54,6 +54,7 @@ from value.cons import value_cons_implicit, value_cons_implicit_check, value_con
 
 from symtab import Symtab
 from util import nbits_for_num, nbytes_for_bits, python_div, python_rem
+from util import float_max, float_overflows, str_fractional
 
 
 
@@ -796,7 +797,12 @@ def do_value_bin_op(op, l, r, ti):
 			elif t.is_rational():
 				pass  # Rational is arbitrary precision (Fraction), no fixed width to overflow
 			elif t.is_float():
-				pass  # у FloatX диапазон задает экспонента, а не разрядность целой части
+				# разрядность целой части у FloatX ничего не говорит - диапазон
+				# задает экспонента, поэтому переполнение здесь свое
+				if float_overflows(asset, t.width):
+					error("float overflow", ti)
+					info("`%s` holds at most %s"
+						% (t.to_str(), str_fractional(float_max(t.width), 64)), ti)
 			else:
 				if need_width > t.width or (not t.is_signed() and asset < 0):
 					# у FixedX разрядность съедает масштаб, и "integer overflow"

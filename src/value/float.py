@@ -2,6 +2,7 @@
 from hlir import *
 from common import settings
 from error import info, warning, error
+from util import float_max, float_overflows, str_fractional
 from .fixed import fixed_to_number
 
 
@@ -40,6 +41,15 @@ def value_float_cons(t, v, method, ti):
 		if v.type.is_fixed():
 			# снимаем масштаб: сырое хранилище -> точное значение
 			a = fixed_to_number(v.asset, v.type.fraction)
+
+		# то же правило, что у целых (см. value_int_cons): за диапазон типа
+		# константа не выходит. В рантайме переполнение дает бесконечность,
+		# как велит IEEE 754, но здесь еще есть кому сказать об этом вслух
+		if method != 'unsafe' and float_overflows(a, t.width):
+			error("float overflow", ti)
+			info("`%s` holds at most %s"
+				% (t.to_str(), str_fractional(float_max(t.width), 64)), ti)
+
 		nv.set_asset(a)
 		nv.stage = HLIR_VALUE_STAGE_COMPILETIME
 		return nv
