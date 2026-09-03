@@ -5,6 +5,5 @@ include "libc/stdio"
 
 func main () -> Int {
 	printf("Hello World!\n")
-	var m: Float16 = 70000.0
 	return 0
 }
