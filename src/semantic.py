@@ -997,7 +997,7 @@ def do_value_ref(x):
 
 	# FIXIT: Сейчас сам факт того что взяли указатель на переменную считается тем что она инициализирована,
 	# что конечно неверно, но пока так. Однажды нужно придумать как проверить судьбу этого указателя.
-	v.is_initialized = True
+	value_lvalue_root(v).is_initialized = True
 
 	if v.is_bad() or v.is_undefined():
 		return v
@@ -1401,6 +1401,7 @@ def do_value_index(x):
 		from hlir.defs import type_char_create
 		_type = type_char_create(width=char_width, ti=ti)
 		nv = ValueIndex(_type, left, index, ti=ti)
+		nv.is_initialized = left.is_initialized
 		print("CC = %x" % char_code)
 		nv.set_asset(char_code)
 		nv.stage = HLIR_VALUE_STAGE_COMPILETIME
@@ -1427,6 +1428,7 @@ def do_value_index(x):
 	item_type = array_type.of
 
 	nv = ValueIndex(item_type, left, index, ti=ti)
+	nv.is_initialized = left.is_initialized
 
 	nv.stage = HLIR_VALUE_STAGE_RUNTIME
 	if not left.type.is_pointer():
@@ -1521,6 +1523,7 @@ def do_value_slice(x):
 
 	type = TypeArray(array_type.of, slice_volume, generic=False, ti=x['ti'])
 	nv = ValueSlice(type, left, index_from, index_to, x['ti'])
+	nv.is_initialized = left.is_initialized
 	if not left.type.is_pointer():
 		nv.is_immutable = left.is_immutable
 	nv.stage = stage
@@ -1595,6 +1598,7 @@ def acc(left, field_id, ti):
 			error("access to private field of record", ti)
 
 	nv = ValueAccessRecord(field.type, left, field, ti=ti)
+	nv.is_initialized = left.is_initialized
 
 	if not left.type.is_pointer():
 		nv.is_immutable = left.is_immutable
@@ -1867,6 +1871,7 @@ def do_value_subexpr(x):
 		return ValueBad(ti=x['ti'])
 	nv = ValueSubexpr(v, ti=x['ti'])
 	nv.stage = v.stage
+	nv.is_initialized = v.is_initialized
 	Value.cp_immediate(nv, v)
 	return nv
 
@@ -2096,10 +2101,10 @@ def do_stmt_assign(x):
 
 	if l.is_var():
 		l.is_initialized = True
-	elif l.is_index() or l.is_access_record():
+	elif l.is_index() or l.is_access_record() or l.is_slice():
 		# FIXIT: Пока считаем что если мы присвоили что то элементу массива или записи
 		# значит их (массив/запись) можно считать инициализированными, но это конечно полуправда
-		l.left.is_initialized = True
+		value_lvalue_root(l).is_initialized = True
 
 # Есть проблема - generic массив справа неявно приводится к типу массива слева
 # и как следствие right имеет тип левого (из ValueLiteral он превращается в ValueCons)
@@ -2206,7 +2211,7 @@ def do_stmt_asm(x):
 			items = c['value']['items']
 			spec = do_rvalue(items[0]['value'])
 			val = do_value(items[1]['value'])
-			val.is_initialized = True
+			value_lvalue_root(val).is_initialized = True
 			pair = (spec, val)
 			outputs.append(pair)
 
@@ -3368,4 +3373,13 @@ def add_att(x, att):
 #	return
 
 
+
+
+def value_lvalue_root(v):
+	# Спускаемся по цепочке доступа (a.b[i].c) к переменной, из которой она читает.
+	# Флаг is_initialized живёт на самой переменной, а узлы доступа создаются заново
+	# на каждое обращение, поэтому помечать нужно именно корень.
+	while v.is_index() or v.is_access_record() or v.is_slice():
+		v = v.left
+	return v
 

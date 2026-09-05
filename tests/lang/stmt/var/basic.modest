@@ -5,6 +5,7 @@
 // EXPECT-OUT: passed: var inference
 // EXPECT-OUT: passed: global zero init
 // EXPECT-OUT: passed: explicit zeroing
+// EXPECT-OUT: passed: partial init
 // EXPECT-OUT: passed: var
 //
 // Covers the local variable statement: the declaration forms, type
@@ -147,12 +148,52 @@ func testExplicitZeroing () -> Bool {
 }
 
 
+func testPartialInit () -> Bool {
+	// Writing one element is enough: the variable counts as assigned, and
+	// reading an element of it afterwards is accepted.  `uninitialized.modest`
+	// holds the other half — reading it *before* any write is refused.
+	var arr: [3]Int32
+	arr[0] = 7
+	arr[1] = 8
+	arr[2] = 9
+
+	if arr[0] + arr[1] + arr[2] != 24 {
+		printf("arr = [%d, %d, %d], expected [7, 8, 9]\n", arr[0], arr[1], arr[2])
+		return false
+	}
+
+	// The same for a field, however deep it sits.
+	var pt: Point
+	pt.x = 1
+	pt.y = 2
+
+	if pt.x != 1 or pt.y != 2 {
+		printf("pt = {%d, %d}, expected {1, 2}\n", pt.x, pt.y)
+		return false
+	}
+
+	// And taking a pointer to an element counts as well.
+	var buf: [2]Int32
+	var ptr = &buf[0]
+	*ptr = 5
+
+	if buf[0] != 5 {
+		printf("buf[0] = %d, expected 5\n", buf[0])
+		return false
+	}
+
+	printf("passed: partial init\n")
+	return true
+}
+
+
 func main () -> Int {
 	var result = true
 	result = testForms() and result
 	result = testInference() and result
 	result = testGlobalZeroInit() and result
 	result = testExplicitZeroing() and result
+	result = testPartialInit() and result
 
 	if not result {
 		printf("failed: var\n")

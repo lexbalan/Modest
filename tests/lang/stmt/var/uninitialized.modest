@@ -1,0 +1,52 @@
+// TEST: reject
+// BACKENDS: c11, llvm, modest
+// EXPECT-ERROR: attempt to use an uninitialized value
+// EXPECT-ERROR: attempt to use an uninitialized value
+// EXPECT-ERROR: attempt to use an uninitialized value
+// EXPECT-ERROR: attempt to use an uninitialized value
+// EXPECT-ERROR: attempt to use an uninitialized value
+//
+// A local must be assigned before it is read.  Globals are zero-initialized
+// and locals are not, so reading one the program never wrote is reading
+// whatever the stack happened to hold — the compiler refuses instead.
+//
+// The rule follows the value, not the syntax used to reach it: an index, a
+// field, a field of a field and a slice all read out of the same variable,
+// so all four are refused exactly like reading the whole thing is.  They
+// used to slip through, which made the two most common ways to touch an
+// array or a record the two ways to get garbage silently.
+//
+// Its accepted counterpart is `basic.modest`: writing one element or one
+// field first is enough to make the variable readable again.
+
+include "libc/ctypes64"
+include "libc/stdio"
+
+
+type Inner = {b: Int32}
+type Point = {x: Int32, y: Int32, inner: Inner}
+
+
+func main () -> Int {
+	// Reading an element.
+	var arr: [4]Int32
+	printf("%d\n", arr[0])
+
+	// Reading a field.
+	var pt: Point
+	printf("%d\n", pt.x)
+
+	// Reading a field of a field: the chain is followed to its root.
+	var nested: Point
+	printf("%d\n", nested.inner.b)
+
+	// Slicing reads the elements too.
+	var src: [4]Int32
+	var part = src[0:2]
+
+	// The whole value, which was always caught.
+	var whole: Point
+	var copy = whole
+
+	return 0
+}

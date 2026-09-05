@@ -219,32 +219,6 @@ printf("%d\n", K)             // no hang any more, but see below
   *should* is a separate question — see #29 for the remaining half of the
   misleading-diagnostic story.
 
-## 21. Uninitialized-value check is bypassed by index and field access
-
-```modest
-var buf: [4]Word8
-printf("%d\n", Nat32 buf[0])   // compiles; prints garbage
-
-var p: Point
-printf("%d\n", p.x)            // compiles; prints garbage
-```
-
-Reading the same locals as whole values is caught:
-
-```modest
-var x: Int32
-var q = p
-var b = buf                    // all three: error: attempt to use an uninitialized value
-```
-
-- So the check looks at the value itself but not at what an index or field
-  access reads out of it — the two most common ways to touch an array or a
-  record.
-- `docs/CHEATSHEET.md` states the rule without an exception ("local: must assign
-  before use (compile error otherwise)"), so the documentation currently
-  promises more than the compiler checks.
-- Verified for `[N]T` elements and record fields; both slip through.
-
 ## 22. An inline comment after a trailing operator breaks line continuation
 
 ```modest
