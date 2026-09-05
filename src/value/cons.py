@@ -27,7 +27,7 @@ def cons_can(to, from_type, method, ti):
 	assert(isinstance(ti, TextInfo))
 
 	if to.is_variant() and not from_type.is_variant():
-		return variant_can(to, from_type, method, ti)
+		return value_variant_can(to, from_type, method, ti)
 
 	if to.brand != from_type.brand:
 		if method == 'implicit':

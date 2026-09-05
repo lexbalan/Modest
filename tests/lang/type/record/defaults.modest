@@ -23,8 +23,7 @@
 //
 // What is *not* here is the nested record: a record-typed field with no
 // declared default, and the defaults of a literal written inside another
-// literal.  Both are broken — BUGS.md#44 — and `defaults_nested.modest`
-// is their reproducer.
+// literal.  Both live in `defaults_nested.modest`.
 
 include "libc/ctypes64"
 include "libc/stdio"

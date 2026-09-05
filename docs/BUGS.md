@@ -128,47 +128,6 @@ mcc -o out/prog -mbackend=c11 main.modest
 - Went unnoticed because every existing invocation follows the
   `-o <dir>/main main.modest` shape, where the two coincide.
 
-## 16. Backends disagree about a function that falls off its end
-
-```modest
-func maybe (a: Int32) -> Int32 {
-	if a > 0 {
-		return 111
-	}
-}                       // warning: expected return operator at end
-
-printf("%d\n", maybe(0))
-```
-
-```
-c11:  -1910964223       // whatever was in the register
-llvm: 0
-```
-
-- The same program, compiled two ways, produces two different answers.
-  Only a warning stands between the author and this, so it survives an
-  ordinary build.
-- Cause: the two backends fill the gap differently. `print_def_func`
-  (`src/backend/llvm.py`) appends `ret <default value>` when the body
-  does not end in a `return`, which is what keeps the emitted IR valid;
-  the C backend appends nothing and lets the function run off its end,
-  which is undefined behaviour in C. Neither is wrong on its own — they
-  simply were never made to agree.
-- Expected: one answer, whichever it is. Two ways to get there:
-  - reject the program in the frontend — promote `expected return
-    operator at end` from a warning to an error, so no backend ever sees
-    a function with a missing `return`. This fits a language that
-    otherwise refuses to guess (no implicit conversions, no implicit
-    `Bool`), and it costs nothing at runtime;
-  - or define the fallback in the language and make the C backend emit
-    the same default value the LLVM backend does.
-- The first is the smaller change and closes the divergence for good;
-  the second makes falling off the end a legal, defined thing to write,
-  which is a language decision, not a backend one.
-- Not reproduced by the test suite yet: a test would have to assert one
-  of the two behaviours, and which one is the open question — tracked in
-  [`lang/OPENQUESTIONS.md`](./lang/OPENQUESTIONS.md) #1.
-
 ## 18. `@cbyvalue` on a type definition crashes the compiler
 
 ```modest
@@ -866,31 +825,6 @@ sizeof(Color)           // c11: 4    llvm: 8
 - Coverage: `tests/lang/type/record/union.modest`, marked
   `EXPECTED-FAIL(llvm)`.
 
-## 44. A record-typed field does not get its own type's defaults
-
-```modest
-type Inner = {a: Int32 = 3, b: Int32 = 4}
-type Outer = {tag: Int32, in: Inner}
-
-var x: Outer = {}            // x.in = {0, 0}, expected {3, 4}
-var z: Outer = {in = {b = 9}}  // c11: {0, 9}   llvm: {3, 9}
-```
-
-- `docs/lang/type/record.md` says an omitted field takes "the default
-  value of the field's type", and for a record type that value is `{}` of
-  it — which is not all-zero storage: it is that type's own fields, each
-  at *its* default. Both backends zero the field instead.
-- A field with a default of its own (`in: Inner = {a = 9, b = 8}`) works;
-  it is the fallback to the type's default that skips the nested type.
-- The nested literal is a second, separate failure and the backends do
-  not agree on it: given `{in = {b = 9}}` the LLVM backend completes `a`
-  from `Inner`'s default (right), the C backend zeroes it.
-- Everything else about defaults — declared defaults, expressions,
-  array-typed and record-typed defaults, a literal overriding one — works
-  and is covered in `tests/lang/type/record/defaults.modest`.
-- Coverage: `tests/lang/type/record/defaults_nested.modest`, marked
-  `EXPECTED-FAIL` on both backends.
-
 ## 45. A comment after an empty record literal is a parse error
 
 ```modest
@@ -1164,3 +1098,52 @@ static struct empty e = (void){0};   // error: variable has incomplete type 'voi
   the struct's own type.
 - No reproducer in the suite: `tests/lang/type/record/` has no empty-record
   case.
+
+## 56. A named variant type crashes the C backend
+
+```modest
+type Err = @branded Nat32
+type Res = Int32 or Err     // never used
+```
+
+```
+TypeError: can only concatenate str (not "NoneType") to str
+```
+
+- `do_ctype_variant` (`src/backend/c11.py:240`) builds the C name from
+  `t.c_anon_id`, which is `None` until something assigns it — nothing
+  does for a variant reached through a `type` definition, and the
+  definition alone is enough to crash: the type need not be used.
+- The LLVM backend accepts the same file — but it does not lower a
+  variant at all (`eval_cons_or`, `src/backend/llvm.py:1612`, is a bare
+  `1/0`), so nothing that uses one gets past it either.
+- Experimental type. `tests/lang/type/variant.modest` covers what does
+  work and spells the type out inline to stay clear of this.
+
+## 57. Each written-out variant type becomes its own C struct
+
+```modest
+func divide (a: Int32, b: Int32) -> Int32 or Err { ... }
+
+var r: Int32 or Err = divide(10, 2)
+```
+
+```c
+struct __anonymous_variant_0 {uint8_t tag; union {int32_t _0; Err _1;} value;};
+struct __anonymous_variant_1 {uint8_t tag; union {int32_t _0; Err _1;} value;};
+...
+struct __anonymous_variant_1 r = divide(10, 2);
+// error: initializing 'struct __anonymous_variant_1' with an expression
+//        of incompatible type 'struct __anonymous_variant_0'
+```
+
+- Every occurrence of the same variant type is emitted as a fresh
+  anonymous struct, so two spellings of one type do not match in C. The
+  language has structural types; the C output makes them nominal, and
+  identical variants stop being the same type.
+- The natural way to write this — name the type once and use the name —
+  is #56, so both spellings of a shared variant type are currently
+  unusable and only a value inferred from the call (`let r = divide(...)`)
+  gets through.
+- Coverage: `tests/lang/type/variant.modest` holds the working shape and
+  points here.

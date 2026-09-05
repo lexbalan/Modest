@@ -1,0 +1,44 @@
+// TEST: build
+// BACKENDS: c11
+//
+// The variant type, as far as it goes today: a value of a member type
+// wraps into the variant implicitly, with the tag set to the member's
+// positional index.  Nothing here inspects the result — `when x is {...}`
+// is not implemented, so the active alternative cannot be read back at
+// the language level, and there is nothing to assert at run time yet.
+//
+// c11 only: the variant is a proof-of-concept in that backend, and the
+// LLVM backend does not lower `or` at all (`eval_cons_or`).  A *named*
+// variant (`type Res = Int32 or Err`) crashes the C backend as well —
+// BUGS.md#56 — so the type is spelled out inline here.
+//
+// This is the example from `docs/lang/type/variant.md`, which used to
+// crash the compiler outright.
+
+include "libc/ctypes64"
+include "libc/stdlib"
+
+
+type Err = @branded Nat32
+
+const errorDivZero = Err 1
+
+
+// Int32 is alternative 0, Err is alternative 1.
+func divide (a: Int32, b: Int32) -> Int32 or Err {
+	if b == 0 {
+		return errorDivZero
+	}
+	return a / b
+}
+
+
+// The variant travels back out of the call and can be held; what it holds
+// is not readable yet.  It is held with `let r = ...` and not with a
+// spelled-out `var r: Int32 or Err` on purpose: two written-out variant
+// types do not match in the C backend — BUGS.md#57.
+func main () -> Int {
+	let ok = divide(10, 2)
+	let bad = divide(1, 0)
+	return exitSuccess
+}

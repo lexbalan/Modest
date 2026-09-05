@@ -17,7 +17,14 @@ return                          // function returns Unit
   end of the body.
 - A non-`Unit` function should return a value on every path; a missing
   `return` at the end of the body is a compiler warning
-  (`expected return operator at end`).
+  (`expected return operator at end`), and the compiler then returns the
+  [default value](../value/README.md) of the return type — the same value
+  under every backend.
+- That check is syntactic: it asks whether the *last statement* of the
+  body is a `return`, so a function whose every path returns is warned
+  about too, and gets a `return` it can never reach. Whether falling off
+  the end should be an error instead is still
+  [open](../OPENQUESTIONS.md) (#1).
 
 ## Examples
 

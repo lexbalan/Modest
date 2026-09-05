@@ -34,7 +34,8 @@ that is settled.
 ### Where it stands today
 
 A missing `return` is a **warning** (`expected return operator at end`),
-and the backends then disagree about what the function gives back:
+and the frontend then appends a `return` of the **default value** of the
+return type, so every backend gives the same answer:
 
 ```modest
 func maybe (a: Int32) -> Int32 {
@@ -43,15 +44,19 @@ func maybe (a: Int32) -> Int32 {
 	}
 }
 
-printf("%d\n", maybe(0))    // c11: -1910964223    llvm: 0
+printf("%d\n", maybe(0))    // 0 everywhere
 ```
 
-Three things about the current state are worth knowing before deciding,
-because each of them is a consequence of not having decided:
+That makes the behaviour uniform, but it does not answer the question —
+it is option C below, taken so the divergence would stop costing anything
+while the question is open. Two things about the current state are worth
+knowing before deciding, because both are consequences of not having
+decided:
 
 - **The check is syntactic, not flow-based.** It asks whether the last
   statement of the body is a `return`, nothing more. So a function whose
-  every path demonstrably returns still gets the warning:
+  every path demonstrably returns still gets the warning — and an
+  unreachable `return` appended after it:
 
   ```modest
   func sign (a: Int32) -> Int32 {
@@ -69,51 +74,25 @@ because each of them is a consequence of not having decided:
   }                          // warning, though the body cannot be left
   ```
 
-- **Only one backend fills the gap.** The LLVM backend appends a default
-  `return` when the body does not end in one — which is what keeps its
-  output valid — and the C backend appends nothing, letting the function
-  run off its end, which is undefined behaviour in C. See
-  [`BUGS.md`](../BUGS.md) #16.
-
-- **Not every type has a default to fall back on.** Record return types
-  get nothing, and the emitted IR stops mid-function:
+- **The default value is the language's, not a backend's.** It is built
+  in the frontend, exactly as a written `T {}` / `T []` / `0` would be,
+  which is why a record return type gets its fields' own defaults rather
+  than zeroed storage:
 
   ```modest
-  type Point = {
-      x: Int32
-      y: Int32
+  type Marked = {
+      tag: Int32 = 7
+      n: Int32
   }
 
-  func makePoint () -> Point {
-  }              // warning: expected return operator at end
+  func makeMarked (a: Int32) -> Marked {
+      if a > 0 {
+          return Marked {tag = 1, n = 2}
+      }
+  }                          // falls through to Marked {} = {7, 0}
   ```
 
-  ```llvm
-  %Point = type {
-      %Int32,
-      %Int32
-  };
-
-  define internal %Point @makePoint() {
-  ```
-  ```
-  error: found end of file when expecting more instructions
-  ```
-
-  The file ends there — no body, no closing brace. Which return types are
-  covered today:
-
-  | Return type | Default `return` |
-  | :-- | :-- |
-  | `Int32`, `Bool`, `Float64` | `ret %Int32 0`, `ret %Bool 0`, ... |
-  | pointer | `ret %Int32* null` |
-  | array | not needed — returned through hidden storage, body is filled |
-  | **record** | **none — output truncated**, any size |
-
-  This one is not filed as a bug on purpose: whether it is a defect at all
-  depends on the answer below. Under option A the program stops being
-  legal and there is nothing to fix; under option B it becomes a plain
-  gap in the default-value rules.
+  Covered by `tests/lang/stmt/return.modest`.
 
 ### Options
 
@@ -131,31 +110,30 @@ about and no default value is ever needed.
 **B. Make the default explicit and legal.** Falling off the end returns
 the type's default value, as a defined language rule.
 
-- Requires the language to define a default for *every* return type —
-  including records, branded types, arrays, and pointers to functions —
-  and to say so in the reference.
-- Requires the C backend to emit the same value the LLVM backend does.
+- The machinery is already there (option C below built it); what is left
+  is the language's word for it — dropping the warning and saying in the
+  reference that this is a legal thing to write.
 - Makes a silently incomplete function a legal thing to write, which is
   the part worth weighing: the warning exists because that is usually a
   mistake.
 
 **C. Keep the warning, just make the backends agree.** The smallest
-change: pick one behaviour and implement it in both.
+change: pick one behaviour and implement it once. **This is what the
+compiler does today** — the frontend appends the default `return`, so
+there is nothing left for a backend to decide.
 
 - Closes the divergence without deciding anything.
-- Leaves a construct that is undefined-ish by policy and only warned
-  about — the state this list exists to get out of.
+- Leaves a construct that is only warned about, and whose value the
+  reference has to describe without blessing — the state this list exists
+  to get out of.
 
 ### What an answer touches
 
 - [`stmt/return.md`](./stmt/return.md) — currently documents the warning
-- the default-value rules, if option B
-- the end-of-body check in `semantic.py`, if option A
-- both backends, under any option
-
-### Related
-
-- [`BUGS.md`](../BUGS.md) #16 — the divergence itself
+  and the default `return` that follows it
+- the end-of-body check in `semantic.py`, under either option: option A
+  replaces it with reachability analysis, option B drops the warning
+- `tests/lang/stmt/return.modest` — pins down today's behaviour
 
 ---
 
@@ -239,7 +217,7 @@ arguments must stop being reordered.
 - Costs nothing and keeps the C output plain.
 - But the same program could then legitimately behave differently under
   `-mbackend=c11` and `-mbackend=llvm` — the shape of problem this
-  project keeps having to chase down (see [`BUGS.md`](../BUGS.md) #16).
+  project keeps having to chase down (question 1 above was one).
   "Unspecified" is a cheap answer that gets expensive later.
 
 ### What an answer touches
@@ -252,7 +230,7 @@ arguments must stop being reordered.
 ### Related
 
 - [`value/call.md`](./value/call.md) — argument passing and named arguments
-- [`BUGS.md`](../BUGS.md) #16 — backends disagreeing on unspecified behaviour
+- question 1 above — backends disagreeing on unspecified behaviour
 
 ---
 
@@ -432,4 +410,4 @@ when it hurts.
 ### Related
 
 - question 2 above — the same shape, for argument evaluation order
-- [`BUGS.md`](../BUGS.md) #16 — backends disagreeing about unstated behaviour
+- question 1 above — backends disagreeing about unstated behaviour

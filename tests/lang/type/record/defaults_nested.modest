@@ -4,23 +4,18 @@
 // EXPECT-OUT: passed: omitted record field
 // EXPECT-OUT: passed: nested literal
 // EXPECT-OUT: passed: nested record defaults
-// EXPECTED-FAIL: BUGS.md#44 a nested record does not get its own defaults
 //
 // The defaults of a record type reached through a field of another record.
 //
 // A field takes "the default value of its type" when the literal omits it,
 // and for a record type that value is `{}` of it — which is not all-zero
-// storage: it is that type's own fields, each at *its* default.  Neither
-// backend builds it that way, and they do not agree on how they get it
-// wrong, so both halves of the page are here in one reproducer.
+// storage: it is that type's own fields, each at *its* default.
 //
-// `testOmittedField` is the field the outer literal never mentions: both
-// backends zero it instead of constructing it.  `testNestedLiteral` is the
-// field given a literal of its own, partially filled: LLVM completes it
-// from `Inner`'s defaults (right), C11 zeroes what the literal left out.
+// `testOmittedField` is the field the outer literal never mentions;
+// `testNestedLiteral` is the field given a literal of its own, partially
+// filled, where what the literal leaves out is still Inner's business.
 //
-// The rest of the defaults machinery works and is tested in
-// `defaults.modest`; only the step through a record-typed field is broken.
+// The rest of the defaults machinery is tested in `defaults.modest`.
 
 include "libc/ctypes64"
 include "libc/stdio"

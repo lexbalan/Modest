@@ -2201,13 +2201,20 @@ def create_default_value(t, ti):
 	assert(isinstance(t, Type))
 	assert(ti != None)
 
+	# Составной литерал строим ровно так же, как его строит фронтенд для
+	# написанного руками `T {}` / `T []`: сперва generic-значение, затем
+	# явное приведение к t (именно явное: у branded-типа своя марка, и
+	# неявно из generic-литерала он не конструируется).  Бэкендам такая
+	# форма уже знакома
 	if t.is_array():
 		from value.array import value_array_create
-		return value_array_create(t, items=[], ti=ti)
+		from value.cons import value_cons_explicit
+		return value_cons_explicit(t, value_array_create(None, items=[], ti=ti), ti)
 
 	if t.is_record():
 		from value.record import value_record_create
-		return value_record_create(t, initializers=[], ti=ti)
+		from value.cons import value_cons_explicit
+		return value_cons_explicit(t, value_record_create(None, initializers=[], ti=ti), ti)
 
 	return ValueLiteral(t, asset=0, ti=ti)
 

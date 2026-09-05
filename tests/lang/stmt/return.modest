@@ -6,12 +6,15 @@
 // EXPECT-OUT: passed: return record
 // EXPECT-OUT: passed: return array
 // EXPECT-OUT: passed: unit return
+// EXPECT-OUT: passed: missing return
 // EXPECT-OUT: passed: return
 //
 // Covers the `return` statement: returning a value, the implicit
 // construction of that value to the declared return type, composite
-// return types (records and arrays, which travel by value), and the bare
-// `return` of a Unit function (which may also be left out entirely).
+// return types (records and arrays, which travel by value), the bare
+// `return` of a Unit function (which may also be left out entirely), and
+// the body that falls off its end — a warning, and the default value of
+// the return type, the same one under every backend.
 
 include "libc/ctypes64"
 include "libc/stdio"
@@ -250,6 +253,126 @@ func testUnit () -> Bool {
 }
 
 
+// A body that falls off its end warns (`expected return operator at end`)
+// and returns the default value of its type — which is what every backend
+// has to agree on, since nothing in the source says what comes back.
+func fellOffScalar (a: Int32) -> Int32 {
+	if a > 0 {
+		return 111
+	}
+}
+
+
+func fellOffFloat (a: Int32) -> Float32 {
+	if a > 0 {
+		return 1.5
+	}
+}
+
+
+func fellOffBool (a: Int32) -> Bool {
+	if a > 0 {
+		return true
+	}
+}
+
+
+func fellOffPointer (a: Int32) -> *Int32 {
+	if a > 0 {
+		return &sharedPoint.x
+	}
+}
+
+
+// A record default is not all-zero storage — it is the type's own fields,
+// each at its default — so the fall-through builds `Marked {}`, not a
+// zeroed struct.
+type Marked = {
+	tag: Int32 = 7
+	n: Int32
+}
+
+
+func fellOffRecord (a: Int32) -> Marked {
+	if a > 0 {
+		return Marked {tag = 1, n = 2}
+	}
+}
+
+
+func fellOffArray (a: Int32) -> [3]Int32 {
+	if a > 0 {
+		return [3]Int32 [1, 2, 3]
+	}
+}
+
+
+// A branded type carries a mark of its own, and the value that fills the
+// gap has to carry it too — it is `Tag {}`, not a bare record literal.
+type Tag = @branded {
+	id: Int32 = 5
+	n: Int32
+}
+
+
+func fellOffBranded (a: Int32) -> Tag {
+	if a > 0 {
+		return Tag {id = 1, n = 2}
+	}
+}
+
+
+func testMissingReturn () -> Bool {
+	// The path that does return is untouched by the added one.
+	if fellOffScalar(1) != 111 {
+		printf("fellOffScalar(1) = %d, expected 111\n", fellOffScalar(1))
+		return false
+	}
+
+	if fellOffScalar(0) != 0 {
+		printf("fellOffScalar(0) = %d, expected 0\n", fellOffScalar(0))
+		return false
+	}
+
+	if fellOffFloat(0) != 0.0 {
+		printf("fellOffFloat(0) = %f, expected 0.0\n", Float64 fellOffFloat(0))
+		return false
+	}
+
+	if fellOffBool(0) {
+		printf("fellOffBool(0) = true, expected false\n")
+		return false
+	}
+
+	if fellOffPointer(0) != nil {
+		printf("fellOffPointer(0) is not nil\n")
+		return false
+	}
+
+	let m = fellOffRecord(0)
+	if m.tag != 7 or m.n != 0 {
+		printf("fellOffRecord(0) = {%d, %d}, expected {7, 0}\n", m.tag, m.n)
+		return false
+	}
+
+	let t = fellOffBranded(0)
+	if t.id != 5 or t.n != 0 {
+		printf("fellOffBranded(0) = {%d, %d}, expected {5, 0}\n", t.id, t.n)
+		return false
+	}
+
+	let a = fellOffArray(0)
+	if a[0] != 0 or a[1] != 0 or a[2] != 0 {
+		printf("fellOffArray(0) = [%d, %d, %d], expected [0, 0, 0]\n",
+			a[0], a[1], a[2])
+		return false
+	}
+
+	printf("passed: missing return\n")
+	return true
+}
+
+
 func main () -> Int {
 	var result = true
 	result = testValue() and result
@@ -257,6 +380,7 @@ func main () -> Int {
 	result = testRecord() and result
 	result = testArray() and result
 	result = testUnit() and result
+	result = testMissingReturn() and result
 
 	if not result {
 		printf("failed: return\n")
