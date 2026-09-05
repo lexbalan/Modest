@@ -309,9 +309,9 @@ def needd(x):
 
 
 
-def initializers_are_equal(a, b):
+def initializers_arent_equal(a, b):
 	if len(a) != len(b):
-		return False
+		return True
 
 	i = 0
 	while i < len(a):
@@ -319,19 +319,22 @@ def initializers_are_equal(a, b):
 		ini_right = b[i]
 
 		if ini_left.id.str != ini_right.id.str:
-			return False
+			return True
 		if ini_left.id.c != ini_right.id.c:
-			return False
+			return True
 		if ini_left.id.common != ini_right.id.common:
-			return False
+			return True
 
-		if ini_right.value.type.is_concretic():
-			if not Type.eq(ini_left.value.type, ini_right.value.type):
-				return False
+		if ini_left.value.type.is_fixed() and ini_right.value.type.is_rational():
+			return True
+
+		#if ini_right.value.type.is_concretic():
+		#	if not Type.eq(ini_left.value.type, ini_right.value.type):
+		#		return True
 
 		i += 1
 
-	return True
+	return False
 
 
 
@@ -503,14 +506,17 @@ def do_cvalue_literal_array(v, ctx):
 	return do_array_literal_from_items(v.asset, ctx=ctx)
 
 
-
 def do_cvalue_literal_record(v, ctx):
+	return do_cvalue_literal_record_from_asset_list(v.asset, ctx)
+
+
+def do_cvalue_literal_record_from_asset_list(asset, ctx):
+	assert(isinstance(asset, list))
 	items = []
-	for kv in v.asset:
+	for kv in asset:
 		if not kv.value.is_undefined():
 			inititlizer = do_cinitializer(kv.value.type, kv.value, ctx=ctx)
 			items.append(KV(get_id_str(kv), inititlizer, kv.nl))
-
 	nv = CValueStruct(items)
 	return nv
 
@@ -685,16 +691,6 @@ def do_cvalue_cons_array(x, ctx):
 	return cv
 
 
-
-
-def initializer_already_here(items, initializer_id):
-	for item in items:
-		if item.key == initializer_id:
-			return True
-	return False
-
-
-
 def do_cvalue_cons_record(x, ctx):
 	to_type = x.type
 	value = x.value
@@ -723,22 +719,27 @@ def do_cvalue_cons_record(x, ctx):
 	tt = do_ctype(to_type)
 
 	if x.value.is_immediate():
-		if not initializers_are_equal(x.asset, value.asset):
+		if initializers_arent_equal(x.asset, value.asset):
 			# Если у нас в ValueCons asset отличается от asset в ValueCons#value
 			# То печатаем литерал структуры из нашего asset
-			record = do_cvalue_literal_record(x.value, ctx=ctx)
+			asset = []
 
+			# сперва добавим в asset те поля что указаны в литерале из которого конструируем
+			# (⚠️ но сами поля берем свои а не из литерала ⚠️)
+			for value_ini in x.value.asset:
+				cons_ini = get_initializer_by_id_str(x.asset, value_ini.id.str)
+				assert(cons_ini != None)
+				asset.append(cons_ini)
+
+			# затем добавим поля, которые имеют default value отличное от zero
 			# add extra non-zero items ⚠️
-			for kv in x.asset:
-				if not kv.value.is_undefined():
-					if kv.value.is_zero():
-						continue
-					if initializer_already_here(record.items, get_id_str(kv)):
-						continue
+			for cons_ini in x.asset:
+				if get_initializer_by_id_str(asset, get_id_str(cons_ini)) != None:
+		 			continue
+				if not cons_ini.value.is_zero():
+					asset.append(cons_ini)
 
-					inititlizer = do_cinitializer(kv.value.type, kv.value, ctx=ctx)
-					record.items.append(KV(get_id_str(kv), inititlizer, kv.nl))
-
+			record = do_cvalue_literal_record_from_asset_list(asset, ctx)
 			cv = CValueCast(tt, record)
 			return cv
 
@@ -1459,7 +1460,7 @@ def do_cvalue_default(x, ctx):
 	elif x.type.is_array():
 		return do_cvalue_literal_array(ValueLiteral(x.type, [], ti=None), ctx)
 	elif x.type.is_record():
-		return do_cvalue_literal_record(ValueLiteral(x.type, [], ti=None), ctx)
+		return do_cvalue_literal_record_from_asset_list([], ctx)
 	elif x.type.is_pointer():
 		return CValueIdentifier("NULL")
 	else:
@@ -3014,4 +3015,13 @@ network_headers = [
 ]
 
 STD_HEADERS = libc_headers + iso_c_headers + posix_headers + network_headers
+
+
+def get_initializer_by_id_str(initializers, initializer_id_str):
+	#print("get_initializer_by_id_str(%s)" % initializer_id_str)
+	for ini in initializers:
+		if ini.id.str == initializer_id_str:
+			return ini
+	return None
+
 

@@ -1092,3 +1092,75 @@ var q: Point = Point b     // error: cannot construct 'Point' from 'Brand' value
   which is the same code path minus the brand.
 - No reproducer in the suite: the branded type has no test file yet, and
   `tests/lang/type/branded.modest` is where one belongs.
+
+## 53. C backend drops the field type in a record literal initializer
+
+```modest
+var deep: {inner: {f: Fixed32}} = {inner = {f = 2.0}}
+var withArr: {a: [2]Fixed32} = {a = [1.0, 2.0]}
+```
+
+```c
+static struct __anonymous_struct_1 deep = (struct __anonymous_struct_1){.inner = {.f = 2.0}};
+static struct __anonymous_struct_3 withArr = (struct __anonymous_struct_3){.a = {1.0, 2.0}};
+// expected: FIXED32(2.0, 16) / {FIXED32(1.0, 16), FIXED32(2.0, 16)}
+```
+
+- The literal is written out as the author typed it: no scale, no
+  construction. `f = 3.14` on a plain `Fixed32` variable and `k.f = 3.14`
+  on the same field both emit `FIXED32(3.14, 16)`, so it is only the
+  *initializer* position that loses the type. Anything whose construction
+  is not the identity is affected the same way; `FixedX` is just where it
+  shows loudest.
+- A field whose type is `FixedX` *directly* was fixed; what remains is
+  everything reached through one more level — a record-typed field, and
+  an array-typed field.
+- `value_record_cons` (`src/value/record.py:92`) builds the right thing:
+  `ValueCons#asset` holds one entry per field of the target record, each
+  value wrapped by `value_cons_implicit_check` to the field's type.
+  `do_cvalue_cons_record` (`src/backend/c11.py:725`) consults it only when
+  `initializers_arent_equal` says the two field lists differ, and that
+  predicate compares types under `if ini_right.value.type.is_concretic()`
+  — but the right list is always the *generic* record literal, whose
+  field types are never concretic. For a record- or array-typed field it
+  therefore answers "equal", and the fall-through prints
+  `do_cvalue(x.value)`: the untyped source literal.
+- The predicate cannot simply be dropped. `x.asset` carries every field
+  of the target, and printing all of it breaks `@layout("union")`
+  (`Overlay {word = w}` would gain `.low = 0`, and C's
+  last-initializer-wins clobbers the word —
+  `tests/lang/value/call.modest` catches this). Printing the whole of
+  `x.asset` unconditionally also costs readability: nested literals gain
+  a compound-literal cast at every level, and `.inputData = "abc"` on a
+  `char[32]` field becomes `{'a', 'b', 'c'}` (`examples/sha256`).
+- Fix: keep the predicate but ask it the right question — not "are the
+  field types equal" but "does the cons over this field do any work" —
+  and recurse into record- and array-typed fields. Note that `asset` is
+  polymorphic: a list of `Initializer` for a record, a list of `Value`
+  for an array, and a plain Python `str` for a string, so a recursion
+  over it must dispatch on the type first.
+- No reproducer in the suite: `tests/lang/type/fixed/comptime.modest` is
+  where a record-with-`Fixed32` initializer belongs.
+
+## 54. An empty record type is emitted as `void` in an initializer
+
+```modest
+type Empty = {}
+var e: Empty = {}
+```
+
+```c
+struct empty {uint8_t __placeholder;};
+static struct empty e = (void){0};   // error: variable has incomplete type 'void'
+```
+
+- The type is declared as a real struct with a placeholder byte, but
+  `do_cvalue_cons_record` (`src/backend/c11.py:700`) treats an empty
+  record as `Unit` and casts its initializer to `void`. The declaration
+  and the initializer disagree, and the translation unit does not
+  compile.
+- The two views of an empty record need to agree: either it is `Unit` and
+  gets no storage, or it is a struct and its initializer is `{0}` under
+  the struct's own type.
+- No reproducer in the suite: `tests/lang/type/record/` has no empty-record
+  case.
