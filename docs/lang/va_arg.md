@@ -26,9 +26,8 @@ __va_end(<#va#>)
   them from elsewhere (a count parameter, a format string).
 - A `__VA_List` may be passed on to C functions taking `va_list`
   (`vprintf`, `vsnprintf`, ...).
-- `__va_copy` duplicates a list — but reading the copy is currently
-  rejected (`attempt to use an uninitialized value`, see
-  [BUGS](../BUGS.md) #7).
+- `__va_copy` duplicates a list: the copy is walked with `__va_arg`
+  like the original and needs its own `__va_end`.
 - Both backends support varargs: `c11` emits `<stdarg.h>` calls, `llvm`
   the corresponding intrinsics.
 

@@ -21,8 +21,9 @@ clobbers:          [<#name#>, ...]
 - Constraint strings are the GCC ones: `"r"` — register, `"=r"` —
   written register, `"=&r"` — early-clobber output; clobbers list what
   else the code touches (`"cc"`, `"memory"`, register names).
-- An output operand counts as initializing its variable — an
-  uninitialized `var` written by `__asm` may be read afterwards.
+- An output operand is a write to its variable: what the asm leaves
+  there replaces the value the variable held, and is what is read
+  afterwards.
 - The asm text is target assembly: it must match the configured
   architecture (`cfg/*.toml`), the compiler does not inspect it.
 

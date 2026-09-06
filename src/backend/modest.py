@@ -698,10 +698,6 @@ def str_value_va_copy(x, ctx):
 	return s
 
 
-def str_value_default(x, ctx):
-	return "default(" + str_type(x.type) + ")"
-
-
 def str_value_subexpr(x, ctx):
 	return "(" + str_value(x.value) + ")"
 
@@ -742,7 +738,6 @@ def str_value(x, ctx=[], parent_expr=None):
 	elif x.is_va_start(): return str_value_va_start(x, ctx)
 	elif x.is_va_end(): return str_value_va_end(x, ctx)
 	elif x.is_va_copy(): return str_value_va_copy(x, ctx)
-	elif x.is_default(): return str_value_default(x, ctx)
 	elif x.is_undefined(): return "<undef>"
 	else: return "%s" % str(x.__class__)
 

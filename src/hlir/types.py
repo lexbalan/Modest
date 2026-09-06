@@ -1457,8 +1457,12 @@ class Type(Entity):
 		return ValueLiteral(self, asset=0, ti=ti)
 
 
+	# Ноль своего типа, помеченный как умолчание: значение обычное, а флаг
+	# хранит то, чего в нем самом не видно - что его никто не писал
 	def get_default_value(self, ti=None):
-		return self.create_zero_literal(ti)
+		v = self.create_zero_literal(ti)
+		v.default_value = True
+		return v
 
 
 	@staticmethod
@@ -1476,11 +1480,17 @@ class TypeBad(Type):
 		super().__init__(ti=ti)
 		self.incomplete = False
 
+	def create_zero_literal(self, ti=None):
+		return ValueBad(self, ti=ti)
+
 
 class TypeUndefined(Type):
 	def __init__(self, ti=None):
 		super().__init__(ti=ti)
 		self.incomplete = False
+
+	def create_zero_literal(self, ti=None):
+		return ValueUndefined(self, ti=ti)
 
 
 class TypeSimple(Type):
@@ -1513,9 +1523,6 @@ class TypeString(TypeSimple):
 
 	def create_zero_literal(self, ti=None):
 		return ValueLiteral(self, items=[], ti=ti)
-
-	def get_default_value(self, ti=None):
-		return self.create_zero_literal(ti)
 
 
 
@@ -1644,9 +1651,6 @@ class TypeArray(Type):
 	def create_zero_literal(self, ti=None):
 		return ValueArray(self, items=[], ti=ti)
 
-	def get_default_value(self, ti=None):
-		return self.create_zero_literal(ti)
-
 
 
 def calc_record_size_align(fields):
@@ -1710,10 +1714,6 @@ class TypeRecord(Type):
 	def create_zero_literal(self, ti=None):
 		return ValueRecord(self, initializers=[], ti=ti)
 
-	def get_default_value(self, ti=None):
-		return self.create_zero_literal(ti)
-
-
 
 class TypePointer(Type):
 	def __init__(self, to, generic=False, ti=None):
@@ -1730,7 +1730,7 @@ class TypeVaList(Type):
 		self.id.c = 'va_list'
 		self.id.llvm = '__VA_List'
 
-	def get_default_value(self, ti=None):
+	def create_zero_literal(self, ti=None):
 		return ValueUndefined(self)
 
 
@@ -1779,6 +1779,11 @@ class Value(Entity):
 		self.immutable = False
 		self.is_pure = False
 		self.is_initialized = True
+
+		# значение синтезировано компилятором как умолчание для типа:
+		# инициализатор не был написан (см. Type#get_default_value).
+		# Само значение при этом настоящее - ноль своего типа
+		self.default_value = False
 
 		# in case of scalar value type here is code
 		# in case of record value here is list of Initializer objects
@@ -1872,7 +1877,7 @@ class Value(Entity):
 		return isinstance(self, ValueUndefined)
 
 	def is_default(self):
-		return isinstance(self, ValueDefault)
+		return self.default_value
 
 	def is_literal(self):
 		return isinstance(self, ValueLiteral)
@@ -2111,14 +2116,6 @@ class ValueUndefined(Value):
 		super().__init__(type=type, ti=ti)
 		self.stage = HLIR_VALUE_STAGE_UNKNOWN  #! unknown compile stage is important for undefined value!
 		self.asset = None
-
-
-class ValueDefault(Value):
-	def __init__(self, type, ti=None):
-		assert(isinstance(type, Type))
-		super().__init__(type=type, ti=ti)
-		self.stage = HLIR_VALUE_STAGE_COMPILETIME
-		self.asset = '<default>'
 
 
 class ValueLiteral(Value):

@@ -227,16 +227,6 @@ def llvm_value_undef(x):
 	}
 
 
-def llvm_value_default(x):
-	#error("default value in llvm backend", x.ti)
-	return {
-		'isa': 'll_value',
-		'kind': 'default',
-		'type': x.type,
-		'is_adr': False
-	}
-
-
 def llvm_value_zero(type):
 	return {
 		'isa': 'll_value',
@@ -592,7 +582,6 @@ def llvm_print_value(x):
 	elif k == 'inline_getelemantptr': llvm_print_value_inline_getelemantptr(x)
 	elif k == 'zero': llvm_print_ValueZero(x)
 	elif k == 'undef': out("undef")
-	elif k == 'default': out("zeroinitializer")
 	else:
 		out("<llvm::unknown_value_kind '%s'>" % k)
 		info("<llvm::unknown_value_kind '%s'>" % k, x['ti'])
@@ -2143,8 +2132,7 @@ def do_eval(x):
 	assert(isinstance(x, Value))
 
 	y = None
-	if x.is_default(): y = llvm_value_default(x)
-	elif x.is_undefined(): y = llvm_value_undef(x)
+	if x.is_undefined(): y = llvm_value_undef(x)
 	elif x.is_literal(): y = do_eval_literal(x)
 	elif x.is_array(): y = do_eval_array(x)
 	elif x.is_record(): y = do_eval_record(x)

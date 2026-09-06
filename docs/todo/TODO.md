@@ -170,3 +170,48 @@ Also worth revisiting at the same time: `param_needs_holder` must be
 consulted in three places (parameter naming, the locals table, the
 holder `alloca`) and the emitted IR contradicts itself if they disagree
 — that coupling would be better expressed once.
+
+## Opt-out annotation for default initialization
+
+Design intent (Alex, 2026-09-06): a variable declared without an
+initializer is initialized to the default value of its type, so reading
+one is always defined. Where that costs too much — a large local buffer
+that is filled right after — an annotation says "do not initialize this
+one".
+
+```modest
+var buf: [4096]Byte        // zeroed on entry
+@noinit var buf: [4096]Byte    // name not decided
+```
+
+Status: the default half landed in `def_var_common` (`src/semantic.py`)
+— an undefined initializer becomes `var_type.get_default_value()`, and
+every type answers that through `create_zero_literal`. The annotation
+itself is not implemented.
+
+To resolve when implementing:
+
+- **The annotation is not visible where the default is substituted.**
+  `def_var_common` runs before annotations are attached:
+  `def_add_annotations` is called by `def_var_global` after it returns,
+  and `do_stmt_var` attaches local attributes after it too. Either
+  materialize the default later (in `def_var_local` / `def_var_global`,
+  once the attributes are known) or read `x['anno']` inside
+  `def_var_common`.
+- **Keep `is_initialized` false for an opted-out variable.** The
+  "attempt to use an uninitialized value" diagnostic (`do_rvalue`) is
+  driven by that flag; with default init it is now always true, and the
+  opted-out case is the only one left that still needs the check.
+  Otherwise the annotation is a hole with no diagnostic behind it.
+- **`tests/lang/stmt/var/uninitialized.modest` must be rewritten.** It
+  currently expects five uninitialized-read errors and fails on all
+  three backends; under the new rule it becomes the test for the
+  annotation.
+
+Settled (2026-09-06): the default is a real zero value carrying a
+`default_value` flag, not a separate `ValueDefault` class. The value is
+an ordinary literal everywhere it is printed; the flag holds the one
+thing not visible in it — that nobody wrote it — and the two places that
+care read it through `is_default()`: a global then gets no initializer
+(C and LLVM zero it anyway) and the `modest` backend prints the
+declaration back as it was written.

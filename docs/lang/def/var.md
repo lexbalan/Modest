@@ -19,11 +19,11 @@ var <#id1#>, <#id2#>, ... : <#type_expression#>                      // several 
   initializer is a generic literal, the *default* concrete type is selected:
   `Integer` → target `Int`, `Rational` → target `Float`, string → target
   `Str` (configurable per target, see `cfg/*.toml`).
-- **Initialization.** A *global* variable without an initializer is
-  zero-initialized (static storage). A *local* variable without an
-  initializer must be assigned before first use — reading it is a
-  compile-time error (`attempt to use an uninitialized value`). To
-  zero-initialize explicitly, use `= 0`, `= []` (arrays), `= {}`
+- **Initialization.** A variable without an initializer is initialized
+  to the default value of its type — `0`, `false`, `nil`, every element
+  and every field zero. This holds for a global and for a local alike,
+  so reading a variable nothing was written to yet is defined. To write
+  the zero out explicitly, use `= 0`, `= []` (arrays), `= {}`
   (records).
 - A global initializer must be a compile-time expression. Local initializers
   may be arbitrary runtime values.
@@ -33,14 +33,14 @@ var <#id1#>, <#id2#>, ... : <#type_expression#>                      // several 
 ## Examples
 
 ```modest
-var x: Int16                   // global: zero-initialized
+var x: Int16                   // no initializer: starts at 0
 var y = 10                     // Integer literal -> target Int
 var z: Int32 = 20
 var r, g, b: Nat8              // three variables of one type
 
 func main () -> Int {
-	var local: Int32           // reading it now would be a compile error
-	local = 5                  // assigned before use: ok
+	var local: Int32           // starts at 0, like the global above
+	local = 5                  // and is an ordinary variable afterwards
 
 	printf("%hd %d %d %d\n", x, y, z, local)
 	return 0

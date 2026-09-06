@@ -328,10 +328,6 @@ def initializers_arent_equal(a, b):
 		if ini_left.value.type.is_fixed() and ini_right.value.type.is_rational():
 			return True
 
-		#if ini_right.value.type.is_concretic():
-		#	if not Type.eq(ini_left.value.type, ini_right.value.type):
-		#		return True
-
 		i += 1
 
 	return False
@@ -1446,28 +1442,6 @@ def do_cvalue_new(x, ctx):
 
 
 
-def do_cvalue_default(x, ctx):
-	if x.type.is_integer() or x.type.is_int() or x.type.is_nat() or x.type.is_word():
-		return cvalue_literal_integer(0, width=x.type.width, is_unsigned=not x.type.is_signed(), ctx=ctx)
-	elif x.type.is_bool():
-		return CValueIdentifier(csettings['false_literal'])
-	elif x.type.is_char():
-		return CValueChar(0, width=x.type.width)
-	elif x.type.is_string():
-		return do_cvalue_literal_string("", width=x.type.width)
-	elif x.type.is_rational() or x.type.is_float():
-		return CValueIdentifier("0.0")
-	elif x.type.is_array():
-		return do_cvalue_literal_array(ValueLiteral(x.type, [], ti=None), ctx)
-	elif x.type.is_record():
-		return do_cvalue_literal_record_from_asset_list([], ctx)
-	elif x.type.is_pointer():
-		return CValueIdentifier("NULL")
-	else:
-		error("default value not implemented for type %s" % str(x.type), x.ti)
-		1/0
-
-
 # Смещение поля печатаем символьно - offsetof() из <stddef.h>, а не готовым
 # числом: раскладка записи остаётся делом C-компилятора (ср. cvalue_sizeof_type)
 def do_cvalue_offsetof(x, ctx):
@@ -1513,7 +1487,6 @@ def do_cvalue(x, ctx=[]):
 	elif x.is_va_end(): return do_cvalue_va_end(x, ctx)
 	elif x.is_va_copy(): return do_cvalue_va_copy(x, ctx)
 	elif x.is_new(): return do_cvalue_new(x, ctx)
-	elif x.is_default(): return do_cvalue_default(x, ctx)
 	elif x.is_undefined():
 		error("value undef in C backend", x.ti)
 		exit(1)

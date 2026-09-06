@@ -9,8 +9,9 @@
 // EXPECT-OUT: passed: var
 //
 // Covers the local variable statement: the declaration forms, type
-// inference, and the split between globals (zero-initialized) and locals
-// (must be assigned before use).
+// inference, and the default initialization a declaration without an
+// initializer gets — the same for a global and for a local.
+// `default_init.modest` holds the default-value rule itself.
 
 include "libc/ctypes64"
 include "libc/stdio"
@@ -23,7 +24,7 @@ type Point = {
 }
 
 
-// Globals are zero-initialized; no initializer needed.
+// No initializer needed: a variable starts at the default of its type.
 var globalCounter: Int32
 var globalArray: [3]Int32
 var globalPoint: Point
@@ -125,7 +126,8 @@ func testGlobalZeroInit () -> Bool {
 
 
 func testExplicitZeroing () -> Bool {
-	// Locals get no implicit zero — these are the explicit forms.
+	// The explicit forms of what a declaration without an initializer
+	// now does by itself.
 	var n: Int32 = 0
 	var arr: [3]Int32 = []
 	var pt: Point = {}
@@ -149,9 +151,8 @@ func testExplicitZeroing () -> Bool {
 
 
 func testPartialInit () -> Bool {
-	// Writing one element is enough: the variable counts as assigned, and
-	// reading an element of it afterwards is accepted.  `uninitialized.modest`
-	// holds the other half — reading it *before* any write is refused.
+	// Writing one element leaves the rest at the default, and the
+	// variable is an ordinary one either way.
 	var arr: [3]Int32
 	arr[0] = 7
 	arr[1] = 8

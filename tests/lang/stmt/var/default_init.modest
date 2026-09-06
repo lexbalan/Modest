@@ -1,0 +1,219 @@
+// TEST: run
+// BACKENDS: c11, llvm, modest
+// EXPECT-EXIT: 0
+// EXPECT-OUT: passed: scalar defaults
+// EXPECT-OUT: passed: aggregate defaults
+// EXPECT-OUT: passed: reading through a path
+// EXPECT-OUT: passed: same as the explicit form
+// EXPECT-OUT: passed: writable afterwards
+// EXPECT-OUT: passed: default init
+//
+// A variable declared without an initializer holds the default value of
+// its type.  Reading one before anything was written to it is therefore
+// defined — it reads the default, not whatever the stack happened to
+// hold — and this test is the check that the default really is there.
+//
+// The rule follows the value, not the syntax used to reach it: an index,
+// a field, a field of a field and a slice all read out of the same
+// variable, so all four see the default exactly like reading the whole
+// thing does.
+//
+// Its counterpart is `basic.modest`, which covers the declaration forms
+// themselves.  An annotation to opt out of the default (for a large
+// buffer that is filled right after) is still to come — see
+// `docs/todo/TODO.md`; that is what will need its own reject test.
+
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+
+
+type Inner = {b: Int32}
+type Point = {x: Int32, y: Int32, inner: Inner}
+
+
+func testScalars () -> Bool {
+	var n: Int32
+	var u: Nat16
+	var w: Word32
+	var f: Float32
+	var c: Char
+	var flag: Bool
+	var ptr: *Int32
+
+	if n != 0 or u != 0 {
+		printf("n = %d, u = %d, expected 0, 0\n", n, u)
+		return false
+	}
+	if w != 0x0 {
+		printf("w = %X, expected 0\n", w)
+		return false
+	}
+	if f != 0.0 {
+		printf("f = %f, expected 0.0\n", f)
+		return false
+	}
+	if c != Char 0 {
+		printf("c is not the zero character\n")
+		return false
+	}
+	if flag {
+		printf("flag is true, expected false\n")
+		return false
+	}
+	if ptr != nil {
+		printf("ptr is not nil\n")
+		return false
+	}
+
+	printf("passed: scalar defaults\n")
+	return true
+}
+
+
+func testAggregates () -> Bool {
+	var arr: [4]Int32
+	var buf: [8]Char
+	var pt: Point
+
+	var i: Int32 = 0
+	while i < 4 {
+		if arr[i] != 0 {
+			printf("arr[%d] = %d, expected 0\n", i, arr[i])
+			return false
+		}
+		i = i + 1
+	}
+
+	i = 0
+	while i < 8 {
+		if buf[i] != Char 0 {
+			printf("buf[%d] is not the zero character\n", i)
+			return false
+		}
+		i = i + 1
+	}
+
+	if pt.x != 0 or pt.y != 0 or pt.inner.b != 0 {
+		printf("pt = {%d, %d, {%d}}, expected all zero\n", pt.x, pt.y, pt.inner.b)
+		return false
+	}
+
+	printf("passed: aggregate defaults\n")
+	return true
+}
+
+
+// The four shapes that used to be the ways to read garbage silently:
+// each one reaches the variable through a path, and each one now sees
+// the default.
+func testPaths () -> Bool {
+	// Reading an element.
+	var arr: [4]Int32
+	if arr[0] != 0 {
+		printf("arr[0] = %d, expected 0\n", arr[0])
+		return false
+	}
+
+	// Reading a field.
+	var pt: Point
+	if pt.x != 0 {
+		printf("pt.x = %d, expected 0\n", pt.x)
+		return false
+	}
+
+	// Reading a field of a field: the chain is followed to its root.
+	var nested: Point
+	if nested.inner.b != 0 {
+		printf("nested.inner.b = %d, expected 0\n", nested.inner.b)
+		return false
+	}
+
+	// Slicing reads the elements too.
+	var src: [4]Int32
+	var part = src[0:2]
+	if part[0] != 0 or part[1] != 0 {
+		printf("part = [%d, %d], expected [0, 0]\n", part[0], part[1])
+		return false
+	}
+
+	// The whole value.
+	var whole: Point
+	var copy = whole
+	if copy.x != 0 or copy.y != 0 {
+		printf("copy = {%d, %d}, expected {0, 0}\n", copy.x, copy.y)
+		return false
+	}
+
+	printf("passed: reading through a path\n")
+	return true
+}
+
+
+// Leaving the initializer out and writing the zero out by hand mean the
+// same thing — the compiler writes what you would have written.
+func testSameAsExplicit () -> Bool {
+	var implicitN: Int32
+	var explicitN: Int32 = 0
+	var implicitArr: [3]Int32
+	var explicitArr: [3]Int32 = []
+	var implicitPt: Point
+	var explicitPt: Point = {}
+
+	if implicitN != explicitN {
+		printf("implicitN = %d, explicitN = %d\n", implicitN, explicitN)
+		return false
+	}
+	if implicitArr != explicitArr {
+		printf("implicitArr does not equal explicitArr\n")
+		return false
+	}
+	if implicitPt != explicitPt {
+		printf("implicitPt does not equal explicitPt\n")
+		return false
+	}
+
+	printf("passed: same as the explicit form\n")
+	return true
+}
+
+
+// The default is a starting value, not a constraint: the variable is an
+// ordinary one afterwards.
+func testWritable () -> Bool {
+	var n: Int32
+	n = n + 7
+
+	var arr: [3]Int32
+	arr[1] = 8
+
+	var pt: Point
+	pt.inner.b = 9
+
+	if n != 7 or arr[1] != 8 or pt.inner.b != 9 {
+		printf("n = %d, arr[1] = %d, pt.inner.b = %d, expected 7, 8, 9\n",
+			n, arr[1], pt.inner.b)
+		return false
+	}
+
+	printf("passed: writable afterwards\n")
+	return true
+}
+
+
+func main () -> Int {
+	var result = true
+	result = testScalars() and result
+	result = testAggregates() and result
+	result = testPaths() and result
+	result = testSameAsExplicit() and result
+	result = testWritable() and result
+
+	if not result {
+		printf("failed: default init\n")
+		return exitFailure
+	}
+
+	printf("passed: default init\n")
+	return exitSuccess
+}

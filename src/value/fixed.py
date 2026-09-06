@@ -105,7 +105,7 @@ def value_fixed_cons(t, v, method, ti):
 	nv = ValueCons(t, t, v, method, ti=ti)
 
 	# numbers.Real покрывает int / Fraction / float разом,
-	# и отсекает asset у ValueDefault ('<default>') и агрегатов (list)
+	# и отсекает asset агрегатов (list)
 	if v.is_immediate() and isinstance(v.asset, numbers.Real):
 		nv.set_asset(fixed_cons_immediate(t, v, ti))
 		nv.stage = HLIR_VALUE_STAGE_COMPILETIME

@@ -1121,3 +1121,49 @@ struct __anonymous_variant_1 r = divide(10, 2);
   gets through.
 - Coverage: `tests/lang/type/variant.modest` holds the working shape and
   points here.
+
+## 58. `var` of type `Unit` is accepted and emits `void u;`
+
+```modest
+func main () -> Int {
+	var u: Unit
+	return 0
+}
+```
+
+```c
+void u;   // error: variable has incomplete type 'void'
+```
+
+- `Type.is_forbidden_var` (`src/hlir/types.py:1231`) rejects a function
+  type and a zero-volume array but says nothing about `Unit`, so a
+  variable of the type that has no storage gets storage anyway.
+- `Unit` is the result type of a function that returns nothing; a
+  variable of it is meaningless and belongs with the other forbidden
+  types in `is_forbidden_var`, next to `is_func()`.
+- No reproducer in the suite: a `reject` test belongs in
+  `tests/lang/type/unit/`.
+
+## 59. A local unsized array is accepted and emits `int32_t a[];`
+
+```modest
+func main () -> Int {
+	var a: []Int32
+	return 0
+}
+```
+
+```c
+int32_t a[];   // error: definition of variable with array type needs an
+               //        explicit size or an initializer
+```
+
+- `def_var_common` (`src/semantic.py:2483`) calls
+  `is_forbidden_var(unsized_array_forbidden=False)`, which lets `[]T`
+  through for every variable. It is meant for a global that is only
+  declared (`@extern`), but a local has to have a size — an unsized
+  array exists only behind a pointer.
+- The check needs to depend on the storage class: forbidden for a local,
+  allowed only for an extern declaration.
+- No reproducer in the suite: a `reject` test belongs in
+  `tests/lang/type/array/`.
