@@ -282,7 +282,7 @@ declare %Bool @ringWord8_get(%ringWord8_RingWord8* %q, %Word8* %b)
 ; -- endstrings --
 @bq0 = internal global %queueWord8_QueueWord8 zeroinitializer
 @br0 = internal global %ringWord8_RingWord8 zeroinitializer
-@ii = internal global %Int32 zeroinitializer
+@ii = internal global %Int32 0
 define internal void @fill(%Nat32 %n) {
 	%1 = alloca %Nat32, align 4
 	store %Nat32 0, %Nat32* %1
@@ -336,6 +336,7 @@ then_0:
 	br label %endif_0
 endif_0:
 	%7 = alloca %Word8, align 1
+	store %Word8 0, %Word8* %7
 	%8 = call %Bool @queueWord8_get(%queueWord8_QueueWord8* @bq0, %Word8* %7)
 	%9 = load %Word8, %Word8* %7
 	%10 = sext %Word8 %9 to %Int

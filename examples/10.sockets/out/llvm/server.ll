@@ -197,10 +197,14 @@ declare %Int @accept(%Int %socket, %SockAddr* %addr, %SocklenT* %addrlen)
 ; -- endstrings --
 define internal %Bool @writeFile(%Int %sockFd) {
 	%1 = alloca [1024 x %Char8], align 1
-	%2 = call i8* @fopen(%ConstCharStr* bitcast ([10 x i8]* @.str1 to [0 x i8]*), %ConstCharStr* bitcast ([2 x i8]* @.str2 to [0 x i8]*))
+	%2 = zext i16 1024 to %Nat32
+	%3 = mul %Nat32 %2, 1
+	%4 = bitcast [1024 x %Char8]* %1 to i8*
+	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %4, i8 0, %Nat32 %3, i1 0)
+	%5 = call i8* @fopen(%ConstCharStr* bitcast ([10 x i8]* @.str1 to [0 x i8]*), %ConstCharStr* bitcast ([2 x i8]* @.str2 to [0 x i8]*))
 ; if_0
-	%3 = icmp eq i8* %2, null
-	br %Bool %3 , label %then_0, label %endif_0
+	%6 = icmp eq i8* %5, null
+	br %Bool %6 , label %then_0, label %endif_0
 then_0:
 	call void @perror(%ConstCharStr* bitcast ([27 x i8]* @.str3 to [0 x i8]*))
 	ret %Bool 0
@@ -211,20 +215,20 @@ endif_0:
 again_1:
 	br %Bool 1 , label %body_1, label %break_1
 body_1:
-	%5 = bitcast [1024 x %Char8]* %1 to i8*
-	%6 = call %SSizeT @recv(%Int %sockFd, i8* %5, %SizeT 1024, %Int 0)
+	%8 = bitcast [1024 x %Char8]* %1 to i8*
+	%9 = call %SSizeT @recv(%Int %sockFd, i8* %8, %SizeT 1024, %Int 0)
 ; if_1
-	%7 = icmp sle %SSizeT %6, 0
-	br %Bool %7 , label %then_1, label %endif_1
+	%10 = icmp sle %SSizeT %9, 0
+	br %Bool %10 , label %then_1, label %endif_1
 then_1:
 	br label %break_1
 	br label %endif_1
 endif_1:
-	%9 = call %Int (i8*, %Str*, ...) @fprintf(i8* %2, %Str* bitcast ([3 x i8]* @.str4 to [0 x i8]*), [1024 x %Char8]* %1)
-	%10 = zext i16 1024 to %Nat32
-	%11 = mul %Nat32 %10, 1
-	%12 = bitcast [1024 x %Char8]* %1 to i8*
-	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %12, i8 0, %Nat32 %11, i1 0)
+	%12 = call %Int (i8*, %Str*, ...) @fprintf(i8* %5, %Str* bitcast ([3 x i8]* @.str4 to [0 x i8]*), [1024 x %Char8]* %1)
+	%13 = zext i16 1024 to %Nat32
+	%14 = mul %Nat32 %13, 1
+	%15 = bitcast [1024 x %Char8]* %1 to i8*
+	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %15, i8 0, %Nat32 %14, i1 0)
 	br label %again_1
 break_1:
 	ret %Bool 1
@@ -278,6 +282,7 @@ endif_2:
 	%21 = alloca %SocklenT, align 4
 	store %SocklenT 16, %SocklenT* %21
 	%22 = alloca %SockAddrIn, align 4
+	store %SockAddrIn zeroinitializer, %SockAddrIn* %22
 	%23 = bitcast %SockAddrIn* %22 to i8*
 	%24 = bitcast i8* %23 to %SockAddr*
 	%25 = call %Int @accept(%Int %1, %SockAddr* %24, %SocklenT* %21)

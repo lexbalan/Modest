@@ -361,7 +361,7 @@ endif_0:
 	ret %fsm_ComplexState %23
 }
 
-@timecnt = internal global %Nat32 zeroinitializer
+@timecnt = internal global %Nat32 0
 define %Int @main() {
 	call void @fsm_init(%fsm_FSM* @fsm0, %Str8* bitcast ([6 x i8]* @.str4 to [0 x i8]*), %fsm_StateDesc* @state0, i8* null)
 ; while_1

@@ -171,6 +171,7 @@ endif_0:
 define internal %Int32 @get_number(%Int32 %min, %Int32 %max) {
 	%1 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %1
+	store %Int32 0, %Int32* %1
 ; while_1
 	br label %again_1
 again_1:

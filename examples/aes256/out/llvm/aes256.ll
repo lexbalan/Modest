@@ -753,7 +753,9 @@ break_1:
 
 define internal void @shiftRows(%aes256_Block* %block) {
 	%1 = alloca %Word8, align 1
+	store %Word8 0, %Word8* %1
 	%2 = alloca %Word8, align 1
+	store %Word8 0, %Word8* %2
 	%3 = getelementptr %aes256_Block, %aes256_Block* %block, %Int32 0, %Int32 1
 	%4 = load %Byte, %Byte* %3
 	store %Byte %4, %Word8* %1
@@ -815,7 +817,9 @@ define internal void @shiftRows(%aes256_Block* %block) {
 
 define internal void @shiftRowsInv(%aes256_Block* %block) {
 	%1 = alloca %Word8, align 1
+	store %Word8 0, %Word8* %1
 	%2 = alloca %Word8, align 1
+	store %Word8 0, %Word8* %2
 	%3 = getelementptr %aes256_Block, %aes256_Block* %block, %Int32 0, %Int32 1
 	%4 = load %Byte, %Byte* %3
 	store %Byte %4, %Word8* %1
@@ -877,10 +881,15 @@ define internal void @shiftRowsInv(%aes256_Block* %block) {
 
 define internal void @mixColumns(%aes256_Block* %block) {
 	%1 = alloca %Word8, align 1
+	store %Word8 0, %Word8* %1
 	%2 = alloca %Word8, align 1
+	store %Word8 0, %Word8* %2
 	%3 = alloca %Word8, align 1
+	store %Word8 0, %Word8* %3
 	%4 = alloca %Word8, align 1
+	store %Word8 0, %Word8* %4
 	%5 = alloca %Word8, align 1
+	store %Word8 0, %Word8* %5
 	%6 = alloca %Nat8, align 1
 	store %Nat8 0, %Nat8* %6
 ; while_1
@@ -1000,13 +1009,21 @@ break_1:
 
 define internal void @mixColumnsInv(%aes256_Block* %block) {
 	%1 = alloca %Word8, align 1
+	store %Word8 0, %Word8* %1
 	%2 = alloca %Word8, align 1
+	store %Word8 0, %Word8* %2
 	%3 = alloca %Word8, align 1
+	store %Word8 0, %Word8* %3
 	%4 = alloca %Word8, align 1
+	store %Word8 0, %Word8* %4
 	%5 = alloca %Word8, align 1
+	store %Word8 0, %Word8* %5
 	%6 = alloca %Word8, align 1
+	store %Word8 0, %Word8* %6
 	%7 = alloca %Word8, align 1
+	store %Word8 0, %Word8* %7
 	%8 = alloca %Word8, align 1
+	store %Word8 0, %Word8* %8
 	%9 = alloca %Nat8, align 1
 	store %Nat8 0, %Nat8* %9
 ; while_1
@@ -1149,6 +1166,7 @@ break_1:
 
 define internal void @expandEncKey(%aes256_Key* %k, %Byte* %rc) {
 	%1 = alloca %Nat8, align 1
+	store %Nat8 0, %Nat8* %1
 	%2 = getelementptr %aes256_Key, %aes256_Key* %k, %Int32 0, %Int32 0
 	%3 = getelementptr %aes256_Key, %aes256_Key* %k, %Int32 0, %Int32 0
 	%4 = getelementptr %aes256_Key, %aes256_Key* %k, %Int32 0, %Int32 29
@@ -1377,6 +1395,7 @@ break_2:
 
 define internal void @expandDecKey(%aes256_Key* %k, %Byte* %rc) {
 	%1 = alloca %Nat8, align 1
+	store %Nat8 0, %Nat8* %1
 	store %Nat8 28, %Nat8* %1
 ; while_1
 	br label %again_1

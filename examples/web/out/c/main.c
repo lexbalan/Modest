@@ -23,7 +23,7 @@ static uint32_t pageCounter;
 
 
 static void handleRequest(int32_t clientSocket) {
-	uint8_t buffer[RECEIVE_BUFFER_SIZE];
+	uint8_t buffer[RECEIVE_BUFFER_SIZE] = {0};
 	const ssize_t bytesReceived = read(clientSocket, buffer, LENGTHOF(buffer) - 1);
 	if (bytesReceived < 0) {
 		perror("cannot read socket");
@@ -32,7 +32,7 @@ static void handleRequest(int32_t clientSocket) {
 	}
 	buffer[bytesReceived] = 0x0;
 	printf("Received request:\n%s\n", (char *)buffer);
-	char response[SEND_BUFFER_SIZE];
+	char response[SEND_BUFFER_SIZE] = {0};
 	sprintf(response, "%s<html><body><h1>Hello, World! (%d)</h1></body></html>", HTTP_HEADER, pageCounter);
 	write(clientSocket, response, strlen(response));
 	close(clientSocket);
@@ -67,7 +67,7 @@ int32_t main(void) {
 	}
 	printf("Server listening on port %d...\n", (uint32_t)PORT);
 	while (true) {
-		struct sockaddr_in clientAddr;
+		struct sockaddr_in clientAddr = {0};
 		struct sockaddr *const socadr = (struct sockaddr *)&clientAddr;
 		socklen_t clientAdrLen = sizeof clientAddr;
 		const int clientSocket = accept(serverSocket, socadr, &clientAdrLen);

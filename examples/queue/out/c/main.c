@@ -31,7 +31,7 @@ static void fetch(uint32_t n) {
 			printf("<queue is empty>\n");
 			break;
 		}
-		uint8_t x;
+		uint8_t x = 0x0;
 		const bool res = queueWord8_get(&bq0, &x);
 		printf("bq.get = %d, res = %d\n", (int)x, (uint32_t)(uint8_t)res);
 		++i;

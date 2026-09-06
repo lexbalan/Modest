@@ -187,7 +187,9 @@ define void @table_print(%table_Table* %table) {
 	%2 = call i8* @llvm.stacksave() 
 	store i8* %2, i8** %1
 	%3 = alloca %Nat32, align 4
+	store %Nat32 0, %Nat32* %3
 	%4 = alloca %Nat32, align 4
+	store %Nat32 0, %Nat32* %4
 	%5 = mul %Int32 1, 1
 	%6 = getelementptr %table_Table, %table_Table* %table, %Int32 0, %Int32 3
 	%7 = load %Nat32, %Nat32* %6

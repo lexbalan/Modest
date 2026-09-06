@@ -152,11 +152,11 @@ declare void @perror(%ConstCharStr* %str)
 @name11 = external global %Bool
 @ext = external global %Int32
 @ext_arr = external global [0 x %Int32]
-@x = internal global %Word32 zeroinitializer, section "__DATA, .xdata", align 8
-@s = global %Nat16 zeroinitializer
-@u = internal global %Word64 zeroinitializer
-@u2 = internal global %Word64 zeroinitializer
-@rp = internal global %Word32* zeroinitializer
+@x = internal global %Word32 0, section "__DATA, .xdata", align 8
+@s = global %Nat16 0
+@u = internal global %Word64 0
+@u2 = internal global %Word64 0
+@rp = internal global %Word32* null
 @vb = internal global [32 x %Bool] zeroinitializer
 define internal %Int32 @staticInlineFunc(%Int32 %x) alwaysinline {
 	%1 = add %Int32 %x, 1

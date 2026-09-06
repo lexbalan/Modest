@@ -778,6 +778,7 @@ declare %aes256_Result @aes256_deinit(%aes256_Context* %ctx)
 ]
 define internal %Bool @runTest(%TestCase* %test) {
 	%1 = alloca %aes256_Context, align 1
+	store %aes256_Context zeroinitializer, %aes256_Context* %1
 	%2 = getelementptr %TestCase, %TestCase* %test, %Int32 0, %Int32 0
 	%3 = call %aes256_Result @aes256_init(%aes256_Context* %1, %aes256_Key* %2)
 	%4 = alloca %aes256_Block, align 1

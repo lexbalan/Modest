@@ -199,6 +199,7 @@ again_1:
 	br %Bool %3 , label %body_1, label %break_1
 body_1:
 	%4 = alloca %Word8, align 1
+	store %Word8 0, %Word8* %4
 ; if_0
 	%5 = call %Bool @queueWord8_get(%queueWord8_QueueWord8* %q, %Word8* %4)
 	%6 = xor %Bool %5, 1

@@ -132,8 +132,8 @@ static void addRoundKeyCpy(uint8_t *block, uint8_t *key, uint8_t *cpk) {
 }
 
 static void shiftRows(uint8_t *block) {
-	uint8_t i;
-	uint8_t j;
+	uint8_t i = 0x0;
+	uint8_t j = 0x0;
 	i = block[1];
 	block[1] = block[5];
 	block[5] = block[9];
@@ -153,8 +153,8 @@ static void shiftRows(uint8_t *block) {
 }
 
 static void shiftRowsInv(uint8_t *block) {
-	uint8_t i;
-	uint8_t j;
+	uint8_t i = 0x0;
+	uint8_t j = 0x0;
 	i = block[1];
 	block[1] = block[13];
 	block[13] = block[9];
@@ -174,11 +174,11 @@ static void shiftRowsInv(uint8_t *block) {
 }
 
 static void mixColumns(uint8_t *block) {
-	uint8_t a;
-	uint8_t b;
-	uint8_t c;
-	uint8_t d;
-	uint8_t e;
+	uint8_t a = 0x0;
+	uint8_t b = 0x0;
+	uint8_t c = 0x0;
+	uint8_t d = 0x0;
+	uint8_t e = 0x0;
 	uint8_t i = 0;
 	while (i < 16) {
 		a = block[i + 0];
@@ -195,14 +195,14 @@ static void mixColumns(uint8_t *block) {
 }
 
 static void mixColumnsInv(uint8_t *block) {
-	uint8_t a;
-	uint8_t b;
-	uint8_t c;
-	uint8_t d;
-	uint8_t e;
-	uint8_t x;
-	uint8_t y;
-	uint8_t z;
+	uint8_t a = 0x0;
+	uint8_t b = 0x0;
+	uint8_t c = 0x0;
+	uint8_t d = 0x0;
+	uint8_t e = 0x0;
+	uint8_t x = 0x0;
+	uint8_t y = 0x0;
+	uint8_t z = 0x0;
 	uint8_t i = 0;
 	while (i < 16) {
 		a = block[i + 0];
@@ -222,7 +222,7 @@ static void mixColumnsInv(uint8_t *block) {
 }
 
 static void expandEncKey(uint8_t *k, uint8_t *rc) {
-	uint8_t i;
+	uint8_t i = 0;
 	k[0] = k[0] ^ rj_sbox(k[29]) ^ *rc;
 	k[1] = k[1] ^ rj_sbox(k[30]);
 	k[2] = k[2] ^ rj_sbox(k[31]);
@@ -251,7 +251,7 @@ static void expandEncKey(uint8_t *k, uint8_t *rc) {
 }
 
 static void expandDecKey(uint8_t *k, uint8_t *rc) {
-	uint8_t i;
+	uint8_t i = 0;
 	i = 28;
 	while (i > 16) {
 		k[i + 0] = k[i + 0] ^ k[i - 4];

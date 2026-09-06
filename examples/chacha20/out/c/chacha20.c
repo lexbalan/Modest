@@ -31,7 +31,7 @@ uint32_t *chacha20_chacha20Block(uint32_t *_state, uint32_t *__out) {
 	__builtin_memcpy(&x, &state, sizeof(chacha20_State));
 	int32_t i = 0;
 	while (i < 10) {
-		uint32_t r[4];
+		uint32_t r[4] = {0};
 		quarterRound(x[0], x[4], x[8], x[12], r);
 		x[0] = r[0];
 		x[4] = r[1];
@@ -74,7 +74,7 @@ uint32_t *chacha20_chacha20Block(uint32_t *_state, uint32_t *__out) {
 		x[14] = r[3];
 		++i;
 	}
-	uint32_t out[16];
+	uint32_t out[16] = {0};
 	uint32_t j = 0;
 	while (j < 16) {
 		out[j] = (x[j] + state[j]);

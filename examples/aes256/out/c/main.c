@@ -82,7 +82,7 @@ static struct test_case tests[8] = {
 };
 
 static bool runTest(struct test_case *test) {
-	aes256_Context ctx;
+	aes256_Context ctx = {0};
 	aes256_init(&ctx, test->key);
 	aes256_Block plaintextBefore;
 	__builtin_memcpy(&plaintextBefore, &test->plaintext, sizeof(aes256_Block));

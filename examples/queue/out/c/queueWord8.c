@@ -57,7 +57,7 @@ bool queueWord8_get(struct queue_word8_queue_word8 *q, uint8_t *b) {
 uint32_t queueWord8_read(struct queue_word8_queue_word8 *q, uint8_t *data, uint32_t len) {
 	uint32_t n = 0;
 	while (n < len) {
-		uint8_t x;
+		uint8_t x = 0x0;
 		if (!queueWord8_get(q, &x)) {
 			break;
 		}

@@ -280,27 +280,31 @@ declare %Int @accept(%Int %socket, %SockAddr* %addr, %SocklenT* %addrlen)
 ; -- endstrings --
 define internal %Bool @sendFile(i8* %fp, %Int %sockFd) {
 	%1 = alloca [1024 x %Char8], align 1
+	%2 = zext i16 1024 to %Nat32
+	%3 = mul %Nat32 %2, 1
+	%4 = bitcast [1024 x %Char8]* %1 to i8*
+	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %4, i8 0, %Nat32 %3, i1 0)
 ; while_1
 	br label %again_1
 again_1:
-	%2 = bitcast [1024 x %Char8]* %1 to %CharStr*
-	%3 = call %CharStr* @fgets(%CharStr* %2, %Int 1024, i8* %fp)
-	%4 = icmp ne %CharStr* %3, null
-	br %Bool %4 , label %body_1, label %break_1
+	%5 = bitcast [1024 x %Char8]* %1 to %CharStr*
+	%6 = call %CharStr* @fgets(%CharStr* %5, %Int 1024, i8* %fp)
+	%7 = icmp ne %CharStr* %6, null
+	br %Bool %7 , label %body_1, label %break_1
 body_1:
 ; if_0
-	%5 = bitcast [1024 x %Char8]* %1 to i8*
-	%6 = call %SSizeT @send(%Int %sockFd, i8* %5, %SizeT 1024, %Int 0)
-	%7 = icmp eq %SSizeT %6, -1
-	br %Bool %7 , label %then_0, label %endif_0
+	%8 = bitcast [1024 x %Char8]* %1 to i8*
+	%9 = call %SSizeT @send(%Int %sockFd, i8* %8, %SizeT 1024, %Int 0)
+	%10 = icmp eq %SSizeT %9, -1
+	br %Bool %10 , label %then_0, label %endif_0
 then_0:
 	ret %Bool 0
 	br label %endif_0
 endif_0:
-	%9 = zext i16 1024 to %Nat32
-	%10 = mul %Nat32 %9, 1
-	%11 = bitcast [1024 x %Char8]* %1 to i8*
-	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %11, i8 0, %Nat32 %10, i1 0)
+	%12 = zext i16 1024 to %Nat32
+	%13 = mul %Nat32 %12, 1
+	%14 = bitcast [1024 x %Char8]* %1 to i8*
+	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %14, i8 0, %Nat32 %13, i1 0)
 	br label %again_1
 break_1:
 	ret %Bool 1

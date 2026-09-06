@@ -10,20 +10,20 @@ static void memoryBarrier(void) {
 }
 
 static int64_t sum64(int64_t a, int64_t b) {
-	int64_t sum;
+	int64_t sum = 0;
 	__asm__ volatile ("add %0, %1, %2" : "=r" (sum) : "r" (a), "r" (b) : "cc");
 	return sum;
 }
 
 static int64_t sub64(int64_t a, int64_t b) {
-	int64_t sub;
+	int64_t sub = 0;
 	__asm__ volatile ("sub %0, %1, %2" : "=r" (sub) : "r" (a), "r" (b) : "cc");
 	return sub;
 }
 
 static void sumsub64(int64_t a, int64_t b) {
-	int64_t sum;
-	int64_t sub;
+	int64_t sum = 0;
+	int64_t sub = 0;
 	__asm__ volatile ("add %0, %2, %3\n\
 sub %1, %2, %3\n\
 " : "=&r" (sum), "=&r" (sub) : "r" (a), "r" (b) : "cc");

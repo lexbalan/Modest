@@ -159,277 +159,285 @@ again_1:
 	br %Bool %8 , label %body_1, label %break_1
 body_1:
 	%9 = alloca [4 x %Word32], align 4
-	%10 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 0
-	%11 = load %Word32, %Word32* %10
-	%12 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 4
-	%13 = load %Word32, %Word32* %12
-	%14 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 8
-	%15 = load %Word32, %Word32* %14
-	%16 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 12
-	%17 = load %Word32, %Word32* %16; alloca memory for return value
-	%18 = alloca [4 x %Word32]
-	call void @quarterRound([4 x %Word32]* %18, %Word32 %11, %Word32 %13, %Word32 %15, %Word32 %17)
-	%19 = load [4 x %Word32], [4 x %Word32]* %18
-	%20 = zext i8 4 to %Nat32
-	store [4 x %Word32] %19, [4 x %Word32]* %9
-	%21 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 0
-	%22 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 0
-	%23 = load %Word32, %Word32* %22
-	store %Word32 %23, %Word32* %21
-	%24 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 4
-	%25 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 1
+	%10 = zext i8 4 to %Nat32
+	%11 = mul %Nat32 %10, 4
+	%12 = bitcast [4 x %Word32]* %9 to i8*
+	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %12, i8 0, %Nat32 %11, i1 0)
+	%13 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 0
+	%14 = load %Word32, %Word32* %13
+	%15 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 4
+	%16 = load %Word32, %Word32* %15
+	%17 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 8
+	%18 = load %Word32, %Word32* %17
+	%19 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 12
+	%20 = load %Word32, %Word32* %19; alloca memory for return value
+	%21 = alloca [4 x %Word32]
+	call void @quarterRound([4 x %Word32]* %21, %Word32 %14, %Word32 %16, %Word32 %18, %Word32 %20)
+	%22 = load [4 x %Word32], [4 x %Word32]* %21
+	%23 = zext i8 4 to %Nat32
+	store [4 x %Word32] %22, [4 x %Word32]* %9
+	%24 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 0
+	%25 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 0
 	%26 = load %Word32, %Word32* %25
 	store %Word32 %26, %Word32* %24
-	%27 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 8
-	%28 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 2
+	%27 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 4
+	%28 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 1
 	%29 = load %Word32, %Word32* %28
 	store %Word32 %29, %Word32* %27
-	%30 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 12
-	%31 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 3
+	%30 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 8
+	%31 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 2
 	%32 = load %Word32, %Word32* %31
 	store %Word32 %32, %Word32* %30
-	%33 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 1
-	%34 = load %Word32, %Word32* %33
-	%35 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 5
-	%36 = load %Word32, %Word32* %35
-	%37 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 9
-	%38 = load %Word32, %Word32* %37
-	%39 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 13
-	%40 = load %Word32, %Word32* %39; alloca memory for return value
-	%41 = alloca [4 x %Word32]
-	call void @quarterRound([4 x %Word32]* %41, %Word32 %34, %Word32 %36, %Word32 %38, %Word32 %40)
-	%42 = load [4 x %Word32], [4 x %Word32]* %41
-	%43 = zext i8 4 to %Nat32
-	store [4 x %Word32] %42, [4 x %Word32]* %9
-	%44 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 1
-	%45 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 0
-	%46 = load %Word32, %Word32* %45
-	store %Word32 %46, %Word32* %44
-	%47 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 5
-	%48 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 1
+	%33 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 12
+	%34 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 3
+	%35 = load %Word32, %Word32* %34
+	store %Word32 %35, %Word32* %33
+	%36 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 1
+	%37 = load %Word32, %Word32* %36
+	%38 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 5
+	%39 = load %Word32, %Word32* %38
+	%40 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 9
+	%41 = load %Word32, %Word32* %40
+	%42 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 13
+	%43 = load %Word32, %Word32* %42; alloca memory for return value
+	%44 = alloca [4 x %Word32]
+	call void @quarterRound([4 x %Word32]* %44, %Word32 %37, %Word32 %39, %Word32 %41, %Word32 %43)
+	%45 = load [4 x %Word32], [4 x %Word32]* %44
+	%46 = zext i8 4 to %Nat32
+	store [4 x %Word32] %45, [4 x %Word32]* %9
+	%47 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 1
+	%48 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 0
 	%49 = load %Word32, %Word32* %48
 	store %Word32 %49, %Word32* %47
-	%50 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 9
-	%51 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 2
+	%50 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 5
+	%51 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 1
 	%52 = load %Word32, %Word32* %51
 	store %Word32 %52, %Word32* %50
-	%53 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 13
-	%54 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 3
+	%53 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 9
+	%54 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 2
 	%55 = load %Word32, %Word32* %54
 	store %Word32 %55, %Word32* %53
-	%56 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 2
-	%57 = load %Word32, %Word32* %56
-	%58 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 6
-	%59 = load %Word32, %Word32* %58
-	%60 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 10
-	%61 = load %Word32, %Word32* %60
-	%62 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 14
-	%63 = load %Word32, %Word32* %62; alloca memory for return value
-	%64 = alloca [4 x %Word32]
-	call void @quarterRound([4 x %Word32]* %64, %Word32 %57, %Word32 %59, %Word32 %61, %Word32 %63)
-	%65 = load [4 x %Word32], [4 x %Word32]* %64
-	%66 = zext i8 4 to %Nat32
-	store [4 x %Word32] %65, [4 x %Word32]* %9
-	%67 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 2
-	%68 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 0
-	%69 = load %Word32, %Word32* %68
-	store %Word32 %69, %Word32* %67
-	%70 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 6
-	%71 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 1
+	%56 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 13
+	%57 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 3
+	%58 = load %Word32, %Word32* %57
+	store %Word32 %58, %Word32* %56
+	%59 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 2
+	%60 = load %Word32, %Word32* %59
+	%61 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 6
+	%62 = load %Word32, %Word32* %61
+	%63 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 10
+	%64 = load %Word32, %Word32* %63
+	%65 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 14
+	%66 = load %Word32, %Word32* %65; alloca memory for return value
+	%67 = alloca [4 x %Word32]
+	call void @quarterRound([4 x %Word32]* %67, %Word32 %60, %Word32 %62, %Word32 %64, %Word32 %66)
+	%68 = load [4 x %Word32], [4 x %Word32]* %67
+	%69 = zext i8 4 to %Nat32
+	store [4 x %Word32] %68, [4 x %Word32]* %9
+	%70 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 2
+	%71 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 0
 	%72 = load %Word32, %Word32* %71
 	store %Word32 %72, %Word32* %70
-	%73 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 10
-	%74 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 2
+	%73 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 6
+	%74 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 1
 	%75 = load %Word32, %Word32* %74
 	store %Word32 %75, %Word32* %73
-	%76 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 14
-	%77 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 3
+	%76 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 10
+	%77 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 2
 	%78 = load %Word32, %Word32* %77
 	store %Word32 %78, %Word32* %76
-	%79 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 3
-	%80 = load %Word32, %Word32* %79
-	%81 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 7
-	%82 = load %Word32, %Word32* %81
-	%83 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 11
-	%84 = load %Word32, %Word32* %83
-	%85 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 15
-	%86 = load %Word32, %Word32* %85; alloca memory for return value
-	%87 = alloca [4 x %Word32]
-	call void @quarterRound([4 x %Word32]* %87, %Word32 %80, %Word32 %82, %Word32 %84, %Word32 %86)
-	%88 = load [4 x %Word32], [4 x %Word32]* %87
-	%89 = zext i8 4 to %Nat32
-	store [4 x %Word32] %88, [4 x %Word32]* %9
-	%90 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 3
-	%91 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 0
-	%92 = load %Word32, %Word32* %91
-	store %Word32 %92, %Word32* %90
-	%93 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 7
-	%94 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 1
+	%79 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 14
+	%80 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 3
+	%81 = load %Word32, %Word32* %80
+	store %Word32 %81, %Word32* %79
+	%82 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 3
+	%83 = load %Word32, %Word32* %82
+	%84 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 7
+	%85 = load %Word32, %Word32* %84
+	%86 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 11
+	%87 = load %Word32, %Word32* %86
+	%88 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 15
+	%89 = load %Word32, %Word32* %88; alloca memory for return value
+	%90 = alloca [4 x %Word32]
+	call void @quarterRound([4 x %Word32]* %90, %Word32 %83, %Word32 %85, %Word32 %87, %Word32 %89)
+	%91 = load [4 x %Word32], [4 x %Word32]* %90
+	%92 = zext i8 4 to %Nat32
+	store [4 x %Word32] %91, [4 x %Word32]* %9
+	%93 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 3
+	%94 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 0
 	%95 = load %Word32, %Word32* %94
 	store %Word32 %95, %Word32* %93
-	%96 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 11
-	%97 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 2
+	%96 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 7
+	%97 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 1
 	%98 = load %Word32, %Word32* %97
 	store %Word32 %98, %Word32* %96
-	%99 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 15
-	%100 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 3
+	%99 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 11
+	%100 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 2
 	%101 = load %Word32, %Word32* %100
 	store %Word32 %101, %Word32* %99
-	%102 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 0
-	%103 = load %Word32, %Word32* %102
-	%104 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 5
-	%105 = load %Word32, %Word32* %104
-	%106 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 10
-	%107 = load %Word32, %Word32* %106
-	%108 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 15
-	%109 = load %Word32, %Word32* %108; alloca memory for return value
-	%110 = alloca [4 x %Word32]
-	call void @quarterRound([4 x %Word32]* %110, %Word32 %103, %Word32 %105, %Word32 %107, %Word32 %109)
-	%111 = load [4 x %Word32], [4 x %Word32]* %110
-	%112 = zext i8 4 to %Nat32
-	store [4 x %Word32] %111, [4 x %Word32]* %9
-	%113 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 0
-	%114 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 0
-	%115 = load %Word32, %Word32* %114
-	store %Word32 %115, %Word32* %113
-	%116 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 5
-	%117 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 1
+	%102 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 15
+	%103 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 3
+	%104 = load %Word32, %Word32* %103
+	store %Word32 %104, %Word32* %102
+	%105 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 0
+	%106 = load %Word32, %Word32* %105
+	%107 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 5
+	%108 = load %Word32, %Word32* %107
+	%109 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 10
+	%110 = load %Word32, %Word32* %109
+	%111 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 15
+	%112 = load %Word32, %Word32* %111; alloca memory for return value
+	%113 = alloca [4 x %Word32]
+	call void @quarterRound([4 x %Word32]* %113, %Word32 %106, %Word32 %108, %Word32 %110, %Word32 %112)
+	%114 = load [4 x %Word32], [4 x %Word32]* %113
+	%115 = zext i8 4 to %Nat32
+	store [4 x %Word32] %114, [4 x %Word32]* %9
+	%116 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 0
+	%117 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 0
 	%118 = load %Word32, %Word32* %117
 	store %Word32 %118, %Word32* %116
-	%119 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 10
-	%120 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 2
+	%119 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 5
+	%120 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 1
 	%121 = load %Word32, %Word32* %120
 	store %Word32 %121, %Word32* %119
-	%122 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 15
-	%123 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 3
+	%122 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 10
+	%123 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 2
 	%124 = load %Word32, %Word32* %123
 	store %Word32 %124, %Word32* %122
-	%125 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 1
-	%126 = load %Word32, %Word32* %125
-	%127 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 6
-	%128 = load %Word32, %Word32* %127
-	%129 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 11
-	%130 = load %Word32, %Word32* %129
-	%131 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 12
-	%132 = load %Word32, %Word32* %131; alloca memory for return value
-	%133 = alloca [4 x %Word32]
-	call void @quarterRound([4 x %Word32]* %133, %Word32 %126, %Word32 %128, %Word32 %130, %Word32 %132)
-	%134 = load [4 x %Word32], [4 x %Word32]* %133
-	%135 = zext i8 4 to %Nat32
-	store [4 x %Word32] %134, [4 x %Word32]* %9
-	%136 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 1
-	%137 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 0
-	%138 = load %Word32, %Word32* %137
-	store %Word32 %138, %Word32* %136
-	%139 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 6
-	%140 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 1
+	%125 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 15
+	%126 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 3
+	%127 = load %Word32, %Word32* %126
+	store %Word32 %127, %Word32* %125
+	%128 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 1
+	%129 = load %Word32, %Word32* %128
+	%130 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 6
+	%131 = load %Word32, %Word32* %130
+	%132 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 11
+	%133 = load %Word32, %Word32* %132
+	%134 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 12
+	%135 = load %Word32, %Word32* %134; alloca memory for return value
+	%136 = alloca [4 x %Word32]
+	call void @quarterRound([4 x %Word32]* %136, %Word32 %129, %Word32 %131, %Word32 %133, %Word32 %135)
+	%137 = load [4 x %Word32], [4 x %Word32]* %136
+	%138 = zext i8 4 to %Nat32
+	store [4 x %Word32] %137, [4 x %Word32]* %9
+	%139 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 1
+	%140 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 0
 	%141 = load %Word32, %Word32* %140
 	store %Word32 %141, %Word32* %139
-	%142 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 11
-	%143 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 2
+	%142 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 6
+	%143 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 1
 	%144 = load %Word32, %Word32* %143
 	store %Word32 %144, %Word32* %142
-	%145 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 12
-	%146 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 3
+	%145 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 11
+	%146 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 2
 	%147 = load %Word32, %Word32* %146
 	store %Word32 %147, %Word32* %145
-	%148 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 2
-	%149 = load %Word32, %Word32* %148
-	%150 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 7
-	%151 = load %Word32, %Word32* %150
-	%152 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 8
-	%153 = load %Word32, %Word32* %152
-	%154 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 13
-	%155 = load %Word32, %Word32* %154; alloca memory for return value
-	%156 = alloca [4 x %Word32]
-	call void @quarterRound([4 x %Word32]* %156, %Word32 %149, %Word32 %151, %Word32 %153, %Word32 %155)
-	%157 = load [4 x %Word32], [4 x %Word32]* %156
-	%158 = zext i8 4 to %Nat32
-	store [4 x %Word32] %157, [4 x %Word32]* %9
-	%159 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 2
-	%160 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 0
-	%161 = load %Word32, %Word32* %160
-	store %Word32 %161, %Word32* %159
-	%162 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 7
-	%163 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 1
+	%148 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 12
+	%149 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 3
+	%150 = load %Word32, %Word32* %149
+	store %Word32 %150, %Word32* %148
+	%151 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 2
+	%152 = load %Word32, %Word32* %151
+	%153 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 7
+	%154 = load %Word32, %Word32* %153
+	%155 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 8
+	%156 = load %Word32, %Word32* %155
+	%157 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 13
+	%158 = load %Word32, %Word32* %157; alloca memory for return value
+	%159 = alloca [4 x %Word32]
+	call void @quarterRound([4 x %Word32]* %159, %Word32 %152, %Word32 %154, %Word32 %156, %Word32 %158)
+	%160 = load [4 x %Word32], [4 x %Word32]* %159
+	%161 = zext i8 4 to %Nat32
+	store [4 x %Word32] %160, [4 x %Word32]* %9
+	%162 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 2
+	%163 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 0
 	%164 = load %Word32, %Word32* %163
 	store %Word32 %164, %Word32* %162
-	%165 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 8
-	%166 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 2
+	%165 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 7
+	%166 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 1
 	%167 = load %Word32, %Word32* %166
 	store %Word32 %167, %Word32* %165
-	%168 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 13
-	%169 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 3
+	%168 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 8
+	%169 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 2
 	%170 = load %Word32, %Word32* %169
 	store %Word32 %170, %Word32* %168
-	%171 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 3
-	%172 = load %Word32, %Word32* %171
-	%173 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 4
-	%174 = load %Word32, %Word32* %173
-	%175 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 9
-	%176 = load %Word32, %Word32* %175
-	%177 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 14
-	%178 = load %Word32, %Word32* %177; alloca memory for return value
-	%179 = alloca [4 x %Word32]
-	call void @quarterRound([4 x %Word32]* %179, %Word32 %172, %Word32 %174, %Word32 %176, %Word32 %178)
-	%180 = load [4 x %Word32], [4 x %Word32]* %179
-	%181 = zext i8 4 to %Nat32
-	store [4 x %Word32] %180, [4 x %Word32]* %9
-	%182 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 3
-	%183 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 0
-	%184 = load %Word32, %Word32* %183
-	store %Word32 %184, %Word32* %182
-	%185 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 4
-	%186 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 1
+	%171 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 13
+	%172 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 3
+	%173 = load %Word32, %Word32* %172
+	store %Word32 %173, %Word32* %171
+	%174 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 3
+	%175 = load %Word32, %Word32* %174
+	%176 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 4
+	%177 = load %Word32, %Word32* %176
+	%178 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 9
+	%179 = load %Word32, %Word32* %178
+	%180 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 14
+	%181 = load %Word32, %Word32* %180; alloca memory for return value
+	%182 = alloca [4 x %Word32]
+	call void @quarterRound([4 x %Word32]* %182, %Word32 %175, %Word32 %177, %Word32 %179, %Word32 %181)
+	%183 = load [4 x %Word32], [4 x %Word32]* %182
+	%184 = zext i8 4 to %Nat32
+	store [4 x %Word32] %183, [4 x %Word32]* %9
+	%185 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 3
+	%186 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 0
 	%187 = load %Word32, %Word32* %186
 	store %Word32 %187, %Word32* %185
-	%188 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 9
-	%189 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 2
+	%188 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 4
+	%189 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 1
 	%190 = load %Word32, %Word32* %189
 	store %Word32 %190, %Word32* %188
-	%191 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 14
-	%192 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 3
+	%191 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 9
+	%192 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 2
 	%193 = load %Word32, %Word32* %192
 	store %Word32 %193, %Word32* %191
-	%194 = load %Int32, %Int32* %6
-	%195 = add %Int32 %194, 1
-	store %Int32 %195, %Int32* %6
+	%194 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Int32 14
+	%195 = getelementptr [4 x %Word32], [4 x %Word32]* %9, %Int32 0, %Int32 3
+	%196 = load %Word32, %Word32* %195
+	store %Word32 %196, %Word32* %194
+	%197 = load %Int32, %Int32* %6
+	%198 = add %Int32 %197, 1
+	store %Int32 %198, %Int32* %6
 	br label %again_1
 break_1:
-	%196 = alloca [16 x %Word32], align 4
-	%197 = alloca %Nat32, align 4
-	store %Nat32 0, %Nat32* %197
+	%199 = alloca [16 x %Word32], align 4
+	%200 = zext i8 16 to %Nat32
+	%201 = mul %Nat32 %200, 4
+	%202 = bitcast [16 x %Word32]* %199 to i8*
+	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %202, i8 0, %Nat32 %201, i1 0)
+	%203 = alloca %Nat32, align 4
+	store %Nat32 0, %Nat32* %203
 ; while_2
 	br label %again_2
 again_2:
-	%198 = load %Nat32, %Nat32* %197
-	%199 = icmp ult %Nat32 %198, 16
-	br %Bool %199 , label %body_2, label %break_2
+	%204 = load %Nat32, %Nat32* %203
+	%205 = icmp ult %Nat32 %204, 16
+	br %Bool %205 , label %body_2, label %break_2
 body_2:
-	%200 = load %Nat32, %Nat32* %197
-	%201 = bitcast %Nat32 %200 to %Nat32
-	%202 = getelementptr [16 x %Word32], [16 x %Word32]* %196, %Int32 0, %Nat32 %201
-	%203 = load %Nat32, %Nat32* %197
-	%204 = bitcast %Nat32 %203 to %Nat32
-	%205 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Nat32 %204
-	%206 = load %Word32, %Word32* %205
-	%207 = bitcast %Word32 %206 to %Nat32
-	%208 = load %Nat32, %Nat32* %197
-	%209 = bitcast %Nat32 %208 to %Nat32
-	%210 = getelementptr %chacha20_State, %chacha20_State* %state, %Int32 0, %Nat32 %209
-	%211 = load %Word32, %Word32* %210
-	%212 = bitcast %Word32 %211 to %Nat32
-	%213 = add %Nat32 %207, %212
-	%214 = bitcast %Nat32 %213 to %Word32
-	store %Word32 %214, %Word32* %202
-	%215 = load %Nat32, %Nat32* %197
-	%216 = add %Nat32 %215, 1
-	store %Nat32 %216, %Nat32* %197
+	%206 = load %Nat32, %Nat32* %203
+	%207 = bitcast %Nat32 %206 to %Nat32
+	%208 = getelementptr [16 x %Word32], [16 x %Word32]* %199, %Int32 0, %Nat32 %207
+	%209 = load %Nat32, %Nat32* %203
+	%210 = bitcast %Nat32 %209 to %Nat32
+	%211 = getelementptr %chacha20_State, %chacha20_State* %3, %Int32 0, %Nat32 %210
+	%212 = load %Word32, %Word32* %211
+	%213 = bitcast %Word32 %212 to %Nat32
+	%214 = load %Nat32, %Nat32* %203
+	%215 = bitcast %Nat32 %214 to %Nat32
+	%216 = getelementptr %chacha20_State, %chacha20_State* %state, %Int32 0, %Nat32 %215
+	%217 = load %Word32, %Word32* %216
+	%218 = bitcast %Word32 %217 to %Nat32
+	%219 = add %Nat32 %213, %218
+	%220 = bitcast %Nat32 %219 to %Word32
+	store %Word32 %220, %Word32* %208
+	%221 = load %Nat32, %Nat32* %203
+	%222 = add %Nat32 %221, 1
+	store %Nat32 %222, %Nat32* %203
 	br label %again_2
 break_2:
-	%217 = load [16 x %Word32], [16 x %Word32]* %196
-	%218 = zext i8 16 to %Nat32
-	store [16 x %Word32] %217, %chacha20_Block* %0
+	%223 = load [16 x %Word32], [16 x %Word32]* %199
+	%224 = zext i8 16 to %Nat32
+	store [16 x %Word32] %223, %chacha20_Block* %0
 	ret void
 }
 

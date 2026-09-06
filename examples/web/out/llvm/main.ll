@@ -295,7 +295,7 @@ declare %Word16 @htons(%Word16 %x)
 @.str8 = private constant [32 x i8] [i8 83, i8 101, i8 114, i8 118, i8 101, i8 114, i8 32, i8 108, i8 105, i8 115, i8 116, i8 101, i8 110, i8 105, i8 110, i8 103, i8 32, i8 111, i8 110, i8 32, i8 112, i8 111, i8 114, i8 116, i8 32, i8 37, i8 100, i8 46, i8 46, i8 46, i8 10, i8 0]
 @.str9 = private constant [25 x i8] [i8 99, i8 97, i8 110, i8 110, i8 111, i8 116, i8 32, i8 97, i8 99, i8 99, i8 101, i8 112, i8 116, i8 32, i8 99, i8 111, i8 110, i8 110, i8 101, i8 99, i8 116, i8 105, i8 111, i8 110, i8 0]
 ; -- endstrings --
-@pageCounter = internal global %Nat32 zeroinitializer
+@pageCounter = internal global %Nat32 0
 
 
 ;@extern
@@ -305,32 +305,40 @@ declare %Word16 @htons(%Word16 %x)
 ;}
 define internal void @handleRequest(%Int32 %clientSocket) {
 	%1 = alloca [1024 x %Word8], align 1
-	%2 = bitcast [1024 x %Word8]* %1 to i8*
-	%3 = call %SSizeT @read(%Int32 %clientSocket, i8* %2, %SizeT 1023)
+	%2 = zext i16 1024 to %Nat32
+	%3 = mul %Nat32 %2, 1
+	%4 = bitcast [1024 x %Word8]* %1 to i8*
+	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %4, i8 0, %Nat32 %3, i1 0)
+	%5 = bitcast [1024 x %Word8]* %1 to i8*
+	%6 = call %SSizeT @read(%Int32 %clientSocket, i8* %5, %SizeT 1023)
 ; if_0
-	%4 = icmp slt %SSizeT %3, 0
-	br %Bool %4 , label %then_0, label %endif_0
+	%7 = icmp slt %SSizeT %6, 0
+	br %Bool %7 , label %then_0, label %endif_0
 then_0:
 	call void @perror(%ConstCharStr* bitcast ([19 x i8]* @.str2 to [0 x i8]*))
-	%5 = call %Int @close(%Int32 %clientSocket)
+	%8 = call %Int @close(%Int32 %clientSocket)
 	ret void
 	br label %endif_0
 endif_0:
-	%7 = trunc %SSizeT %3 to %Nat32
-	%8 = getelementptr [1024 x %Word8], [1024 x %Word8]* %1, %Int32 0, %Nat32 %7
-	%9 = bitcast i8 0 to %Word8
-	store %Word8 %9, %Word8* %8
-	%10 = bitcast [1024 x %Word8]* %1 to %Str8*
-	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @.str3 to [0 x i8]*), %Str8* %10)
-	%12 = alloca [1024 x %Char8], align 1
-	%13 = bitcast [1024 x %Char8]* %12 to %CharStr*
-	%14 = load %Nat32, %Nat32* @pageCounter
-	%15 = call %Int (%CharStr*, %ConstCharStr*, ...) @sprintf(%CharStr* %13, %ConstCharStr* bitcast ([56 x i8]* @.str4 to [0 x i8]*), %Str8* bitcast ([64 x i8]* @.str1 to [0 x i8]*), %Nat32 %14)
-	%16 = bitcast [1024 x %Char8]* %12 to i8*
-	%17 = bitcast [1024 x %Char8]* %12 to [0 x %ConstChar]*
-	%18 = call %SizeT @strlen([0 x %ConstChar]* %17)
-	%19 = call %SSizeT @write(%Int32 %clientSocket, i8* %16, %SizeT %18)
-	%20 = call %Int @close(%Int32 %clientSocket)
+	%10 = trunc %SSizeT %6 to %Nat32
+	%11 = getelementptr [1024 x %Word8], [1024 x %Word8]* %1, %Int32 0, %Nat32 %10
+	%12 = bitcast i8 0 to %Word8
+	store %Word8 %12, %Word8* %11
+	%13 = bitcast [1024 x %Word8]* %1 to %Str8*
+	%14 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @.str3 to [0 x i8]*), %Str8* %13)
+	%15 = alloca [1024 x %Char8], align 1
+	%16 = zext i16 1024 to %Nat32
+	%17 = mul %Nat32 %16, 1
+	%18 = bitcast [1024 x %Char8]* %15 to i8*
+	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %18, i8 0, %Nat32 %17, i1 0)
+	%19 = bitcast [1024 x %Char8]* %15 to %CharStr*
+	%20 = load %Nat32, %Nat32* @pageCounter
+	%21 = call %Int (%CharStr*, %ConstCharStr*, ...) @sprintf(%CharStr* %19, %ConstCharStr* bitcast ([56 x i8]* @.str4 to [0 x i8]*), %Str8* bitcast ([64 x i8]* @.str1 to [0 x i8]*), %Nat32 %20)
+	%22 = bitcast [1024 x %Char8]* %15 to i8*
+	%23 = bitcast [1024 x %Char8]* %15 to [0 x %ConstChar]*
+	%24 = call %SizeT @strlen([0 x %ConstChar]* %23)
+	%25 = call %SSizeT @write(%Int32 %clientSocket, i8* %22, %SizeT %24)
+	%26 = call %Int @close(%Int32 %clientSocket)
 	ret void
 }
 
@@ -384,6 +392,7 @@ again_1:
 	br %Bool 1 , label %body_1, label %break_1
 body_1:
 	%20 = alloca %SockAddrIn, align 4
+	store %SockAddrIn zeroinitializer, %SockAddrIn* %20
 	%21 = bitcast %SockAddrIn* %20 to %SockAddr*
 	%22 = alloca %SocklenT, align 4
 	store %SocklenT 16, %SocklenT* %22

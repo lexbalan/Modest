@@ -34,7 +34,7 @@ static void readExample(void) {
 		printf("error: cannot open file '%s'", FILENAME);
 		return;
 	}
-	struct chunk chunk;
+	struct chunk chunk = {0};
 	fread((void *)&chunk, sizeof(struct chunk), 1, fp);
 	printf("file \"%s\" contains:\n", FILENAME);
 	printf("chunk.id: \"%s\"\n", chunk.id);

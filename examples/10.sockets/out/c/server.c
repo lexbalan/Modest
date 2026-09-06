@@ -12,7 +12,7 @@
 #define BUF_SIZE 1024
 
 static bool writeFile(int sockFd) {
-	char buffer[BUF_SIZE];
+	char buffer[BUF_SIZE] = {0};
 	FILE *const fp = fopen(FILENAME, "w");
 	if (fp == NULL) {
 		perror("[-] Error in creating file");
@@ -57,7 +57,7 @@ int main(void) {
 	}
 	printf("[+] Listening...\n");
 	socklen_t addrSize = sizeof(struct sockaddr_in);
-	struct sockaddr_in newAddr;
+	struct sockaddr_in newAddr = {0};
 	struct sockaddr *const sa = (struct sockaddr *)(void *)&newAddr;
 	const int newSock = accept(sockFd, sa, &addrSize);
 	const bool suc = writeFile(newSock);

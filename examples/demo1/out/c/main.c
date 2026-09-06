@@ -22,7 +22,7 @@ int32_t main(void) {
 }
 
 static int32_t get_number(int32_t min, int32_t max) {
-	int32_t number;
+	int32_t number = 0;
 	number = 0;
 	while (true) {
 		printf("enter a number (%i .. %i): ", min, max);

@@ -148,7 +148,9 @@ declare void @perror(%ConstCharStr* %str)
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @.str1 to [0 x i8]*))
 	%2 = alloca %Int32, align 4
+	store %Int32 0, %Int32* %2
 	%3 = alloca %Int32, align 4
+	store %Int32 0, %Int32* %3
 	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @.str2 to [0 x i8]*))
 	%5 = call %Int (%ConstCharStr*, ...) @scanf(%ConstCharStr* bitcast ([3 x i8]* @.str3 to [0 x i8]*), %Int32* %2)
 	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @.str4 to [0 x i8]*))

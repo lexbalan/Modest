@@ -6,8 +6,8 @@
 
 int main(void) {
 	printf("if statement example\n");
-	int32_t a;
-	int32_t b;
+	int32_t a = 0;
+	int32_t b = 0;
 	printf("enter a: ");
 	scanf("%d", &a);
 	printf("enter b: ");

@@ -327,6 +327,7 @@ then_0:
 endif_0:
 	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @.str1 to [0 x i8]*), %Int32 %pos)
 	%8 = alloca %list_Node*, align 8
+	store %list_Node* null, %list_Node** %8
 ; if_1
 	%9 = icmp sge %Int32 %pos, 0
 	br %Bool %9 , label %then_1, label %else_1

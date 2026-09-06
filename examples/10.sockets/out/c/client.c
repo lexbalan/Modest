@@ -16,7 +16,7 @@
 #define BUF_SIZE 1024
 
 static bool sendFile(FILE *fp, int sockFd) {
-	char data[BUF_SIZE];
+	char data[BUF_SIZE] = {0};
 	while (fgets(data, LENGTHOF(data), fp) != NULL) {
 		if (send(sockFd, data, sizeof(char [BUF_SIZE]), 0) == -1) {
 			return false;

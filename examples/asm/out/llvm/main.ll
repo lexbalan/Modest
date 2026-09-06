@@ -149,6 +149,7 @@ define internal void @memoryBarrier() {
 
 define internal %Int64 @sum64(%Int64 %a, %Int64 %b) {
 	%1 = alloca %Int64, align 8
+	store %Int64 0, %Int64* %1
 	%2 = call %Int64 asm sideeffect "add $0, $1, $2", "=r,r,r,~{cc}" (%Int64 %a, %Int64 %b)
 	store %Int64 %2, %Int64* %1
 	%3 = load %Int64, %Int64* %1
@@ -157,6 +158,7 @@ define internal %Int64 @sum64(%Int64 %a, %Int64 %b) {
 
 define internal %Int64 @sub64(%Int64 %a, %Int64 %b) {
 	%1 = alloca %Int64, align 8
+	store %Int64 0, %Int64* %1
 	%2 = call %Int64 asm sideeffect "sub $0, $1, $2", "=r,r,r,~{cc}" (%Int64 %a, %Int64 %b)
 	store %Int64 %2, %Int64* %1
 	%3 = load %Int64, %Int64* %1
@@ -165,7 +167,9 @@ define internal %Int64 @sub64(%Int64 %a, %Int64 %b) {
 
 define internal void @sumsub64(%Int64 %a, %Int64 %b) {
 	%1 = alloca %Int64, align 8
+	store %Int64 0, %Int64* %1
 	%2 = alloca %Int64, align 8
+	store %Int64 0, %Int64* %2
 	%3 = call {%Int64,%Int64} asm sideeffect "add $0, $2, $3\0Asub $1, $2, $3\0A", "=&r,=&r,r,r,~{cc}" (%Int64 %a, %Int64 %b)
 	%4 = extractvalue {%Int64,%Int64} %3, 0
 	store %Int64 %4, %Int64* %1
