@@ -1,0 +1,27 @@
+// TEST: build
+// BACKENDS: c11, llvm
+//
+// The one variable allowed to keep an unsized array type without an
+// initializer: an `@extern` global.
+//
+// `@extern` says the storage lives outside the module, so its size is not
+// this module's to know — the declaration names the symbol and the element
+// type, and the C output is `extern int32_t externTable[];`, which is a
+// declaration and not a definition.  The refusals that surround this
+// permission are in `unsized.modest`.
+//
+// Nothing reads the variable: there is no definition to link against, and
+// the point here is that the declaration compiles at all.  It went missing
+// once: forbidding `[]T` for every variable to catch the local case takes
+// this one down with it.
+
+include "libc/ctypes64"
+
+
+@extern("C")
+var externTable: []Int32
+
+
+func main () -> Int {
+	return 0
+}

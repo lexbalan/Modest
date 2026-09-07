@@ -1095,30 +1095,6 @@ void u;   // error: variable has incomplete type 'void'
 - No reproducer in the suite: a `reject` test belongs in
   `tests/lang/type/unit/`.
 
-## 59. A local unsized array is accepted and emits `int32_t a[];`
-
-```modest
-func main () -> Int {
-	var a: []Int32
-	return 0
-}
-```
-
-```c
-int32_t a[];   // error: definition of variable with array type needs an
-               //        explicit size or an initializer
-```
-
-- `def_var_common` (`src/semantic.py:2483`) calls
-  `is_forbidden_var(unsized_array_forbidden=False)`, which lets `[]T`
-  through for every variable. It is meant for a global that is only
-  declared (`@extern`), but a local has to have a size — an unsized
-  array exists only behind a pointer.
-- The check needs to depend on the storage class: forbidden for a local,
-  allowed only for an extern declaration.
-- No reproducer in the suite: a `reject` test belongs in
-  `tests/lang/type/array/`.
-
 ## 60. Annotations on a local `var` are silently ignored
 
 ```modest

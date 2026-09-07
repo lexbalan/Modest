@@ -1198,12 +1198,12 @@ class Type(Entity):
 
 
 	# cannot create field with type
-	def is_forbidden_field(self, unsized_array_forbidden=True):
+	def is_forbidden_field(self):
 		if self.is_func():
 			return True
 
 		if self.is_unsized_array():
-			return unsized_array_forbidden
+			return True
 
 		return False
 
@@ -1228,7 +1228,7 @@ class Type(Entity):
 		return False
 
 
-	def is_forbidden_var(self, unsized_array_forbidden=True):
+	def is_forbidden_var(self):
 		if self.is_func():
 			return True
 
@@ -1236,7 +1236,9 @@ class Type(Entity):
 			if self.of.is_forbidden_any():
 				return True
 			if self.is_unsized_array():
-				return unsized_array_forbidden
+				# размер даёт инициализатор либо @extern;
+				# это решает def_var_common, у него есть аннотации
+				return False
 			if self.volume.is_immediate():
 				if self.volume.asset == 0:
 					return True

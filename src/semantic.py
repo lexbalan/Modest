@@ -2500,7 +2500,7 @@ def def_var_common(x):
 		# осознанно пропускаем ошибку, чтобы не плодить кучу ошибок дальше; это ок
 		pass
 
-	if var_type.is_forbidden_var(unsized_array_forbidden=False):
+	if var_type.is_forbidden_var():
 		error("unsuitable type", x['ti'])
 
 	# аннотации навешиваются уже после def_var_common, поэтому смотрим в AST;

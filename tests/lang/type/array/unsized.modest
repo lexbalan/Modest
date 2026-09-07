@@ -1,0 +1,41 @@
+// TEST: reject
+// BACKENDS: c11, llvm, modest
+// EXPECT-ERROR: variable of unsized array type requires an initializer
+// EXPECT-ERROR: variable of unsized array type requires an initializer
+// EXPECT-ERROR: extern is allowed only for global definitions
+//
+// A variable of an unsized array type `[]T`, and where its size may come
+// from.
+//
+// The length of an array is part of its type, so `[]T` — a type that
+// leaves it out — says nothing about how much storage to reserve.  A
+// variable of it therefore needs an initializer to take the size from;
+// without one the backend has nothing to write down: the C output would be
+// `int32_t a[];`, which clang refuses.
+//
+// The one variable that may leave `[]T` empty is an `@extern` global: its
+// storage is defined outside the module, and the size along with it — see
+// `unsized_extern.modest` for that side of the rule.  A local is storage
+// this function makes, so the escape hatch does not apply to it, and
+// `@extern` on a local is refused outright rather than quietly ignored.
+//
+// `[]T` as a *parameter* or behind a pointer stays legal — nothing here is
+// about the type itself, only about a variable that has to be storage.
+
+include "libc/ctypes64"
+
+
+// Nothing defines this elsewhere, so the size has to come from right here.
+var table: []Int32
+
+
+func main () -> Int {
+	// A local has no other source for a size either.
+	var local: []Int32
+
+	// And it cannot borrow one from outside: a local is never external.
+	@extern("C")
+	var borrowed: []Int32
+
+	return 0
+}
