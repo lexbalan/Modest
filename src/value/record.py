@@ -56,6 +56,10 @@ def value_record_can(to, from_type, method, ti):
 	if not from_type.is_generic():
 		return False
 
+	if to.layout == 'union' and len(from_type.fields) > 1:
+		# 'union' record requires only one field
+		return False
+
 	# check if all fields present in t
 	# and their types are correct
 	for field_src in from_type.fields:

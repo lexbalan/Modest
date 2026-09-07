@@ -7,6 +7,7 @@
 // EXPECT-OUT: passed: fixed comptime construction
 // EXPECT-OUT: passed: fixed comptime fraction
 // EXPECT-OUT: passed: fixed comptime array
+// EXPECT-OUT: passed: fixed comptime record
 // EXPECT-OUT: passed: fixed comptime
 //
 // Constant folding of FixedX, checked at the only place where it is
@@ -18,12 +19,14 @@
 // one construction that does not rescale), so each check below compares a
 // folded constant against the bit pattern it must have produced.
 //
-// Nothing here computes at run time: every value is a `const`, and the
-// program only prints comparisons.  The run-time half of the type lives next
-// door, in runtime.modest, which checks the same operations built by the
-// backends instead of folded.  The two stay apart so that a break names its
-// own half — the fold or the codegen — and because the bit-exact checks here
-// need `pragma unsafe`, which run-time code has no reason to ask for.
+// Nothing here computes at run time: every value is folded before the program
+// starts — a `const`, or a `var` whose initializer the backend writes straight
+// into the storage — and the program only prints comparisons.  The run-time
+// half of the type lives next door, in runtime.modest, which checks the same
+// operations built by the backends instead of folded.  The two stay apart so
+// that a break names its own half — the fold or the codegen — and because the
+// bit-exact checks here need `pragma unsafe`, which run-time code has no
+// reason to ask for.
 
 pragma unsafe
 
@@ -261,6 +264,69 @@ func testArray () -> Bool {
 }
 
 
+// A record field is constructed to the type of that field, exactly as an
+// array element is constructed to the element type.  The scale therefore
+// has to survive every level a literal is nested through: a record inside
+// a record, an array inside a record, and the default of a field the
+// literal never names.
+//
+// These are `var` and not `const` on purpose.  A `const` folds into each
+// of its uses and never reaches any storage, and it is the written-out
+// storage that has to carry the scale here.
+type Point = {x: Fixed32, y: Fixed32}
+type Segment = {from: Point, to: Point}
+type Box = {corners: [2]Point, edge: [2]Fixed32}
+type Margin = {near: Fixed32, far: Fixed32 = 0.75}
+
+var flat: Point = {x = 1.5, y = -0.5}
+var whole: Point = {x = 7, y = 2}
+var seg: Segment = {from = {x = 0.25, y = 2.0}, to = {x = 7, y = 0.1}}
+var box: Box = {corners = [{x = 1.5, y = 0.5}, {x = 0.25, y = 3}], edge = [0.5, 2]}
+var margin: Margin = {near = 1.0}
+
+
+func testRecord () -> Bool {
+	var ok = true
+
+	ok = check("flat.x", unsafe Word32 flat.x, 0x00018000) and ok
+	ok = check("flat.y", unsafe Word32 flat.y, 0xFFFF8000) and ok
+
+	// An integer literal in a field scales like a fractional one — and a
+	// record whose every field is written as an integer has nothing in it
+	// that looks fractional to give the type away.
+	ok = check("whole.x", unsafe Word32 whole.x, 0x00070000) and ok
+	ok = check("whole.y", unsafe Word32 whole.y, 0x00020000) and ok
+
+	// One level down: a record-typed field.
+	ok = check("seg.from.x", unsafe Word32 seg.from.x, 0x00004000) and ok
+	ok = check("seg.from.y", unsafe Word32 seg.from.y, 0x00020000) and ok
+	ok = check("seg.to.x", unsafe Word32 seg.to.x, 0x00070000) and ok
+	ok = check("seg.to.y", unsafe Word32 seg.to.y, 0x0000199A) and ok
+
+	// ... and through an array-typed field, of records and of Fixed32 alike.
+	ok = check("box.corners[0].x", unsafe Word32 box.corners[0].x, 0x00018000) and ok
+	ok = check("box.corners[1].y", unsafe Word32 box.corners[1].y, 0x00030000) and ok
+	ok = check("box.edge[0]", unsafe Word32 box.edge[0], 0x00008000) and ok
+	ok = check("box.edge[1]", unsafe Word32 box.edge[1], 0x00020000) and ok
+
+	// A field the literal leaves out is filled from the field's default,
+	// which is constructed to the field's type just the same.
+	ok = check("margin.far", unsafe Word32 margin.far, 0x0000C000) and ok
+
+	// A local is written out the same way a global is.
+	var local: Segment = {from = {x = 0.25, y = 2.0}, to = {x = 7, y = 0.1}}
+	ok = check("local.from.x", unsafe Word32 local.from.x, 0x00004000) and ok
+	ok = check("local.to.y", unsafe Word32 local.to.y, 0x0000199A) and ok
+
+	if not ok {
+		return false
+	}
+
+	printf("passed: fixed comptime record\n")
+	return true
+}
+
+
 func main () -> Int {
 	var result = true
 	result = testLiterals() and result
@@ -269,6 +335,7 @@ func main () -> Int {
 	result = testConstruction() and result
 	result = testFraction() and result
 	result = testArray() and result
+	result = testRecord() and result
 
 	if not result {
 		printf("failed: fixed comptime\n")

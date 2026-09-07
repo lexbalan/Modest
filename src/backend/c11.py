@@ -309,40 +309,6 @@ def needd(x):
 
 
 
-def initializers_arent_equal(a, b):
-	if len(a) != len(b):
-		return True
-
-	i = 0
-	while i < len(a):
-		ini_left = a[i]
-		ini_right = b[i]
-
-		if ini_left.id.str != ini_right.id.str:
-			return True
-		if ini_left.id.c != ini_right.id.c:
-			return True
-		if ini_left.id.common != ini_right.id.common:
-			return True
-
-		if ini_left.value.type.is_fixed() and ini_right.value.type.is_rational():
-			return True
-
-		i += 1
-
-	return False
-
-
-
-#def cstr(value, sz):
-#	if sz > 8:
-#		return "_STR%d(%s)" % (sz, str_value(value))
-#	return str_value(value)
-#
-
-
-
-
 def is_the_same_in_c(t0, t1):
 	if t0.is_pointer_to_array() and t1.is_pointer_to_array():
 		if t0.to.is_array_of_char() and t1.to.is_array_of_char():
@@ -617,7 +583,6 @@ def do_cvalue_literal_number(t, v, ctx):
 	is_unsigned = t.is_nat() or t.is_word() or (t.is_integer() and v.asset >= 0)
 	as_hex = v.hasAttribute('hexadecimal') or t.is_word()
 	cv = cvalue_literal_integer(int(v.asset), width=t.width, is_unsigned=is_unsigned, as_hex=as_hex, nsigns=v.nsigns, ctx=ctx)
-	#cv.mark = '$%s' + str()
 	return cv
 
 
@@ -715,18 +680,18 @@ def do_cvalue_cons_record(x, ctx):
 	tt = do_ctype(to_type)
 
 	if x.value.is_immediate():
-		if initializers_arent_equal(x.asset, value.asset):
-			# Если у нас в ValueCons asset отличается от asset в ValueCons#value
-			# То печатаем литерал структуры из нашего asset
-			asset = []
+		# Если у нас в ValueCons asset отличается от asset в ValueCons#value
+		# То печатаем литерал структуры из нашего asset
+		asset = []
 
-			# сперва добавим в asset те поля что указаны в литерале из которого конструируем
-			# (⚠️ но сами поля берем свои а не из литерала ⚠️)
-			for value_ini in x.value.asset:
-				cons_ini = get_initializer_by_id_str(x.asset, value_ini.id.str)
-				assert(cons_ini != None)
-				asset.append(cons_ini)
+		# сперва добавим в asset те поля что указаны в литерале из которого конструируем
+		# (⚠️ но сами поля берем свои а не из литерала ⚠️)
+		for value_ini in x.value.asset:
+			cons_ini = get_initializer_by_id_str(x.asset, value_ini.id.str)
+			assert(cons_ini != None)
+			asset.append(cons_ini)
 
+		if x.type.layout != 'union':
 			# затем добавим поля, которые имеют default value отличное от zero
 			# add extra non-zero items ⚠️
 			for cons_ini in x.asset:
@@ -735,9 +700,9 @@ def do_cvalue_cons_record(x, ctx):
 				if not cons_ini.value.is_zero():
 					asset.append(cons_ini)
 
-			record = do_cvalue_literal_record_from_asset_list(asset, ctx)
-			cv = CValueCast(tt, record)
-			return cv
+		record = do_cvalue_literal_record_from_asset_list(asset, ctx)
+		cv = CValueCast(tt, record)
+		return cv
 
 	cv = do_cvalue(value, ctx=ctx)
 	cv = CValueCast(tt, cv)
@@ -2052,8 +2017,6 @@ def do_def_const(x):
 #	if not isinstance(iv, CValueCast):
 #		if not x.init_value.type.is_generic() and not x.init_value.type.is_array():
 #			iv = CValueCast(do_ctype(x.value.type), iv)
-
-	#iv.mark = str(x.init_value)
 	macro = CMacroDefValue(id_str, iv)
 	module_undef_list.append(id_str)
 	defined.append(x)

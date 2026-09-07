@@ -5,6 +5,7 @@
 // EXPECT-OUT: passed: the size of the largest field
 // EXPECT-OUT: passed: the fields share the storage
 // EXPECT-OUT: passed: a union field inside a record
+// EXPECT-OUT: passed: a field default leaves the union alone
 // EXPECT-OUT: passed: union layout
 // EXPECTED-FAIL(llvm): BUGS.md#43 @layout("union") is ignored, the fields do not overlap
 //
@@ -36,6 +37,19 @@ type Pixel = {
 	at: Nat32
 	color: Color
 }
+
+
+// A union whose second field carries a default.  The default must never be
+// written out beside the field a literal names: C initialises exactly one
+// member of a union, and a second designated initializer for the same
+// storage silently wins over the first.
+type Slot = @layout("union") {
+	word: Word32
+	bytes: [4]Word8 = [0xAA, 0xBB, 0xCC, 0xDD]
+}
+
+
+var globalSlot: Slot = {word = 0x11223344}
 
 
 func testOffsets () -> Bool {
@@ -136,12 +150,40 @@ func testInsideRecord () -> Bool {
 }
 
 
+func testFieldDefault () -> Bool {
+	// The literal names `word` and nothing else, so `word` is what the
+	// storage holds — `bytes` and its default are not part of this value.
+	var local: Slot = {word = 0x11223344}
+	if local.word != 0x11223344 {
+		printf("local.word = %08X, expected 11223344\n", Nat32 local.word)
+		return false
+	}
+
+	if globalSlot.word != 0x11223344 {
+		printf("globalSlot.word = %08X, expected 11223344\n", Nat32 globalSlot.word)
+		return false
+	}
+
+	// Naming the other field instead reaches the same storage from the
+	// other side, and the default plays no part there either.
+	var other: Slot = {bytes = [0x11, 0x11, 0x11, 0x11]}
+	if other.word != 0x11111111 {
+		printf("other.word = %08X after filling the bytes with 11\n", Nat32 other.word)
+		return false
+	}
+
+	printf("passed: a field default leaves the union alone\n")
+	return true
+}
+
+
 func main () -> Int {
 	var result = true
 	result = testOffsets() and result
 	result = testSize() and result
 	result = testAliasing() and result
 	result = testInsideRecord() and result
+	result = testFieldDefault() and result
 
 	if not result {
 		printf("failed: union layout\n")
