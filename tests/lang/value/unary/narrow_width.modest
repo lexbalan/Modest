@@ -1,0 +1,158 @@
+// TEST: run
+// BACKENDS: c11, llvm, modest
+// EXPECT-EXIT: 0
+// EXPECT-OUT: passed: word8
+// EXPECT-OUT: passed: word16
+// EXPECT-OUT: passed: stored
+// EXPECT-OUT: passed: narrow width
+// EXPECTED-FAIL(c11): BUGS.md#30 narrow Word operations are done at int width
+//
+// `~` on a Word8 or a Word16.
+//
+// The result of a unary bitwise operation has the operand's own type, says
+// docs/lang/value/unary.md — so `~` on a Word8 is a Word8, and the answer
+// is eight bits wide.  The complement of `0xF0` is `0x0F` and nothing else.
+//
+// The C backend hands the expression to C, where a `uint8_t` is promoted to
+// `int` before the operator sees it: `~0xF0` comes back `0xFFFFFF0F`, with
+// twenty-four bits that belong to no Modest type.  The LLVM backend does
+// the operation at `i8` and truncates by construction, so the two disagree.
+//
+// Storing the result into a variable of the operand type hides it — C
+// truncates on the store — so every check below uses the expression
+// directly, in a comparison or as a call argument, and the last one shows
+// the stored form being right under both backends.  That contrast is the
+// whole shape of the defect.
+//
+// The same promotion is what binary/narrow_width.modest reports for `<<`;
+// this is the unary half of one bug.  bitwise.modest stays at Word32 and
+// Word64 for exactly this reason.
+
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+
+
+func testWord8 () -> Bool {
+	var b: Word8 = 0xF0
+
+	if ~b != 0x0F {
+		printf("Word8 ~0xF0 = 0x%x, expected 0x0F\n", Word32(~b))
+		return false
+	}
+
+	// The complement of zero is every bit of the *type*, which is 0xFF and
+	// not 0xFFFFFFFF.
+	var zero: Word8 = 0x00
+	if ~zero != 0xFF {
+		printf("Word8 ~0x00 = 0x%x, expected 0xFF\n", Word32(~zero))
+		return false
+	}
+
+	// And of all ones, zero — the one case a too-wide operation gets right,
+	// here to show the failure is not simply "always wrong".
+	var ones: Word8 = 0xFF
+	if ~ones != 0x00 {
+		printf("Word8 ~0xFF = 0x%x, expected 0x00\n", Word32(~ones))
+		return false
+	}
+
+	// The operand and its complement have to partition the byte.
+	var w: Word8 = 0xA5
+	if w | ~w != 0xFF or w & ~w != 0x00 {
+		printf("Word8 0xA5 and ~0xA5 do not partition the byte\n")
+		return false
+	}
+
+	// The clearing idiom, where the extra bits are invisible because `&`
+	// masks them off again — right under both backends, and here to place
+	// the boundary.
+	var flags: Word8 = 0xFF
+	var bit: Word8 = 0x04
+	if flags & ~bit != 0xFB {
+		printf("Word8 0xFF & ~0x04 = 0x%x, expected 0xFB\n", Word32(flags & ~bit))
+		return false
+	}
+
+	printf("passed: word8\n")
+	return true
+}
+
+
+func testWord16 () -> Bool {
+	var h: Word16 = 0xFF00
+
+	if ~h != 0x00FF {
+		printf("Word16 ~0xFF00 = 0x%x, expected 0x00FF\n", Word32(~h))
+		return false
+	}
+
+	var zero: Word16 = 0x0000
+	if ~zero != 0xFFFF {
+		printf("Word16 ~0x0000 = 0x%x, expected 0xFFFF\n", Word32(~zero))
+		return false
+	}
+
+	var w: Word16 = 0xA55A
+	if ~w != 0x5AA5 {
+		printf("Word16 ~0xA55A = 0x%x, expected 0x5AA5\n", Word32(~w))
+		return false
+	}
+
+	if w | ~w != 0xFFFF or w & ~w != 0x0000 {
+		printf("Word16 0xA55A and ~0xA55A do not partition the halfword\n")
+		return false
+	}
+
+	// Two complements come back to the operand at every width, and this is
+	// the one identity that survives the promotion — so it passing tells
+	// you nothing, and it is here so that a reader does not add it later
+	// expecting it to catch something.
+	if ~(~w) != w {
+		printf("Word16 ~(~w) is not w\n")
+		return false
+	}
+
+	printf("passed: word16\n")
+	return true
+}
+
+
+// Stored into a variable of the operand's type, the same expressions are
+// right under both backends: C truncates on the assignment.  The type is
+// what narrows the value, which is precisely why the operator not doing it
+// goes unnoticed.
+func testStored () -> Bool {
+	var b: Word8 = 0xF0
+	var storedB: Word8 = ~b
+	if storedB != 0x0F {
+		printf("stored Word8 ~0xF0 = 0x%x, expected 0x0F\n", Word32 storedB)
+		return false
+	}
+
+	var h: Word16 = 0xFF00
+	var storedH: Word16 = ~h
+	if storedH != 0x00FF {
+		printf("stored Word16 ~0xFF00 = 0x%x, expected 0x00FF\n", Word32 storedH)
+		return false
+	}
+
+	printf("passed: stored\n")
+	return true
+}
+
+
+func main () -> Int {
+	var result = true
+	result = testWord8() and result
+	result = testWord16() and result
+	result = testStored() and result
+
+	if not result {
+		printf("failed: narrow width\n")
+		return exitFailure
+	}
+
+	printf("passed: narrow width\n")
+	return exitSuccess
+}

@@ -1,0 +1,71 @@
+// TEST: reject
+// EXPECT-ERROR: expected mutable value or function
+// EXPECT-ERROR: expected value with signed type
+// EXPECT-ERROR: expected value with signed type
+// EXPECT-ERROR: expected mutable value or function
+// EXPECT-ERROR: expected mutable value or function
+// EXPECT-ERROR: expected pointer value
+// EXPECT-ERROR: type mismatch
+//
+// The rules of docs/lang/value/unary.md that are stated by what will not
+// compile.  They cannot appear in a file that has to build, so they live
+// here, and each one is a separate site so that a diagnostic going missing
+// is a failure rather than a silent gap.
+//
+// The order matters: EXPECT-ERROR is matched in sequence, and mcc reports
+// the whole file in one run, so the parameter case at the top comes first
+// because its function is defined before `main`.
+//
+// What is deliberately *not* here: the operand-type rules that are settled
+// but not yet enforced.  `not` on an IntX, `~` and `+` on a Bool, `-` on a
+// WordX and `~` on a FloatX are all accepted by mcc today — see BUGS.md
+// #64.  They have their own files, one per row of the rule table, each
+// marked EXPECTED-FAIL so that the day a check lands is the day the suite
+// says so: reject_not_operand, reject_tilde_operand, reject_sign_operand.
+// Keeping them out of this file is what lets this one pass.
+
+include "libc/ctypes64"
+
+const limit: Int32 = 7
+
+
+// A parameter is a copy the callee may read and not export, so it is
+// immutable and has no address to take.
+func hold (v: Int32) -> Int32 {
+	var pv: *Int32 = &v
+	return v
+}
+
+
+func main () -> Int {
+	// `-` requires a signed type.  A NatX cannot represent the answer, and
+	// the language says so instead of handing back a large positive number.
+	var n: Nat32 = 5
+	var negated = -n
+
+	// Unary `+` goes through the same check, though it is a no-op and could
+	// not overflow anything.  Refusing a NatX is right for both operators,
+	// so this line stays where it is — what BUGS.md #64 has against `+` is
+	// the operands it wrongly *accepts*, not this one.
+	var plussed = +n
+
+	// `&` takes a mutable place.  A `let` binding is not one.
+	let bound: Int32 = 5
+	var pl: *Int32 = &bound
+
+	// Neither is a constant, which has no storage to point at.
+	var pc: *Int32 = &limit
+
+	// `*` requires a pointer.  An integer that happens to hold a plausible
+	// address is still not one — there is no implicit conversion in either
+	// direction.
+	var i: Int32 = 5
+	var deref = *i
+
+	// A function needs the `&` written out to become a pointer.  The bare
+	// name has the function type, not the pointer type, and the two do not
+	// convert — which is the reason `&` accepts a function at all.
+	var fp: *(v: Int32) -> Int32 = hold
+
+	return 0
+}

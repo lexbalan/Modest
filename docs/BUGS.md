@@ -384,53 +384,6 @@ a == b        // llvm: false      c11: true
   `EXPECTED-FAIL(llvm)`. It passes under c11 on purpose — if that backend
   ever stops emitting a compound literal, the test reports it.
 
-## 27. A prefix operator cannot be applied twice
-
-```modest
-var w: Word16 = 0xA55A
-let r = ~~w        // error: unexpected token1 '~'
-let n = - -a       // error: unexpected token1 '-'
-let b = not not t  // error: undefined value 'not'
-let s = &*p        // error: unexpected token1 '*'
-```
-
-- `docs/EBNF.txt:118` states the rule as `expr_10 ::= prefix_op* expr_11` —
-  any number of prefix operators. The parser accepts one.
-- Cause is one line per operator in `expr_value_10`
-  (`src/parser.py:920`): `*` recurses into `expr_value_10` and therefore
-  chains (`**pp` and `*&a` both compile), while `&`, `not`, `~`, `+` and
-  `-` each call `expr_value_11` — the postfix level — so nothing but a
-  primary may follow them.
-- Parenthesising works: `~(~w)`, `-(-a)`, `&(*p)`. So this costs
-  readability rather than expressiveness, which is why it has gone
-  unnoticed — `~~w` is rare, `not not x` is a Bool round-trip nobody
-  writes, and `- -a` is `a`.
-- The `not not t` case is worth reading twice: the second `not` is taken
-  for an identifier, so the diagnostic is `undefined value 'not'` and
-  points at a name the language reserves.
-- The same line also blocks a prefix operator in front of a *builtin*
-  operator, which is not a repeated prefix at all: `sizeof`, `alignof`,
-  `lengthof`, `offsetof` and `__defined` are parsed in `expr_value_10`
-  too, so nothing above level 11 may follow `-`, `~`, `+`, `&` or `not`
-  either. Each one is then read as an identifier, and what happens next
-  depends on what is inside its parentheses:
-
-  ```modest
-  let n = -lengthof(a)      // error: undefined value 'lengthof'
-  let b = not __defined(x)  // error: undefined value '__defined'
-  let s = -sizeof(Int32)    // mcc spins forever
-  let m = -alignof(Int32)   // same
-  ```
-
-  `lengthof(a)` and `__defined(x)` hold a value, so the phantom call
-  parses and the error is reported. `sizeof(Int32)` holds a *type*, which
-  `parse_args` cannot parse and will not skip — so the diagnostic never
-  arrives and #20 hangs the compiler instead.
-- Fix: call `self.expr_value_10()` instead of `self.expr_value_11()` in the
-  five branches. Precedence is unaffected — the level is the same one.
-- No test covers repeated prefix operators; `tests/lang/value/unary.modest`
-  does not exist yet.
-
 ## 28. Bitwise operators reject a pair of literal operands
 
 ```modest
@@ -1141,3 +1094,176 @@ extern int32_t env[3];   // the initializer is gone
   from a dropped initializer.
 - No reproducer in the suite: a `reject` test belongs next to the other
   `@extern` cases.
+
+## 62. C backend runs two unary signs together into `--` / `++`
+
+```modest
+var i: Int32 = 5
+printf("%d\n", - -i)          // c11: 4, and i is now 4     llvm: 5
+printf("%d\n", + +i)          // c11: 6, and i is now 6     llvm: 5
+```
+
+```c
+printf("%d\n", --i);          // a pre-decrement, not a double negation
+printf("%d\n", ++i);
+```
+
+- The worst shape a codegen bug can take: no diagnostic, valid C, and the
+  wrong answer *plus* a variable silently mutated. Everything downstream of
+  the expression sees the changed value, so one `- -i` moves every later
+  reading of `i` by one.
+- Cause is the printer, not the backend: `CValueUnaryMinus.__str__`
+  (`~/p/cshape/cshape.py:678`) returns `'-%s' % operand` with no separator,
+  and `CValueUnaryPlus` (`:667`) does the same with `'+'`. When the operand
+  itself prints as `-i` the two signs meet and lex as one token. The other
+  three prefix printers are safe: `~~w` and `!!b` are still two tokens in C,
+  and `**p` cannot arise from `CValueDeref` alone.
+- Only *adjacent* signs collide. `-(-i)` is right, and so is a binary
+  operator meeting a unary one — `k - -m` prints with the spaces the binary
+  printer puts in. A mixed pair is safe for the same reason: `- +m` prints
+  `-+m`, which is two tokens.
+- Three in a row stops compiling rather than compiling wrong: `- - -k`
+  prints `---k`, and clang refuses it with `expression is not assignable`
+  because `--k` is not an lvalue the third `-` can take.
+- The `modest` backend prints `--i` too (`-mbackend=modest`), from the same
+  shape of code. It only has to survive codegen, so nothing fails there,
+  but the emitted source no longer says what the input said.
+- The LLVM backend is right: it builds `0 - (0 - i)` as two instructions,
+  with no text to run together.
+- Fix belongs in cshape: emit a space (or parenthesise) when the operand's
+  own text starts with the same sign character.
+- Coverage: `tests/lang/value/unary/double_sign.modest`, marked
+  `EXPECTED-FAIL(c11)`.
+
+## 63. LLVM backend inverts a literal at the literal's own width
+
+```modest
+var a: Word32 = ~0x0F
+var b: Word32 = ~0x000000FF
+var c: Word64 = ~0x0F
+```
+
+| | c11 | llvm |
+| :-- | :-- | :-- |
+| `~0x0F` → Word32 | `0xfffffff0` | `0x000000f0` |
+| `~0x000000FF` → Word32 | `0xffffff00` | `0x00000000` |
+| `~0x0F` → Word64 | `0xfffffffffffffff0` | `0x00000000000000f0` |
+
+```llvm
+%2 = xor i8 15, -1          ; the inversion happens at the literal's width
+%3 = zext i8 %2 to %Word32  ; and the top bits are then filled with zeros
+```
+
+- A literal has no type of its own and takes the one it meets, so `~0x0F`
+  assigned to a `Word32` is the complement of a 32-bit `0x0000000F`. The
+  LLVM backend sizes the literal to its own value first — `0x0F` fits `i8`
+  — inverts it there, and *zero*-extends the result, so every bit above the
+  literal's width comes out 0 instead of 1.
+- The same expression over a variable is right: `var w: Word32 = 0x0F` then
+  `~w` emits `xor %Word32 %13, -1` and gives `0xfffffff0`. So the defect is
+  specific to a literal operand, which is exactly how a mask is written.
+- The wider the target and the smaller the literal, the more bits are lost;
+  `~0x0000FFFF` into a `Word32` comes out 0, a mask that selects nothing.
+- Not the same as #30, which is the C backend doing narrow `Word`
+  operations too *wide*. This one is the LLVM backend doing them too
+  *narrow*, and it needs no narrow type to appear in the source.
+- Fix: give the literal the target type before the inversion, the way the
+  variable path already has it — the `zext` should not be there at all.
+- Coverage: `tests/lang/value/unary/literal_width.modest`, marked
+  `EXPECTED-FAIL(llvm)`.
+
+## 64. Unary operators accept operand types they are not defined for
+
+The operand class of each unary operator was settled on 2026-09-07:
+
+| Operator | Operand |
+| :-- | :-- |
+| `not` | Bool — and nothing else |
+| `~` | WordX — and nothing else |
+| `-`, `+` | IntX, FloatX, FixedX, Integer, Rational |
+
+`not` and `~` are two operators, not two spellings of one: neither crosses
+to the other's type. `docs/lang/value/unary.md` states the rule; the
+compiler enforces almost none of it.
+
+```modest
+var t: Bool = true
+var f: Float64 = 1.5
+var i: Int32 = 5
+var w: Word32 = 5
+var n: Nat32 = 5
+
+var a = not w       // accepted; `not` is Bool-only
+var b = not i       // accepted; bitwise, -6
+var c = ~t          // accepted; `~` is Word-only
+var d = ~f          // accepted by mcc — then clang and llvm-as reject it
+var e = -w          // accepted; wraps, 0xfffffffb
+var g = -t          // accepted
+var h = +t          // accepted
+var k = +n          // error: expected value with signed type
+```
+
+- Exactly one check exists — the signedness test behind `-`, which gives
+  `expected value with signed type` on a `NatX`. That one is right, and it
+  is the only operand rule applied anywhere.
+- That check is also asked on the wrong operator. `+` shares it, so the
+  picture for the no-op operator is inside out: `NatX` is refused, while
+  `WordX` and `Bool` — which the rule does not admit at all — go through.
+  Removing `+` from the signedness test and giving both `+` and `-` the
+  numeric-operand test is one change, not two.
+- Two different costs. Where the operand has an integer representation the
+  program compiles and runs with a meaning the language does not define
+  (`not` on an `Int32` is a bitwise inversion; `-` on a `Word32` wraps).
+  Where it does not, the nonsense reaches the backend and the *user* gets
+  the toolchain's diagnostic instead of mcc's:
+
+  ```
+  c11:  p.c:11:13: error: invalid argument type 'double' to unary expression
+  llvm: p.ll:102:11: error: instruction requires integer or integer vector operands
+  ```
+
+  `~f` and `not f` on a `FloatX` both do this, under both backends.
+- `not` on a `WordX` is the one that has to be *removed* rather than
+  refused-at-last: it works today, it is what `docs/lang/value/unary.md`
+  used to document, and code may be relying on it. `~` is the spelling that
+  survives.
+- Coverage: `tests/lang/value/unary/reject_operand_type.modest`, marked
+  `EXPECTED-FAIL` on both backends — it is a `reject` test that mcc
+  currently accepts, so it reports XFAIL until the check lands and XPASS
+  the moment it does. The rules that *are* enforced are in
+  `tests/lang/value/unary/reject.modest`.
+
+## 65. `&` on an `@immutable var` hands out a writable pointer
+
+```modest
+@immutable
+var gimm: Int32 = 3
+
+func main () -> Int {
+	gimm = 9              // error: expected mutable value
+	var p: *Int32 = &gimm // accepted
+	*p = 99               // and this writes: gimm is 99
+	return 0
+}
+```
+
+- `docs/lang/value/unary.md` says `&` applies to mutable values, and the
+  check exists — `&` on a `let`, on a parameter and on a `const` all give
+  `expected mutable value or function`. An `@immutable var` passes it,
+  even though direct assignment to the same name is refused two lines up.
+- So the annotation is enforced against one way of writing and not the
+  other, and the pointer is the way that leaves no trace at the definition.
+  Both backends agree, on a global and on a local alike.
+- No undefined behaviour is emitted — the C backend prints
+  `static int32_t gimm = 3;` with no `const`, and LLVM prints
+  `@gimm = internal global %Int32 3` — so this is an unenforced rule
+  rather than a miscompilation.
+- Related but distinct from #60: that one is about a local `var`'s
+  annotations never being read at all. This holds for a *global*
+  `@immutable var`, whose annotation is read and does stop assignment.
+- Fix: the mutability test behind `&` should ask the same question
+  assignment asks. Whether `&` on an immutable value should instead yield a
+  pointer-to-immutable is a language question the pointer type does not
+  currently have an answer for.
+- No reproducer in the suite; it belongs with the `@immutable` tests
+  wherever the annotation cases land.

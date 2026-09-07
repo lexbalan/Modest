@@ -1,0 +1,220 @@
+// TEST: run
+// BACKENDS: c11, llvm, modest
+// EXPECT-EXIT: 0
+// EXPECT-OUT: passed: involution
+// EXPECT-OUT: passed: complement
+// EXPECT-OUT: passed: de morgan
+// EXPECT-OUT: passed: masking
+// EXPECT-OUT: passed: bitwise not
+//
+// `~` on a WordX — the bitwise inversion, and the only unary operator the
+// type has.
+//
+// `not` is not a second spelling of it.  The two are separate operators
+// over separate types — `not` is the Bool one — and neither crosses over;
+// docs/lang/value/unary.md draws the line, and it is the same line
+// docs/CHEATSHEET.md draws for the binary `&`, `|` and `^`.  mcc still
+// accepts `not w` today, so the rule is stated where a rule that stops a
+// program compiling has to be: reject_not_operand.modest.
+//
+// Everything here is at Word32 and Word64 and over *variables*, and both
+// restrictions are load-bearing:
+//
+//   - Word8 and Word16 are covered in narrow_width.modest, because the C
+//     backend does the inversion at `int` width and the bits that leave the
+//     type survive (BUGS.md #30).
+//   - a literal operand is covered in literal_width.modest, because the
+//     LLVM backend inverts it at the *literal's* width and zero-extends
+//     (BUGS.md #63).
+//
+// Splitting them out is what lets this file be about the operator rather
+// than about the two backends.
+
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+
+
+// Inversion is its own inverse — the property that separates it from a
+// clear or a set.
+func testInvolution () -> Bool {
+	var w: Word32 = 0x0000A55A
+
+	// Chained and parenthesised: the parser takes any number of prefix
+	// operators, so both spellings have to work and agree.
+	if ~~w != w or ~(~w) != w {
+		printf("~~w = 0x%08x, expected 0x%08x\n", ~~w, w)
+		return false
+	}
+
+	// An odd number of them is a single inversion.
+	if ~~~w != ~w {
+		printf("~~~w is not ~w\n")
+		return false
+	}
+
+	var q: Word64 = 0x0123456789ABCDEF
+	if ~~q != q {
+		printf("Word64 ~~q is not q\n")
+		return false
+	}
+
+	printf("passed: involution\n")
+	return true
+}
+
+
+// What the complement actually is, in terms the other operators can state:
+// every bit flipped, so the operand and its complement partition the type.
+func testComplement () -> Bool {
+	var w: Word32 = 0x0000A55A
+
+	// The two have no bit in common and cover every bit between them.
+	if w & ~w != 0x00000000 {
+		printf("w & ~w = 0x%08x, expected 0\n", w & ~w)
+		return false
+	}
+
+	if w | ~w != 0xFFFFFFFF {
+		printf("w | ~w = 0x%08x, expected 0xFFFFFFFF\n", w | ~w)
+		return false
+	}
+
+	if w ^ ~w != 0xFFFFFFFF {
+		printf("w ^ ~w = 0x%08x, expected 0xFFFFFFFF\n", w ^ ~w)
+		return false
+	}
+
+	// The named patterns, by hand.
+	var zero: Word32 = 0x00000000
+	var ones: Word32 = 0xFFFFFFFF
+	if ~zero != ones or ~ones != zero {
+		printf("~0 = 0x%08x and ~0xFFFFFFFF = 0x%08x\n", ~zero, ~ones)
+		return false
+	}
+
+	var nib: Word32 = 0x0F0F0F0F
+	if ~nib != 0xF0F0F0F0 {
+		printf("~0x0F0F0F0F = 0x%08x, expected 0xF0F0F0F0\n", ~nib)
+		return false
+	}
+
+	// At Word64 the top half is what a narrowed intermediate would drop.
+	var qmask: Word64 = 0xFFFFFFFF00000000
+	if ~qmask != 0x00000000FFFFFFFF {
+		printf("~0xFFFFFFFF00000000 = 0x%016llx\n", ~qmask)
+		return false
+	}
+
+	printf("passed: complement\n")
+	return true
+}
+
+
+// De Morgan ties the unary operator to the binary ones, in both spellings,
+// so a `not` that quietly did something else to a Word would show here.
+func testDeMorgan () -> Bool {
+	var w: Word32 = 0x0000A55A
+	var key: Word32 = 0x00001234
+
+	if ~(w & key) != (~w | ~key) {
+		printf("~(w & key) = 0x%08x, ~w | ~key = 0x%08x\n",
+			~(w & key), ~w | ~key)
+		return false
+	}
+
+	if ~(w | key) != (~w & ~key) {
+		printf("~(w | key) = 0x%08x, ~w & ~key = 0x%08x\n",
+			~(w | key), ~w & ~key)
+		return false
+	}
+
+	// `^` is unaffected by a complement on one side, which is the third
+	// identity of the set: ~(a ^ b) == ~a ^ b.
+	if ~(w ^ key) != (~w ^ key) {
+		printf("~(w ^ key) = 0x%08x, ~w ^ key = 0x%08x\n",
+			~(w ^ key), ~w ^ key)
+		return false
+	}
+
+	printf("passed: de morgan\n")
+	return true
+}
+
+
+// What the operator is for: `& ~mask` is how a bit is cleared, and it is
+// the one place unary `~` appears in ordinary code.
+func testMasking () -> Bool {
+	var flags: Word32 = 0x00000000
+	var bit: Word32 = 0x00000004
+
+	flags = flags | bit
+	if flags & bit == 0 {
+		printf("the bit that was just set does not read back\n")
+		return false
+	}
+
+	flags = flags & ~bit
+	if flags != 0x00000000 {
+		printf("clearing through ~bit left 0x%08x\n", flags)
+		return false
+	}
+
+	// Clearing a bit that was never set changes nothing, and clearing one
+	// of several leaves the rest.
+	var many: Word32 = 0x000000FF
+	var low: Word32 = 0x0000000F
+	if many & ~low != 0x000000F0 {
+		printf("0xFF & ~0x0F = 0x%08x, expected 0xF0\n", many & ~low)
+		return false
+	}
+
+	var none: Word32 = 0x00000000
+	if many & ~none != many {
+		printf("clearing no bits changed the value\n")
+		return false
+	}
+
+	// Splitting a value along a mask and putting it back together.
+	var q: Word64 = 0xDEADBEEFCAFEBABE
+	var qmask: Word64 = 0xFFFFFFFF00000000
+	if (q & qmask) | (q & ~qmask) != q {
+		printf("the two halves of a Word64 do not add back up\n")
+		return false
+	}
+
+	// `~` binds above every binary operator, so `~a & b` is `(~a) & b`.
+	// Written the other way the answer differs, which is what makes this a
+	// check and not a restatement.
+	var a: Word32 = 0x0000FF00
+	var b: Word32 = 0x00FFFF00
+	if ~a & b != 0x00FF0000 {
+		printf("~a & b = 0x%08x, expected 0x00FF0000\n", ~a & b)
+		return false
+	}
+
+	if ~a & b == ~(a & b) {
+		printf("~a & b equals ~(a & b), so `~` grouped below `&`\n")
+		return false
+	}
+
+	printf("passed: masking\n")
+	return true
+}
+
+
+func main () -> Int {
+	var result = true
+	result = testInvolution() and result
+	result = testComplement() and result
+	result = testDeMorgan() and result
+	result = testMasking() and result
+
+	if not result {
+		printf("failed: bitwise not\n")
+		return exitFailure
+	}
+
+	printf("passed: bitwise not\n")
+	return exitSuccess
+}

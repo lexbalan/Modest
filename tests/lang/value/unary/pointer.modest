@@ -1,0 +1,388 @@
+// TEST: run
+// BACKENDS: c11, llvm, modest
+// EXPECT-EXIT: 0
+// EXPECT-OUT: passed: address and dereference
+// EXPECT-OUT: passed: places
+// EXPECT-OUT: passed: round trip
+// EXPECT-OUT: passed: out parameter
+// EXPECT-OUT: passed: through a pointer
+// EXPECT-OUT: passed: function pointer
+// EXPECT-OUT: passed: pointer unary
+//
+// `&` and `*` — the two operators that are not arithmetic on the value but
+// arithmetic on where it lives.
+//
+// `&` takes a *mutable place*: a variable, a field, an element, a global —
+// or a function.  It does not take a `let`, a parameter or a `const`, and
+// those refusals are what reject.modest is for.  A function is the one
+// immutable thing it does take, and it takes it only with the `&` written
+// out: a bare function name is not a pointer, which is the difference from
+// C worth having a check for.
+//
+// `*` designates the pointed-to value as a place, so it reads and it
+// assigns.  The one thing to keep in mind while reading this file is that
+// records and arrays behind a pointer are reached *without* it — `p.x` and
+// `p[i]`, not `(*p).x` — so `*` shows up mostly on pointers to scalars.
+
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+
+
+type Point = {
+	x: Int32
+	y: Int32
+}
+
+type Frame = {
+	origin: Point
+	tag: Word32
+}
+
+var counter: Int32 = 100
+
+
+func addTwo (a: Int32, b: Int32) -> Int32 {
+	return a + b
+}
+
+func negate (v: Int32) -> Int32 {
+	return -v
+}
+
+// The reason `&` exists: a callee that writes back through a pointer.
+func bump (p: *Int32) -> Unit {
+	*p = *p + 1
+}
+
+func swap (a: *Int32, b: *Int32) -> Unit {
+	var tmp: Int32 = *a
+	*a = *b
+	*b = tmp
+}
+
+
+func testAddressAndDeref () -> Bool {
+	var v: Int32 = 7
+	var p: *Int32 = &v
+
+	if *p != 7 {
+		printf("*p = %d, expected 7\n", *p)
+		return false
+	}
+
+	// `*p` is a place, so it assigns — and the assignment is visible under
+	// the original name, which is the whole point of having taken the
+	// address rather than a copy.
+	*p = 10
+	if v != 10 {
+		printf("v = %d after *p = 10, expected 10\n", v)
+		return false
+	}
+
+	// And the other direction: writing the variable is visible through the
+	// pointer.
+	v = 20
+	if *p != 20 {
+		printf("*p = %d after v = 20, expected 20\n", *p)
+		return false
+	}
+
+	// `*p` reads as an ordinary operand in a larger expression.
+	if *p + 1 != 21 or *p * 2 != 40 or -*p != -20 {
+		printf("*p does not behave as 20 in arithmetic\n")
+		return false
+	}
+
+	// Two pointers to the same place agree, and compare equal.
+	var q: *Int32 = &v
+	if p != q {
+		printf("two pointers to v are not equal\n")
+		return false
+	}
+
+	// A pointer that points nowhere is `nil`, and that is a value it can be
+	// compared against.
+	var none: *Int32 = nil
+	if none != nil or p == nil {
+		printf("nil comparison is wrong\n")
+		return false
+	}
+
+	printf("passed: address and dereference\n")
+	return true
+}
+
+
+// Every kind of place `&` accepts, each written to through the pointer so
+// that the address is proved to be the real one and not a copy's.
+func testPlaces () -> Bool {
+	// A local variable.
+	var local: Int32 = 1
+	var pl: *Int32 = &local
+	*pl = 11
+	if local != 11 {
+		printf("local = %d, expected 11\n", local)
+		return false
+	}
+
+	// A module-level variable.
+	var pg: *Int32 = &counter
+	*pg = 111
+	if counter != 111 {
+		printf("counter = %d, expected 111\n", counter)
+		return false
+	}
+
+	// A record field.
+	var pt: Point = {x = 1, y = 2}
+	var px: *Int32 = &pt.x
+	*px = 21
+	if pt.x != 21 or pt.y != 2 {
+		printf("pt = {%d, %d}, expected {21, 2}\n", pt.x, pt.y)
+		return false
+	}
+
+	// A field of a nested record, reached through the outer one.
+	var fr: Frame = {origin = {x = 3, y = 4}, tag = 0x99}
+	var py: *Int32 = &fr.origin.y
+	*py = 41
+	if fr.origin.y != 41 or fr.origin.x != 3 {
+		printf("fr.origin = {%d, %d}, expected {3, 41}\n",
+			fr.origin.x, fr.origin.y)
+		return false
+	}
+
+	// An array element, including one reached by a computed index.
+	var arr: [4]Int32 = [1, 2, 3, 4]
+	var pe: *Int32 = &arr[2]
+	*pe = 31
+	if arr[2] != 31 or arr[1] != 2 or arr[3] != 4 {
+		printf("arr = [%d, %d, %d, %d], expected [1, 2, 31, 4]\n",
+			arr[0], arr[1], arr[2], arr[3])
+		return false
+	}
+
+	var i: Int32 = 0
+	var pf: *Int32 = &arr[i]
+	*pf = 91
+	if arr[0] != 91 {
+		printf("arr[0] = %d, expected 91\n", arr[0])
+		return false
+	}
+
+	printf("passed: places\n")
+	return true
+}
+
+
+// `&` and `*` undo each other, in both orders.
+func testRoundTrip () -> Bool {
+	var v: Int32 = 5
+
+	// `*&v` is v, as a place: it reads and it assigns.
+	if *&v != 5 {
+		printf("*&v = %d, expected 5\n", *&v)
+		return false
+	}
+
+	*&v = 6
+	if v != 6 {
+		printf("v = %d after *&v = 6, expected 6\n", v)
+		return false
+	}
+
+	// `&*p` is p.
+	var p: *Int32 = &v
+	if &*p != p {
+		printf("&*p is not p\n")
+		return false
+	}
+
+	// A pointer is itself a place, so it has an address of its own — and
+	// two dereferences get back to the value.
+	var pp: **Int32 = &p
+	if **pp != 6 {
+		printf("**pp = %d, expected 6\n", **pp)
+		return false
+	}
+
+	// Writing through both levels reaches the original variable.
+	**pp = 7
+	if v != 7 {
+		printf("v = %d after **pp = 7, expected 7\n", v)
+		return false
+	}
+
+	// And *pp is p, so redirecting it redirects the outer pointer.
+	var other: Int32 = 99
+	*pp = &other
+	if *p != 99 {
+		printf("*p = %d after *pp = &other, expected 99\n", *p)
+		return false
+	}
+
+	if v != 7 {
+		printf("v = %d, expected the redirect to leave it alone\n", v)
+		return false
+	}
+
+	printf("passed: round trip\n")
+	return true
+}
+
+
+// What `&` is for in practice: giving a callee something to write back to,
+// since a parameter is a copy the callee may read but not export.
+func testOutParameter () -> Bool {
+	var v: Int32 = 1
+
+	bump(&v)
+	bump(&v)
+	if v != 3 {
+		printf("v = %d after two bumps, expected 3\n", v)
+		return false
+	}
+
+	var a: Int32 = 10
+	var b: Int32 = 20
+	swap(&a, &b)
+	if a != 20 or b != 10 {
+		printf("after swap a = %d, b = %d, expected 20/10\n", a, b)
+		return false
+	}
+
+	// Swapping the same place with itself leaves it alone rather than
+	// zeroing it — the callee copies before it writes.
+	swap(&a, &a)
+	if a != 20 {
+		printf("a = %d after swapping with itself, expected 20\n", a)
+		return false
+	}
+
+	// The address of a field and of an element are ordinary arguments.
+	var pt: Point = {x = 1, y = 2}
+	bump(&pt.x)
+	var arr: [3]Int32 = [7, 8, 9]
+	bump(&arr[1])
+	if pt.x != 2 or arr[1] != 9 {
+		printf("pt.x = %d, arr[1] = %d, expected 2/9\n", pt.x, arr[1])
+		return false
+	}
+
+	printf("passed: out parameter\n")
+	return true
+}
+
+
+// A record or an array behind a pointer is reached without an explicit
+// `*` — the difference from C that costs the most to discover by accident.
+func testThroughPointer () -> Bool {
+	var pt: Point = {x = 1, y = 2}
+	var pp: *Point = &pt
+
+	if pp.x != 1 or pp.y != 2 {
+		printf("pp = {%d, %d}, expected {1, 2}\n", pp.x, pp.y)
+		return false
+	}
+
+	pp.x = 5
+	if pt.x != 5 {
+		printf("pt.x = %d after pp.x = 5, expected 5\n", pt.x)
+		return false
+	}
+
+	// An array is the same, and indexing needs a pointer to *array* — a
+	// pointer to the element type does not index, which is the other half
+	// of the same rule.
+	var arr: [4]Int32 = [1, 2, 3, 4]
+	var ap: *[]Int32 = &arr
+
+	if ap[0] != 1 or ap[3] != 4 {
+		printf("ap = [%d, ..., %d], expected 1/4\n", ap[0], ap[3])
+		return false
+	}
+
+	ap[1] = 22
+	if arr[1] != 22 {
+		printf("arr[1] = %d after ap[1] = 22, expected 22\n", arr[1])
+		return false
+	}
+
+	// A pointer to the sized array type indexes too.
+	var sized: *[4]Int32 = &arr
+	if sized[2] != 3 {
+		printf("sized[2] = %d, expected 3\n", sized[2])
+		return false
+	}
+
+	// A field of a record behind a pointer still yields a place whose
+	// address can be taken.
+	var px: *Int32 = &pp.y
+	*px = 8
+	if pt.y != 8 {
+		printf("pt.y = %d after writing through &pp.y, expected 8\n", pt.y)
+		return false
+	}
+
+	printf("passed: through a pointer\n")
+	return true
+}
+
+
+// A function is the one immutable thing `&` accepts, and the `&` is not
+// optional: `var f: *(...) -> T = name` is a type mismatch, so the address
+// operator is the only way in.  reject.modest states that half.
+func testFunctionPointer () -> Bool {
+	var f: *(a: Int32, b: Int32) -> Int32 = &addTwo
+
+	if f(3, 4) != 7 {
+		printf("f(3, 4) = %d, expected 7\n", f(3, 4))
+		return false
+	}
+
+	// A pointer to a function is a value: it is assignable and comparable.
+	var g: *(v: Int32) -> Int32 = &negate
+	if g(5) != -5 {
+		printf("g(5) = %d, expected -5\n", g(5))
+		return false
+	}
+
+	if g != &negate {
+		printf("&negate taken twice gives two different pointers\n")
+		return false
+	}
+
+	if f == nil or g == nil {
+		printf("a function pointer compares equal to nil\n")
+		return false
+	}
+
+	// Calling through the pointer composes like any other call.
+	if g(f(1, 2)) != -3 {
+		printf("g(f(1, 2)) = %d, expected -3\n", g(f(1, 2)))
+		return false
+	}
+
+	printf("passed: function pointer\n")
+	return true
+}
+
+
+func main () -> Int {
+	var result = true
+	result = testAddressAndDeref() and result
+	result = testPlaces() and result
+	result = testRoundTrip() and result
+	result = testOutParameter() and result
+	result = testThroughPointer() and result
+	result = testFunctionPointer() and result
+
+	if not result {
+		printf("failed: pointer unary\n")
+		return exitFailure
+	}
+
+	printf("passed: pointer unary\n")
+	return exitSuccess
+}

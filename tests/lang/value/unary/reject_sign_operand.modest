@@ -1,0 +1,30 @@
+// TEST: reject
+// EXPECTED-FAIL: BUGS.md#64 `-` and `+` accept WordX and Bool operands
+//
+// `-` and `+` take a number: IntX, FloatX, or an untyped Integer literal.
+//
+// The signedness half of this rule is enforced and passes — `-n` and `+n`
+// on a NatX are in reject.modest.  What is missing is the other half: a
+// `WordX` is a bit pattern rather than a quantity, so it has no negation,
+// and a Bool is not a number at all.
+//
+// `-w` is the one with a plausible-looking answer: it wraps, and both
+// backends agree on 0xfffffffb for `-5` at Word32, so nothing downstream
+// reports anything.  That is the reason to refuse it at the front.
+//
+// Expected to fail today — see reject_not_operand.modest for what the
+// marker means and what removing it involves.
+
+include "libc/ctypes64"
+
+func main () -> Int {
+	var w: Word32 = 5
+	var negWord = -w
+	var posWord = +w
+
+	var t: Bool = true
+	var negBool = -t
+	var posBool = +t
+
+	return 0
+}

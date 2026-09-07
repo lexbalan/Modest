@@ -1,0 +1,282 @@
+// TEST: run
+// BACKENDS: c11, llvm, modest
+// EXPECT-EXIT: 0
+// EXPECT-OUT: passed: negation
+// EXPECT-OUT: passed: widths
+// EXPECT-OUT: passed: identities
+// EXPECT-OUT: passed: precedence
+// EXPECT-OUT: passed: unary plus
+// EXPECT-OUT: passed: unary arithmetic
+//
+// `-` and `+` on the types that carry a number.
+//
+// The interesting one is `-`, and the interesting thing about it is what it
+// refuses: docs/lang/value/unary.md gives it IntX and FloatX and not NatX,
+// so a language that would silently hand back a huge positive number
+// instead says `expected value with signed type`.  That refusal is stated
+// in reject.modest, which is where a rule that stops a program compiling
+// has to live; this file is the other side of it.
+//
+// `+` is a no-op and the checks below say so — it exists for symmetry with
+// `-` in a written expression, not because it does anything.
+//
+// Two operand types are deliberately absent.  FloatX negation is in
+// tests/lang/type/float/negation.modest, on its own because the LLVM
+// backend emits an integer `sub` for it (BUGS.md #34) and one backend bug
+// should not mark every other operand type broken.  `- -x` written with the
+// two signs adjacent is in double_sign.modest, for the same reason on the
+// other backend (BUGS.md #62).
+
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+
+
+func testNegation () -> Bool {
+	var a: Int32 = 5
+
+	if -a != -5 {
+		printf("-a = %d, expected -5\n", -a)
+		return false
+	}
+
+	// A negative operand comes back positive: `-` is not "make negative".
+	var neg: Int32 = -7
+	if -neg != 7 {
+		printf("-neg = %d, expected 7\n", -neg)
+		return false
+	}
+
+	// Negating zero gives zero, and there is no second zero to confuse it
+	// with — that is a FloatX property, not an IntX one.
+	var zero: Int32 = 0
+	if -zero != 0 {
+		printf("-0 = %d, expected 0\n", -zero)
+		return false
+	}
+
+	// The operand can be a whole expression rather than a name.
+	var b: Int32 = 3
+	if -(a + b) != -8 or -(a - b) != -2 {
+		printf("-(5 + 3) = %d, -(5 - 3) = %d, expected -8/-2\n",
+			-(a + b), -(a - b))
+		return false
+	}
+
+	// And the result of a call, or an element, or a field.
+	var arr: [3]Int32 = [1, 2, 3]
+	if -arr[1] != -2 {
+		printf("-arr[1] = %d, expected -2\n", -arr[1])
+		return false
+	}
+
+	printf("passed: negation\n")
+	return true
+}
+
+
+// Negation stays inside the operand type, at every signed width.
+func testWidths () -> Bool {
+	var i8: Int8 = 100
+	if -i8 != -100 {
+		printf("Int8 -100 = %d\n", Int32 -i8)
+		return false
+	}
+
+	var i16: Int16 = 30000
+	if -i16 != -30000 {
+		printf("Int16 -30000 = %d\n", Int32 -i16)
+		return false
+	}
+
+	// Int64 carries what Int32 cannot.
+	var i64: Int64 = 5_000_000_000
+	if -i64 != -5_000_000_000 {
+		printf("Int64 -5e9 = %lld\n", -i64)
+		return false
+	}
+
+	// The most negative value of a width has no positive counterpart, so
+	// negating it wraps back to itself.  This is what two's complement
+	// does, and the language has not promised otherwise — the check is
+	// here so that a change of mind about it is visible.
+	var min32: Int32 = -2_147_483_648
+	if -min32 != min32 {
+		printf("-(-2147483648) = %d, expected it to wrap to itself\n", -min32)
+		return false
+	}
+
+	// FixedX negates like the integer it is stored as, scale and all.
+	var f: Fixed32 = 1.5
+	if -f != -1.5 {
+		printf("Fixed32 -1.5 = %f\n", Float64 -f)
+		return false
+	}
+
+	var g: Fixed32 = -0.25
+	if -g != 0.25 {
+		printf("Fixed32 -(-0.25) = %f\n", Float64 -g)
+		return false
+	}
+
+	printf("passed: widths\n")
+	return true
+}
+
+
+// The arithmetic identities that say `-` is the additive inverse and not
+// something that merely looks like one.
+func testIdentities () -> Bool {
+	var a: Int32 = 5
+	var b: Int32 = 3
+
+	if a + -a != 0 {
+		printf("a + -a = %d, expected 0\n", a + -a)
+		return false
+	}
+
+	// Two negations give the original back.  Written with parentheses: the
+	// adjacent spelling `- -a` is a separate file, see the header.
+	if -(-a) != a {
+		printf("-(-a) = %d, expected %d\n", -(-a), a)
+		return false
+	}
+
+	// Subtraction is addition of the negation.
+	if a - b != a + -b {
+		printf("a - b = %d, a + -b = %d\n", a - b, a + -b)
+		return false
+	}
+
+	// Negation distributes over multiplication on either side, and once on
+	// each cancels.
+	if -a * b != -(a * b) or a * -b != -(a * b) or -a * -b != a * b {
+		printf("negation does not distribute over *\n")
+		return false
+	}
+
+	// It commutes with division, where truncation could have got in the
+	// way: 10 / 3 is 3, so -(10 / 3) and (-10) / 3 are both -3.
+	var ten: Int32 = 10
+	var three: Int32 = 3
+	if -(ten / three) != -3 or -ten / three != -3 {
+		printf("-(10 / 3) = %d, -10 / 3 = %d, expected -3/-3\n",
+			-(ten / three), -ten / three)
+		return false
+	}
+
+	printf("passed: identities\n")
+	return true
+}
+
+
+// `-` binds at level 12, above every binary operator — so it takes the
+// operand next to it and not the expression around it.  Each case below is
+// one where the two groupings give different answers.
+func testPrecedence () -> Bool {
+	var a: Int32 = 3
+	var b: Int32 = 4
+
+	// -3 * 4 = -12, not -(3 * 4)... which is also -12.  Multiplication is
+	// the case where precedence cannot show itself; addition is the one
+	// where it can.
+	if -a + b != 1 {
+		printf("-a + b = %d, expected 1 (not -7)\n", -a + b)
+		return false
+	}
+
+	if -a + b == -(a + b) {
+		printf("-a + b equals -(a + b), so `-` grouped below `+`\n")
+		return false
+	}
+
+	// The same on the right of a binary operator: `b - -a` is 7.
+	if b - -a != 7 {
+		printf("b - -a = %d, expected 7\n", b - -a)
+		return false
+	}
+
+	// Above `%` as well: -10 % 3 is (-10) % 3 = -1, since the remainder
+	// follows the dividend.
+	var ten: Int32 = 10
+	var three: Int32 = 3
+	if -ten % three != -1 {
+		printf("-10 %% 3 = %d, expected -1\n", -ten % three)
+		return false
+	}
+
+	// Above comparison, which is how it is nearly always written.
+	if not (-a < 0) or not (-a < b) {
+		printf("-a does not compare as -3\n")
+		return false
+	}
+
+	printf("passed: precedence\n")
+	return true
+}
+
+
+// `+` gives back exactly its operand.  It has no effect to check, so what
+// is checked is that it has none.
+func testUnaryPlus () -> Bool {
+	var a: Int32 = 5
+	var neg: Int32 = -7
+
+	if +a != a or +neg != neg {
+		printf("+a = %d, +neg = %d, expected 5/-7\n", +a, +neg)
+		return false
+	}
+
+	// Not on a NatX: `+` goes through the same signedness check as `-`,
+	// so `+n` is `expected value with signed type` even though a no-op on
+	// an unsigned number is exactly as meaningful as one on a signed one.
+	// docs/lang/value/unary.md says `+` takes any numeric operand — the
+	// compiler is narrower, and reject.modest states the behaviour as it
+	// is.  BUGS.md #64 has the mismatch.
+	//
+	// On a FloatX and a FixedX.
+	var f: Float64 = 1.5
+	if +f != f {
+		printf("+f = %f, expected 1.5\n", +f)
+		return false
+	}
+
+	var x: Fixed32 = -2.25
+	if +x != x {
+		printf("+x = %f, expected -2.25\n", Float64 +x)
+		return false
+	}
+
+	// It composes with `-` without changing the answer, and binds at the
+	// same level.
+	if +a + a != 10 or a - +a != 0 {
+		printf("+a does not behave as a in arithmetic\n")
+		return false
+	}
+
+	if -(+a) != -5 {
+		printf("-(+a) = %d, expected -5\n", -(+a))
+		return false
+	}
+
+	printf("passed: unary plus\n")
+	return true
+}
+
+
+func main () -> Int {
+	var result = true
+	result = testNegation() and result
+	result = testWidths() and result
+	result = testIdentities() and result
+	result = testPrecedence() and result
+	result = testUnaryPlus() and result
+
+	if not result {
+		printf("failed: unary arithmetic\n")
+		return exitFailure
+	}
+
+	printf("passed: unary arithmetic\n")
+	return exitSuccess
+}

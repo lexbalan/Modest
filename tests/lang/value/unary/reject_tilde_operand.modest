@@ -1,0 +1,38 @@
+// TEST: reject
+// EXPECTED-FAIL: BUGS.md#64 `~` accepts operands other than WordX
+//
+// `~` is the Word operator and takes nothing else.
+//
+// The other half of the split decided on 2026-09-07: bit manipulation is
+// defined for `Word*` and for no other type, which is the same line
+// docs/CHEATSHEET.md already draws for the binary `&`, `|` and `^`.  The
+// binary side enforces it — `i & 1` on an Int32 is refused — and the unary
+// side does not.
+//
+// Expected to fail today for the reason spelled out in
+// reject_not_operand.modest: mcc accepts every line below, so the runner
+// reports XFAIL, and an XPASS later is the prompt to remove the marker and
+// write the real EXPECT-ERROR lines.
+
+include "libc/ctypes64"
+
+func main () -> Int {
+	// Bool has `not` and nothing else.  This gives false today, by
+	// inverting the single bit.
+	var t: Bool = true
+	var onBool = ~t
+
+	var i: Int32 = 5
+	var onInt = ~i
+
+	var n: Nat32 = 5
+	var onNat = ~n
+
+	// The one that does not even survive code generation: mcc accepts it
+	// and clang answers `invalid argument type 'double' to unary
+	// expression`, which names the C type and not the Modest one.
+	var f: Float64 = 1.5
+	var onFloat = ~f
+
+	return 0
+}

@@ -1,0 +1,218 @@
+// TEST: run
+// BACKENDS: c11, llvm, modest
+// EXPECT-EXIT: 0
+// EXPECT-OUT: passed: negation
+// EXPECT-OUT: passed: involution
+// EXPECT-OUT: passed: precedence
+// EXPECT-OUT: passed: de morgan
+// EXPECT-OUT: passed: conditions
+// EXPECT-OUT: passed: logical not
+//
+// `not` on a Bool — the only unary operator the language gives that type.
+//
+// There is no truthiness to lean on: `not` takes a Bool and returns a Bool,
+// and the only way to make one out of anything else is a comparison.  So
+// what is worth checking is not the two-row truth table but where `not`
+// sits relative to everything around it.  It binds at level 12, above every
+// binary operator including `==`, which is the opposite of what a reader
+// coming from a language with a low-precedence `not` expects: `not a == b`
+// is `(not a) == b`, and the parenthesised form means something else.
+//
+// `not` takes a Bool and nothing else: the bitwise inversion next door in
+// bitwise.modest is `~`, a separate operator over a separate type.  mcc
+// still accepts `not` on a WordX today — reject_not_operand.modest is
+// where that is written down.
+
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+
+
+func testNegation () -> Bool {
+	var t = true
+	var f = false
+
+	if not t {
+		printf("not true is true\n")
+		return false
+	}
+
+	if not (not f) {
+		printf("not false is false\n")
+		return false
+	}
+
+	// `not` applies to a variable, to a parenthesised expression and to the
+	// result of a comparison alike — it takes a Bool, wherever it came from.
+	var a: Int32 = 1
+	var b: Int32 = 2
+	if not (a < b) {
+		printf("not (1 < 2) is true\n")
+		return false
+	}
+
+	if not (a != b) {
+		printf("not (1 != 2) is true\n")
+		return false
+	}
+
+	printf("passed: negation\n")
+	return true
+}
+
+
+// Two negations give the original back, which is the property that makes
+// `not` a permutation of Bool rather than a projection onto one value.
+func testInvolution () -> Bool {
+	var t = true
+	var f = false
+
+	if not (not not t) or not not f {
+		printf("not not x is not x\n")
+		return false
+	}
+
+	// An odd number of them is a single negation.
+	if not not not t {
+		printf("not not not true is true\n")
+		return false
+	}
+
+	printf("passed: involution\n")
+	return true
+}
+
+
+// Where `not` sits in the precedence table, stated by cases in which the
+// two groupings disagree.
+func testPrecedence () -> Bool {
+	var t = true
+	var f = false
+
+	// Above `and` and `or`: `not f and f` is `(not f) and f` = false, not
+	// `not (f and f)` = true.
+	if not f and f {
+		printf("not f and f is true, so `not` grouped below `and`\n")
+		return false
+	}
+
+	if not (not f or f) {
+		printf("not f or f is false, so `not` grouped below `or`\n")
+		return false
+	}
+
+	// Above `==` as well, though on Bool operands that cannot be caught by
+	// a disagreement: `not (a == b)` and `(not a) == b` are both `a != b`
+	// when a and b are Bools, so the two groupings coincide on every row of
+	// the table.  What is checkable here is that the tighter binding is not
+	// a parse error and gives the right answer; the grouping shows itself
+	// where the operand is a WordX — see bitwise.modest.
+	if not (not t == f) {
+		printf("not t == f is false, expected true\n")
+		return false
+	}
+
+	if not t == t {
+		printf("not t == t is true, expected false\n")
+		return false
+	}
+
+	printf("passed: precedence\n")
+	return true
+}
+
+
+// De Morgan on Bool.  `and`/`or` may or may not evaluate their right
+// operand once the left one decides — the backends disagree, see
+// docs/lang/OPENQUESTIONS.md #4 — so nothing here has a side effect and the
+// answer cannot depend on it.
+func testDeMorgan () -> Bool {
+	var t = true
+	var f = false
+
+	if not (not (t and f) == (not t or not f)) {
+		printf("not (t and f) != (not t or not f)\n")
+		return false
+	}
+
+	if not (not (t or f) == (not t and not f)) {
+		printf("not (t or f) != (not t and not f)\n")
+		return false
+	}
+
+	// And on the rows where both operands agree, which is where a
+	// mixed-up implementation is least likely to be caught above.
+	if not (not (f and f) == (not f or not f)) {
+		printf("De Morgan fails on false and false\n")
+		return false
+	}
+
+	if not (not (t or t) == (not t and not t)) {
+		printf("De Morgan fails on true or true\n")
+		return false
+	}
+
+	printf("passed: de morgan\n")
+	return true
+}
+
+
+// `not` in the places a Bool is actually consumed: the conditions of `if`
+// and `while`, where it is the ordinary way to write "until".
+func testConditions () -> Bool {
+	var done = false
+	var n: Int32 = 0
+
+	while not done {
+		n = n + 1
+		if n == 3 {
+			done = true
+		}
+	}
+
+	if n != 3 {
+		printf("loop ran %d times, expected 3\n", n)
+		return false
+	}
+
+	// The negated form of a condition takes the other branch.
+	var taken: Int32 = 0
+	if not (n == 3) {
+		taken = 1
+	} else {
+		taken = 2
+	}
+
+	if taken != 2 {
+		printf("not (n == 3) took the then branch\n")
+		return false
+	}
+
+	// `not` on a flag that was itself produced by `not`.
+	var flag = not done
+	if flag or not done {
+		printf("not done is true after the loop set it\n")
+		return false
+	}
+
+	printf("passed: conditions\n")
+	return true
+}
+
+
+func main () -> Int {
+	var result = true
+	result = testNegation() and result
+	result = testInvolution() and result
+	result = testPrecedence() and result
+	result = testDeMorgan() and result
+	result = testConditions() and result
+
+	if not result {
+		printf("failed: logical not\n")
+		return exitFailure
+	}
+
+	printf("passed: logical not\n")
+	return exitSuccess
+}

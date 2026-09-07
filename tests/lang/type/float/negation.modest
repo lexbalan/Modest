@@ -31,8 +31,7 @@ func testUnaryMinus () -> Bool {
 		return false
 	}
 
-	// Negating a whole expression, not just a name.  (Written with the
-	// parentheses: two prefix operators in a row do not parse, BUGS.md #27.)
+	// Negating a whole expression, not just a name.
 	if -(a + a) != -3.0 {
 		printf("-(a + a) = %f, expected -3.0\n", -(a + a))
 		return false

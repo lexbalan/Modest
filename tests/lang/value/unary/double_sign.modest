@@ -1,0 +1,94 @@
+// TEST: run
+// BACKENDS: c11, llvm, modest
+// EXPECT-EXIT: 0
+// EXPECT-OUT: passed: double sign
+// EXPECTED-FAIL(c11): BUGS.md#62 two unary signs run together into `--` / `++`
+//
+// Two unary signs in a row.
+//
+// The parser takes any number of prefix operators, and every other
+// combination of them is checked where it belongs — `~~w` and `not not t`
+// in bitwise.modest and logical.modest, `**pp` and `*&v` and `&*p` in
+// pointer.modest.  The two that need a file of their own are `- -x` and
+// `+ +x`, because they are the two whose C spelling collides.
+//
+// The C backend prints a unary sign by writing the character in front of
+// the operand's own text, with nothing between them.  When that text
+// already begins with the same sign the two meet and clang lexes one token:
+// `- -i` becomes `--i` and `+ +i` becomes `++i`, which are a decrement and
+// an increment.  So the expression comes back off by one *and* the operand
+// is modified — every later reading of the variable is wrong too, and
+// nothing anywhere reports it.
+//
+// The LLVM backend builds the two negations as two instructions and has no
+// text for them to run together in.
+//
+// Parenthesising works — `-(-x)` is right under both — so this costs a
+// spelling rather than an ability.  That is why the identities in
+// arithmetic.modest are written with parentheses and point here.
+
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+
+
+func main () -> Int {
+	var i: Int32 = 5
+
+	if - -i != 5 {
+		printf("- -i = %d, expected 5\n", - -i)
+		return exitFailure
+	}
+
+	// The second half of the defect, and the worse one: the operand must
+	// still be 5.  Under the C backend it is 4 by now, so this check fails
+	// even if the one above somehow did not.
+	if i != 5 {
+		printf("i = %d after `- -i`, expected it untouched at 5\n", i)
+		return exitFailure
+	}
+
+	var j: Int32 = 5
+	if + +j != 5 {
+		printf("+ +j = %d, expected 5\n", + +j)
+		return exitFailure
+	}
+
+	if j != 5 {
+		printf("j = %d after `+ +j`, expected it untouched at 5\n", j)
+		return exitFailure
+	}
+
+	// Three of them is a single negation, and still leaves the operand
+	// alone.  This is where the defect stops being a wrong answer and
+	// becomes a build failure: `---k` is what the C backend prints, and
+	// clang refuses it outright with `expression is not assignable`, since
+	// `--k` is not something the third `-` can be applied to.
+	var k: Int32 = 5
+	if - - -k != -5 or k != 5 {
+		printf("- - -k = %d with k = %d, expected -5 with k = 5\n", - - -k, k)
+		return exitFailure
+	}
+
+	// The mixed pair, where the two characters differ and so cannot lex as
+	// one token — this is the case the C backend gets right, and it is here
+	// to place the boundary of the defect.
+	var m: Int32 = 5
+	if - +m != -5 or + -m != -5 or m != 5 {
+		printf("- +m = %d, + -m = %d, m = %d, expected -5/-5/5\n",
+			- +m, + -m, m)
+		return exitFailure
+	}
+
+	// The parenthesised spelling, right everywhere, so a run of this test
+	// that fails has failed on the adjacency and not on the arithmetic.
+	var n: Int32 = 5
+	if -(-n) != 5 or +(+n) != 5 or n != 5 {
+		printf("-(-n) = %d, +(+n) = %d, n = %d, expected 5/5/5\n",
+			-(-n), +(+n), n)
+		return exitFailure
+	}
+
+	printf("passed: double sign\n")
+	return exitSuccess
+}

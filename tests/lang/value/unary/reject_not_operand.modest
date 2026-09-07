@@ -1,0 +1,45 @@
+// TEST: reject
+// EXPECTED-FAIL: BUGS.md#64 `not` accepts operands other than Bool
+//
+// `not` is the Bool operator and takes nothing else.
+//
+// Decided 2026-09-07 and written into docs/lang/value/unary.md: `not` and
+// `~` are two operators rather than two spellings of one, and neither
+// crosses to the other's type.  `not` on a WordX is the case that has to be
+// *removed* rather than merely refused — it works today and it is what the
+// documentation used to promise, so a file that states the new rule is the
+// thing that will notice when the removal happens.
+//
+// Every line below compiles today, so this test is expected to fail: the
+// runner reports XFAIL because mcc accepted a file it had to refuse.  When
+// the check lands it flips to XPASS and fails the suite, which is the
+// prompt to delete the EXPECTED-FAIL line above and add an EXPECT-ERROR
+// for each site — the diagnostic does not exist yet, so there is nothing
+// honest to write there now.
+//
+// The rules `not` already enforces are in reject.modest, which passes.
+
+include "libc/ctypes64"
+
+func main () -> Int {
+	// The spelling this rule retires.  `~w` is the one that survives, and
+	// bitwise.modest uses it throughout.
+	var w: Word32 = 0xA5
+	var onWord = not w
+
+	// An integer is a quantity, not a condition and not a bit pattern.
+	// Today this is a bitwise inversion: `not 5` gives -6.
+	var i: Int32 = 5
+	var onInt = not i
+
+	var n: Nat32 = 5
+	var onNat = not n
+
+	// A float has no bit-inversion to fall back on, so this one does not
+	// merely mean something undefined — it reaches the backend and comes
+	// back as a clang or llvm-as diagnostic about the generated code.
+	var f: Float64 = 1.5
+	var onFloat = not f
+
+	return 0
+}

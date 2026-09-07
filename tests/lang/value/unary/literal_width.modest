@@ -1,0 +1,100 @@
+// TEST: run
+// BACKENDS: c11, llvm, modest
+// EXPECT-EXIT: 0
+// EXPECT-OUT: passed: literal width
+// EXPECTED-FAIL(llvm): BUGS.md#63 a literal is inverted at its own width
+//
+// `~` applied to a *literal*.
+//
+// A literal has no type of its own: it takes the one it meets, which is
+// what lets `0x0F` serve every width.  So `~0x0F` assigned to a Word32 is
+// the complement of a 32-bit `0x0000000F` and has to be `0xFFFFFFF0`.
+//
+// The LLVM backend sizes the literal to its own value first — `0x0F` fits
+// eight bits — inverts it there, and zero-extends the result, so every bit
+// above the literal's width comes back 0 instead of 1.  The narrower the
+// literal and the wider the target, the more of the answer is missing:
+// `~0x0000FFFF` into a Word32 comes out 0, a mask that selects nothing.
+//
+// This is the mirror image of narrow_width.modest next door, where the C
+// backend does the same operation too *wide*.  Here the operand type is
+// never narrow — every target below is Word32 or Word64 — and it is the
+// literal that decides the width it should not have decided.
+//
+// The same expression over a variable is right under both backends, and
+// bitwise.modest is written that way on purpose; the contrast is repeated
+// at the end of this file so that a failure here names the literal.
+
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+
+
+func main () -> Int {
+	// A literal that fits a byte, inverted into a 32-bit type.
+	var a: Word32 = ~0x0F
+	if a != 0xFFFFFFF0 {
+		printf("~0x0F into Word32 = 0x%08x, expected 0xFFFFFFF0\n", a)
+		return exitFailure
+	}
+
+	// Spelled to the full width of the target, which changes nothing: the
+	// leading zeros of a literal are not part of its value.
+	var b: Word32 = ~0x0000000F
+	if b != 0xFFFFFFF0 {
+		printf("~0x0000000F into Word32 = 0x%08x, expected 0xFFFFFFF0\n", b)
+		return exitFailure
+	}
+
+	if a != b {
+		printf("~0x0F and ~0x0000000F differ: 0x%08x vs 0x%08x\n", a, b)
+		return exitFailure
+	}
+
+	// The case where the wrong answer is not merely wrong but empty.
+	var c: Word32 = ~0x0000FFFF
+	if c != 0xFFFF0000 {
+		printf("~0x0000FFFF into Word32 = 0x%08x, expected 0xFFFF0000\n", c)
+		return exitFailure
+	}
+
+	// At Word64, where thirty-two more bits go missing.
+	var d: Word64 = ~0x0F
+	if d != 0xFFFFFFFFFFFFFFF0 {
+		printf("~0x0F into Word64 = 0x%016llx, expected 0xFFFFFFFFFFFFFFF0\n", d)
+		return exitFailure
+	}
+
+	// Used directly rather than stored, in case a store were what fixed it.
+	var mask: Word32 = 0xFFFFFFFF
+	if mask & ~0x0F != 0xFFFFFFF0 {
+		printf("0xFFFFFFFF & ~0x0F = 0x%08x, expected 0xFFFFFFF0\n",
+			mask & ~0x0F)
+		return exitFailure
+	}
+
+	// The clearing idiom this breaks: a flag word with one bit taken out by
+	// a literal mask.
+	var flags: Word32 = 0x000000FF
+	if flags & ~0x04 != 0x000000FB {
+		printf("0xFF & ~0x04 = 0x%08x, expected 0xFB\n", flags & ~0x04)
+		return exitFailure
+	}
+
+	// The contrast: the same values through a variable, which both backends
+	// get right.  If this fails too, the defect is not about the literal.
+	var lit: Word32 = 0x0F
+	if ~lit != 0xFFFFFFF0 {
+		printf("~lit = 0x%08x, expected 0xFFFFFFF0 — not a literal problem\n",
+			~lit)
+		return exitFailure
+	}
+
+	if ~lit != a {
+		printf("~lit = 0x%08x but ~0x0F = 0x%08x\n", ~lit, a)
+		return exitFailure
+	}
+
+	printf("passed: literal width\n")
+	return exitSuccess
+}

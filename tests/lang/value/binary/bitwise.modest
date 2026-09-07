@@ -102,11 +102,11 @@ func testIdentities () -> Bool {
 		return false
 	}
 
-	// Two complements make the original again.  The parentheses are not
-	// for precedence: a prefix operator cannot be applied twice in a row
-	// today — see BUGS.md #27.
-	if ~(~w) != w {
-		printf("~(~w) is not w\n")
+	// Two complements make the original again.  Written both ways: the
+	// chained spelling is the one the parser used to refuse, and the
+	// parenthesised one is what that cost people.
+	if ~~w != w or ~(~w) != w {
+		printf("~~w is not w\n")
 		return false
 	}
 
