@@ -473,6 +473,9 @@ Unit value                         // discard a value (suppress warnings)
 @cbyvalue                          // pass record by value in C ABI (not by pointer)
 ```
 
+> `@extern` applies to global definitions only — a local `var` cannot be
+> external.
+
 > To emit `#include` in C output use the **pragma** (module-level), not an annotation:
 > `pragma c_include "header.h"`
 

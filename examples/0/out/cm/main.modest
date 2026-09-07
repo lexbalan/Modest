@@ -7,7 +7,6 @@ include "libc/stdio"
 
 @nonstatic
 func main () -> Int {
-	var a: Int32
 	printf("Hello World!\n")
 	return 0
 }

@@ -27,6 +27,10 @@ var <#id1#>, <#id2#>, ... : <#type_expression#>                      // several 
   (records).
 - A global initializer must be a compile-time expression. Local initializers
   may be arbitrary runtime values.
+- A variable of an unsized array type (`[]T`) needs an initializer to get its
+  size. The only variable that may omit it is an `@extern` global, whose
+  storage is defined elsewhere — and `@extern` is for globals only, never for
+  a local.
 - `public` global variables may be disabled by target configuration
   (`public_vars_forbidden`); prefer accessor functions in libraries.
 
@@ -37,6 +41,9 @@ var x: Int16                   // no initializer: starts at 0
 var y = 10                     // Integer literal -> target Int
 var z: Int32 = 20
 var r, g, b: Nat8              // three variables of one type
+
+@extern("C")
+var environ: []Ptr             // size comes from outside; only extern may do this
 
 func main () -> Int {
 	var local: Int32           // starts at 0, like the global above

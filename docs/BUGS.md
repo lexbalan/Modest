@@ -1118,3 +1118,50 @@ int32_t a[];   // error: definition of variable with array type needs an
   allowed only for an extern declaration.
 - No reproducer in the suite: a `reject` test belongs in
   `tests/lang/type/array/`.
+
+## 60. Annotations on a local `var` are silently ignored
+
+```modest
+func main () -> Int32 {
+	@immutable
+	var lmax: Int32 = 100
+	lmax = 200          // compiles; on a global the same code is an error
+	return 0
+}
+```
+
+- A global definition passes through `def_add_annotations`
+  (`src/semantic.py:3227`), which handles the whole annotation set. A
+  local `var` never reaches it: `do_stmt_var` (`src/semantic.py:1974`)
+  walks `x['anno']` itself and only looks at `static` (and now
+  `extern`, which it rejects). Everything else — `@immutable`,
+  `@volatile`, `@used`, `@alias`, `@section` — is dropped without a
+  word.
+- Two outcomes are defensible: apply the annotations that make sense
+  for a local, or reject the rest explicitly. Silence is the one that
+  is not — `@immutable` reads as enforced and is not.
+- No reproducer in the suite: `tests/lang/attribute/` (or wherever the
+  annotation tests land) needs both a `reject` case and a case that
+  proves an applied annotation works on a local.
+
+## 61. `@extern` variable with an initializer silently drops it
+
+```modest
+@extern("C")
+var env: []Int32 = [1, 2, 3]
+```
+
+```c
+extern int32_t env[3];   // the initializer is gone
+```
+
+- The initializer is accepted, used to infer the array size, and then
+  never emitted, so the source claims storage that the output only
+  declares.
+- An `@extern` variable is a declaration of storage defined elsewhere;
+  an initializer contradicts it and belongs in an error
+  (C says the same: `extern int a[] = {...};` is a definition, not a
+  declaration). The size should come from the type — `[3]Int32` — not
+  from a dropped initializer.
+- No reproducer in the suite: a `reject` test belongs next to the other
+  `@extern` cases.

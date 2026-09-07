@@ -1964,7 +1964,7 @@ def do_stmt_var(x):
 	if id_already_used(x['id']['str'], shallow=True):
 		error("redefinition of '%s'" % x['id']['str'], x['id']['ti'])
 
-	df = def_var_common(x, is_local=True)
+	df = def_var_common(x)
 
 	if df.is_stmt_bad():
 		return df
@@ -1975,6 +1975,8 @@ def do_stmt_var(x):
 	for a in x['anno']:
 		if a['kind'] == 'static':
 			df.addAttribute('static')
+		elif a['kind'] == 'extern':
+			error("extern is allowed only for global definitions", a['ti'])
 
 	return df
 
@@ -2475,7 +2477,7 @@ def def_const_common(x):
 
 
 
-def def_var_common(x, is_local=False):
+def def_var_common(x):
 	global csymtab, cdef
 
 	id = do_id(x['id'])
@@ -2500,6 +2502,13 @@ def def_var_common(x, is_local=False):
 
 	if var_type.is_forbidden_var(unsized_array_forbidden=False):
 		error("unsuitable type", x['ti'])
+
+	# аннотации навешиваются уже после def_var_common, поэтому смотрим в AST;
+	# extern бывает только у глобала, у него размер массива приходит извне
+	is_extern = any(a['kind'] == 'extern' for a in x['anno'])
+	if not is_extern:
+		if var_type.is_unsized_array() and init_value.is_undefined():
+			error("variable of unsized array type requires an initializer", x['ti'])
 
 	if init_value.is_undefined():
 		init_value = var_type.get_default_value()

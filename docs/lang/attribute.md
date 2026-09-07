@@ -35,6 +35,10 @@ Annotations are written before a definition, or inside a type expression
 | `@nonstatic` | suppress `static` in C output |
 | `@no_print`, `@c_no_print`, `@ll_no_print` | omit the definition from output (both / C / LLVM) |
 
+> `@extern` describes a symbol defined outside the module, so it belongs to a
+> global definition only — on a local `var` it is an error
+> (`extern is allowed only for global definitions`).
+
 ### Diagnostics & lifetime
 
 | | |
@@ -83,6 +87,9 @@ func myAlloc (size: Nat64) -> Ptr
 
 @used @section("__DATA,.table")
 var table: [256]Word8 = []
+
+@extern("C")
+var environ: []Ptr   // an extern global may leave the array unsized
 
 type Packet = @layout("packed") {
 	tag: Word8
