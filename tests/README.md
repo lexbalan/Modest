@@ -134,8 +134,13 @@ has a reproducer.
 the same path:
 
 ```
-docs/lang/stmt/while.md   ->   tests/lang/stmt/while.modest
+docs/lang/stmt/while.md   ->   tests/lang/stmt/while/
 ```
+
+A construct is always a directory, however little it holds today: the main
+case is `basic.modest`, and every further aspect gets its own file next to
+it, named after what it exercises (`value/unary/narrow_width.modest`).  So
+a construct that grows a second test does not have to move first.
 
 Directories whose name starts with `_` are skipped by discovery — use them
 for fixtures that are not tests themselves.

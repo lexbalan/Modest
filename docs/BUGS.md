@@ -995,7 +995,7 @@ TypeError: can only concatenate str (not "NoneType") to str
 - The LLVM backend accepts the same file — but it does not lower a
   variant at all (`eval_cons_or`, `src/backend/llvm.py:1612`, is a bare
   `1/0`), so nothing that uses one gets past it either.
-- Experimental type. `tests/lang/type/variant.modest` covers what does
+- Experimental type. `tests/lang/type/variant/basic.modest` covers what does
   work and spells the type out inline to stay clear of this.
 
 ## 57. Each written-out variant type becomes its own C struct
@@ -1023,7 +1023,7 @@ struct __anonymous_variant_1 r = divide(10, 2);
   is #56, so both spellings of a shared variant type are currently
   unusable and only a value inferred from the call (`let r = divide(...)`)
   gets through.
-- Coverage: `tests/lang/type/variant.modest` holds the working shape and
+- Coverage: `tests/lang/type/variant/basic.modest` holds the working shape and
   points here.
 
 ## 58. `var` of type `Unit` is accepted and emits `void u;`

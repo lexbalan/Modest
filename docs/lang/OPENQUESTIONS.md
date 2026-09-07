@@ -92,7 +92,7 @@ decided:
   }                          // falls through to Marked {} = {7, 0}
   ```
 
-  Covered by `tests/lang/stmt/return.modest`.
+  Covered by `tests/lang/stmt/return/basic.modest`.
 
 ### Options
 
@@ -133,7 +133,7 @@ there is nothing left for a backend to decide.
   and the default `return` that follows it
 - the end-of-body check in `semantic.py`, under either option: option A
   replaces it with reachability analysis, option B drops the warning
-- `tests/lang/stmt/return.modest` — pins down today's behaviour
+- `tests/lang/stmt/return/basic.modest` — pins down today's behaviour
 
 ---
 
