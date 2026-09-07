@@ -76,7 +76,7 @@ func main () -> Int {
 	var message: [9]Byte = "123456789"
 
 	// An array is a value: `&message` is a pointer to it, nothing decays.
-	printf("crc32 = %08x\n", crc32(*[]Byte &message, lengthof(message)))
+	printf("crc32 = %08x\n", crc32(&message, lengthof(message)))
 	return 0
 }
 ```
