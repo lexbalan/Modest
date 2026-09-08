@@ -53,8 +53,23 @@ from value.cons import value_cons_implicit, value_cons_implicit_check, value_con
 
 
 from symtab import Symtab
-from util import nbits_for_num, nbytes_for_bits, python_div, python_rem
-from util import float_max, float_overflows, str_fractional
+from bits import nbits_for_num, nbytes_for_bits
+from real import float_max, float_overflows, str_fractional
+
+
+# У питона свое видение того как следует делить целые числа
+def python_div(a, b):
+	# Целочисленное деление с усечением к нулю
+	if (a < 0) != (b < 0):
+		return -(-a // b)
+	else:
+		return a // b
+
+
+# Целочисленное деление с усечением к нулю и остаток от него
+def python_rem(op, a, b):
+	q = python_div(a, b)
+	return a - (q * b)
 
 
 

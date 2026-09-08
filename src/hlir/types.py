@@ -1,6 +1,7 @@
 
 import copy
-from util import *
+from bits import align_to, align_bits_up, nbits_for_num, nbytes_for_bits, pack_int
+from real import pack_float
 
 
 

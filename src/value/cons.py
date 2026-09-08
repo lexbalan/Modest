@@ -16,7 +16,7 @@ from .pointer import value_pointer_can, value_pointer_cons
 from .variant import value_variant_can, value_variant_cons
 from .bad import value_bad_can, value_bad_cons
 
-from util import align_bits_up
+from bits import align_bits_up
 
 
 # can be implicitly constructed value with type a from type b?

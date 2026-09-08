@@ -1,5 +1,6 @@
 
 from .types import *
+from bits import align_bits_up, nbits_for_num
 
 
 

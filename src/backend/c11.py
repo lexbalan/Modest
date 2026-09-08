@@ -7,12 +7,12 @@ import re
 import shutil
 
 from hlir import *
-from error import info, warning, error, fatal
+from error import info, warning, error, fatal, trace
 from unicode import chars_to_utf32
-from util import str_fractional, align_bits_up, nbits_for_num, float_special, pack_float
+from bits import align_bits_up, nbits_for_num
+from real import str_fractional, float_special, pack_float
 from common import features, get_setting
 from cshape import *
-from util import trace
 
 
 PTR_TO_ARR_AS_PTR_TO_ITEM = True

@@ -2,7 +2,7 @@
 from hlir import *
 from common import settings
 from error import info, warning, error
-from util import float_max, float_overflows, str_fractional
+from real import float_max, float_overflows, str_fractional
 from .fixed import fixed_to_number
 
 

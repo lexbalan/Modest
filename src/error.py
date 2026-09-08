@@ -129,6 +129,24 @@ def log(s):
 		print(('  ' * log_ind) + s)
 
 
+def return_functions_list():
+	import inspect
+	stack = inspect.stack()
+	stack.pop(0)  # Remove the current function from the stack
+	return [frame.function for frame in stack]
+
+# Возвращает строку с функциями в обратном порядке, начиная с текущей функции
+# Используется для отладки
+def trace():
+	x = return_functions_list()
+	x.pop(0)  # Remove the current function from the stack
+	x.reverse()
+	s = ""
+	for	 f in x:
+		s += f + " > "
+	return s
+
+
 
 def note(s, ti=None):
 	str_common_message('note: ', COLOR_NOTE, s, ti)

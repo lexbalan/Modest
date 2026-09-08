@@ -1,6 +1,6 @@
 
 from hlir import *
-from util import nbits_for_num
+from bits import nbits_for_num
 
 
 

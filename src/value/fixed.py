@@ -5,7 +5,7 @@ from fractions import Fraction
 from hlir import *
 from common import settings
 from error import info, warning, error
-from util import nbits_for_num
+from bits import nbits_for_num
 
 
 

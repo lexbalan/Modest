@@ -5,9 +5,9 @@ import copy
 from hlir import *
 from common import get_setting
 from error import info, warning, error, fatal
-from util import align_bits_up
+from bits import align_bits_up
 from pprint import pprint
-from util import str_fractional, pack_float, float_special
+from real import str_fractional, pack_float, float_special
 
 
 f = None

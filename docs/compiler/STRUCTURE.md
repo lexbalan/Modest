@@ -30,7 +30,8 @@ described in [README.md](./README.md).
 | `symtab.py` | Symbol table: tracks types and values in scopes |
 | `common.py` | Global `settings` dict and `features` list (populated from config) |
 | `error.py` | Error reporting: `error()`, `warning()`, `info()`, `fatal()` with colored output |
-| `util.py` | Utility functions: alignment, bit ops, numeric helpers |
+| `bits.py` | Integers on the target: alignment, bit widths, zero-extension, packing |
+| `real.py` | Reals on the target: IEEE 754 rounding, range limits, literal printing |
 | `unicode.py` | Unicode handling: UTF-8/16/32 conversion |
 
 ### `src/hlir/` — High-Level Intermediate Representation

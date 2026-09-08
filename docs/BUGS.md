@@ -592,7 +592,7 @@ printf("%f\n", Float64 g)           // c11: 1065353216.0, expected 1.0
   (`src/value/word.py:54`), which passes the folded float to `int_zext`:
 
   ```
-  File "src/util.py", line 52, in int_to_bitstring
+  File "src/bits.py", line 50, in int_to_bitstring
       return format(x & (2**width - 1), '0%db' % width)
   TypeError: unsupported operand type(s) for &: 'float' and 'int'
   ```

@@ -28,7 +28,7 @@ the back-edges are listed [below](#cycles-and-deferred-imports)).
   layer 2   hlir/  (__init__ → types.py → defs.py)
               │
               ▼
-  layer 1   common.py    util.py    unicode.py
+  layer 1   common.py   bits.py   real.py   unicode.py
 ```
 
 Two things are worth reading off this picture:
@@ -49,12 +49,14 @@ Two things are worth reading off this picture:
 | Module | Responsibility | Public surface |
 | :-- | :-- | :-- |
 | `common.py` | Global configuration. Two mutable objects, filled by `main` from `cfg/*.toml`, `--config` and `-m` / `-f` flags. | `settings` (dict), `features` (list) |
-| `util.py` | Pure numeric & decoding helpers: alignment, bit widths, int packing, decimal/fraction formatting, UTF-x → UTF-32. | `align_bits_up`, `nbits_for_num`, `int_zext`, `pack_int`, `str_fractional`, `utfx_chars_to_utf32_chars` |
-| `unicode.py` | The encoding direction: UTF-32 → UTF-8/16/32 code units. | `chars_to_utf8/16/32`, `utf32_chars_to_utfx_cc` |
+| `bits.py` | Integers on the target machine: alignment, bit widths, zero-extension, fixed-width packing. | `align_to`, `align_bits_up`, `nbits_for_num`, `nbytes_for_bits`, `int_zext`, `pack_int` |
+| `real.py` | Reals on the target machine: IEEE 754 rounding, range limits, literal printing. | `pack_float`, `float_max`, `float_overflows`, `float_special`, `str_fractional` |
+| `unicode.py` | Both encoding directions: UTF-32 ↔ UTF-8/16/32 code units. | `chars_to_utf8/16/32`, `utf32_chars_to_utfx_cc`, `utfx_chars_to_utf32_chars` |
 
-> The `util` / `unicode` split is by *direction* (decode vs encode), not
-> by domain — a name asymmetry worth remembering when looking for a
-> conversion function.
+> `bits` and `real` are one model cut along the kind of number: what a
+> value looks like on the target machine. Almost every `value/*` module
+> needs only `bits`; both halves are needed by `semantic`, `hlir/types`
+> and two of the backends.
 
 ### Layer 2 — `hlir/` — the data model
 
@@ -64,7 +66,7 @@ Two things are worth reading off this picture:
 | `defs.py` | Target-independent builtins: factories (`type_int_create`, `type_nat_create`, `type_float_create`, …), singletons (`typeBool`, `typeUnit`, `typeInteger`, `typeNil`, `typeByte`, `type__VA_List`, `builtin_ti`), selectors (`type_select_int/nat/char`, `type_integer_for`). |
 | `__init__.py` | Re-exports both, so `from hlir import *` is the single entry. |
 
-Depends only on `util`. Field-level documentation:
+Depends only on `bits` and `real`. Field-level documentation:
 [hlir-internals.md](../agents/claude/hlir-internals.md).
 
 ### Layer 3 — `error.py`
@@ -157,19 +159,19 @@ semantic.init() → semantic.translate(src) → error gate → backend.init() �
 | Module | Imports |
 | :-- | :-- |
 | `main.py` | `error`, `semantic`, `common` (+ `backend.*` dynamically) |
-| `semantic.py` | `hlir`, `error`, `lexer`, `parser`, `symtab`, `common`, `util`, `value.{bool,integer,rational,string,array,record,word,cons}` |
+| `semantic.py` | `hlir`, `error`, `lexer`, `parser`, `symtab`, `common`, `bits`, `real`, `value.{bool,integer,rational,string,array,record,word,cons}` |
 | `lexer.py` | `error`, `hlir` |
-| `parser.py` | `hlir`, `error`, `util` |
+| `parser.py` | `hlir`, `error` |
 | `symtab.py` | `hlir` |
 | `error.py` | `common`, `hlir` |
-| `hlir/types.py` | `util` |
-| `hlir/defs.py` | `hlir.types` |
-| `value/cons.py` | `hlir`, `error`, `util` + all sibling `value.*` modules |
-| `value/*.py` | `hlir`, `error`, and some of `util`, `unicode`, `common`, `value.char`, `hlir.defs` |
-| `backend/c11.py` | `hlir`, `error`, `util`, `unicode`, `common`, **`cshape`** |
-| `backend/llvm.py` | `hlir`, `error`, `util` |
-| `backend/modest.py` | `hlir`, `error`, `util` |
-| `common.py`, `util.py`, `unicode.py` | — (stdlib only) |
+| `hlir/types.py` | `bits`, `real` |
+| `hlir/defs.py` | `hlir.types`, `bits` |
+| `value/cons.py` | `hlir`, `error`, `bits` + all sibling `value.*` modules |
+| `value/*.py` | `hlir`, `error`, and some of `bits`, `real`, `unicode`, `common`, `value.char`, `hlir.defs` |
+| `backend/c11.py` | `hlir`, `error`, `bits`, `real`, `unicode`, `common`, **`cshape`** |
+| `backend/llvm.py` | `hlir`, `error`, `bits`, `real` |
+| `backend/modest.py` | `hlir`, `error`, `real` |
+| `common.py`, `bits.py`, `real.py`, `unicode.py` | — (stdlib only) |
 
 ### Cycles and deferred imports
 
