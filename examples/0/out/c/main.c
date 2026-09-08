@@ -5,7 +5,6 @@
 #include <stdio.h>
 
 int main(void) {
-	int32_t X = 0;
 	printf("Hello World!\n");
 	return 0;
 }
