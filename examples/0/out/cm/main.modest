@@ -8,6 +8,18 @@ include "libc/stdio"
 @nonstatic
 func main () -> Int {
 	printf("Hello World!\n")
+	let fx32 = Fixed32 4.123456
+	printf("fx32 = %d.%d\n", apart(fx32), bpart(fx32))
 	return 0
+}
+
+func apart (x: Fixed32) -> Int32 {
+	let w16: Word16 = unsafe Word16 (unsafe Word32 x >> 16)
+	return Int32 Int16 w16
+}
+
+func bpart (x: Fixed32) -> Int32 {
+	let i64 = Int64 (Word64 (Word32 x & 0xFFFF))
+	return unsafe Int32 (i64 * 100000 / 65536)
 }
 

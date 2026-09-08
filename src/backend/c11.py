@@ -4,6 +4,7 @@
 import copy
 import os
 import re
+import shutil
 
 from hlir import *
 from error import info, warning, error, fatal
@@ -15,6 +16,16 @@ from util import trace
 
 
 PTR_TO_ARR_AS_PTR_TO_ITEM = True
+
+# Заголовки рантайма: исходники лежат в ${MODEST_DIR}/rt/c, а копия -
+# рядом с выхлопом, поэтому включаются они локально, в кавычках
+RUNTIME_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'rt', 'c')
+FIXED_HEADER = 'fixed.h'
+
+# какой хелпер какой заголовок притягивает
+runtime_headers = {
+	'use_fixed_point': FIXED_HEADER,
+}
 
 
 def camel_to_lower_snake(name: str) -> str:
@@ -2168,198 +2179,22 @@ def do_helper_use_arrcpy():
 #	return unsafe Fixed32 ((Word32 i << fraction) or unsafe Word32 tail)
 #}
 
-# Только имена типов: FixedX печатается как __fixedX (см. type_fixed_create),
-# поэтому typedef нужен и в заголовке, где публичное объявление может
-# упомянуть тип, но ни одной fixed-операции нет. Повтор typedef с тем же
-# типом легален в C11 (6.7p3), а вот static inline из полного хелпера
-# продублировать нельзя - потому он и вынесен отдельно.
-def do_helper_use_fixed_point_types():
-	sstr = ''
-	sstr += ("\n#ifndef __FIXED_POINT__")
-	sstr += ("\ntypedef int32_t __fixed32;")
-	sstr += ("\ntypedef int64_t __fixed64;")
-	sstr += ("\n#endif /* __FIXED_POINT__ */\n")
-	return (CRawText(sstr),)
-
-
+# Содержимое - в rt/c/fixed.h; сюда он попадает включением, а сам файл
+# копируется рядом с выхлопом (см. copy_runtime_headers), чтобы собранный
+# .c оставался самодостаточным и не требовал -I наружу.
+# Заголовку все равно, кто его включает - .h или .c: с повторным
+# включением разбирается его собственный include guard. Поэтому прежнего
+# деления на "только typedef'ы для заголовка" и "полный текст для .c"
+# больше нет - оно существовало лишь оттого, что static inline нельзя
+# было продублировать текстом.
 def do_helper_use_fixed_point():
-	sstr = ''
-	sstr += ("\n#ifndef __FIXED_POINT__")
-
-	sstr += ("\ntypedef int32_t __fixed32;")
-	sstr += ("\ntypedef int64_t __fixed64;")
-
-	# Округление к ближайшему, половина - от нуля: то же правило, что и у
-	# свертки констант (см. value/fixed.py), иначе одно и то же выражение
-	# давало бы разный результат в зависимости от того, известно оно на
-	# этапе компиляции или нет.
-	# (!) Макрос обязан оставаться КОНСТАНТНЫМ ВЫРАЖЕНИЕМ - он попадает
-	# в статические инициализаторы, где вызов функции недопустим. Ценой
-	# этого (x) вычисляется дважды, поэтому codegen подставляет сюда
-	# только литералы и константы; для рантайма есть __fixedX_from_float64
-	sstr += ("\n#define FIXED32(x, f) ((__fixed32)((double)(x) * (double)((int64_t)1 << (f)) + ((x) < 0 ? -0.5 : 0.5)))")
-	sstr += ("\n#define FIXED64(x, f) ((__fixed64)((double)(x) * (double)((int64_t)1 << (f)) + ((x) < 0 ? -0.5 : 0.5)))")
-
-	sstr += ("\nstatic inline __fixed64 __fixed64_create(int64_t i, uint64_t m, uint64_t n, uint8_t fraction) {")
-	sstr += ("\n	return (i << fraction) | (m * (1 << fraction) / n);")
-	sstr += ("\n}")
-
-	# у целого источника дробной части нет, поэтому масштаб - ровно
-	# сдвиг влево, и округлять тут нечего.
-	# (!) 1 сдвигаем в ширине результата: `1 << 31` на int - переполнение
-	sstr += ("\n__attribute__((used))")
-	sstr += ("\nstatic inline __fixed32 __fixed32_from_int32(int32_t a, uint8_t fraction) {")
-	sstr += ("\n	return (__fixed32)(a * ((int32_t)1 << fraction));")
-	sstr += ("\n}")
-
-	sstr += ("\n__attribute__((used))")
-	sstr += ("\nstatic inline __fixed64 __fixed64_from_int64(int64_t a, uint8_t fraction) {")
-	sstr += ("\n	return (__fixed64)(a * ((int64_t)1 << fraction));")
-	sstr += ("\n}")
-
-	# Перенос двоичной точки между разными @fraction. Считаем в int64
-	# независимо от ширин: у сужения (Fixed64 -> Fixed32) урезать
-	# операнд ДО переноса нельзя, целая часть уедет. Целевую ширину
-	# накладывает codegen приведением результата.
-	# Влево - точный сдвиг; вправо - округление к ближайшему, половина
-	# от нуля, тем же правилом, что и свертка (см. value/fixed.py)
-	sstr += ("\n__attribute__((used))")
-	sstr += ("\nstatic inline int64_t __fixed_rescale(int64_t a, uint8_t from_fraction, uint8_t to_fraction) {")
-	sstr += ("\n	if (to_fraction >= from_fraction) {")
-	sstr += ("\n		return a << (to_fraction - from_fraction);")
-	sstr += ("\n	} else {")
-	sstr += ("\n		int64_t d = (int64_t)1 << (from_fraction - to_fraction);")
-	sstr += ("\n		int64_t half = d / 2;")
-	sstr += ("\n		return (a < 0 ? a - half : a + half) / d;")
-	sstr += ("\n	}")
-	sstr += ("\n}")
-
-	# аргумент вычисляется один раз (в отличие от макроса) - через это
-	# codegen пропускает рантаймовые значения, в т.ч. вызовы функций
-	sstr += ("\n__attribute__((used))")
-	sstr += ("\nstatic inline __fixed32 __fixed32_from_float64(double a, uint8_t fraction) {")
-	sstr += ("\n	return FIXED32(a, fraction);")
-	sstr += ("\n}")
-
-	sstr += ("\n__attribute__((used))")
-	sstr += ("\nstatic inline __fixed64 __fixed64_from_float64(double a, uint8_t fraction) {")
-	sstr += ("\n	return FIXED64(a, fraction);")
-	sstr += ("\n}")
-
-	# Обратная сторона __fixedX_from_*: снимаем масштаб.
-	# (!) 1 сдвигаем как int64_t: @fraction(N) доходит до 31 у Fixed32
-	# и до 63 у Fixed64, а `1 << 31` на int - переполнение со знаком.
-	# Деление, а не сдвиг: '/' у отрицательных отбрасывает дробь в
-	# сторону нуля - как того требует таблица конструирования и как
-	# считает свертка (int(Fraction) в value/int.py)
-	#
-	# Макрос и inline-функция считают одно и то же; макрос нужен затем,
-	# что известное на этапе компиляции снятие масштаба попадает в
-	# статические инициализаторы, где вызов функции недопустим. В отличие
-	# от FIXED32()/FIXED64() операнд здесь вычисляется РОВНО ОДИН РАЗ,
-	# поэтому оговорки "только литералы и константы" тут не нужно -
-	# codegen отдает макросу любое immediate-выражение
-	sstr += ("\n#define __FIXED32_TO_INT32(x, f) ((int32_t)((x) / ((int64_t)1 << (f))))")
-	sstr += ("\n#define __FIXED64_TO_INT64(x, f) ((int64_t)((x) / ((int64_t)1 << (f))))")
-	sstr += ("\n#define __FIXED32_TO_FLOAT64(x, f) ((double)(x) / (double)((int64_t)1 << (f)))")
-	sstr += ("\n#define __FIXED64_TO_FLOAT64(x, f) ((double)(x) / (double)((int64_t)1 << (f)))")
-
-	sstr += ("\n__attribute__((used))")
-	sstr += ("\nstatic inline int32_t __fixed32_to_int32(__fixed32 a, uint8_t fraction) {")
-	sstr += ("\n	return (int32_t)(a / ((int64_t)1 << fraction));")
-	sstr += ("\n}")
-
-	sstr += ("\n__attribute__((used))")
-	sstr += ("\nstatic inline int64_t __fixed64_to_int64(__fixed64 a, uint8_t fraction) {")
-	sstr += ("\n	return a / ((int64_t)1 << fraction);")
-	sstr += ("\n}")
-
-	sstr += ("\n__attribute__((used))")
-	sstr += ("\nstatic inline double __fixed32_to_float64(__fixed32 a, uint8_t fraction) {")
-	sstr += ("\n	return (double)a / (double)((int64_t)1 << fraction);")
-	sstr += ("\n}")
-
-	sstr += ("\n__attribute__((used))")
-	sstr += ("\nstatic inline double __fixed64_to_float64(__fixed64 a, uint8_t fraction) {")
-	sstr += ("\n	return (double)a / (double)((int64_t)1 << fraction);")
-	sstr += ("\n}")
-
-	# у mul масштаб возводится в квадрат, у div - сокращается;
-	# половину младшего разряда добавляем ДО деления, чтобы округление
-	# (к ближайшему, половина - от нуля) совпало со сверткой констант.
-	# Делим, а не сдвигаем: '/' у отрицательных отбрасывает дробь в
-	# сторону нуля, а '>>' - в сторону минус бесконечности, и половина
-	# ушла бы не от нуля, а вниз (плюс сдвиг отрицательного в C11 UB).
-	# Промежуточное произведение вдвое шире хранилища: int64_t у Fixed32,
-	# __int128 у Fixed64
-	#
-	# (!) МАКРОСЫ обязаны оставаться КОНСТАНТНЫМ ВЫРАЖЕНИЕМ - они попадают
-	# в статические инициализаторы, где вызов функции недопустим. Ценой
-	# этого операнды вычисляются дважды, поэтому codegen подставляет их
-	# только там, где выражение известно на этапе компиляции; для рантайма
-	# есть одноименные inline-функции (см. do_cvalue_fixed_bin)
-	sstr += ("\n#define __FIXED32_MUL(a, b, f) \\")
-	sstr += ("\n	((__fixed32)(((int64_t)(a) * (int64_t)(b) < 0 \\")
-	sstr += ("\n		? (int64_t)(a) * (int64_t)(b) - (((int64_t)1 << (f)) / 2) \\")
-	sstr += ("\n		: (int64_t)(a) * (int64_t)(b) + (((int64_t)1 << (f)) / 2)) \\")
-	sstr += ("\n	/ ((int64_t)1 << (f))))")
-
-	sstr += ("\n#define __FIXED32_DIV(a, b, f) \\")
-	sstr += ("\n	((__fixed32)((((a) < 0) == ((b) < 0) \\")
-	sstr += ("\n		? (int64_t)(a) * ((int64_t)1 << (f)) + (int64_t)(b) / 2 \\")
-	sstr += ("\n		: (int64_t)(a) * ((int64_t)1 << (f)) - (int64_t)(b) / 2) \\")
-	sstr += ("\n	/ (int64_t)(b)))")
-
-	sstr += ("\nstatic inline __fixed32 __fixed32_mul(__fixed32 a, __fixed32 b, uint8_t fraction) {")
-	sstr += ("\n	int64_t p = (int64_t)a * (int64_t)b;")
-	sstr += ("\n	int64_t scale = (int64_t)1 << fraction;")
-	sstr += ("\n	return (__fixed32)((p < 0 ? p - scale / 2 : p + scale / 2) / scale);")
-	sstr += ("\n}")
-
-	sstr += ("\nstatic inline __fixed32 __fixed32_div(__fixed32 a, __fixed32 b, uint8_t fraction) {")
-	sstr += ("\n	int64_t n = (int64_t)a * ((int64_t)1 << fraction);")
-	sstr += ("\n	int64_t half = (int64_t)b / 2;")
-	sstr += ("\n	return (__fixed32)(((a < 0) == (b < 0) ? n + half : n - half) / (int64_t)b);")
-	sstr += ("\n}")
-
-	# __int128 есть только у 64-битных целей: под guard, чтобы модуль,
-	# который пользуется одним лишь Fixed32, собирался и без него
-	sstr += ("\n#ifdef __SIZEOF_INT128__")
-
-	sstr += ("\n#define __FIXED64_MUL(a, b, f) \\")
-	sstr += ("\n	((__fixed64)(((__int128)(a) * (__int128)(b) < 0 \\")
-	sstr += ("\n		? (__int128)(a) * (__int128)(b) - (((__int128)1 << (f)) / 2) \\")
-	sstr += ("\n		: (__int128)(a) * (__int128)(b) + (((__int128)1 << (f)) / 2)) \\")
-	sstr += ("\n	/ ((__int128)1 << (f))))")
-
-	sstr += ("\n#define __FIXED64_DIV(a, b, f) \\")
-	sstr += ("\n	((__fixed64)((((a) < 0) == ((b) < 0) \\")
-	sstr += ("\n		? (__int128)(a) * ((__int128)1 << (f)) + (__int128)(b) / 2 \\")
-	sstr += ("\n		: (__int128)(a) * ((__int128)1 << (f)) - (__int128)(b) / 2) \\")
-	sstr += ("\n	/ (__int128)(b)))")
-
-	sstr += ("\nstatic inline __fixed64 __fixed64_mul(__fixed64 a, __fixed64 b, uint8_t fraction) {")
-	sstr += ("\n	__int128 p = (__int128)a * (__int128)b;")
-	sstr += ("\n	__int128 scale = (__int128)1 << fraction;")
-	sstr += ("\n	return (__fixed64)((p < 0 ? p - scale / 2 : p + scale / 2) / scale);")
-	sstr += ("\n}")
-
-	sstr += ("\nstatic inline __fixed64 __fixed64_div(__fixed64 a, __fixed64 b, uint8_t fraction) {")
-	sstr += ("\n	__int128 n = (__int128)a * ((__int128)1 << fraction);")
-	sstr += ("\n	__int128 half = (__int128)b / 2;")
-	sstr += ("\n	return (__fixed64)(((a < 0) == (b < 0) ? n + half : n - half) / (__int128)b);")
-	sstr += ("\n}")
-
-	sstr += ("\n#endif /* __SIZEOF_INT128__ */")
-
-	sstr += ("\n#endif /* __FIXED_POINT__ */\n")
-	return (CRawText(sstr),)
+	return include(FIXED_HEADER, local=True)
 
 
 h_helpers = {
 	'use_bigint': do_helper_use_bigint,
 	'use_va_arg': do_helper_use_va_arg,
-	'use_fixed_point': do_helper_use_fixed_point_types,
+	'use_fixed_point': do_helper_use_fixed_point,
 }
 
 c_helpers = {
@@ -2584,6 +2419,25 @@ def dump(filename, defs):
 	file.close()
 
 
+# Кладем заголовки рантайма рядом с выхлопом: так собранный .c остается
+# самодостаточным - ни -I, ни MODEST_DIR на этапе сборки C не нужны.
+# Каталогов может быть два, если заголовок модуля уводили в include_dir
+def copy_runtime_headers(module, dirs):
+	for use in module.helpers:
+		if not use in runtime_headers:
+			continue
+		name = runtime_headers[use]
+		src = os.path.normpath(os.path.join(RUNTIME_DIR, name))
+		if not os.path.isfile(src):
+			fatal("runtime header not found: %s" % src)
+		for d in dirs:
+			os.makedirs(d, exist_ok=True)
+			dst = os.path.join(d, name)
+			if os.path.abspath(dst) == os.path.abspath(src):
+				continue
+			shutil.copyfile(src, dst)
+
+
 def run(module, _outname):
 	global csettings
 
@@ -2605,6 +2459,13 @@ def run(module, _outname):
 	if not 'no-c-file' in features:
 		cc = do_cfile(module)
 		dump(_outname + '.c', cc)
+
+	dirs = set()
+	if not 'no-h-file' in features and module.id != 'main':
+		dirs.add(os.path.dirname(hpath) or '.')
+	if not 'no-c-file' in features:
+		dirs.add(os.path.dirname(_outname) or '.')
+	copy_runtime_headers(module, dirs)
 
 
 

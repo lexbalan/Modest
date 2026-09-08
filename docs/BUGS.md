@@ -1233,3 +1233,34 @@ func main () -> Int {
   currently have an answer for.
 - No reproducer in the suite; it belongs with the `@immutable` tests
   wherever the annotation cases land.
+
+## 66. An annotation after a parameter's type hangs the parser
+
+```modest
+module g
+
+func f (x: Int32 @inline) -> Int32 {   // mcc never returns
+	return 0
+}
+```
+
+- `@fraction(N)` and the rest go *before* the type (`x: @fraction(16)
+  Fixed32`), and that form compiles. Writing the annotation *after* the
+  type is simply wrong — but instead of a diagnostic, `mcc` spins forever
+  and has to be killed.
+- It is the `@` that does it, not any particular annotation: `@inline`,
+  `@fraction(16)` and `@immutable` all hang, while ordinary junk in the
+  same position (`x: Int32 zzz`) is rejected cleanly with
+  `unexpected token`. So the parameter-list loop has no progress
+  guarantee once it meets `@` where it wants `,` or `)`.
+- Only the parameter list is affected. The same misplacement elsewhere
+  gives a proper error: `-> Fixed32 @fraction(16)` says
+  `unexpected token '{'`, and `var x: Fixed32 @fraction(16) = 1.5` says
+  `unexpected token1 '='`.
+- Front-end, not codegen: it hangs identically under `-mbackend=c11`,
+  `llvm` and `modest`, and no output file is ever written.
+- Fix: the parameter-list loop must consume a token or bail on every
+  iteration. Worth checking whether the same loop shape is used for
+  record fields, which take annotations in the same position.
+- No reproducer in the suite; a `reject_` test belongs next to the other
+  parameter-parsing tests.
