@@ -1,0 +1,35 @@
+// TEST: reject
+// EXPECT-ERROR: value identifier must start with a small letter; 'Foo' names a type
+// EXPECT-ERROR: value identifier must start with a small letter; 'Xx' names a type
+// EXPECT-ERROR: value identifier must start with a small letter; 'Mask' names a type
+// EXPECT-ERROR: type identifier must start with a capital letter; 'myInt' names a value
+// EXPECT-ERROR: value identifier must start with a small letter; 'Y' names a type
+//
+// The rule of docs/lang/identifier.md, stated by what will not compile:
+// the case of the first letter decides the class, so a capitalized name
+// cannot define a value and a small one cannot define a type.
+//
+// Both halves are checked at the point of definition.  That is the whole
+// point of the test: the definitions used to be accepted, and only a
+// later *use* failed — `Xx + 1` parses `Xx` as a type and reports
+// "undefined type", which names neither the mistake nor its site.
+//
+// The order matters: EXPECT-ERROR is matched in sequence, and mcc reports
+// the whole file in one run, so `func Foo` comes first because it is
+// defined before `main`.  Every site is separate so that one check going
+// missing is a failure rather than a silent gap.
+
+include "libc/ctypes64"
+
+func Foo () -> Int32 {
+	return 1
+}
+
+var Xx: Int32 = 1
+const Mask: Word8 = 0x0F
+type myInt = Int32
+
+func main () -> Int {
+	var Y: Int32 = 2
+	return 0
+}

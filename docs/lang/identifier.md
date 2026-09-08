@@ -19,9 +19,10 @@ decides which — lexically, before parsing.
   **lowercase** — value identifier (variables, constants, functions,
   parameters, fields, modules); **uppercase** — type identifier.
 - The split is grammatical, not stylistic: where a type is expected only
-  a type identifier parses, and vice versa. `var Xx: Int32` is a syntax
-  error; a `type myInt = ...` definition parses, but the name can never
-  appear in a type expression (`expected type expr`).
+  a type identifier parses, and vice versa. Both halves are refused where
+  the name is defined, not where it is used: `var Xx: Int32` gives *value
+  identifier must start with a small letter*, and `type myInt = ...` gives
+  *type identifier must start with a capital letter*.
 - Style: *PascalCase* for types, *camelCase* for values.
 
 ## Names reserved by the C backend

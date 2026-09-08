@@ -1,0 +1,27 @@
+// TEST: run
+// BACKENDS: c11, llvm
+// EXPECT-OUT: passed: underscore
+//
+// Leading underscores are skipped before the class is decided, so the
+// first *letter* is what counts: `_Handle` is a type and `_tmp` a value.
+// The case check on definitions must skip them the same way the lexer
+// does, or these two lines stop compiling.
+
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+
+type _Handle = Int32
+
+var _tmp: _Handle = 7
+
+func main () -> Int {
+	if _tmp != 7 {
+		printf("_tmp = %d, expected 7\n", _tmp)
+		printf("failed: underscore\n")
+		return exitFailure
+	}
+
+	printf("passed: underscore\n")
+	return exitSuccess
+}

@@ -14,7 +14,7 @@ func_stoppers = ['let', 'var', 'if', 'while', 'return', 'type']
 
 def isUpperIdentifierToken(token):
 	# skip _ before letters
-	while token[0] == '_':
+	while len(token) > 0 and token[0] == '_':
 		token = token[1:]
 	if len(token) > 0:
 		return token[0].isupper()
@@ -164,10 +164,22 @@ class Parser:
 		return self.ctok_class() == 'tag'
 
 
+	# value identifier: the first letter (leading '_' skipped) must be small
 	def parse_identifier(self):
 		ti = self.textInfo()
 		s = self.gettok()
-		return {'isa': 'ast_id', 'kind': 'id', 'str': s, 'ti': ti} #Id(s, ti=ti) ####
+		if isUpperIdentifierToken(s):
+			error("value identifier must start with a small letter; '%s' names a type" % s, ti)
+		return {'isa': 'ast_id', 'kind': 'id', 'str': s, 'ti': ti}
+
+
+	# type identifier: the first letter (leading '_' skipped) must be capital
+	def parse_Identifier(self):
+		ti = self.textInfo()
+		s = self.gettok()
+		if not isUpperIdentifierToken(s):
+			error("type identifier must start with a capital letter; '%s' names a value" % s, ti)
+		return {'isa': 'ast_id', 'kind': 'id', 'str': s, 'ti': ti}
 
 
 	def need_sep(self, separators=['\n', ';'], stoppers=['}'], eat=True):
@@ -491,7 +503,7 @@ class Parser:
 			}
 
 		elif self.is_Identifier():
-			id = self.parse_identifier()
+			id = self.parse_Identifier()
 			t = {
 				'isa': 'ast_type',
 				'kind': 'named',
@@ -508,7 +520,7 @@ class Parser:
 						break
 					left.append(self.parse_identifier())
 
-			right = self.parse_identifier()
+			right = self.parse_Identifier()
 			#print(left)
 			t = {
 				'isa': 'ast_type',
@@ -2161,7 +2173,7 @@ class Parser:
 	def parse_def_type(self):
 		ti = self.textInfo()
 		self.skip("type")
-		id = self.parse_identifier()
+		id = self.parse_Identifier()
 
 		if self.is_comment():
 			self.skip1()

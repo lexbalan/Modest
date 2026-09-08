@@ -412,40 +412,6 @@ const flags: Word8 = 0x0F | 0x30      // error: unsuitable value type
 - Coverage: `tests/lang/value/binary/bitwise.modest` works around it by
   keeping one operand a variable.
 
-## 29. A value identifier that starts with a capital is defined, then unusable
-
-```modest
-var Xx: Int32 = 1        // accepted
-var y = Xx + 1           // error: undefined type
-```
-
-- `docs/lang/identifier.md` states the rule: the case of the first letter
-  decides the class lexically, uppercase names a type, and `var Xx: Int32`
-  is "a syntax error". The definition is accepted instead — for `var`,
-  `const` and `func` alike (`func Foo () -> Int32` compiles).
-- Every use then fails, because in a value position the capitalized name
-  parses as a type: `Xx + 1` gives `undefined type`, `s ^ M1 ^ M2` gives
-  `unexpected token1 '^'`, and a bare `let r = M1` gives `unexpected
-  token1 'newline'`. None of them names the actual mistake.
-- The cost is a definition that looks fine and a diagnostic that points at
-  the use site with the wrong word. `const MASK: Word8 = 0x0F` is the
-  spelling a C programmer reaches for first, and nothing says why it
-  cannot work.
-- Worse, a capitalized name used as a call argument does not merely give the
-  wrong diagnostic — it hangs the compiler, because the unparsed argument
-  trips #20:
-
-  ```modest
-  const K: Int32 = 5
-  printf("%d\n", K)           // mcc spins forever after two errors
-  ```
-
-  `const K` / `const MASK` is exactly the spelling a C programmer writes
-  first, so this is the likely first encounter with both bugs at once.
-- Fix: reject the capitalized name where it is defined, with the rule in
-  the message — the check belongs next to the identifier class the lexer
-  already computes.
-
 ## 30. C backend does narrow `Word` operations at `int` width
 
 ```modest

@@ -402,9 +402,6 @@ def create_builtin_module():
 # offset - real offset (address inside container struct)
 def do_field(x):
 	id = do_id(x['id'])
-	if id.str[0].isupper():
-		error("field id must starts with small letter", id.ti)
-
 	field_type, init_value = process_field_common(x)
 	if field_type.is_forbidden_field():
 		error("unsuitable type", x['ti'])
