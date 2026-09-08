@@ -62,7 +62,7 @@ func testAndOrXor () -> Bool {
 }
 
 
-// At Word32, where `~` does not run into BUGS.md #30 — the narrow widths
+// At Word32, where `~` does not run into BUG#30 — the narrow widths
 // are covered in narrow_width.modest.
 func testIdentities () -> Bool {
 	var w: Word32 = 0x0000A55A
@@ -201,7 +201,7 @@ func testMasking () -> Bool {
 	}
 
 	// `^` is left-associative, so the chain meets one literal at a time; a
-	// literal pair on its own would not compile today — BUGS.md #28.
+	// literal pair on its own would not compile today — BUG#28.
 	if state ^ 0x0F ^ 0x0F != state {
 		printf("toggling four bits twice did not restore the value\n")
 		return false

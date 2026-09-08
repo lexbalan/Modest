@@ -32,7 +32,8 @@ TESTS_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT_DIR = os.path.dirname(TESTS_DIR)
 MCC = os.path.join(ROOT_DIR, 'mcc')
 
-# A hung compiler must fail the suite, not stall it (see docs/BUGS.md #8).
+# A hung compiler must fail the suite, not stall it — mcc used to spin on a
+# malformed file, and a stalled run tells you nothing (BUG#8, fixed).
 TIMEOUT_COMPILE = 30
 TIMEOUT_LINK = 60
 TIMEOUT_RUN = 10

@@ -23,8 +23,8 @@ return                          // function returns Unit
 - That check is syntactic: it asks whether the *last statement* of the
   body is a `return`, so a function whose every path returns is warned
   about too, and gets a `return` it can never reach. Whether falling off
-  the end should be an error instead is still
-  [open](../OPENQUESTIONS.md) (#1).
+  the end should be an error instead is still open —
+  [QUESTION#1](../QUESTIONS.md).
 
 ## Examples
 

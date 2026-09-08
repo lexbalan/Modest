@@ -1,5 +1,5 @@
 // TEST: reject
-// EXPECTED-FAIL: BUGS.md#64 `not` accepts operands other than Bool
+// EXPECTED-FAIL: BUG#64 `not` accepts operands other than Bool
 //
 // `not` is the Bool operator and takes nothing else.
 //

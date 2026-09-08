@@ -1,5 +1,5 @@
 // TEST: reject
-// EXPECTED-FAIL: BUGS.md#64 `~` accepts operands other than WordX
+// EXPECTED-FAIL: BUG#64 `~` accepts operands other than WordX
 //
 // `~` is the Word operator and takes nothing else.
 //

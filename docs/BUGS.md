@@ -3,7 +3,18 @@
 Found 2026-06-11 while verifying documentation against the compiler
 (merged 2026-07-29 with the older, previously-duplicated root-level BUGS.md).
 
-## 5. `builtin.*` namespace does not resolve (regression)
+This file is the only place bugs are recorded, so a bug is referred to as
+`BUG#N` everywhere — docs, source comments, test `EXPECTED-FAIL` markers,
+commit messages — without naming the file.  The number is permanent: an entry
+is deleted when the bug is fixed, and numbers are never reused.
+
+Nothing is kept here about fixed bugs.  What survives a fix is the test that
+reproduced it: its `EXPECTED-FAIL` marker becomes a `Guards BUG#N (fixed
+<date>)` line, so the number still leads to its reproducer (`tests/README.md`,
+"Known-broken tests").  Who fixed it and when is git's to answer:
+`git log -S '## BUG#N:' -- docs/BUGS.md`.
+
+## BUG#5: `builtin.*` namespace does not resolve (regression)
 
 ```modest
 var w: builtin.target.Word        // error: via import is forbidden
@@ -20,7 +31,7 @@ Affects everything under the `builtin.*` namespace in
 that same page (`true`, `false`, `nil`) are bound directly at module
 scope, not under `builtin.*`, and are unaffected.
 
-## 6. Empty slice assignment target emits a C zero-length array
+## BUG#6: Empty slice assignment target emits a C zero-length array
 
 ```modest
 var a: [5]Int32 = [10, 20, 30, 40, 50]
@@ -33,7 +44,7 @@ straight from the slice's `volume` expression with no zero-length case;
 see `do_ctype_array_volume` in `src/backend/c11.py:210`. No reproducer in the
 suite — the old `tests/slice` was not carried over into `tests/lang/`.
 
-## 7. C backend emits `arr[from][i]` for a postfix operator on a slice
+## BUG#7: C backend emits `arr[from][i]` for a postfix operator on a slice
 
 ```modest
 var a: [5]Int32 = [1, 2, 3, 4, 5]
@@ -66,7 +77,7 @@ of a sliced record (`ps[1:3][0].x` becomes `ps[1][0].x`).
 - Reproducer: `tests/lang/value/slice/postfix.modest`, marked
   `EXPECTED-FAIL(c11)`.
 
-## 12. LLVM backend does not apply C's default argument promotion to variadic calls
+## BUG#12: LLVM backend does not apply C's default argument promotion to variadic calls
 
 ```modest
 var f32: Float32 = 3.14159265358979323846264338327950288419716939937510582097494459
@@ -111,7 +122,7 @@ prints `f32 = 3.141593`, which is correct.
   narrower than `int` → `int`) before emitting the call.
 - Low priority for now — noted for later, not scheduled.
 
-## 15. C backend's `#include` of its own header ignores `-o`
+## BUG#15: C backend's `#include` of its own header ignores `-o`
 
 ```sh
 mcc -o out/prog -mbackend=c11 main.modest
@@ -128,7 +139,7 @@ mcc -o out/prog -mbackend=c11 main.modest
 - Went unnoticed because every existing invocation follows the
   `-o <dir>/main main.modest` shape, where the two coincide.
 
-## 18. `@cbyvalue` on a type definition crashes the compiler
+## BUG#18: `@cbyvalue` on a type definition crashes the compiler
 
 ```modest
 @cbyvalue
@@ -160,7 +171,7 @@ AttributeError: 'StmtDefType' object has no attribute 'value'
   the code describe two different features.
 
 
-## 19. `-funsafe` is never consulted; only `pragma unsafe` grants permission
+## BUG#19: `-funsafe` is never consulted; only `pragma unsafe` grants permission
 
 ```bash
 mcc -o out -mbackend=c11 -funsafe main.modest   # module has no pragma unsafe
@@ -186,7 +197,7 @@ error: for use 'unsafe' operator required -funsafe option
 - Docs updated to match the current behaviour: `docs/CHEATSHEET.md`
   (construction rules), `docs/lang/value/cons.md`, `docs/USAGE.md`.
 
-## 20. Malformed expression in a call argument makes `parse_args` spin
+## BUG#20: Malformed expression in a call argument makes `parse_args` spin
 
 ```modest
 const K: Int32 = 5
@@ -196,17 +207,20 @@ printf("%d\n", K)             // no hang any more, but see below
 - Cause: `parse_args` (`src/parser.py`) has no progress guard — when
   `expr_value` stops without consuming the offending token, the loop keeps
   re-parsing it.
-- The malformed argument here comes from #29 — `K` starts with a capital, so
-  in a value position it parses as a type and the argument list is left
-  standing on `)`. Two errors are printed (`unexpected token1 ')'`, then
-  `expected separator`) and only then does `parse_args` start spinning, so the
-  diagnostics are not the last thing the user sees.
+- The malformed argument here is a capitalized value identifier: `K` is a type
+  name to the parser, so in a value position `expr_value` stops without
+  consuming it and the argument list is left standing on `)`. Since 2026-09-08
+  the definition is refused first, at its own site (`value identifier must
+  start with a small letter; 'K' names a type`), but the call behind it still
+  derails: `unexpected token1 ')'`, then `expected separator`, and only then
+  does `parse_args` start spinning — so the useful diagnostic is not the last
+  thing the user sees.
 - Since the lexer got a real end-of-input token (2026-08-30), this no longer
   hangs: the loop drains the rest of the file, then hits `MAX_ERRORS` at EOF
   and exits. That is termination by accident, not a fix — the loop still makes
-  no progress, and the user gets ten copies of `unexpected token1
-  'end-of-file'` instead of one useful message. `parse_args` still needs a
-  no-progress guard.
+  no progress, and `expected separator` / `unexpected token1 'end-of-file'`
+  alternate until the ten-error limit (`MAX_ERRORS`, `src/error.py`) cuts the
+  run off; verified 2026-09-08. `parse_args` still needs a no-progress guard.
 - The original triggers no longer reproduce at all:
 
   ```modest
@@ -215,11 +229,11 @@ printf("%d\n", K)             // no hang any more, but see below
   ```
 
   Both were unary operators applied above level 13 of the precedence table;
-  verified 2026-08-30 that this compiles without a diagnostic. Whether it
-  *should* is a separate question — see #29 for the remaining half of the
-  misleading-diagnostic story.
+  verified 2026-08-30 that this compiles without a diagnostic, and again
+  2026-09-08. Whether it *should* is a question about the operand-type rules,
+  not about this bug.
 
-## 22. An inline comment after a trailing operator breaks line continuation
+## BUG#22: An inline comment after a trailing operator breaks line continuation
 
 ```modest
 let v = a |   // low bits
@@ -247,7 +261,7 @@ error: unexpected token1 ' low bits'
   comments to the right of code (`docs/CHEATSHEET.md`, Code Style).
 - Fix belongs next to the newline skip: skip comment tokens the same way.
 
-## 23. Breaking the line-continuation rule gives a diagnostic that does not teach it
+## BUG#23: Breaking the line-continuation rule gives a diagnostic that does not teach it
 
 ```modest
 let v = a
@@ -268,7 +282,7 @@ return 0            // error: undefined value 'return'
 - `unexpected token1` leaks an internal name into user-facing output; it appears
   in many other diagnostics too and deserves a separate pass.
 
-## 25. `FixedX` — the gaps left around a working type
+## BUG#25: `FixedX` — the gaps left around a working type
 
 The scale itself is right everywhere now: constant folding, run-time
 construction and run-time `*` and `/` all apply it, in both backends.  What
@@ -345,7 +359,7 @@ Coverage: `tests/lang/type/fixed/runtime.modest` (run-time) and
 `tests/lang/type/fixed/comptime.modest` (compile-time); both pass under c11 and
 llvm.
 
-## 26. Record equality compares the padding between fields
+## BUG#26: Record equality compares the padding between fields
 
 ```modest
 type Sample = {
@@ -384,7 +398,7 @@ a == b        // llvm: false      c11: true
   `EXPECTED-FAIL(llvm)`. It passes under c11 on purpose — if that backend
   ever stops emitting a compound literal, the test reports it.
 
-## 28. Bitwise operators reject a pair of literal operands
+## BUG#28: Bitwise operators reject a pair of literal operands
 
 ```modest
 const flags: Word8 = 0x0F | 0x30      // error: unsuitable value type
@@ -412,7 +426,7 @@ const flags: Word8 = 0x0F | 0x30      // error: unsuitable value type
 - Coverage: `tests/lang/value/binary/bitwise.modest` works around it by
   keeping one operand a variable.
 
-## 30. C backend does narrow `Word` operations at `int` width
+## BUG#30: C backend does narrow `Word` operations at `int` width
 
 ```modest
 var b: Word8 = 0x81
@@ -447,7 +461,7 @@ var f: Word8 = 0xF0
 - Coverage: `tests/lang/value/binary/narrow_width.modest`, marked
   `EXPECTED-FAIL(c11)`.
 
-## 33. A malformed type crashes the compiler after reporting the error
+## BUG#33: A malformed type crashes the compiler after reporting the error
 
 ```modest
 type F = (Int32) -> Int   // a parameter without a name
@@ -480,7 +494,7 @@ AssertionError
 - Expected: stop at the error that was already reported, the way every
   other bad definition does.
 
-## 34. LLVM backend negates a float with the integer `sub`
+## BUG#34: LLVM backend negates a float with the integer `sub`
 
 ```modest
 var a: Float64 = 1.5
@@ -528,7 +542,7 @@ printf("%f\n", -a)          // c11: -1.500000    llvm: does not assemble
 - Coverage: `tests/lang/type/float/negation.modest`, marked
   `EXPECTED-FAIL(llvm)`.
 
-## 35. Backends disagree about `!=` on a NaN
+## BUG#35: Backends disagree about `!=` on a NaN
 
 ```modest
 var zero: Float64 = 0.0
@@ -551,7 +565,7 @@ if nan != nan { printf("NaN\n") }    // c11: prints    llvm: does not
 - Coverage: `tests/lang/type/float/nan.modest`, marked
   `EXPECTED-FAIL(llvm)`.
 
-## 36. `FloatX` ↔ `WordX` converts numerically instead of reinterpreting bits
+## BUG#36: `FloatX` ↔ `WordX` converts numerically instead of reinterpreting bits
 
 ```modest
 var f: Float32 = 1.0
@@ -593,7 +607,7 @@ printf("%f\n", Float64 g)           // c11: 1065353216.0, expected 1.0
   It uses run-time values only — a compile-time one would crash the
   compiler and hide the rest of the file.
 
-## 37. `IntX` from a wider `FloatY` is rejected as an integer overflow
+## BUG#37: `IntX` from a wider `FloatY` is rejected as an integer overflow
 
 ```modest
 var f: Float64 = 2.75
@@ -633,7 +647,7 @@ var i: Int32 = Int32 f        // error: integer overflow
   `EXPECTED-FAIL`. The working half of the table is
   `tests/lang/type/float/cons.modest`, which passes.
 
-## 40. LLVM backend builds the `FixedX` scale in the source float's width
+## BUG#40: LLVM backend builds the `FixedX` scale in the source float's width
 
 ```modest
 var h: Float16 = 1.5
@@ -661,7 +675,7 @@ var x: Fixed32 = Fixed32 h   // c11: 1.5   llvm: 32767.999985
 - Coverage: `tests/lang/type/float/float16/fixed.modest`, marked
   `EXPECTED-FAIL(llvm)`.
 
-## 42. `@layout("packed")` is ignored by both backends
+## BUG#42: `@layout("packed")` is ignored by both backends
 
 ```modest
 type Header = @layout("packed") {
@@ -687,11 +701,11 @@ offsetof(Header.len)    // 4, expected 1
   `copy_with_atts` has attached one. So `sizeof` and `offsetof` would
   stay padded even if both backends emitted the packed form.
 - `@layout("exact")` is the default layout under another name and is
-  unaffected. `union` is broken differently, see #43.
+  unaffected. `union` is broken differently, see BUG#43.
 - Coverage: `tests/lang/type/record/packed.modest`, marked
   `EXPECTED-FAIL` on both backends.
 
-## 43. LLVM backend ignores `@layout("union")`
+## BUG#43: LLVM backend ignores `@layout("union")`
 
 ```modest
 type Color = @layout("union") {
@@ -713,12 +727,12 @@ sizeof(Color)           // c11: 4    llvm: 8
   holding a single array of bytes the size of the largest member, with
   each access bitcast to the field's type.
 - The offsets come from `calc_record_size_align`, which lays every record
-  out in sequence, so a fix has to reach the layout too (#42 is the same
+  out in sequence, so a fix has to reach the layout too (BUG#42 is the same
   gap seen from the packed side).
 - Coverage: `tests/lang/type/record/union.modest`, marked
   `EXPECTED-FAIL(llvm)`.
 
-## 45. A comment after an empty record literal is a parse error
+## BUG#45: A comment after an empty record literal is a parse error
 
 ```modest
 var p: Point = {}    // fills the record
@@ -738,7 +752,7 @@ error: unexpected token1 ' fills the record'
 - No reproducer in the suite: a test for it would have to be a compile
   failure, and the runner has no expectation for that yet.
 
-## 46. C backend hands a compound literal to the `RAWCAST` macro
+## BUG#46: C backend hands a compound literal to the `RAWCAST` macro
 
 ```modest
 type Point = {x: Int32, y: Int32}
@@ -766,7 +780,7 @@ struct vec2 w = RAWCAST(struct vec2, struct point, (struct point){.x = 5, .y = 6
 - Coverage: `tests/lang/type/record/structural_literal.modest`, marked
   `EXPECTED-FAIL(c11)`.
 
-## 47. LLVM backend stores a returned record under the callee's type
+## BUG#47: LLVM backend stores a returned record under the callee's type
 
 ```modest
 type Point = {x: Int32, y: Int32}
@@ -788,11 +802,11 @@ store %Point %2, %Point* %1   ; %2 is a %Vec2
   between two variables works. A call result has no address to bitcast:
   the value arrives as `%Vec2` and is stored straight into a `%Point*`.
 - The C backend converts through `RAWCAST` and is unaffected (its own
-  trouble with that macro is #46).
+  trouble with that macro is BUG#46).
 - Coverage: `tests/lang/type/record/structural_call.modest`, marked
   `EXPECTED-FAIL(llvm)`.
 
-## 48. C backend emits an anonymous record before the type it contains
+## BUG#48: C backend emits an anonymous record before the type it contains
 
 ```modest
 type Point = {x: Int32, y: Int32}
@@ -821,7 +835,7 @@ struct point { ... };
 - Coverage: `tests/lang/type/record/anonymous_field.modest`, marked
   `EXPECTED-FAIL(c11)`.
 
-## 49. LLVM backend keeps the literal's type for an array of records with a pointer
+## BUG#49: LLVM backend keeps the literal's type for an array of records with a pointer
 
 ```modest
 type Ref = {tag: Int32, p: *Int32}
@@ -848,7 +862,7 @@ store [2 x %Ref] %14, [2 x %Ref]* %9   ; %14 is [2 x {i8,%Int32*}]
 - Coverage: `tests/lang/type/record/pointer_field.modest`, marked
   `EXPECTED-FAIL(llvm)`.
 
-## 50. C backend emits an identifier that is a C keyword as it stands
+## BUG#50: C backend emits an identifier that is a C keyword as it stands
 
 ```modest
 var double: Int32 = 2
@@ -872,7 +886,7 @@ int32_t switch = 1;
   the backend already mangles what it has to.
 - No reproducer in the suite.
 
-## 51. A type named after a builtin redefines it in the LLVM backend
+## BUG#51: A type named after a builtin redefines it in the LLVM backend
 
 ```modest
 type Size = {w: Int32, h: Int32}
@@ -896,7 +910,7 @@ type Size = {w: Int32, h: Int32}
   user types under names that cannot collide with the prelude's.
 - No reproducer in the suite.
 
-## 52. A branded record cannot be constructed from its parent
+## BUG#52: A branded record cannot be constructed from its parent
 
 ```modest
 type Point = {x: Int32, y: Int32}
@@ -920,7 +934,7 @@ var q: Point = Point b     // error: cannot construct 'Point' from 'Brand' value
 - No reproducer in the suite: the branded type has no test file yet, and
   `tests/lang/type/branded.modest` is where one belongs.
 
-## 54. An empty record type is emitted as `void` in an initializer
+## BUG#54: An empty record type is emitted as `void` in an initializer
 
 ```modest
 type Empty = {}
@@ -943,7 +957,7 @@ static struct empty e = (void){0};   // error: variable has incomplete type 'voi
 - No reproducer in the suite: `tests/lang/type/record/` has no empty-record
   case.
 
-## 56. A named variant type crashes the C backend
+## BUG#56: A named variant type crashes the C backend
 
 ```modest
 type Err = @branded Nat32
@@ -964,7 +978,7 @@ TypeError: can only concatenate str (not "NoneType") to str
 - Experimental type. `tests/lang/type/variant/basic.modest` covers what does
   work and spells the type out inline to stay clear of this.
 
-## 57. Each written-out variant type becomes its own C struct
+## BUG#57: Each written-out variant type becomes its own C struct
 
 ```modest
 func divide (a: Int32, b: Int32) -> Int32 or Err { ... }
@@ -986,13 +1000,13 @@ struct __anonymous_variant_1 r = divide(10, 2);
   language has structural types; the C output makes them nominal, and
   identical variants stop being the same type.
 - The natural way to write this — name the type once and use the name —
-  is #56, so both spellings of a shared variant type are currently
+  is BUG#56, so both spellings of a shared variant type are currently
   unusable and only a value inferred from the call (`let r = divide(...)`)
   gets through.
 - Coverage: `tests/lang/type/variant/basic.modest` holds the working shape and
   points here.
 
-## 58. `var` of type `Unit` is accepted and emits `void u;`
+## BUG#58: `var` of type `Unit` is accepted and emits `void u;`
 
 ```modest
 func main () -> Int {
@@ -1014,7 +1028,7 @@ void u;   // error: variable has incomplete type 'void'
 - No reproducer in the suite: a `reject` test belongs in
   `tests/lang/type/unit/`.
 
-## 60. Annotations on a local `var` are silently ignored
+## BUG#60: Annotations on a local `var` are silently ignored
 
 ```modest
 func main () -> Int32 {
@@ -1039,7 +1053,7 @@ func main () -> Int32 {
   annotation tests land) needs both a `reject` case and a case that
   proves an applied annotation works on a local.
 
-## 61. `@extern` variable with an initializer silently drops it
+## BUG#61: `@extern` variable with an initializer silently drops it
 
 ```modest
 @extern("C")
@@ -1061,7 +1075,7 @@ extern int32_t env[3];   // the initializer is gone
 - No reproducer in the suite: a `reject` test belongs next to the other
   `@extern` cases.
 
-## 62. C backend runs two unary signs together into `--` / `++`
+## BUG#62: C backend runs two unary signs together into `--` / `++`
 
 ```modest
 var i: Int32 = 5
@@ -1101,7 +1115,7 @@ printf("%d\n", ++i);
 - Coverage: `tests/lang/value/unary/double_sign.modest`, marked
   `EXPECTED-FAIL(c11)`.
 
-## 63. LLVM backend inverts a literal at the literal's own width
+## BUG#63: LLVM backend inverts a literal at the literal's own width
 
 ```modest
 var a: Word32 = ~0x0F
@@ -1130,7 +1144,7 @@ var c: Word64 = ~0x0F
   specific to a literal operand, which is exactly how a mask is written.
 - The wider the target and the smaller the literal, the more bits are lost;
   `~0x0000FFFF` into a `Word32` comes out 0, a mask that selects nothing.
-- Not the same as #30, which is the C backend doing narrow `Word`
+- Not the same as BUG#30, which is the C backend doing narrow `Word`
   operations too *wide*. This one is the LLVM backend doing them too
   *narrow*, and it needs no narrow type to appear in the source.
 - Fix: give the literal the target type before the inversion, the way the
@@ -1138,7 +1152,7 @@ var c: Word64 = ~0x0F
 - Coverage: `tests/lang/value/unary/literal_width.modest`, marked
   `EXPECTED-FAIL(llvm)`.
 
-## 64. Unary operators accept operand types they are not defined for
+## BUG#64: Unary operators accept operand types they are not defined for
 
 The operand class of each unary operator was settled on 2026-09-07:
 
@@ -1199,7 +1213,7 @@ var k = +n          // error: expected value with signed type
   the moment it does. The rules that *are* enforced are in
   `tests/lang/value/unary/reject.modest`.
 
-## 65. `&` on an `@immutable var` hands out a writable pointer
+## BUG#65: `&` on an `@immutable var` hands out a writable pointer
 
 ```modest
 @immutable
@@ -1224,7 +1238,7 @@ func main () -> Int {
   `static int32_t gimm = 3;` with no `const`, and LLVM prints
   `@gimm = internal global %Int32 3` — so this is an unenforced rule
   rather than a miscompilation.
-- Related but distinct from #60: that one is about a local `var`'s
+- Related but distinct from BUG#60: that one is about a local `var`'s
   annotations never being read at all. This holds for a *global*
   `@immutable var`, whose annotation is read and does stop assignment.
 - Fix: the mutability test behind `&` should ask the same question
@@ -1234,7 +1248,7 @@ func main () -> Int {
 - No reproducer in the suite; it belongs with the `@immutable` tests
   wherever the annotation cases land.
 
-## 66. An annotation after a parameter's type hangs the parser
+## BUG#66: An annotation after a parameter's type hangs the parser
 
 ```modest
 module g

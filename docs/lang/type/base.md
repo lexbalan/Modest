@@ -50,7 +50,7 @@ Target-width aliases (resolved from target config): `Int`, `Nat`, `Word`,
 > around the type rather than in it: `Fixed64` `*` and `/` need a 128-bit
 > intermediate and so do not compile for a 32-bit target in C, `NatX` does
 > not accept a `FixedX` source, and the `modest` backend drops
-> `@fraction`'s argument. See `docs/BUGS.md` (#25),
+> `@fraction`'s argument. See BUG#25,
 > `tests/lang/type/fixed/runtime.modest` (the type at run time) and
 > `tests/lang/type/fixed/comptime.modest` (the compile-time fold).
 
@@ -65,7 +65,7 @@ Target-width aliases (resolved from target config): `Int`, `Nat`, `Word`,
 > `FixedX` scale at the source float's width — which only a `Float16` source
 > is narrow enough to expose. A literal outside the type's range is a
 > compile-time error in both backends, the way an integer one is
-> ([cons](../value/cons.md)). See `docs/BUGS.md` (#34–#37, #40) and
+> ([cons](../value/cons.md)). See BUG#34–37, BUG#40 and
 > `tests/lang/type/float/`, where each has a marked reproducer next to the
 > files that pass.
 

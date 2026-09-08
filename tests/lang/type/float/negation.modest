@@ -4,7 +4,7 @@
 // EXPECT-OUT: passed: float unary minus
 // EXPECT-OUT: passed: signed zero
 // EXPECT-OUT: passed: float negation
-// EXPECTED-FAIL(llvm): BUGS.md#34 float negation emits an integer `sub`
+// EXPECTED-FAIL(llvm): BUG#34 float negation emits an integer `sub`
 //
 // Unary `-` on a float, and the negative zero it produces.
 //

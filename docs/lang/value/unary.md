@@ -29,7 +29,7 @@
   [binary](./binary.md) draws for arithmetic and ordering.
 - Most of this is not enforced yet: `not` on an `IntX`, `~` and `+` on a
   `Bool`, `-` on a `WordX` all compile today, and `~` on a `FloatX` is
-  refused by the C compiler rather than by mcc. See BUGS.md #64 — the
+  refused by the C compiler rather than by mcc. See BUG#64 — the
   table above is the rule, not a description of the current compiler.
 - `&` applies to mutable values (variables, fields, elements) and
   functions. Immutable values — `let` bindings, parameters,

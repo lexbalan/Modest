@@ -22,10 +22,10 @@
 //
 //   - Word8 and Word16 are covered in narrow_width.modest, because the C
 //     backend does the inversion at `int` width and the bits that leave the
-//     type survive (BUGS.md #30).
+//     type survive (BUG#30).
 //   - a literal operand is covered in literal_width.modest, because the
 //     LLVM backend inverts it at the *literal's* width and zero-extends
-//     (BUGS.md #63).
+//     (BUG#63).
 //
 // Splitting them out is what lets this file be about the operator rather
 // than about the two backends.

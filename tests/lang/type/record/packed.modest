@@ -6,7 +6,7 @@
 // EXPECT-OUT: passed: the fields still read and write
 // EXPECT-OUT: passed: packed elements in an array
 // EXPECT-OUT: passed: packed layout
-// EXPECTED-FAIL: BUGS.md#42 @layout("packed") is ignored by both backends
+// EXPECTED-FAIL: BUG#42 @layout("packed") is ignored by both backends
 //
 // `@layout("packed")` lays the fields out with no padding: each starts
 // where the one before it ended, and the record is as long as its fields

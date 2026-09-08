@@ -2664,7 +2664,7 @@ def def_func(x):
 		# умолчанию: иначе каждый бэкенд затыкает эту дыру по-своему.
 		# Проверка синтаксическая, не по потоку управления, так что
 		# функция, возвращающая на всех путях, тоже получит и warning,
-		# и недостижимый return (docs/lang/OPENQUESTIONS.md #1)
+		# и недостижимый return (QUESTION#1)
 		if not fn.type.to.is_unit():
 			stmts = stmt.stmts
 			if len(stmts) == 0 or not stmts[-1].is_stmt_return():

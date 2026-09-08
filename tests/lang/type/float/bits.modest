@@ -5,7 +5,7 @@
 // EXPECT-OUT: passed: Float64 bits
 // EXPECT-OUT: passed: bits to float
 // EXPECT-OUT: passed: float bits
-// EXPECTED-FAIL: BUGS.md#36 FloatX <-> WordX converts numerically
+// EXPECTED-FAIL: BUG#36 FloatX <-> WordX converts numerically
 //
 // The storage of a FloatX, which is the one place IEEE 754 is visible to
 // the last bit.

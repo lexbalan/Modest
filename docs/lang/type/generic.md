@@ -70,7 +70,7 @@ const pi = 3.14159265358979323846264338327950288419716939937510582097494459
   `Rational`/`Float` constant literal as text. It mirrors `precision` in
   `cfg/*.toml` and is otherwise unused — `Rational` arithmetic itself is
   already exact regardless of this setting. It is currently unreachable
-  like the rest of `builtin.*` — see `docs/BUGS.md` (#5).
+  like the rest of `builtin.*` — see BUG#5.
 - Raising `precision` only helps a *single literal* wider than the
   default 256 digits — a real but narrow case. It does not increase the
   precision of a `FloatX`-typed variable at runtime: once the C compiler

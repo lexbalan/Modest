@@ -2,7 +2,7 @@
 // BACKENDS: c11, llvm, modest
 // EXPECT-EXIT: 0
 // EXPECT-OUT: passed: literal width
-// EXPECTED-FAIL(llvm): BUGS.md#63 a literal is inverted at its own width
+// EXPECTED-FAIL(llvm): BUG#63 a literal is inverted at its own width
 //
 // `~` applied to a *literal*.
 //

@@ -12,6 +12,10 @@ This is deliberately separate from the two other lists:
 | [`DOUBTS.md`](../DOUBTS.md) | the implementation works but is the wrong shape inside |
 | here | the **language** has not decided, so there is nothing to be wrong about yet |
 
+A question is referred to as `QUESTION#4` — the tag its heading carries — the
+same way a bug is `BUG#20`, so copying the tag out of any mention finds the
+entry. The number is permanent: it is never reused or renumbered.
+
 A question leaves this page when it is answered: the answer goes into the
 reference page it belongs to, and whatever the compiler does differently
 becomes an ordinary entry in `BUGS.md`.
@@ -22,7 +26,7 @@ options with their consequences, and what an answer would touch.
 
 ---
 
-## 1. Should a function return something by default?
+## QUESTION#1: Should a function return something by default?
 
 **Question.** Must every non-`Unit` function return a value on every path,
 or is falling off the end legal — with the language supplying a default
@@ -137,7 +141,7 @@ there is nothing left for a backend to decide.
 
 ---
 
-## 2. In what order are call arguments evaluated?
+## QUESTION#2: In what order are call arguments evaluated?
 
 **Question.** Is the evaluation order of arguments part of the language,
 or left unspecified as it is in C? Left to right is the expected answer —
@@ -234,7 +238,7 @@ arguments must stop being reordered.
 
 ---
 
-## 3. Should `NatX` accept a `CharY` source?
+## QUESTION#3: Should `NatX` accept a `CharY` source?
 
 **Question.** A `CharX` is a code unit — a number in an encoding. Ordering
 it is settled: `<` `>` `<=` `>=` are rejected on `Char`, because comparing
@@ -330,7 +334,7 @@ instead of through `unsafe`.
 
 ---
 
-## 4. Does `and` / `or` evaluate the right operand when the left one decides?
+## QUESTION#4: Does `and` / `or` evaluate the right operand when the left one decides?
 
 **Question.** Is short-circuit evaluation part of the language? `false and
 f()` and `true or f()` already know their answer from the left operand

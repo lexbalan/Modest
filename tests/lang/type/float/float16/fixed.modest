@@ -3,7 +3,7 @@
 // EXPECT-OUT: passed: half to fixed
 // EXPECT-OUT: passed: half from fixed
 // EXPECT-OUT: passed: Float16 and fixed
-// EXPECTED-FAIL(llvm): BUGS.md#40 the Float->Fixed scale is built in the source width
+// EXPECTED-FAIL(llvm): BUG#40 the Float->Fixed scale is built in the source width
 //
 // `FixedX <-> Float16`, the one pair in the construction table where the
 // two types have a scale between them.

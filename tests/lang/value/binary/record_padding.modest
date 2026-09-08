@@ -2,7 +2,7 @@
 // BACKENDS: c11, llvm, modest
 // EXPECT-EXIT: 0
 // EXPECT-OUT: passed: record padding
-// EXPECTED-FAIL(llvm): BUGS.md#26 record equality compares the padding bytes
+// EXPECTED-FAIL(llvm): BUG#26 record equality compares the padding bytes
 //
 // docs/lang/value/binary.md says records compare field-wise.  Both backends
 // instead compare the raw bytes of the whole object — `__builtin_memcmp` in

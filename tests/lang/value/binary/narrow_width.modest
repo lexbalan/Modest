@@ -2,7 +2,7 @@
 // BACKENDS: c11, llvm, modest
 // EXPECT-EXIT: 0
 // EXPECT-OUT: passed: narrow width
-// EXPECTED-FAIL(c11): BUGS.md#30 narrow Word operations are done at int width
+// EXPECTED-FAIL(c11): BUG#30 narrow Word operations are done at int width
 //
 // An operation on WordX gives a WordX — the operand's own width, says
 // docs/lang/value/binary.md, and nothing wider.  Every check below is a

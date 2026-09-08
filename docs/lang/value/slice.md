@@ -21,7 +21,7 @@ Selects a contiguous sub-array `[from, to)`.
 - The result is itself an array value, so index, slice and field access
   continue on it: `a[1:4][0]` is the slice's first element, `a[1:5][1:3]`
   a slice of a slice. Not yet usable under `-mbackend=c11` — see
-  `docs/BUGS.md#7`.
+  BUG#7.
 - An unsized array of unsized arrays cannot be sliced
   (compiler message: `cannot slice array of an unsized array`).
 

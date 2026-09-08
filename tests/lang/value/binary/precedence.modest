@@ -22,7 +22,7 @@
 // what it looks like; in C the same line is `w & (mask == 0)`.  Every level
 // is left-associative, the bitwise ones included, so a chain meets one
 // literal at a time — a literal pair on its own would not compile today
-// (BUGS.md #28).
+// (BUG#28).
 //
 // Precedence decides how an unparenthesised expression groups; what happens
 // when the parentheses are written down is parens.modest.

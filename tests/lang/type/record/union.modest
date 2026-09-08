@@ -7,7 +7,7 @@
 // EXPECT-OUT: passed: a union field inside a record
 // EXPECT-OUT: passed: a field default leaves the union alone
 // EXPECT-OUT: passed: union layout
-// EXPECTED-FAIL(llvm): BUGS.md#43 @layout("union") is ignored, the fields do not overlap
+// EXPECTED-FAIL(llvm): BUG#43 @layout("union") is ignored, the fields do not overlap
 //
 // `@layout("union")` puts every field of the record at offset 0 — the C
 // union.  The fields are then one storage under several names: writing

@@ -207,12 +207,16 @@ declare void @perror(%ConstCharStr* %str)
 ; -- strings --
 @.str1 = private constant [14 x i8] [i8 72, i8 101, i8 108, i8 108, i8 111, i8 32, i8 87, i8 111, i8 114, i8 108, i8 100, i8 33, i8 10, i8 0]
 @.str2 = private constant [14 x i8] [i8 102, i8 120, i8 51, i8 50, i8 32, i8 61, i8 32, i8 37, i8 100, i8 46, i8 37, i8 100, i8 10, i8 0]
+@.str3 = private constant [15 x i8] [i8 102, i8 120, i8 51, i8 50, i8 50, i8 32, i8 61, i8 32, i8 37, i8 100, i8 46, i8 37, i8 100, i8 10, i8 0]
 ; -- endstrings --
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @.str1 to [0 x i8]*))
 	%2 = call %Int32 @apart(%Fixed32 270235)
-	%3 = call %Int32 @bpart(%Fixed32 270235)
+	%3 = call %Int32 @bpart(%Fixed32 270235, %Nat32 100000000)
 	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @.str2 to [0 x i8]*), %Int32 %2, %Int32 %3)
+	%5 = call %Int32 @apart(%Fixed32 135118)
+	%6 = call %Int32 @bpart(%Fixed32 135118, %Nat32 100000000)
+	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @.str3 to [0 x i8]*), %Int32 %5, %Int32 %6)
 	ret %Int 0
 }
 
@@ -226,16 +230,17 @@ define internal %Int32 @apart(%Fixed32 %x) {
 	ret %Int32 %6
 }
 
-define internal %Int32 @bpart(%Fixed32 %x) {
+define internal %Int32 @bpart(%Fixed32 %x, %Nat32 %precision) {
 	%1 = bitcast %Fixed32 %x to %Word32
 	%2 = zext i16 65535 to %Word32
 	%3 = and %Word32 %1, %2
 	%4 = zext %Word32 %3 to %Word64
 	%5 = bitcast %Word64 %4 to %Int64
-	%6 = mul %Int64 %5, 100000
-	%7 = sdiv %Int64 %6, 65536
-	%8 = trunc %Int64 %7 to %Int32
-	ret %Int32 %8
+	%6 = sext %Nat32 %precision to %Int64
+	%7 = mul %Int64 %5, %6
+	%8 = sdiv %Int64 %7, 65536
+	%9 = trunc %Int64 %8 to %Int32
+	ret %Int32 %9
 }
 
 

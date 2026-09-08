@@ -22,10 +22,10 @@
 //
 // Two operand types are deliberately absent.  FloatX negation is in
 // tests/lang/type/float/negation.modest, on its own because the LLVM
-// backend emits an integer `sub` for it (BUGS.md #34) and one backend bug
+// backend emits an integer `sub` for it (BUG#34) and one backend bug
 // should not mark every other operand type broken.  `- -x` written with the
 // two signs adjacent is in double_sign.modest, for the same reason on the
-// other backend (BUGS.md #62).
+// other backend (BUG#62).
 
 include "libc/ctypes64"
 include "libc/stdio"
@@ -232,7 +232,7 @@ func testUnaryPlus () -> Bool {
 	// an unsigned number is exactly as meaningful as one on a signed one.
 	// docs/lang/value/unary.md says `+` takes any numeric operand — the
 	// compiler is narrower, and reject.modest states the behaviour as it
-	// is.  BUGS.md #64 has the mismatch.
+	// is.  BUG#64 has the mismatch.
 	//
 	// On a FloatX and a FixedX.
 	var f: Float64 = 1.5

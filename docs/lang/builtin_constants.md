@@ -4,7 +4,7 @@ Every module implicitly imports the `builtin` namespace with information
 about the compiler and the target platform.
 
 > **Status:** resolution of `builtin.*` is currently broken on the dev
-> branch — see `docs/BUGS.md` (#5). The reference below describes the
+> branch — see BUG#5. The reference below describes the
 > intended interface (`tests/builtin`).
 
 ## Top-level constants

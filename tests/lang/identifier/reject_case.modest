@@ -18,6 +18,8 @@
 // the whole file in one run, so `func Foo` comes first because it is
 // defined before `main`.  Every site is separate so that one check going
 // missing is a failure rather than a silent gap.
+//
+// Guards BUG#29 (fixed 2026-09-08).
 
 include "libc/ctypes64"
 

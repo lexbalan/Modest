@@ -3,7 +3,7 @@
 // EXPECT-EXIT: 0
 // EXPECT-OUT: passed: a named literal under the other name
 // EXPECT-OUT: passed: structural literal
-// EXPECTED-FAIL(c11): BUGS.md#46 a named record literal breaks the RAWCAST macro
+// EXPECTED-FAIL(c11): BUG#46 a named record literal breaks the RAWCAST macro
 //
 // A record literal that names its type, used where a structurally
 // identical type of another name is expected: `var v: Vec2 = Point {...}`.

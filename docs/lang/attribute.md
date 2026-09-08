@@ -65,7 +65,7 @@ Annotations are written before a definition, or inside a type expression
 | `@section("name")` | linker section |
 | `@branded` | nominal type (see [branded](./type/branded.md)) |
 | `@zarray` | zero-terminated array (see `docs/TODO.md`) |
-| `@fraction(N)` | binary point for `FixedX`: N fractional bits (applied to constants; run-time arithmetic still ignores it — `BUGS.md` #25) |
+| `@fraction(N)` | binary point for `FixedX`: N fractional bits (applied by the fold and at run time alike; remaining limitations in BUG#25) |
 
 ### Access
 

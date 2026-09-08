@@ -5,7 +5,7 @@
 // EXPECT-OUT: passed: NaN ordering
 // EXPECT-OUT: passed: NaN propagation
 // EXPECT-OUT: passed: NaN
-// EXPECTED-FAIL(llvm): BUGS.md#35 `!=` on floats is an ordered compare
+// EXPECTED-FAIL(llvm): BUG#35 `!=` on floats is an ordered compare
 //
 // Not-a-number, and the one property that makes it observable without any
 // library: it is the only value not equal to itself.

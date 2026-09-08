@@ -49,7 +49,7 @@ func testLeft () -> Bool {
 	}
 
 	// A left shift that pushes bits out of a narrow Word is where the two
-	// backends part company — see narrow_width.modest and BUGS.md #30.
+	// backends part company — see narrow_width.modest and BUG#30.
 
 	printf("passed: left\n")
 	return true

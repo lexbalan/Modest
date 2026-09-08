@@ -16,7 +16,7 @@
 // One thing this file deliberately does not check: whether the right
 // operand is evaluated when the left one already decides the answer.  The
 // backends disagree about it today and the language has not said which is
-// right — see docs/lang/OPENQUESTIONS.md #4.  Everything below is written
+// right — see QUESTION#4.  Everything below is written
 // so that the answer cannot change the outcome: no operand has a side
 // effect.
 

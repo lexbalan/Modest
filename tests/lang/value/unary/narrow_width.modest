@@ -5,7 +5,7 @@
 // EXPECT-OUT: passed: word16
 // EXPECT-OUT: passed: stored
 // EXPECT-OUT: passed: narrow width
-// EXPECTED-FAIL(c11): BUGS.md#30 narrow Word operations are done at int width
+// EXPECTED-FAIL(c11): BUG#30 narrow Word operations are done at int width
 //
 // `~` on a Word8 or a Word16.
 //

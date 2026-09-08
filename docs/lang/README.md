@@ -86,4 +86,4 @@ Prints `crc32 = cbf43926` — the standard CRC-32 check value.
 For a one-page overview see the [cheatsheet](../CHEATSHEET.md).
 
 Design decisions the language has not made yet are collected in
-[open questions](./OPENQUESTIONS.md).
+[open questions](./QUESTIONS.md).

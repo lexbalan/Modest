@@ -18,8 +18,8 @@
 //
 // What is deliberately *not* here: the operand-type rules that are settled
 // but not yet enforced.  `not` on an IntX, `~` and `+` on a Bool, `-` on a
-// WordX and `~` on a FloatX are all accepted by mcc today — see BUGS.md
-// #64.  They have their own files, one per row of the rule table, each
+// WordX and `~` on a FloatX are all accepted by mcc today — see BUG#64.
+// They have their own files, one per row of the rule table, each
 // marked EXPECTED-FAIL so that the day a check lands is the day the suite
 // says so: reject_not_operand, reject_tilde_operand, reject_sign_operand.
 // Keeping them out of this file is what lets this one pass.
@@ -45,7 +45,7 @@ func main () -> Int {
 
 	// Unary `+` goes through the same check, though it is a no-op and could
 	// not overflow anything.  Refusing a NatX is right for both operators,
-	// so this line stays where it is — what BUGS.md #64 has against `+` is
+	// so this line stays where it is — what BUG#64 has against `+` is
 	// the operands it wrongly *accepts*, not this one.
 	var plussed = +n
 

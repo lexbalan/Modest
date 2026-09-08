@@ -1,6 +1,6 @@
 // TEST: run
 // BACKENDS: c11, llvm, modest
-// EXPECTED-FAIL(c11): BUGS.md#7 postfix after a slice emits arr[from][i]
+// EXPECTED-FAIL(c11): BUG#7 postfix after a slice emits arr[from][i]
 // EXPECT-EXIT: 0
 // EXPECT-OUT: passed: index after slice
 // EXPECT-OUT: passed: slice after slice

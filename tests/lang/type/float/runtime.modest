@@ -18,7 +18,7 @@
 // Two things shape how the checks below are written.
 //
 // A Float32 never reaches printf directly: the LLVM backend does not widen
-// it to double for a variadic call (BUGS.md #12), so every value printed
+// it to double for a variadic call (BUG#12), so every value printed
 // here is constructed to Float64 first.  That is also what the language
 // wants — there is no implicit promotion between FloatX widths, so the two
 // types never mix in one expression either.
@@ -34,7 +34,7 @@
 // are written out in full here.
 //
 // Unary `-` on a float is not here either — it is broken under the LLVM
-// backend (BUGS.md #34), so it has its own file, negation.modest, and this
+// backend (BUG#34), so it has its own file, negation.modest, and this
 // one negates by subtracting from zero where it needs to.  Keeping it out
 // means one backend bug does not mark the whole type broken.
 
@@ -291,7 +291,7 @@ func testPrecision () -> Bool {
 // question, and this file is about what the backends emit.
 //
 // NaN is not here: the two backends disagree about `!=` on it
-// (BUGS.md #35), so it has its own file, nan.modest.
+// (BUG#35), so it has its own file, nan.modest.
 func testSpecials () -> Bool {
 	var one: Float64 = 1.0
 	var zero: Float64 = 0.0
@@ -316,7 +316,7 @@ func testSpecials () -> Bool {
 
 	// Zero has a sign, which equality does not see.  The negative one is
 	// built rather than written: the literal `-0.0` crashes the LLVM
-	// backend (BUGS.md #34), and a product carries the sign just as well.
+	// backend (BUG#34), and a product carries the sign just as well.
 	var negOne: Float64 = -1.0
 	var negZero = zero * negOne
 	if zero != negZero {

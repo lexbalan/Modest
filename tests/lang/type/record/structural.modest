@@ -25,8 +25,8 @@
 //
 // Two shapes are missing for a reason of their own, each with a
 // reproducer: an *explicitly named* literal handed to the other name
-// (`structural_literal.modest`, BUGS.md#46) and a call result taken into
-// the other name (`structural_call.modest`, BUGS.md#47).
+// (`structural_literal.modest`, BUG#46) and a call result taken into
+// the other name (`structural_call.modest`, BUG#47).
 
 include "libc/ctypes64"
 include "libc/stdio"

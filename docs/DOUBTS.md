@@ -4,7 +4,12 @@ Questionable design/implementation choices worth revisiting — not confirmed
 bugs (those go in `BUGS.md`), just spots where the current approach feels
 like the wrong shape and might be worth a redesign discussion.
 
-## 1. `@immutable` piggybacks on the generic attribute bag instead of being a first-class flag
+An entry here is `DOUBT#2`, the tag its heading carries, the same way a bug is
+`BUG#20` and an undecided design question is `QUESTION#4`
+(`docs/lang/QUESTIONS.md`).  Numbers are permanent: never reused, never
+renumbered.
+
+## DOUBT#1: `@immutable` piggybacks on the generic attribute bag instead of being a first-class flag
 
 `Value` already tracks immutability as a dedicated field, `is_immutable`
 (`src/hlir/types.py:1777`), propagated explicitly through binary-op codegen
@@ -33,7 +38,7 @@ remember both exist.
   one source of truth and the printer doesn't need special-case handling
   to preserve it?
 
-## 2. An array-returning call zeroes its buffer before the callee fills it
+## DOUBT#2: An array-returning call zeroes its buffer before the callee fills it
 
 A function that returns an array is compiled with an sret parameter and
 gives that same pointer back, so the call stays an expression
@@ -61,7 +66,7 @@ buffer immediately before the callee overwrites every byte of it.
   expression. Hoisting it into a statement before the expression would make
   it unconditional as the right operand of `and` / `or`, and C's `&&` / `||`
   is the only reason this backend short-circuits — see
-  `OPENQUESTIONS.md` #4. Declaring the temporary is fine; moving the call
+  QUESTION#4. Declaring the temporary is fine; moving the call
   is not.
 - The same compound-literal trick gives a record returned by a call an
   address for `memcmp` (`do_cvalue_as_ptr`, `src/backend/c11.py:2694`), and

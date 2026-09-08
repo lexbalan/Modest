@@ -2,7 +2,7 @@
 // BACKENDS: c11, llvm, modest
 // EXPECT-EXIT: 0
 // EXPECT-OUT: passed: double sign
-// EXPECTED-FAIL(c11): BUGS.md#62 two unary signs run together into `--` / `++`
+// EXPECTED-FAIL(c11): BUG#62 two unary signs run together into `--` / `++`
 //
 // Two unary signs in a row.
 //

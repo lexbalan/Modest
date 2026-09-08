@@ -115,8 +115,8 @@ sites and match them in order.
 A test for a bug that is not fixed yet stays in the suite, marked:
 
 ```modest
-// EXPECTED-FAIL: BUGS.md#5 builtin.* does not resolve
-// EXPECTED-FAIL(llvm): BUGS.md#12 no default argument promotion for variadics
+// EXPECTED-FAIL: BUG#5 builtin.* does not resolve
+// EXPECTED-FAIL(llvm): BUG#12 no default argument promotion for variadics
 ```
 
 It is then expected to fail, and reported as `XFAIL` without failing the
@@ -127,6 +127,23 @@ entry from `docs/BUGS.md`.
 This exists so that a broken test is never deleted or commented out of the
 run to keep things green.  Both of those lose the information that the bug
 has a reproducer.
+
+When the bug is fixed the marker does not simply vanish — it turns into a
+line in the same header comment, naming what the test guards from then on:
+
+```modest
+// Guards BUG#30 (fixed 2026-09-08).
+```
+
+So `grep -rn 'BUG#30'` answers "which test covers it?" the same way before
+and after the fix, once the entry itself has left `docs/BUGS.md`.  That one
+line is the whole hand-kept record; who closed the bug and when the entry
+went is recovered from git, which finds it by content even when the commit
+message says nothing:
+
+```
+git log --format='%h %ad %an  %s' --date=short -S '## BUG#30:' -- docs/BUGS.md
+```
 
 ## Layout
 

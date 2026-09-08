@@ -1,5 +1,5 @@
 // TEST: reject
-// EXPECTED-FAIL: BUGS.md#64 `-` and `+` accept WordX and Bool operands
+// EXPECTED-FAIL: BUG#64 `-` and `+` accept WordX and Bool operands
 //
 // `-` and `+` take a number: IntX, FloatX, or an untyped Integer literal.
 //

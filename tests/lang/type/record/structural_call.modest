@@ -3,7 +3,7 @@
 // EXPECT-EXIT: 0
 // EXPECT-OUT: passed: call result under the other name
 // EXPECT-OUT: passed: structural call result
-// EXPECTED-FAIL(llvm): BUGS.md#47 a returned record keeps the callee's type name
+// EXPECTED-FAIL(llvm): BUG#47 a returned record keeps the callee's type name
 //
 // A function returning one record type, into a variable of a structurally
 // identical type of another name: `var p: Point = returnsVec2()`.

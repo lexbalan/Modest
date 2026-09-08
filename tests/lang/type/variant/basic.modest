@@ -10,7 +10,7 @@
 // c11 only: the variant is a proof-of-concept in that backend, and the
 // LLVM backend does not lower `or` at all (`eval_cons_or`).  A *named*
 // variant (`type Res = Int32 or Err`) crashes the C backend as well —
-// BUGS.md#56 — so the type is spelled out inline here.
+// BUG#56 — so the type is spelled out inline here.
 //
 // This is the example from `docs/lang/type/variant.md`, which used to
 // crash the compiler outright.
@@ -36,7 +36,7 @@ func divide (a: Int32, b: Int32) -> Int32 or Err {
 // The variant travels back out of the call and can be held; what it holds
 // is not readable yet.  It is held with `let r = ...` and not with a
 // spelled-out `var r: Int32 or Err` on purpose: two written-out variant
-// types do not match in the C backend — BUGS.md#57.
+// types do not match in the C backend — BUG#57.
 func main () -> Int {
 	let ok = divide(10, 2)
 	let bad = divide(1, 0)

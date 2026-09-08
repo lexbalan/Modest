@@ -25,7 +25,7 @@ Nat8, Nat16, Nat32, Nat64, Nat128  // unsigned integers
 Word8, Word16, Word32, Word64, Word128  // bitwise integers
 Char8, Char16, Char32              // characters
 Float16, Float32, Float64          // floating point (Float16 needs a target that has it)
-Fixed32, Fixed64                   // fixed-point — run-time * and / not rescaled by the LLVM backend (BUGS.md #25)
+Fixed32, Fixed64                   // fixed-point — experimental; remaining limitations in BUG#25
 Str8, Str16, Str32                 // aliases for: []Char8, []Char16, []Char32 (string values are passed as *Str8)
 Int, Nat, Word                     // target-width integer aliases (builtin)
 Byte                               // builtin byte type
@@ -60,8 +60,8 @@ var g: Float32 = pi    // Rational implicitly cast to Float32
 > builtin constant `builtin.target.rationalPrecision` (Integer, 256 by
 > default, mirrors `precision` in `cfg/*.toml`) is how many significant
 > decimal digits the C backend keeps when it writes such a literal out
-> as text (currently unreachable, like the rest of `builtin.*` — see
-> `docs/BUGS.md` #5) — see
+> as text (currently unreachable, like the rest of `builtin.*` —
+> see BUG#5) — see
 > [docs/lang/type/generic.md#rational-precision](lang/type/generic.md#rational-precision).
 
 ### Composite Types
@@ -229,7 +229,7 @@ printf("%d %d\n",
 > `unexpected token1 '|'`.
 >
 > A blank line after the trailing operator is fine; an inline comment after it is
-> not — that is a known bug, see [BUGS.md](BUGS.md) #22.
+> not — that is a known bug, see [BUG#22](BUGS.md).
 
 ### If/Else
 ```modest
@@ -429,7 +429,7 @@ Unit value                         // discard a value (suppress warnings)
 > **Unsafe** — needs `pragma unsafe` in the module *and* the `unsafe` operator
 > at the use site: `unsafe Nat8 x`. Permission lives in the source, not on the
 > command line — the `-funsafe` flag is currently ignored (see
-> [BUGS.md](BUGS.md) #19).
+> [BUG#19](BUGS.md)).
 > Width notation: `Y≤X` means source width is narrower or equal; `Y>X` means wider.
 
 | Target | Safe sources | Unsafe sources | Comment |

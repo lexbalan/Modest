@@ -3,7 +3,7 @@
 // EXPECT-EXIT: 0
 // EXPECT-OUT: passed: an anonymous field over a named record
 // EXPECT-OUT: passed: anonymous field dependencies
-// EXPECTED-FAIL(c11): BUGS.md#48 an anonymous record is emitted before what it contains
+// EXPECTED-FAIL(c11): BUG#48 an anonymous record is emitted before what it contains
 //
 // An anonymous record type written as a field, whose own fields name
 // another record type: `body: {pos: Point, speed: Int32}`.

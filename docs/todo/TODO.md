@@ -138,7 +138,7 @@ until reimplemented.
 ## LLVM backend: merge `ass` and `ass2`
 
 Cleanup noted 2026-08-09, while fixing an invalid-IR bug in the LLVM
-backend (former `BUGS.md` #17).
+backend (former BUG#17).
 
 `src/backend/llvm.py` has two near-identical helpers that turn a value
 plus indexes into an address:

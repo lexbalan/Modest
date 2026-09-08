@@ -3,7 +3,7 @@
 // EXPECT-EXIT: 0
 // EXPECT-OUT: passed: an array literal of records with a pointer
 // EXPECT-OUT: passed: pointer field in an array literal
-// EXPECTED-FAIL(llvm): BUGS.md#49 an array literal keeps the generic record's type
+// EXPECTED-FAIL(llvm): BUG#49 an array literal keeps the generic record's type
 //
 // An array literal whose elements are record literals, where the record
 // has a pointer field: `var ops: [2]Op = [{tag = 1, fn = &twice}, ...]`.

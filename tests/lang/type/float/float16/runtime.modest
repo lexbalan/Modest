@@ -24,15 +24,15 @@
 // every value below is one both backends have to produce.
 //
 // Every Float16 is printed through Float64: a float narrower than a double
-// cannot be passed to a variadic call at its own width (BUGS.md #12 is the
+// cannot be passed to a variadic call at its own width (BUG#12 is the
 // Float32 side of the same thing).
 //
 // Two of the type's neighbours are not here.  A literal outside binary16's
 // range does not compile at all, which is its own pair of tests
 // (range.modest and overflow.modest), and `Fixed32 <- Float16` converts to
-// garbage, its scale not fitting the source width (BUGS.md #40,
+// garbage, its scale not fitting the source width (BUG#40,
 // fixed.modest).  Unary
-// `-` is avoided throughout for BUGS.md #34, the way runtime.modest one
+// `-` is avoided throughout for BUG#34, the way runtime.modest one
 // directory up avoids it — this file subtracts from zero instead.
 
 include "libc/ctypes64"
@@ -220,7 +220,7 @@ func testFromInteger () -> Bool {
 
 // The other direction truncates toward zero, as it does from any float.
 // Float16 is also the one width where an `Int32` target works: the check
-// that refuses `Int32 <- Float64` (BUGS.md #37) compares the two widths,
+// that refuses `Int32 <- Float64` (BUG#37) compares the two widths,
 // and here the float is the narrower of the two.
 func testToInteger () -> Bool {
 	var f: Float16 = 2.75
@@ -271,7 +271,7 @@ func testArithmetic () -> Bool {
 		return false
 	}
 
-	// Negated by subtracting from zero; unary `-` is BUGS.md #34.
+	// Negated by subtracting from zero; unary `-` is BUG#34.
 	var zero: Float16 = 0.0
 	if Float64(zero - a) != -1.5 {
 		printf("zero - a = %f, expected -1.5\n", Float64(zero - a))

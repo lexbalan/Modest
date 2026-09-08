@@ -3,7 +3,7 @@
 // EXPECT-EXIT: 0
 // EXPECT-OUT: passed: float to a narrower integer
 // EXPECT-OUT: passed: narrow int from float
-// EXPECTED-FAIL: BUGS.md#37 IntX <- FloatY rejected when the float is wider
+// EXPECTED-FAIL: BUG#37 IntX <- FloatY rejected when the float is wider
 //
 // `IntX <- FloatY` and `NatX <- FloatY` where the float is the wider of the
 // two — `Int32` from a `Float64`, the shape most rounding code is written

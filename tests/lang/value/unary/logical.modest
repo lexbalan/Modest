@@ -124,7 +124,7 @@ func testPrecedence () -> Bool {
 
 // De Morgan on Bool.  `and`/`or` may or may not evaluate their right
 // operand once the left one decides — the backends disagree, see
-// docs/lang/OPENQUESTIONS.md #4 — so nothing here has a side effect and the
+// QUESTION#4 — so nothing here has a side effect and the
 // answer cannot depend on it.
 func testDeMorgan () -> Bool {
 	var t = true

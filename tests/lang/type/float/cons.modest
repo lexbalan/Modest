@@ -19,14 +19,14 @@
 //
 // Two rows of that table are not exercised here, because they do not work:
 // the `WordY` reinterpretation is a numeric conversion in both backends
-// (BUGS.md #36, reproducer in bits.modest), and `IntX <- FloatY` is
-// rejected whenever the float is the wider of the two (BUGS.md #37,
+// (BUG#36, reproducer in bits.modest), and `IntX <- FloatY` is
+// rejected whenever the float is the wider of the two (BUG#37,
 // reproducer in narrow_int.modest).  What this file checks is every
 // direction that does hold today, so that a change to construction has to
 // come past it.
 //
 // Every Float32 is printed through Float64: the LLVM backend passes a
-// Float32 to a variadic call at the wrong width (BUGS.md #12).
+// Float32 to a variadic call at the wrong width (BUG#12).
 
 include "libc/ctypes64"
 include "libc/stdio"
