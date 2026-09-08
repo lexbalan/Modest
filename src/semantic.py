@@ -1998,7 +1998,7 @@ def do_stmt_if(x):
 	if x['else'] != None:
 		_else = do_stmt(x['else'])
 		if _else.is_stmt_bad():
-			return StmtBad(x['else'])
+			return StmtBad(x['ti'])
 
 	return StmtIf(cond, _then, _else, ti=x['ti'])
 

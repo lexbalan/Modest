@@ -1,0 +1,28 @@
+// TEST: reject
+// EXPECT-ERROR: undefined value 'missingInElse'
+// EXPECT-ERROR: undefined value 'afterTheIf'
+//
+// An error inside the `else` branch must be reported like any other and
+// leave the rest of the function to be checked.  It used to end the run
+// instead: `do_stmt_if` handed the else *node* to `StmtBad`, which takes
+// a TextInfo, and the compiler died on the assertion right after
+// printing the first diagnostic.
+//
+// Hence the second error, on the line after the whole `if`: it is what
+// tells a clean rejection apart from a crash, since a crash also exits
+// non-zero and has the first diagnostic on stdout already.  Both the
+// `else if` and the plain `else` form reach the same site.
+
+include "libc/ctypes64"
+
+func main () -> Int {
+	var m: Int32 = 0
+
+	if m == 1 {
+	} else if m == missingInElse {
+	}
+
+	m = afterTheIf
+
+	return 0
+}
