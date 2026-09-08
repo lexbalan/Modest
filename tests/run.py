@@ -30,9 +30,9 @@ from dataclasses import dataclass, field
 
 TESTS_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT_DIR = os.path.dirname(TESTS_DIR)
-MCC = os.path.join(ROOT_DIR, 'mcc')
+MODEST = os.path.join(ROOT_DIR, 'modest')
 
-# A hung compiler must fail the suite, not stall it — mcc used to spin on a
+# A hung compiler must fail the suite, not stall it — modest used to spin on a
 # malformed file, and a stalled run tells you nothing (BUG#8, fixed).
 TIMEOUT_COMPILE = 30
 TIMEOUT_LINK = 60
@@ -66,7 +66,7 @@ class Test:
 	expect_out: list = field(default_factory=list)
 	expect_error: list = field(default_factory=list)  # diagnostics a `reject` test must produce
 	link: list = field(default_factory=list)   # extra .modest sources to link in
-	flags: list = field(default_factory=list)  # extra mcc flags
+	flags: list = field(default_factory=list)  # extra modest flags
 	xfail: dict = field(default_factory=dict)  # backend (or '*') -> reason
 
 	def xfail_reason(self, backend):
@@ -146,15 +146,15 @@ def apply_directive(t, key, scope, value, name):
 
 # ------------------------------------------------------- locating the failure
 
-# mcc and clang both colour their output whether or not a terminal is
+# modest and clang both colour their output whether or not a terminal is
 # listening, so the captured text has to be cleaned before it is read.
 ANSI = re.compile(r'\x1b\[[0-9;]*m')
 
-# clang puts the whole diagnostic on one line; mcc puts the location on its
+# clang puts the whole diagnostic on one line; modest puts the location on its
 # own line and the message on the next.
 CLANG_ERROR = re.compile(r'^(.+?):(\d+):(\d+):\s*(?:fatal\s+)?error:\s*(.*)$')
-MCC_LOCATION = re.compile(r'^(.+?):(\d+):(\d+):$')
-MCC_MESSAGE = re.compile(r'^(?:fatal\s+)?error:\s*(.*)$')
+MODEST_LOCATION = re.compile(r'^(.+?):(\d+):(\d+):$')
+MODEST_MESSAGE = re.compile(r'^(?:fatal\s+)?error:\s*(.*)$')
 
 
 def first_error(log):
@@ -165,9 +165,9 @@ def first_error(log):
 		if m:
 			return '%s:%s: %s' % (os.path.basename(m.group(1)), m.group(2), m.group(4))
 
-		m = MCC_LOCATION.match(line)
+		m = MODEST_LOCATION.match(line)
 		if m and i + 1 < len(lines):
-			msg = MCC_MESSAGE.match(lines[i + 1])
+			msg = MODEST_MESSAGE.match(lines[i + 1])
 			if msg:
 				return '%s:%s: %s' % (os.path.basename(m.group(1)), m.group(2), msg.group(1))
 	return None
@@ -205,10 +205,10 @@ def run_case(t, backend, keep=False):
 
 
 def do_reject(t, backend, sources, workdir, result):
-	"""Compile the sources expecting mcc to refuse one of them."""
+	"""Compile the sources expecting modest to refuse one of them."""
 	for src in sources:
 		prefix = os.path.join(workdir, os.path.splitext(os.path.basename(src))[0])
-		cmd = [MCC] + t.flags + ['-o', prefix, '-mbackend=' + backend, src]
+		cmd = [MODEST] + t.flags + ['-o', prefix, '-mbackend=' + backend, src]
 		code, out = run(cmd, workdir, TIMEOUT_COMPILE)
 		if code == 0:
 			continue  # this one was fine; a later source may be the bad one
@@ -226,7 +226,7 @@ def do_reject(t, backend, sources, workdir, result):
 			rest = rest[i + len(want):]
 		return result(PASS)
 
-	return result(FAIL, 'mcc accepted it, expected it to be rejected')
+	return result(FAIL, 'modest accepted it, expected it to be rejected')
 
 
 def do_case(t, backend, workdir):
@@ -245,7 +245,7 @@ def do_case(t, backend, workdir):
 			return result(FAIL, 'missing source %s' % s)
 
 	# A `reject` test is the negative of all the rest: nothing is built or
-	# run, mcc simply has to refuse the source - and for the stated reason.
+	# run, modest simply has to refuse the source - and for the stated reason.
 	if t.mode == 'reject':
 		return do_reject(t, backend, sources, workdir, result)
 
@@ -253,14 +253,14 @@ def do_case(t, backend, workdir):
 	generated = []
 	for src in sources:
 		prefix = os.path.join(workdir, os.path.splitext(os.path.basename(src))[0])
-		cmd = [MCC] + t.flags + ['-o', prefix, '-mbackend=' + backend, src]
+		cmd = [MODEST] + t.flags + ['-o', prefix, '-mbackend=' + backend, src]
 		code, out = run(cmd, workdir, TIMEOUT_COMPILE)
 		if code != 0:
-			return compiler_failed('mcc', code, out)
+			return compiler_failed('modest', code, out)
 
 		ext = COMPILABLE.get(backend) or GENERATE_ONLY[backend]
 		if not os.path.isfile(prefix + ext):
-			return result(FAIL, 'mcc produced no %s' % ext, last_output(out), out)
+			return result(FAIL, 'modest produced no %s' % ext, last_output(out), out)
 		generated.append(prefix + ext)
 
 	if backend in GENERATE_ONLY:
@@ -426,8 +426,8 @@ def main():
 	ap.add_argument('--list', action='store_true', help='list tests and exit')
 	args = ap.parse_args()
 
-	if not os.path.isfile(MCC):
-		fatal('compiler not found at %s' % MCC)
+	if not os.path.isfile(MODEST):
+		fatal('compiler not found at %s' % MODEST)
 	os.environ.setdefault('MODEST_DIR', ROOT_DIR)
 	os.environ.setdefault('MODEST_LIB', os.path.join(ROOT_DIR, 'lib') + os.sep)
 

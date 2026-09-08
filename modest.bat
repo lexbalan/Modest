@@ -1,7 +1,7 @@
 @echo off
 
 if not defined MODEST_DIR (
-	echo mcc: MODEST_DIR is not set 1>&2
+	echo modest: MODEST_DIR is not set 1>&2
 	exit /b 1
 )
 

@@ -15,20 +15,20 @@ all: CM C LLVM
 
 
 CM:
-	mcc -o $(CMPREFIX)/main -mbackend=modest -funsafe $(INDIR)/main.modest
-	mcc -o $(CMPREFIX)/aes256 -mbackend=modest -funsafe ${MODEST_LIB}/misc/aes256.modest
+	modest -o $(CMPREFIX)/main -mbackend=modest -funsafe $(INDIR)/main.modest
+	modest -o $(CMPREFIX)/aes256 -mbackend=modest -funsafe ${MODEST_LIB}/misc/aes256.modest
 
 
 LLVM:
-	mcc -o $(LLVMPREFIX)/main -mbackend=llvm -funsafe $(INDIR)/main.modest
-	mcc -o $(LLVMPREFIX)/aes256 -mbackend=llvm -funsafe ${MODEST_LIB}/misc/aes256.modest
+	modest -o $(LLVMPREFIX)/main -mbackend=llvm -funsafe $(INDIR)/main.modest
+	modest -o $(LLVMPREFIX)/aes256 -mbackend=llvm -funsafe ${MODEST_LIB}/misc/aes256.modest
 	clang $(LLVMPREFIX)/main.ll $(LLVMPREFIX)/aes256.ll
 	./a.out
 
 
 C:
-	mcc -o $(CPREFIX)/main -mbackend=c11 -funsafe $(INDIR)/main.modest
-	mcc -o $(CPREFIX)/aes256 -mbackend=c11 -funsafe ${MODEST_LIB}/misc/aes256.modest
+	modest -o $(CPREFIX)/main -mbackend=c11 -funsafe $(INDIR)/main.modest
+	modest -o $(CPREFIX)/aes256 -mbackend=c11 -funsafe ${MODEST_LIB}/misc/aes256.modest
 	clang $(C_OPTIONS) $(CPREFIX)/main.c $(CPREFIX)/aes256.c
 	./a.out
 

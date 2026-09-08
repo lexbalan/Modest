@@ -12,13 +12,13 @@
 // here, and each one is a separate site so that a diagnostic going missing
 // is a failure rather than a silent gap.
 //
-// The order matters: EXPECT-ERROR is matched in sequence, and mcc reports
+// The order matters: EXPECT-ERROR is matched in sequence, and modest reports
 // the whole file in one run, so the parameter case at the top comes first
 // because its function is defined before `main`.
 //
 // What is deliberately *not* here: the operand-type rules that are settled
 // but not yet enforced.  `not` on an IntX, `~` and `+` on a Bool, `-` on a
-// WordX and `~` on a FloatX are all accepted by mcc today — see BUG#64.
+// WordX and `~` on a FloatX are all accepted by modest today — see BUG#64.
 // They have their own files, one per row of the rule table, each
 // marked EXPECTED-FAIL so that the day a check lands is the day the suite
 // says so: reject_not_operand, reject_tilde_operand, reject_sign_operand.

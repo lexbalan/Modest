@@ -7,8 +7,8 @@ described in [README.md](./README.md).
 
 | File | Purpose |
 |------|---------|
-| `mcc` | Compiler entry point (bash wrapper around `src/main.py`) |
-| `mcc.bat` | Same, for Windows `cmd.exe` |
+| `modest` | Compiler entry point (bash wrapper around `src/main.py`) |
+| `modest.bat` | Same, for Windows `cmd.exe` |
 | `README.md` | Project overview |
 | `LICENSE` | MIT License |
 | `requirements.txt` | Python dependencies |

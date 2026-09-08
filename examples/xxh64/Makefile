@@ -16,16 +16,16 @@ test: CM LLVM C
 
 
 CM:
-	mcc -o $(CMPREFIX)/main -mbackend=modest -funsafe $(INDIR)/main.modest
+	modest -o $(CMPREFIX)/main -mbackend=modest -funsafe $(INDIR)/main.modest
 
 
 LLVM:
-	mcc -o $(LLVMPREFIX)/main -mbackend=llvm -funsafe $(INDIR)/main.modest
+	modest -o $(LLVMPREFIX)/main -mbackend=llvm -funsafe $(INDIR)/main.modest
 	clang $(LLVMPREFIX)/main.ll
 
 
 C:
-	mcc -o $(CPREFIX)/main -mbackend=c11 -funsafe $(INDIR)/main.modest
+	modest -o $(CPREFIX)/main -mbackend=c11 -funsafe $(INDIR)/main.modest
 	clang $(C_OPTIONS) $(CPREFIX)/main.c #$(CPREFIX)/utf.c
 
 

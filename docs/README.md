@@ -21,7 +21,7 @@ You can contact me by telegram: t.me/@alexbalan.
 | `CHEATSHEET.md` | [Cheat sheet](https://lexbalan.github.io/Modest/CHEATSHEET.html) — the whole language on one page |
 | `EBNF.txt` | [the grammar](https://lexbalan.github.io/Modest/EBNF.txt), kept in step with the parser |
 | `INSTALL.md` | [Installation](https://lexbalan.github.io/Modest/INSTALL.html) — Python 3.11, Clang, environment |
-| `USAGE.md` | [Usage](https://lexbalan.github.io/Modest/USAGE.html) — invoking `mcc`, flags, backends, config |
+| `USAGE.md` | [Usage](https://lexbalan.github.io/Modest/USAGE.html) — invoking `modest`, flags, backends, config |
 | `compiler/` | [How the compiler works](https://lexbalan.github.io/Modest/compiler/) — pipeline, module map, where to make a change |
 | `todo/` | [Design TODO](https://lexbalan.github.io/Modest/todo/TODO.html) — planned work, not yet decided in code |
 | `agents/claude/` | notes for AI assistants: task index and HLIR internals |

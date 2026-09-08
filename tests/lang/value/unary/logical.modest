@@ -19,7 +19,7 @@
 // is `(not a) == b`, and the parenthesised form means something else.
 //
 // `not` takes a Bool and nothing else: the bitwise inversion next door in
-// bitwise.modest is `~`, a separate operator over a separate type.  mcc
+// bitwise.modest is `~`, a separate operator over a separate type.  modest
 // still accepts `not` on a WordX today — reject_not_operand.modest is
 // where that is written down.
 

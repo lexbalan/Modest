@@ -23,6 +23,6 @@ read docs/CHEATSHEET.md before writing Modest code
 
 ## Build & test
 
-- Compile: `./mcc -o <out> -mbackend=c11|llvm|modest <file.modest>` (needs `MODEST_DIR`, `MODEST_LIB` env vars)
+- Compile: `./modest -o <out> -mbackend=c11|llvm|modest <file.modest>` (needs `MODEST_DIR`, `MODEST_LIB` env vars)
 - Tests: `./tests/run.py` (one `.modest` file per test; expectations in its header — see `tests/README.md`)
 - Config: `cfg/*.toml` (target arch, type widths, backend)

@@ -784,9 +784,9 @@ public func myPrint (s: Str8) -> Unit  // emitted as: printf
 ## Compilation
 
 ```bash
-mcc -o main -mbackend=c11 main.modest       # translate to C (main.c)
-mcc -o main -mbackend=llvm main.modest      # translate to LLVM IR (main.ll)
-mcc -o main -mbackend=modest main.modest    # re-emit Modest source (main.modest, pretty-printed)
+modest -o main -mbackend=c11 main.modest       # translate to C (main.c)
+modest -o main -mbackend=llvm main.modest      # translate to LLVM IR (main.ll)
+modest -o main -mbackend=modest main.modest    # re-emit Modest source (main.modest, pretty-printed)
 
-mcc -o main -mbackend=c11 -fparanoid main.modest   # warnings as errors
+modest -o main -mbackend=c11 -fparanoid main.modest   # warnings as errors
 ```

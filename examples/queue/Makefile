@@ -13,25 +13,25 @@ test: CM LLVM C
 
 
 CM:
-	mcc -o $(CMPREFIX)/queue -mbackend=modest $(INDIR)/queue.modest
-	mcc -o $(CMPREFIX)/queueWord8 -mbackend=modest $(INDIR)/queueWord8.modest
-	mcc -o $(CMPREFIX)/ringWord8 -mbackend=modest $(INDIR)/ringWord8.modest
-	mcc -o $(CMPREFIX)/main -mbackend=modest -funsafe $(INDIR)/main.modest
+	modest -o $(CMPREFIX)/queue -mbackend=modest $(INDIR)/queue.modest
+	modest -o $(CMPREFIX)/queueWord8 -mbackend=modest $(INDIR)/queueWord8.modest
+	modest -o $(CMPREFIX)/ringWord8 -mbackend=modest $(INDIR)/ringWord8.modest
+	modest -o $(CMPREFIX)/main -mbackend=modest -funsafe $(INDIR)/main.modest
 
 
 LLVM:
-	mcc -o $(LLVMPREFIX)/queue -mbackend=llvm $(INDIR)/queue.modest
-	mcc -o $(LLVMPREFIX)/queueWord8 -mbackend=llvm $(INDIR)/queueWord8.modest
-	mcc -o $(LLVMPREFIX)/ringWord8 -mbackend=llvm $(INDIR)/ringWord8.modest
-	mcc -o $(LLVMPREFIX)/main -mbackend=llvm -funsafe $(INDIR)/main.modest
+	modest -o $(LLVMPREFIX)/queue -mbackend=llvm $(INDIR)/queue.modest
+	modest -o $(LLVMPREFIX)/queueWord8 -mbackend=llvm $(INDIR)/queueWord8.modest
+	modest -o $(LLVMPREFIX)/ringWord8 -mbackend=llvm $(INDIR)/ringWord8.modest
+	modest -o $(LLVMPREFIX)/main -mbackend=llvm -funsafe $(INDIR)/main.modest
 	clang $(LLVMPREFIX)/main.ll $(LLVMPREFIX)/queue.ll $(LLVMPREFIX)/queueWord8.ll $(LLVMPREFIX)/ringWord8.ll
 
 
 C:
-	mcc -o $(CPREFIX)/queue -mbackend=c11 $(INDIR)/queue.modest
-	mcc -o $(CPREFIX)/queueWord8 -mbackend=c11 $(INDIR)/queueWord8.modest
-	mcc -o $(CPREFIX)/ringWord8 -mbackend=c11 $(INDIR)/ringWord8.modest
-	mcc -o $(CPREFIX)/main -mbackend=c11 -funsafe $(INDIR)/main.modest
+	modest -o $(CPREFIX)/queue -mbackend=c11 $(INDIR)/queue.modest
+	modest -o $(CPREFIX)/queueWord8 -mbackend=c11 $(INDIR)/queueWord8.modest
+	modest -o $(CPREFIX)/ringWord8 -mbackend=c11 $(INDIR)/ringWord8.modest
+	modest -o $(CPREFIX)/main -mbackend=c11 -funsafe $(INDIR)/main.modest
 	clang $(C_OPTIONS) $(CPREFIX)/main.c $(CPREFIX)/queue.c $(CPREFIX)/queueWord8.c $(CPREFIX)/ringWord8.c 
 
 

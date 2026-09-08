@@ -10,6 +10,10 @@ func main () -> Int {
 	printf("Hello World!\n")
 	let fx32 = Fixed32 4.123456
 	printf("fx32 = %d.%d\n", apart(fx32), bpart(fx32, 100000000))
+
+	let fx322: Fixed32 = fx32 / 2
+	printf("fx322 = %d.%d\n", apart(fx322), bpart(fx322, 100000000))
+
 	return 0
 }
 

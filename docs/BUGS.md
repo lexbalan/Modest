@@ -125,7 +125,7 @@ prints `f32 = 3.141593`, which is correct.
 ## BUG#15: C backend's `#include` of its own header ignores `-o`
 
 ```sh
-mcc -o out/prog -mbackend=c11 main.modest
+modest -o out/prog -mbackend=c11 main.modest
 # writes out/prog.c and out/prog.h, but out/prog.c contains:
 #include "main.h"        # does not exist -> clang: file not found
 ```
@@ -174,7 +174,7 @@ AttributeError: 'StmtDefType' object has no attribute 'value'
 ## BUG#19: `-funsafe` is never consulted; only `pragma unsafe` grants permission
 
 ```bash
-mcc -o out -mbackend=c11 -funsafe main.modest   # module has no pragma unsafe
+modest -o out -mbackend=c11 -funsafe main.modest   # module has no pragma unsafe
 ```
 
 ```
@@ -1176,7 +1176,7 @@ var n: Nat32 = 5
 var a = not w       // accepted; `not` is Bool-only
 var b = not i       // accepted; bitwise, -6
 var c = ~t          // accepted; `~` is Word-only
-var d = ~f          // accepted by mcc — then clang and llvm-as reject it
+var d = ~f          // accepted by modest — then clang and llvm-as reject it
 var e = -w          // accepted; wraps, 0xfffffffb
 var g = -t          // accepted
 var h = +t          // accepted
@@ -1195,7 +1195,7 @@ var k = +n          // error: expected value with signed type
   program compiles and runs with a meaning the language does not define
   (`not` on an `Int32` is a bitwise inversion; `-` on a `Word32` wraps).
   Where it does not, the nonsense reaches the backend and the *user* gets
-  the toolchain's diagnostic instead of mcc's:
+  the toolchain's diagnostic instead of modest's:
 
   ```
   c11:  p.c:11:13: error: invalid argument type 'double' to unary expression
@@ -1208,7 +1208,7 @@ var k = +n          // error: expected value with signed type
   used to document, and code may be relying on it. `~` is the spelling that
   survives.
 - Coverage: `tests/lang/value/unary/reject_operand_type.modest`, marked
-  `EXPECTED-FAIL` on both backends — it is a `reject` test that mcc
+  `EXPECTED-FAIL` on both backends — it is a `reject` test that modest
   currently accepts, so it reports XFAIL until the check lands and XPASS
   the moment it does. The rules that *are* enforced are in
   `tests/lang/value/unary/reject.modest`.
@@ -1253,14 +1253,14 @@ func main () -> Int {
 ```modest
 module g
 
-func f (x: Int32 @inline) -> Int32 {   // mcc never returns
+func f (x: Int32 @inline) -> Int32 {   // modest never returns
 	return 0
 }
 ```
 
 - `@fraction(N)` and the rest go *before* the type (`x: @fraction(16)
   Fixed32`), and that form compiles. Writing the annotation *after* the
-  type is simply wrong — but instead of a diagnostic, `mcc` spins forever
+  type is simply wrong — but instead of a diagnostic, `modest` spins forever
   and has to be killed.
 - It is the `@` that does it, not any particular annotation: `@inline`,
   `@fraction(16)` and `@immutable` all hang, while ordinary junk in the

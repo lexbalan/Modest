@@ -16,18 +16,18 @@ all: CM LLVM C
 
 
 CM:
-	mcc -o $(CMPREFIX)/main -mbackend=modest $(INDIR)/main.modest
-	mcc -o $(CMPREFIX)/crc32 -mbackend=modest -funsafe ${MODEST_LIB}/misc/crc32.modest
+	modest -o $(CMPREFIX)/main -mbackend=modest $(INDIR)/main.modest
+	modest -o $(CMPREFIX)/crc32 -mbackend=modest -funsafe ${MODEST_LIB}/misc/crc32.modest
 
 LLVM:
-	mcc -o $(LLVMPREFIX)/main -mbackend=llvm $(INDIR)/main.modest
-	mcc -o $(LLVMPREFIX)/crc32 -mbackend=llvm -funsafe ${MODEST_LIB}/misc/crc32.modest
+	modest -o $(LLVMPREFIX)/main -mbackend=llvm $(INDIR)/main.modest
+	modest -o $(LLVMPREFIX)/crc32 -mbackend=llvm -funsafe ${MODEST_LIB}/misc/crc32.modest
 	clang $(LLVMPREFIX)/main.ll $(LLVMPREFIX)/crc32.ll
 	./a.out
 
 C:
-	mcc -o $(CPREFIX)/main -mbackend=c11 $(INDIR)/main.modest
-	mcc -o $(CPREFIX)/crc32 -mbackend=c11 -funsafe ${MODEST_LIB}/misc/crc32.modest
+	modest -o $(CPREFIX)/main -mbackend=c11 $(INDIR)/main.modest
+	modest -o $(CPREFIX)/crc32 -mbackend=c11 -funsafe ${MODEST_LIB}/misc/crc32.modest
 	clang $(C_OPTIONS) $(CPREFIX)/main.c $(CPREFIX)/crc32.c
 	./a.out
 

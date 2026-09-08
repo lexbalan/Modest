@@ -13,19 +13,19 @@ test: CM LLVM C
 
 
 CM:
-	mcc -o $(CMPREFIX)/main -funsafe -mbackend=modest $(INDIR)/main.modest
-	mcc -o $(CMPREFIX)/table -funsafe -mbackend=modest $(INDIR)/table.modest
+	modest -o $(CMPREFIX)/main -funsafe -mbackend=modest $(INDIR)/main.modest
+	modest -o $(CMPREFIX)/table -funsafe -mbackend=modest $(INDIR)/table.modest
 
 
 LLVM:
-	mcc -o $(LLVMPREFIX)/main -mbackend=llvm -funsafe $(INDIR)/main.modest
-	mcc -o $(LLVMPREFIX)/table -mbackend=llvm -funsafe $(INDIR)/table.modest
+	modest -o $(LLVMPREFIX)/main -mbackend=llvm -funsafe $(INDIR)/main.modest
+	modest -o $(LLVMPREFIX)/table -mbackend=llvm -funsafe $(INDIR)/table.modest
 	clang $(LLVMPREFIX)/main.ll $(LLVMPREFIX)/table.ll
 
 
 C:
-	mcc -o $(CPREFIX)/main -mbackend=c11 -funsafe $(INDIR)/main.modest
-	mcc -o $(CPREFIX)/table -mbackend=c11 -funsafe $(INDIR)/table.modest
+	modest -o $(CPREFIX)/main -mbackend=c11 -funsafe $(INDIR)/main.modest
+	modest -o $(CPREFIX)/table -mbackend=c11 -funsafe $(INDIR)/table.modest
 	clang $(C_OPTIONS) $(CPREFIX)/main.c $(CPREFIX)/table.c
 
 

@@ -68,13 +68,13 @@ prints nothing and returns 0 also "passes" otherwise.
 
 | Directive | Default | Meaning |
 |---|---|---|
-| `TEST: run` | `run` | `run` = compile, link, execute. `build` = stop after linking. `reject` = mcc must refuse it |
+| `TEST: run` | `run` | `run` = compile, link, execute. `build` = stop after linking. `reject` = modest must refuse it |
 | `BACKENDS: c11, llvm` | `c11, llvm` | which backends to run under |
 | `EXPECT-EXIT: 0` | `0` | required exit code |
 | `EXPECT-OUT: text` | — | substring that must appear in stdout; repeatable, matched **in order** |
 | `EXPECT-ERROR: text` | — | substring of a diagnostic a `reject` test must produce; repeatable, matched **in order** |
 | `LINK: other.modest` | — | extra sources compiled and linked with this one (multi-module tests) |
-| `FLAGS: -funsafe` | — | extra flags passed to `mcc` |
+| `FLAGS: -funsafe` | — | extra flags passed to `modest` |
 | `EXPECTED-FAIL: reason` | — | known-broken; see below |
 
 A directive may be narrowed to some backends by naming them in
@@ -88,7 +88,7 @@ something clang can link, so for it a test stops after code generation.
 
 Some rules are only visible when they are broken: an out-of-range literal,
 a type that does not convert, a name used where it cannot be. Those are
-`reject` tests — nothing is built or run, mcc simply has to refuse the
+`reject` tests — nothing is built or run, modest simply has to refuse the
 source:
 
 ```modest

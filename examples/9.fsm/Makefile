@@ -14,19 +14,19 @@ test: CM LLVM C
 
 
 CM:
-	mcc -o $(CMPREFIX)/fsm -mbackend=modest $(INDIR)/fsm.modest
-	mcc -o $(CMPREFIX)/main -mbackend=modest $(INDIR)/main.modest
+	modest -o $(CMPREFIX)/fsm -mbackend=modest $(INDIR)/fsm.modest
+	modest -o $(CMPREFIX)/main -mbackend=modest $(INDIR)/main.modest
 
 
 LLVM:
-	mcc -o $(LLVMPREFIX)/fsm -mbackend=llvm $(INDIR)/fsm.modest
-	mcc -o $(LLVMPREFIX)/main -mbackend=llvm $(INDIR)/main.modest
+	modest -o $(LLVMPREFIX)/fsm -mbackend=llvm $(INDIR)/fsm.modest
+	modest -o $(LLVMPREFIX)/main -mbackend=llvm $(INDIR)/main.modest
 	clang $(LLVMPREFIX)/main.ll $(LLVMPREFIX)/fsm.ll
 
 
 C:
-	mcc -o $(CPREFIX)/fsm -mbackend=c11 $(INDIR)/fsm.modest
-	mcc -o $(CPREFIX)/main -mbackend=c11 $(INDIR)/main.modest
+	modest -o $(CPREFIX)/fsm -mbackend=c11 $(INDIR)/fsm.modest
+	modest -o $(CPREFIX)/main -mbackend=c11 $(INDIR)/main.modest
 	clang $(C_OPTIONS) $(CPREFIX)/main.c $(CPREFIX)/fsm.c
 
 

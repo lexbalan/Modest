@@ -14,7 +14,7 @@
 // later *use* failed — `Xx + 1` parses `Xx` as a type and reports
 // "undefined type", which names neither the mistake nor its site.
 //
-// The order matters: EXPECT-ERROR is matched in sequence, and mcc reports
+// The order matters: EXPECT-ERROR is matched in sequence, and modest reports
 // the whole file in one run, so `func Foo` comes first because it is
 // defined before `main`.  Every site is separate so that one check going
 // missing is a failure rather than a silent gap.

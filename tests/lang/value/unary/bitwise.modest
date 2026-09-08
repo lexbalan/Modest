@@ -13,7 +13,7 @@
 // `not` is not a second spelling of it.  The two are separate operators
 // over separate types — `not` is the Bool one — and neither crosses over;
 // docs/lang/value/unary.md draws the line, and it is the same line
-// docs/CHEATSHEET.md draws for the binary `&`, `|` and `^`.  mcc still
+// docs/CHEATSHEET.md draws for the binary `&`, `|` and `^`.  modest still
 // accepts `not w` today, so the rule is stated where a rule that stops a
 // program compiling has to be: reject_not_operand.modest.
 //

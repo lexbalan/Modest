@@ -11,7 +11,7 @@
 // thing that will notice when the removal happens.
 //
 // Every line below compiles today, so this test is expected to fail: the
-// runner reports XFAIL because mcc accepted a file it had to refuse.  When
+// runner reports XFAIL because modest accepted a file it had to refuse.  When
 // the check lands it flips to XPASS and fails the suite, which is the
 // prompt to delete the EXPECTED-FAIL line above and add an EXPECT-ERROR
 // for each site — the diagnostic does not exist yet, so there is nothing

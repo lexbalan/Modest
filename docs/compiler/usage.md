@@ -1,6 +1,6 @@
 # Usage
 
-`mcc` is a thin bash wrapper: it activates the venv and runs
+`modest` is a thin bash wrapper: it activates the venv and runs
 `src/main.py`.
 
 ## Invocation
@@ -9,7 +9,7 @@
 export MODEST_DIR=/path/to/Modest      # compiler root
 export MODEST_LIB=$MODEST_DIR/lib      # library search path
 
-mcc -o <out> [options] <files.modest>
+modest -o <out> [options] <files.modest>
 ```
 
 | Option | Meaning |
@@ -26,7 +26,7 @@ overrides. The config defines the target (arch, OS, ABI, endianness),
 type widths (`int_width`, `pointer_width`, ...) and the backend.
 
 The compiler emits source; producing a binary is the build system's
-job — each project's `Makefile` runs `mcc`, then `cc`/`clang` on the
+job — each project's `Makefile` runs `modest`, then `cc`/`clang` on the
 output (see `tests/*/Makefile` for the pattern).
 
 ## Testing
