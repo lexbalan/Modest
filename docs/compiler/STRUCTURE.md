@@ -143,17 +143,20 @@ Key settings: target name/machine, endianness, ABI, word/pointer/integer/float/c
 ## `examples/` — Example Programs
 
 From `1.hello_world` to network sockets (`10.sockets`), inline assembly
-(`asm`), AVR microcontroller blink (`m328p_blink`) and SHA-256. Each
-example contains `src/`, `out/` (generated output) and a `Makefile`.
+(`asm`) and an AVR microcontroller blink (`m328p_blink`). Each example
+contains `src/`, `out/` (generated output) and a `Makefile`.
 See [examples/README.md](../../examples/README.md).
 
 
 ## `tests/` — Test Suite
 
-Each test is a directory with `src/main.modest`, a `Makefile` (`make test`)
-and `out/{c,cm,llvm}/`. The active set is listed in `tests/run.sh`;
-crypto tests (`sha256`, `aes256`, `chacha20`, `crc32`) verify end-to-end
-semantics against known vectors.
+`./run.py` compiles, links and runs every test under every backend; a test
+declares what is expected of it in its own leading comment block, and
+nothing is built inside the tree. Two namespaces, both testing the
+compiler: `lang/` takes the language one feature at a time and mirrors
+`docs/lang/`, `prog/` runs whole programs — among them the known-answer
+tests for `sha256`, `aes256`, `chacha20`, `crc32` and `xxh64`.
+See [tests/README.md](../../tests/README.md).
 
 
 ## `misc/` — Everything Around the Compiler

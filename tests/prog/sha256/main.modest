@@ -1,11 +1,22 @@
-import "builtin"
-import "misc/sha256"
-include "ctypes64"
-include "stdio"
+// TEST: run
+// BACKENDS: c11, llvm, modest
+// EXPECT-EXIT: 0
+// EXPECT-OUT: test #0: passed
+// EXPECT-OUT: test #1: passed
+// EXPECT-OUT: test SHA256 passed
+// LINK: misc/sha256.modest
+//
+// Known-answer test for misc/sha256, against the FIPS-180 vectors.
+
+pragma unsafe
 
 include "libc/ctypes64"
 include "libc/stdio"
-import "misc/sha256" as sha256
+include "libc/stdlib"
+
+
+import "misc/sha256"
+pragma c_include "./sha256.h"
 
 
 const inputDataLength = 32
@@ -15,7 +26,8 @@ type SHA256_TestCase = {
 	inputData: [inputDataLength]Char8
 	inputDataLen: Nat32
 
-	expectedResult: Hash
+	expectedResult: sha256.Hash
+	//expectedResult2: Word256
 }
 
 
@@ -28,6 +40,8 @@ var test0 = SHA256_TestCase {
 		0xB0, 0x03, 0x61, 0xA3, 0x96, 0x17, 0x7A, 0x9C
 		0xB4, 0x10, 0xFF, 0x61, 0xF2, 0x00, 0x15, 0xAD
 	]
+
+	//expectedResult2 = 0xBA7816BF8F01CFEA414140DE5DAE2223B00361A396177A9CB410FF61F20015AD
 }
 
 var test1 = SHA256_TestCase {
@@ -39,6 +53,8 @@ var test1 = SHA256_TestCase {
 		0xFC, 0x2D, 0x4B, 0x1F, 0xA3, 0xD6, 0x77, 0x28
 		0x4A, 0xDD, 0xD2, 0x00, 0x12, 0x6D, 0x90, 0x69
 	]
+
+	//expectedResult2 = 0x7F83B1657FF1FC53B92DC18148A1D65DFC2D4B1FA3D677284ADDD200126D9069
 }
 
 
@@ -46,9 +62,9 @@ const tests: [2]*SHA256_TestCase = [&test0, &test1]
 
 
 func doTest (test: *SHA256_TestCase) -> Bool {
-	var test_hash: Hash
-	let msg: *[]Word8 = unsafe *[]Word8 &test.inputData
-	let msgLen: Nat32 = test.inputDataLen
+	var test_hash: sha256.Hash
+	let msg = unsafe *[]Word8 &test.inputData
+	let msgLen = test.inputDataLen
 
 	sha256.hash(msg, msgLen, &test_hash)
 
@@ -67,18 +83,20 @@ func doTest (test: *SHA256_TestCase) -> Bool {
 }
 
 
-@nonstatic
 func main () -> Int {
 	printf("test SHA256\n")
 
+	var success = true
+
 	var i: Nat32 = 0
 	while i < lengthof(tests) {
-		let test: *SHA256_TestCase = tests[i]
-		let testResult: Bool = doTest(test)
+		let test = tests[i]
 
 		var res = *Str8 "failed"
-		if testResult {
+		if doTest(test) {
 			res = "passed"
+		} else {
+			success = false
 		}
 
 		printf("test #%i: %s\n", i, res)
@@ -86,6 +104,14 @@ func main () -> Int {
 		++i
 	}
 
-	return 0
+	printf("test SHA256 ")
+	if not success {
+		printf("failed\n")
+		return exitFailure
+	}
+
+	printf("passed\n")
+	return exitSuccess
 }
+
 

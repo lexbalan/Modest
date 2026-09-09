@@ -1,3 +1,9 @@
+// TEST: run
+// BACKENDS: c11, llvm, modest
+// EXPECT-EXIT: 0
+// EXPECT-OUT: AES-256 test passed
+// LINK: misc/aes256.modest
+
 //
 // A compact byte-oriented AES-256 implementation.
 // This demo uses a few known-answer tests from FIPS-197 Appendix C.3,

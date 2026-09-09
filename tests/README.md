@@ -73,7 +73,7 @@ prints nothing and returns 0 also "passes" otherwise.
 | `EXPECT-EXIT: 0` | `0` | required exit code |
 | `EXPECT-OUT: text` | — | substring that must appear in stdout; repeatable, matched **in order** |
 | `EXPECT-ERROR: text` | — | substring of a diagnostic a `reject` test must produce; repeatable, matched **in order** |
-| `LINK: other.modest` | — | extra sources compiled and linked with this one (multi-module tests) |
+| `LINK: misc/crc32.modest` | — | extra sources compiled and linked with this one; see below |
 | `FLAGS: -funsafe` | — | extra flags passed to `modest` |
 | `EXPECTED-FAIL: reason` | — | known-broken; see below |
 
@@ -83,6 +83,29 @@ only, and it still has to pass everywhere else.
 
 `modest` is a valid backend here, but it emits Modest source rather than
 something clang can link, so for it a test stops after code generation.
+
+### Linking other modules
+
+`LINK` resolves a path the way `import` does, so a test names a module
+exactly as its own source does:
+
+| Written | Found in |
+|---|---|
+| `misc/crc32.modest` | the library — `$MODEST_LIB`, or `lib/` of this tree |
+| `./helper.modest`, `../shared/helper.modest` | next to the test |
+| `/some/where/x.modest` | there |
+
+```modest
+// TEST: run
+// LINK: misc/crc32.modest
+
+import "misc/crc32"
+```
+
+A test therefore never spells out how deep under `tests/` it sits, and
+moving it to another directory does not touch its header.  A file pulled
+in through `LINK` is a part of some other test, so it is not collected as
+a test of its own even when it sits inside `tests/`.
 
 ### Tests that must not compile
 

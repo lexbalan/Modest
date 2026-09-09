@@ -27,17 +27,19 @@ type widths (`int_width`, `pointer_width`, ...) and the backend.
 
 The compiler emits source; producing a binary is the build system's
 job — each project's `Makefile` runs `modest`, then `cc`/`clang` on the
-output (see `tests/*/Makefile` for the pattern).
+output (see `examples/*/Makefile` for the pattern).
 
 ## Testing
 
 ```sh
-cd tests && ./run.sh        # build + run the test suite
-./check.sh                  # tests + build all examples
+cd tests && ./run.py        # the whole suite
+./run.py -b c11             # one backend
+./run.py prog               # one part of the tree
 ```
 
-Tests are directories with `src/main.modest` and a `Makefile` (`make test`).
-The crypto tests (`sha256`, `aes256`, `chacha20`, `crc32`) double as
-end-to-end semantic checks against known vectors. Known compiler bugs
+One `.modest` file per test, expectations in its leading comment block:
+`lang/` per language feature, `prog/` whole programs — the latter includes
+the known-answer tests for `sha256`, `aes256`, `chacha20`, `crc32` and
+`xxh64`. Known compiler bugs
 are tracked in [../BUGS.md](../BUGS.md), design plans in
 [../todo/TODO.md](../todo/TODO.md).

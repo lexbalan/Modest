@@ -1,14 +1,50 @@
-import "builtin"
-include "ctypes64"
-include "stdio"
+// TEST: run
+// BACKENDS: c11, llvm, modest
+// EXPECT-EXIT: 0
+// EXPECT-OUT: XXH64 reference implementation: OK
 
-include "libc/ctypes64"
-include "libc/stdio"
+//
+// XXH64 — a compact, standalone reference implementation of xxHash.
+//
+// Copyright (c) 2012-2020 Yann Collet
+// Copyright (c) 2019-2020 Devin Hussey (easyaspi314)
+// Copyright (c) 2026 Alex Balan — Ported and adapted for the Modest language
+//
+// BSD 2-Clause License (http://www.opensource.org/licenses/bsd-license.php)
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+// * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+// * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
 
 // thx: https://github.com/Cyan4973/xxHash
 //
 // Арифметика хэша — по модулю 2^64 (обёртка), поэтому значения живут
 // в Word64 (битовые операции), а сложение/умножение делаются через Nat64.
+
+pragma unsafe
+
+include "libc/ctypes64"
+include "libc/stdio"
 
 const prime64_1 = Word64 0x9E3779B185EBCA87
 const prime64_2 = Word64 0xC2B2AE3D27D4EB4F
@@ -19,19 +55,16 @@ const prime64_5 = Word64 0x27D4EB2F165667C5
 
 // wrapping-арифметика над Word64
 
-
 @inline
 func add (a: Word64, b: Word64) -> Word64 {
 	return Word64 (Nat64 a + Nat64 b)
 }
 
 
-
 @inline
 func sub (a: Word64, b: Word64) -> Word64 {
 	return Word64 (Nat64 a - Nat64 b)
 }
-
 
 
 @inline
@@ -41,7 +74,6 @@ func mul (a: Word64, b: Word64) -> Word64 {
 
 
 // циклический сдвиг влево на amt бит
-
 @inline
 func rotl64 (value: Word64, amt: Nat32) -> Word64 {
 	return (value << (amt % 64)) | (value >> (64 - amt % 64))
@@ -74,7 +106,7 @@ func read64 (data: *[]Word8, offset: SizeT) -> Word64 {
 
 // подмешивает input в acc — основной шаг главного цикла
 func round (acc: Word64, input: Word64) -> Word64 {
-	var a: Word64 = add(acc, mul(input, prime64_2))
+	var a = add(acc, mul(input, prime64_2))
 	a = rotl64(a, 31)
 	return mul(a, prime64_1)
 }
@@ -82,7 +114,7 @@ func round (acc: Word64, input: Word64) -> Word64 {
 
 // вливает аккумулятор acc в hash
 func mergeRound (hash: Word64, acc: Word64) -> Word64 {
-	var h: Word64 = hash ^ round(0, acc)
+	var h = hash ^ round(0, acc)
 	h = mul(h, prime64_1)
 	return add(h, prime64_4)
 }
@@ -90,7 +122,7 @@ func mergeRound (hash: Word64, acc: Word64) -> Word64 {
 
 // финальное перемешивание всех бит
 func avalanche (hash: Word64) -> Word64 {
-	var h: Word64 = hash
+	var h = hash
 	h = h ^ (h >> 33)
 	h = mul(h, prime64_2)
 	h = h ^ (h >> 29)
@@ -106,17 +138,20 @@ func avalanche (hash: Word64) -> Word64 {
 //   seed:   64-битное зерно
 func xxh64 (input: *[]Word8, length: SizeT, seed: Word64) -> Word64 {
 	var hash = Word64 0
-	var remaining: SizeT = length
+	var remaining = length
 	var offset = SizeT 0
+
+	// референс этого не делает, но разыменовывать nil мы не будем
 	if input == nil {
 		return avalanche(add(seed, prime64_5))
 	}
 
 	if remaining >= 32 {
-		var acc1: Word64 = add(add(seed, prime64_1), prime64_2)
-		var acc2: Word64 = add(seed, prime64_2)
-		var acc3: Word64 = seed
-		var acc4: Word64 = sub(seed, prime64_1)
+		// инициализация аккумуляторов
+		var acc1 = add(add(seed, prime64_1), prime64_2)
+		var acc2 = add(seed, prime64_2)
+		var acc3 = seed
+		var acc4 = sub(seed, prime64_1)
 
 		while remaining >= 32 {
 			acc1 = round(acc1, read64(input, offset))
@@ -138,10 +173,13 @@ func xxh64 (input: *[]Word8, length: SizeT, seed: Word64) -> Word64 {
 		hash = mergeRound(hash, acc3)
 		hash = mergeRound(hash, acc4)
 	} else {
+		// на главный цикл данных не хватило — кладём хоть что-то
 		hash = add(seed, prime64_5)
 	}
 
 	hash = add(hash, Word64 length)
+
+	// хвост: по 8 байт
 	while remaining >= 8 {
 		hash = hash ^ round(0, read64(input, offset))
 		hash = rotl64(hash, 27)
@@ -151,6 +189,8 @@ func xxh64 (input: *[]Word8, length: SizeT, seed: Word64) -> Word64 {
 		offset = offset + 8
 		remaining = remaining - 8
 	}
+
+	// хвост: 4 байта
 	if remaining >= 4 {
 		hash = hash ^ mul(read32(input, offset), prime64_1)
 		hash = rotl64(hash, 23)
@@ -160,6 +200,8 @@ func xxh64 (input: *[]Word8, length: SizeT, seed: Word64) -> Word64 {
 		offset = offset + 4
 		remaining = remaining - 4
 	}
+
+	// хвост: по байту
 	while remaining != 0 {
 		hash = hash ^ mul(Word64 input[offset], prime64_5)
 		hash = rotl64(hash, 11)
@@ -181,12 +223,10 @@ const prime32_1 = Word32 0x9E3779B1
 var testNum = Int32 0
 
 
-
 @inline
 func hi32 (w: Word64) -> Nat32 {
 	return unsafe Nat32 (w >> 32)
 }
-
 
 
 @inline
@@ -196,14 +236,13 @@ func lo32 (w: Word64) -> Nat32 {
 
 
 func testSequence (data: *[]Word8, length: SizeT, seed: Word64, expected: Word64) -> Bool {
-	let result: Word64 = xxh64(data, length, seed)
+	let result = xxh64(data, length, seed)
 
 	++testNum
 
 	if result != expected {
-		printf("test #%d failed: expected 0x%08X%08X, got 0x%08X%08X\n"
-			testNum, hi32(expected), lo32(expected), hi32(result), lo32(result)
-		)
+		printf("test #%d failed: expected 0x%08X%08X, got 0x%08X%08X\n",
+			testNum, hi32(expected), lo32(expected), hi32(result), lo32(result))
 		return false
 	}
 
@@ -212,11 +251,12 @@ func testSequence (data: *[]Word8, length: SizeT, seed: Word64, expected: Word64
 }
 
 
-@nonstatic
 func main () -> Int {
 	printf("test XXH64\n")
+
+	// заполняем буфер «случайными» данными
 	var testData: [testDataSize]Word8
-	var byteGen: Word32 = prime32_1
+	var byteGen = prime32_1
 
 	var i = SizeT 0
 	while i < testDataSize {
@@ -228,24 +268,16 @@ func main () -> Int {
 	let data = *[]Word8 &testData
 	let prime = Word64 prime32_1
 
-	var success: Bool = true
+	var success = true
 
-	if not testSequence(nil, 0, 0, 0xEF46DB3751D8E999) {; success = false
-	}
-	if not testSequence(nil, 0, prime, 0xAC75FDA2929B17EF) {; success = false
-	}
-	if not testSequence(data, 1, 0, 0x4FCE394CC88952D8) {; success = false
-	}
-	if not testSequence(data, 1, prime, 0x739840CB819FA723) {; success = false
-	}
-	if not testSequence(data, 14, 0, 0xCFFA8DB881BC3A3D) {; success = false
-	}
-	if not testSequence(data, 14, prime, 0x5B9611585EFCC9CB) {; success = false
-	}
-	if not testSequence(data, testDataSize, 0, 0x0EAB543384F878AD) {; success = false
-	}
-	if not testSequence(data, testDataSize, prime, 0xCAA65939306F1E21) {; success = false
-	}
+	if not testSequence(nil, 0, 0, 0xEF46DB3751D8E999) { success = false }
+	if not testSequence(nil, 0, prime, 0xAC75FDA2929B17EF) { success = false }
+	if not testSequence(data, 1, 0, 0x4FCE394CC88952D8) { success = false }
+	if not testSequence(data, 1, prime, 0x739840CB819FA723) { success = false }
+	if not testSequence(data, 14, 0, 0xCFFA8DB881BC3A3D) { success = false }
+	if not testSequence(data, 14, prime, 0x5B9611585EFCC9CB) { success = false }
+	if not testSequence(data, testDataSize, 0, 0x0EAB543384F878AD) { success = false }
+	if not testSequence(data, testDataSize, prime, 0xCAA65939306F1E21) { success = false }
 
 	if not success {
 		printf("XXH64: FAILED\n")
@@ -255,4 +287,5 @@ func main () -> Int {
 	printf("XXH64 reference implementation: OK\n")
 	return 0
 }
+
 

@@ -1,4 +1,11 @@
-// tests/chacha20/src/main.modest
+// TEST: run
+// BACKENDS: c11, llvm, modest
+// EXPECT-EXIT: 0
+// EXPECT-OUT: test ChaCha20
+// EXPECT-OUT: success
+// LINK: misc/chacha20.modest
+//
+// Known-answer test for misc/chacha20, against the RFC 8439 vectors.
 
 pragma unsafe
 

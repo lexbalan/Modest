@@ -32,6 +32,11 @@ TESTS_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT_DIR = os.path.dirname(TESTS_DIR)
 MODEST = os.path.join(ROOT_DIR, 'modest')
 
+# Where a library-relative LINK is looked up.  The compiler reads MODEST_LIB
+# for the same purpose; run.py falls back to the lib of the tree it lives in,
+# so the suite works in a shell that has not exported anything.
+LIB_DIR = os.getenv('MODEST_LIB') or os.path.join(ROOT_DIR, 'lib')
+
 # A hung compiler must fail the suite, not stall it — modest used to spin on a
 # malformed file, and a stalled run tells you nothing (BUG#8, fixed).
 TIMEOUT_COMPILE = 30
@@ -65,7 +70,7 @@ class Test:
 	expect_exit: int = 0
 	expect_out: list = field(default_factory=list)
 	expect_error: list = field(default_factory=list)  # diagnostics a `reject` test must produce
-	link: list = field(default_factory=list)   # extra .modest sources to link in
+	link: list = field(default_factory=list)   # extra sources to link in, resolved
 	flags: list = field(default_factory=list)  # extra modest flags
 	xfail: dict = field(default_factory=dict)  # backend (or '*') -> reason
 
@@ -110,6 +115,22 @@ def parse_test(path):
 	return t
 
 
+def resolve_link(spec, test_dir):
+	"""Where a LINK source lives.
+
+	The rule is the one `import` already uses: a path that starts with `./`
+	or `../` is relative to the test, anything else is relative to the
+	library.  So a test links a library module the same way its own source
+	imports it — `misc/crc32.modest` against `import "misc/crc32"` — and
+	never has to spell out how deep under tests/ it happens to sit.
+	"""
+	if os.path.isabs(spec):
+		return spec
+	if spec.startswith('./') or spec.startswith('../'):
+		return os.path.normpath(os.path.join(test_dir, spec))
+	return os.path.normpath(os.path.join(LIB_DIR, spec))
+
+
 def apply_directive(t, key, scope, value, name):
 	for b in scope:
 		if b not in ALL_BACKENDS:
@@ -131,7 +152,9 @@ def apply_directive(t, key, scope, value, name):
 	elif key == 'EXPECT-ERROR':
 		t.expect_error.append(value)
 	elif key == 'LINK':
-		t.link += [s.strip() for s in value.split(',') if s.strip()]
+		test_dir = os.path.dirname(t.path)
+		t.link += [resolve_link(s.strip(), test_dir)
+		           for s in value.split(',') if s.strip()]
 	elif key == 'FLAGS':
 		t.flags += value.split()
 	elif key == 'EXPECTED-FAIL':
@@ -204,10 +227,21 @@ def run_case(t, backend, keep=False):
 			shutil.rmtree(workdir, ignore_errors=True)
 
 
+def output_names(sources):
+	"""What each source is called after code generation.
+
+	Its own basename, and it cannot be anything else: the backend names the
+	module — its self-include, its include guard — after the source file and
+	ignores `-o` when doing so (BUG#68).  Rename the output and the `.c` asks
+	for a header nobody wrote.
+	"""
+	return [os.path.splitext(os.path.basename(s))[0] for s in sources]
+
+
 def do_reject(t, backend, sources, workdir, result):
 	"""Compile the sources expecting modest to refuse one of them."""
-	for src in sources:
-		prefix = os.path.join(workdir, os.path.splitext(os.path.basename(src))[0])
+	for src, name in zip(sources, output_names(sources)):
+		prefix = os.path.join(workdir, name)
 		cmd = [MODEST] + t.flags + ['-o', prefix, '-mbackend=' + backend, src]
 		code, out = run(cmd, workdir, TIMEOUT_COMPILE)
 		if code == 0:
@@ -239,7 +273,7 @@ def do_case(t, backend, workdir):
 		return result(FAIL, '%s failed (exit %d)' % (what, code),
 		              [err] if err else last_output(out), out)
 
-	sources = [t.path] + [os.path.join(os.path.dirname(t.path), s) for s in t.link]
+	sources = [t.path] + t.link
 	for s in sources:
 		if not os.path.isfile(s):
 			return result(FAIL, 'missing source %s' % s)
@@ -250,9 +284,17 @@ def do_case(t, backend, workdir):
 		return do_reject(t, backend, sources, workdir, result)
 
 	# 1. Modest -> backend source
+	names = output_names(sources)
+	clash = [n for n in names if names.count(n) > 1]
+	if clash:
+		# Same basename, same module name, same include guard (BUG#68): one
+		# generates on top of the other and the survivor is missing half its
+		# declarations.  Say so here rather than let the linker guess.
+		return result(FAIL, "two sources are both named '%s.modest'" % clash[0])
+
 	generated = []
-	for src in sources:
-		prefix = os.path.join(workdir, os.path.splitext(os.path.basename(src))[0])
+	for src, name in zip(sources, names):
+		prefix = os.path.join(workdir, name)
 		cmd = [MODEST] + t.flags + ['-o', prefix, '-mbackend=' + backend, src]
 		code, out = run(cmd, workdir, TIMEOUT_COMPILE)
 		if code != 0:
@@ -402,8 +444,7 @@ def discover(filt):
 			tests.append(parse_test(path))
 
 	# A file pulled in via LINK is part of another test, not a test itself.
-	linked = {os.path.join(os.path.dirname(t.path), s)
-	          for t in tests for s in t.link}
+	linked = {s for t in tests for s in t.link}
 	return [t for t in tests if t.path not in linked]
 
 

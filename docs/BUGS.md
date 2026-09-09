@@ -1316,3 +1316,32 @@ store %Word8 %1, %Word8 None
 - Not a precedence question: the sources involved contain no binary
   operators at all.
 
+
+## BUG#68: `-o` renames the generated files but not the module inside them
+
+```sh
+modest -o zzz -mbackend=c11 xxh64.modest
+```
+
+```c
+/* zzz.c */
+#include "xxh64.h"
+
+/* zzz.h */
+#if !defined(XXH64_H)
+#define XXH64_H
+```
+
+- The C11 backend writes `zzz.c` and `zzz.h` as asked, but names the module
+  after the source file: the self-include and the include guard both say
+  `xxh64`. The `.c` then includes a header that was never written, and clang
+  stops at `'xxh64.h' file not found`.
+- The reverse case is worse, because it is silent. Two modules whose sources
+  share a basename — a test `prog/crc32.modest` linked against
+  `lib/misc/crc32.modest` — generate the same guard `CRC32_H` whatever `-o`
+  calls the files. The second header to be included is skipped entirely, and
+  the program links only if it happens not to need the declarations that were
+  dropped.
+- So the name a module is known by is the source filename, and `-o` cannot
+  change it. Either the module name should follow `-o`, or it should be the
+  import path (`misc/crc32`), which is unique by construction.
