@@ -1,0 +1,38 @@
+// TEST: reject
+// EXPECT-ERROR: required parentheses
+// EXPECT-ERROR: required parentheses
+// EXPECT-ERROR: required parentheses
+// EXPECT-ERROR: required parentheses
+//
+// `==` `!=` `<` `>` `<=` `>=` are one level (level 3 in
+// docs/lang/value/README.md), so a chain of them would group from the left
+// like every other level: `a == b < c` is `(a == b) < c`, an ordering over
+// two Bools.  That is never what the line was meant to say, and on Bool it
+// would not even typecheck, so the parser refuses the chain outright and
+// asks for the parentheses that would settle it.
+//
+// A chain of `==` / `!=` alone stays legal — `a == b == c` is a Bool
+// compared with a Bool, which is meaningful — and precedence.modest checks
+// that it still works.
+
+include "libc/ctypes64"
+
+func main () -> Int {
+	var a: Int32 = 1
+	var b: Int32 = 2
+	var c: Int32 = 3
+
+	// An equality followed by an ordering.
+	var x = a == b < c
+
+	// And the other way round.
+	var y = a < b == c
+
+	// `<=` and `>=` are on the same level and refuse the same way.
+	var z = a <= b != c
+
+	// Two orderings chained: `(a < b) < c` compares a Bool with an Int32.
+	var w = a < b < c
+
+	return 0
+}

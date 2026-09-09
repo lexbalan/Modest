@@ -374,35 +374,41 @@ func(args)                         // call
 
 Loosest to tightest — each level binds tighter than the one above it.
 Every binary level is left-associative: `10 - 3 - 2` is `5`, and a chain of
-`or`, `and`, <code>&#124;</code>, `^` or `&` groups the same way.
+`or`, `and` or the bitwise operators groups the same way.
 
 | # | Operators | |
 |---|---|---|
 | 1 | `or` | loosest |
 | 2 | `and` | |
-| 3 | `==` `!=` | |
-| 4 | <code>&#124;</code> | |
-| 5 | `^` | |
-| 6 | `&` | |
-| 7 | `<` `>` `<=` `>=` | |
-| 8 | `<<` `>>` | |
-| 9 | `+` `-` | |
-| 10 | `*` `/` `%` | |
-| 11 | `Type value` (construction), `unsafe Type value` | |
-| 12 | unary `-` `+` `not` `~` `&x` `*p`, `sizeof` `alignof` `lengthof` `offsetof` | |
-| 13 | `f(args)` `x.field` `a[i]` `a[i:j]` | tightest |
+| 3 | `==` `!=` `<` `>` `<=` `>=` | |
+| 4 | `+` `-` `&` <code>&#124;</code> `^` `<<` `>>` | |
+| 5 | `*` `/` `%` | |
+| 6 | `Type value` (construction), `unsafe Type value` | |
+| 7 | unary `-` `+` `not` `~` `&x` `*p`, `sizeof` `alignof` `lengthof` `offsetof` | |
+| 8 | `f(args)` `x.field` `a[i]` `a[i:j]` | tightest |
 
-> **Equality is looser than the bitwise operators, ordering is tighter.**
-> `==`/`!=` sit above <code>&#124;</code> `^` `&` (level 3), so the classic C
-> parenthesis trap is gone — `crc & 1 != 0` means `(crc & 1) != 0`, as it reads.
-> But `<` `>` `<=` `>=` sit *below* them (level 7), so `w & x < y` parses as
-> `w & (x < y)` and fails with `different types 'Word32' & 'Bool'`. Parenthesize
-> ordering comparisons when mixing them with bitwise operators.
+> **All comparisons share one level, and all the bitwise operators share
+> another.** Bitwise sits below (level 4), comparisons above (level 3), so the
+> classic C parenthesis trap is gone: `crc & 1 != 0` means `(crc & 1) != 0`, as
+> it reads. (Ordering never meets a bitwise expression anyway — there is no
+> `<` on `WordX`.) Chaining an equality with an ordering is rejected —
+> `a == b < c` gives `required parentheses`, because `(a == b) < c` compares
+> two `Bool`s and is never what was meant. A chain of `==` / `!=` alone is
+> fine.
 
-> **Construction binds tighter than every binary operator** (level 11):
+> **Level 4 is flat: `&` does not bind tighter than <code>&#124;</code>, and a
+> shift does not bind tighter than either.** `hi << 8 | lo` is
+> `(hi << 8) | lo`, same as C — but `lo | hi << 8` is `(lo | hi) << 8`, and C
+> would read it the other way. All operands are `WordX`, so nothing is
+> reported: **put the parentheses around a shift written to the right of**
+> `&` <code>&#124;</code> `^`. Arithmetic shares the level without ever meeting
+> it — `+` `-` want `IntX` / `NatX` / `FloatX`, the bitwise operators want
+> `WordX`, so a mixed chain is a type error, not a grouping question.
+
+> **Construction binds tighter than every binary operator** (level 6):
 > `Word64 b << 8` is `(Word64 b) << 8`, not `Word64 (b << 8)`.
 
-> **A unary operator takes only a level-13 operand** — a name, literal, call,
+> **A unary operator takes only a level-8 operand** — a name, literal, call,
 > field, index or a parenthesized expression. `-x`, `~w`, `&arr[0]`, `not f()`
 > are fine; `- -x`, `~ ~w` and `~ Word64 w` are syntax errors — parenthesize:
 > `~ (Word64 w)`. Two exceptions: `*` (dereference) chains freely (`**pp`), and

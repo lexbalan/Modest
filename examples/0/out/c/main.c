@@ -10,10 +10,23 @@ static int32_t bpart(__fixed32 x, uint32_t precision);
 
 int main(void) {
 	printf("Hello World!\n");
-	const __fixed32 fx32 = FIXED32(4.123456, 16);
+	const __fixed32 fx32 = FIXED32(4.067, 16);
 	printf("fx32 = %d.%d\n", apart(fx32), bpart(fx32, 100000000));
 	const __fixed32 fx322 = __FIXED32_DIV(fx32, FIXED32(2, 16), 16);
 	printf("fx322 = %d.%d\n", apart(fx322), bpart(fx322, 100000000));
+	const uint32_t a = 0x0000FFFF;
+	const uint32_t b = 0xFFFF0000UL;
+	const uint32_t c = 0x00FFFF00;
+	const uint32_t x = (a | b) & c;
+	printf("x = %08x\n", x);
+	uint64_t big = 0xDEADBEEF12345678ULL;
+	const uint64_t kk = ((big >> 32) << 32 | (big << 32)) >> 32;
+	printf("kk = %016llx\n", kk);
+	if (((big >> 32) << 32 | (big << 32)) >> 32 == big) {
+		printf("OK\n");
+	} else {
+		printf("FAIL\n");
+	}
 	return 0;
 }
 

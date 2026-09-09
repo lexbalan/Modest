@@ -104,19 +104,21 @@ params ::= field_decl (lsep field_decl)*
 
 value_expr ::= expr_1
 
-expr_1  ::= expr_2  ('or'           expr_2 )*          (* logical or  *)
-expr_2  ::= expr_3  ('and'          expr_3 )*          (* logical and *)
-expr_3  ::= expr_4  (('==' | '!=')  expr_4 )*          (* equality    *)
-expr_4  ::= expr_41 ('|'            expr_41)*          (* bitwise or  *)
-expr_41 ::= expr_42 ('^'            expr_42)*          (* bitwise xor *)
-expr_42 ::= expr_5  ('&'            expr_5 )*          (* bitwise and *)
-expr_5  ::= expr_6  (('<' | '>' | '<=' | '>=') expr_6)*   (* relational  *)
-expr_6  ::= expr_7  (('<<' | '>>')  expr_7 )*          (* shifts      *)
-expr_7  ::= expr_8  (('+' | '-')    expr_8 )*          (* additive    *)
-expr_8  ::= expr_9  (('*' | '/' | '%') expr_9)*        (* multiplicative *)
-expr_9  ::= type_expr expr_9 | expr_10                 (* type construction (not a cast!) *)
-expr_10 ::= prefix_op* expr_11                         (* prefix / unary *)
-expr_11 ::= expr_term postfix*                         (* postfix *)
+expr_1  ::= expr_2 ('or'  expr_2)*                     (* logical or  *)
+expr_2  ::= expr_3 ('and' expr_3)*                     (* logical and *)
+
+(* Comparison: one level.  An equality and an ordering may not be chained
+   without parentheses (`a == b < c` is rejected); `==` / `!=` may. *)
+expr_3  ::= expr_4 (('==' | '!=' | '<' | '>' | '<=' | '>=') expr_4)*
+
+(* Additive and bitwise: one level, left to right.  The two halves never
+   meet — `+` `-` take IntX/NatX/FloatX, the rest take WordX. *)
+expr_4  ::= expr_5 (('+' | '-' | '&' | '|' | '^' | '<<' | '>>') expr_5)*
+
+expr_5  ::= expr_6 (('*' | '/' | '%') expr_6)*         (* multiplicative *)
+expr_6  ::= type_expr expr_6 | expr_7                  (* type construction (not a cast!) *)
+expr_7  ::= prefix_op* expr_8                          (* prefix / unary *)
+expr_8  ::= expr_term postfix*                         (* postfix *)
 
 
 (* Prefix / unary operators *)

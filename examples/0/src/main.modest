@@ -7,11 +7,29 @@ include "libc/stdio"
 
 func main () -> Int {
 	printf("Hello World!\n")
-	let fx32 = Fixed32 4.123456
+	let fx32 = Fixed32 4.067
 	printf("fx32 = %d.%d\n", apart(fx32), bpart(fx32, 100000000))
 
 	let fx322 = fx32 / 2
 	printf("fx322 = %d.%d\n", apart(fx322), bpart(fx322, 100000000))
+
+	let a: Word32 = 0x0000ffff
+	let b: Word32 = 0xffff0000
+	let c: Word32 = 0x00ffff00
+	let x = a | b & c
+	printf("x = %08x\n", x)
+
+	//let y = true == true == false == (5 < 4) < 5
+	//let y = 5 < 4 == (2 < 5) == false
+
+	var big: Word64 = 0xDEADBEEF12345678
+	let kk = (big >> 32) << 32 | (big << 32) >> 32
+	printf("kk = %016llx\n", kk)
+	if (big >> 32) << 32 | (big << 32) >> 32 == big {
+		printf("OK\n")
+	} else {
+		printf("FAIL\n")
+	}
 
 	return 0
 }

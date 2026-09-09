@@ -84,7 +84,7 @@ error) and on `hlir` — but only for `TokenInfo` / `TextInfo`.
 | Module | Responsibility | Entry point |
 | :-- | :-- | :-- |
 | `lexer.py` | `Lexer` rule engine + the `CmLexer` rule table. Newlines are tokens; capitalized identifiers get their own token class, so the parser can tell types from values lexically. | `CmLexer().run(filename)` → `[(class, text, TokenInfo)]` |
-| `parser.py` | Recursive descent with backtracking (`getpos` / `setpos`). Precedence is the call chain `expr_value_1` (loosest) … `expr_value_11` (postfix). Emits plain dicts, not classes. | `Parser().parse(tokens)` → AST |
+| `parser.py` | Recursive descent with backtracking (`getpos` / `setpos`). Precedence is the call chain `expr_value_1` (loosest) … `expr_value_8` (postfix). Emits plain dicts, not classes. | `Parser().parse(tokens)` → AST |
 | `symtab.py` | A scope chain with two namespaces per scope — `types` and `values` — and parent lookup. 53 lines, no logic beyond that. | `Symtab(parent)`, `type_get`, `value_get`, `type_add`, `value_add` |
 | `value/*.py` | Compile-time semantics per type: is a construction legal, and what does it produce. | see below |
 

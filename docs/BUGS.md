@@ -228,7 +228,7 @@ printf("%d\n", K)             // no hang any more, but see below
   printf("%d\n", ~ Word64 w)  // compiles cleanly now
   ```
 
-  Both were unary operators applied above level 13 of the precedence table;
+  Both were unary operators applied above the postfix level of the precedence table;
   verified 2026-08-30 that this compiles without a diagnostic, and again
   2026-09-08. Whether it *should* is a question about the operand-type rules,
   not about this bug.

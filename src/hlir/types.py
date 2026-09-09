@@ -1452,7 +1452,7 @@ class Type(Entity):
 		print("select_common_type(%s %s) not implenemted" % (a.__class__.__name__, b.__class__.__name__))
 
 		from error import error
-		error("cannot select common type (`%s` & `%s`)" % (a.to_str(), b.to_str()), ti)
+		info("cannot select common type (`%s` & `%s`)" % (a.to_str(), b.to_str()), ti)
 		return None
 
 

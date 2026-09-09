@@ -208,15 +208,60 @@ declare void @perror(%ConstCharStr* %str)
 @.str1 = private constant [14 x i8] [i8 72, i8 101, i8 108, i8 108, i8 111, i8 32, i8 87, i8 111, i8 114, i8 108, i8 100, i8 33, i8 10, i8 0]
 @.str2 = private constant [14 x i8] [i8 102, i8 120, i8 51, i8 50, i8 32, i8 61, i8 32, i8 37, i8 100, i8 46, i8 37, i8 100, i8 10, i8 0]
 @.str3 = private constant [15 x i8] [i8 102, i8 120, i8 51, i8 50, i8 50, i8 32, i8 61, i8 32, i8 37, i8 100, i8 46, i8 37, i8 100, i8 10, i8 0]
+@.str4 = private constant [10 x i8] [i8 120, i8 32, i8 61, i8 32, i8 37, i8 48, i8 56, i8 120, i8 10, i8 0]
+@.str5 = private constant [14 x i8] [i8 107, i8 107, i8 32, i8 61, i8 32, i8 37, i8 48, i8 49, i8 54, i8 108, i8 108, i8 120, i8 10, i8 0]
+@.str6 = private constant [4 x i8] [i8 79, i8 75, i8 10, i8 0]
+@.str7 = private constant [6 x i8] [i8 70, i8 65, i8 73, i8 76, i8 10, i8 0]
 ; -- endstrings --
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @.str1 to [0 x i8]*))
-	%2 = call %Int32 @apart(%Fixed32 270235)
-	%3 = call %Int32 @bpart(%Fixed32 270235, %Nat32 100000000)
+	%2 = call %Int32 @apart(%Fixed32 266535)
+	%3 = call %Int32 @bpart(%Fixed32 266535, %Nat32 100000000)
 	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @.str2 to [0 x i8]*), %Int32 %2, %Int32 %3)
-	%5 = call %Int32 @apart(%Fixed32 135118)
-	%6 = call %Int32 @bpart(%Fixed32 135118, %Nat32 100000000)
+	%5 = call %Int32 @apart(%Fixed32 133268)
+	%6 = call %Int32 @bpart(%Fixed32 133268, %Nat32 100000000)
 	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @.str3 to [0 x i8]*), %Int32 %5, %Int32 %6)
+	%8 = zext i16 65535 to %Word32
+	%9 = bitcast i32 4294901760 to %Word32
+	%10 = bitcast i32 16776960 to %Word32
+	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @.str4 to [0 x i8]*), %Word32 16776960)
+	%12 = alloca %Word64, align 8
+	%13 = bitcast i64 16045690981402826360 to %Word64
+	store %Word64 %13, %Word64* %12
+	%14 = load %Word64, %Word64* %12
+	%15 = zext i8 32 to %Word64
+	%16 = lshr %Word64 %14, %15
+	%17 = zext i8 32 to %Word64
+	%18 = shl %Word64 %16, %17
+	%19 = load %Word64, %Word64* %12
+	%20 = zext i8 32 to %Word64
+	%21 = shl %Word64 %19, %20
+	%22 = or %Word64 %18, %21
+	%23 = zext i8 32 to %Word64
+	%24 = lshr %Word64 %22, %23
+	%25 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @.str5 to [0 x i8]*), %Word64 %24)
+; if_0
+	%26 = load %Word64, %Word64* %12
+	%27 = zext i8 32 to %Word64
+	%28 = lshr %Word64 %26, %27
+	%29 = zext i8 32 to %Word64
+	%30 = shl %Word64 %28, %29
+	%31 = load %Word64, %Word64* %12
+	%32 = zext i8 32 to %Word64
+	%33 = shl %Word64 %31, %32
+	%34 = or %Word64 %30, %33
+	%35 = zext i8 32 to %Word64
+	%36 = lshr %Word64 %34, %35
+	%37 = load %Word64, %Word64* %12
+	%38 = icmp eq %Word64 %36, %37
+	br %Bool %38 , label %then_0, label %else_0
+then_0:
+	%39 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @.str6 to [0 x i8]*))
+	br label %endif_0
+else_0:
+	%40 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @.str7 to [0 x i8]*))
+	br label %endif_0
+endif_0:
 	ret %Int 0
 }
 

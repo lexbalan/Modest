@@ -8,11 +8,26 @@ include "libc/stdio"
 @nonstatic
 func main () -> Int {
 	printf("Hello World!\n")
-	let fx32 = Fixed32 4.123456
+	let fx32 = Fixed32 4.067
 	printf("fx32 = %d.%d\n", apart(fx32), bpart(fx32, 100000000))
 
 	let fx322: Fixed32 = fx32 / 2
 	printf("fx322 = %d.%d\n", apart(fx322), bpart(fx322, 100000000))
+
+	let a: Word32 = 0x0000FFFF
+	let b: Word32 = 0xFFFF0000
+	let c: Word32 = 0x00FFFF00
+	let x: Word32 = a | b & c
+	printf("x = %08x\n", x)
+
+	var big: Word64 = 0xDEADBEEF12345678
+	let kk: Word64 = (big >> 32) << 32 | (big << 32) >> 32
+	printf("kk = %016llx\n", kk)
+	if (big >> 32) << 32 | (big << 32) >> 32 == big {
+		printf("OK\n")
+	} else {
+		printf("FAIL\n")
+	}
 
 	return 0
 }

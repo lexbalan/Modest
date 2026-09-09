@@ -175,8 +175,10 @@ func testWidths () -> Bool {
 		return false
 	}
 
-	// The two halves recovered by shifting, and put back together.
-	if (big >> 32) << 32 | (big << 32) >> 32 != big {
+	// The two halves recovered by shifting, and put back together.  The
+	// shifts and the `|` share one level, so the outer parentheses are what
+	// keeps the trailing `>> 32` from swallowing the `|` (precedence.modest).
+	if ((big >> 32) << 32) | ((big << 32) >> 32) != big {
 		printf("splitting a Word64 by shifts does not put it back together\n")
 		return false
 	}

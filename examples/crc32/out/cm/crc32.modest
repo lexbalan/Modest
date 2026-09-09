@@ -35,7 +35,7 @@ public func run (buf: *[]Word8, len: Nat32) -> Word32 {
 	var i = Nat32 0
 	while i < len {
 		let x = Word32 buf[i]
-		let y: Word32 = crc ^ x & 0xFF
+		let y: Word32 = (crc ^ x) & 0xFF
 		let yy: Nat8 = unsafe Nat8 y
 		crc = table[yy] ^ (crc >> 8)
 		++i
