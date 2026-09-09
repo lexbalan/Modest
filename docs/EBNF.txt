@@ -112,7 +112,10 @@ expr_2  ::= expr_3 ('and' expr_3)*                     (* logical and *)
 expr_3  ::= expr_4 (('==' | '!=' | '<' | '>' | '<=' | '>=') expr_4)*
 
 (* Additive and bitwise: one level, left to right.  The two halves never
-   meet — `+` `-` take IntX/NatX/FloatX, the rest take WordX. *)
+   meet — `+` `-` take IntX/NatX/FloatX, the rest take WordX.  Among the
+   bitwise operators the level has no order, so a chain may not mix two
+   kinds without parentheses (`a | b & c` is rejected); `<<` and `>>` are
+   one kind, each of `&` `|` `^` is a kind of its own. *)
 expr_4  ::= expr_5 (('+' | '-' | '&' | '|' | '^' | '<<' | '>>') expr_5)*
 
 expr_5  ::= expr_6 (('*' | '/' | '%') expr_6)*         (* multiplicative *)

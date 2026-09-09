@@ -27,7 +27,7 @@ public func init () -> Unit {
 		var j = Nat32 0
 		while j < 8 {
 			if crc & 1 != 0 {
-				crc = crc >> 1 ^ 0xEDB88320
+				crc = (crc >> 1) ^ 0xEDB88320
 			} else {
 				crc = crc >> 1
 			}

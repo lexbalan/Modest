@@ -396,14 +396,13 @@ Every binary level is left-associative: `10 - 3 - 2` is `5`, and a chain of
 > two `Bool`s and is never what was meant. A chain of `==` / `!=` alone is
 > fine.
 
-> **Level 4 is flat: `&` does not bind tighter than <code>&#124;</code>, and a
-> shift does not bind tighter than either.** `hi << 8 | lo` is
-> `(hi << 8) | lo`, same as C — but `lo | hi << 8` is `(lo | hi) << 8`, and C
-> would read it the other way. All operands are `WordX`, so nothing is
-> reported: **put the parentheses around a shift written to the right of**
-> `&` <code>&#124;</code> `^`. Arithmetic shares the level without ever meeting
-> it — `+` `-` want `IntX` / `NatX` / `FloatX`, the bitwise operators want
-> `WordX`, so a mixed chain is a type error, not a grouping question.
+> **Level 4 is flat, so a chain that mixes two bitwise operators is refused,
+> not grouped.** `a | b & c` gives `required parentheses` — `(a | b) & c` and
+> `a | (b & c)` are different answers and the level has no order to pick
+> between them. Same-kind chains are fine (`s ^ 0x0F ^ 0x30`, `x >> 1 >> 2`);
+> `<<` and `>>` count as one kind. Arithmetic shares the level without ever
+> meeting the bitwise half — `+` `-` want `IntX` / `NatX` / `FloatX`, the
+> others want `WordX`, so a mixed chain there is a type error and says so.
 
 > **Construction binds tighter than every binary operator** (level 6):
 > `Word64 b << 8` is `(Word64 b) << 8`, not `Word64 (b << 8)`.

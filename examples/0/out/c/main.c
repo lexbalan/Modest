@@ -19,14 +19,6 @@ int main(void) {
 	const uint32_t c = 0x00FFFF00;
 	const uint32_t x = (a | b) & c;
 	printf("x = %08x\n", x);
-	uint64_t big = 0xDEADBEEF12345678ULL;
-	const uint64_t kk = ((big >> 32) << 32 | (big << 32)) >> 32;
-	printf("kk = %016llx\n", kk);
-	if (((big >> 32) << 32 | (big << 32)) >> 32 == big) {
-		printf("OK\n");
-	} else {
-		printf("FAIL\n");
-	}
 	return 0;
 }
 

@@ -224,4 +224,3 @@ public func hash (msg: *[]Word8, msgLen: Nat32, outHash: *Hash) -> Unit {
 	final(&ctx, outHash)
 }
 
-

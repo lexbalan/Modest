@@ -415,3 +415,80 @@ when it hurts.
 
 - question 2 above — the same shape, for argument evaluation order
 - question 1 above — backends disagreeing about unstated behaviour
+
+---
+
+## QUESTION#5: Should `<<` `>>` `&` move down to the multiplicative level?
+
+**Question.** Level 4 currently holds `+` `-` together with `&` `|` `^`
+`<<` `>>`. Go and Swift split that group differently — the shifts and `&`
+go down with `*` `/` `%`, and only `|` and `^` stay with `+` `-`. Both
+arrangements have five binary levels; the difference is which chains a
+reader can write without parentheses and get what a C habit expects.
+
+### Where it stands today
+
+Everything bitwise is on level 4 with no order inside it, and a chain that
+mixes two kinds is refused ([`value/README.md`](./value/README.md)):
+
+```modest
+let m = a | b & c        // error: required parentheses
+let m = (a | b) & c      // says which one
+```
+
+That refusal is what makes the question cheap to leave open: since no
+mixed chain compiles, nothing in the tree can depend on how the level
+orders itself, and moving the operators later would not change the meaning
+of any program that compiles today. It would only turn some of the
+currently rejected lines back into legal ones.
+
+The other half of the C fix is already settled and is not in question:
+the comparisons sit *above* the bitwise operators, so `crc & 1 != 0` means
+`(crc & 1) != 0` and needs no parentheses. Both arrangements keep that.
+
+### The options
+
+**A. Leave the flat level and keep refusing mixed chains.** One rule to
+state — "different bitwise operators need parentheses" — and it holds
+without exceptions.
+
+- A reader never has to know an order, because there is none to know.
+- Every mixed chain costs two characters, including the ones C would have
+  read the same way: `a & b | c` groups identically in both languages and
+  is still rejected.
+- The refusal is a Modest-only rule. Code moved from C compiles or does
+  not, but never changes meaning silently — which is the point.
+
+**B. Adopt the Go/Swift split** — `<<` `>>` `&` to level 5, `|` `^` stay
+on level 4.
+
+- Every unparenthesised bitwise chain then groups exactly as in C, so a
+  reader coming from C is never wrong and the `required parentheses` rule
+  for the bitwise operators can be dropped.
+- Costs an order that has to be remembered again, and it is the C order,
+  including the part of it that was never intuitive: `&` tighter than `^`
+  tighter than `|`.
+- `a | b & c` becomes legal and means `a | (b & c)` — so this direction is
+  only open while option A keeps such lines out of the tree.
+
+**C. Split, and keep the refusal on top of it.** The order exists, but a
+mixed chain still asks for parentheses.
+
+- The order then only decides what parenthesised code means, which it
+  already does — so the level assignment stops being observable at all,
+  and the question becomes one about the grammar rather than the language.
+
+### What an answer touches
+
+- the precedence table in [`value/README.md`](./value/README.md) and in
+  [`CHEATSHEET.md`](../CHEATSHEET.md)
+- [`EBNF.txt`](../EBNF.txt) — `expr_4`, and a new level under B and C
+- `expr_value_4` in `src/parser.py`, and `bitwise_kind_of_op` there under B
+- `tests/lang/value/binary/precedence.modest` and
+  `reject_bitwise_mix.modest` — the latter is what would shrink under B
+
+### Related
+
+- [`value/binary.md`](./value/binary.md) — which types each group takes,
+  which is why arithmetic and bitwise can share a level at all
+- BUG#28 — why the bitwise operators have to be left-associative

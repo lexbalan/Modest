@@ -16,28 +16,18 @@ func main () -> Int {
 	let a: Word32 = 0x0000ffff
 	let b: Word32 = 0xffff0000
 	let c: Word32 = 0x00ffff00
-	let x = a | b & c
+	let x = (a | b) & c
 	printf("x = %08x\n", x)
-
-	//let y = true == true == false == (5 < 4) < 5
-	//let y = 5 < 4 == (2 < 5) == false
-
-	var big: Word64 = 0xDEADBEEF12345678
-	let kk = (big >> 32) << 32 | (big << 32) >> 32
-	printf("kk = %016llx\n", kk)
-	if (big >> 32) << 32 | (big << 32) >> 32 == big {
-		printf("OK\n")
-	} else {
-		printf("FAIL\n")
-	}
 
 	return 0
 }
+
 
 func apart (x: Fixed32) -> Int32 {
   let w16 = unsafe Word16 (Word32 x >> 16)
   return Int32 Int16 w16
 }
+
 
 func bpart (x: Fixed32, precision: Nat32) -> Int32 {
   let i64 = Int64 (Word64 (Word32 x & 0xffff))

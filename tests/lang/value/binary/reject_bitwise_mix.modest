@@ -1,0 +1,44 @@
+// TEST: reject
+// EXPECT-ERROR: required parentheses
+// EXPECT-ERROR: required parentheses
+// EXPECT-ERROR: required parentheses
+// EXPECT-ERROR: required parentheses
+// EXPECT-ERROR: required parentheses
+//
+// `&`, `|`, `^` and the shifts share level 4 of
+// docs/lang/value/README.md with no order among themselves, so a chain
+// that mixes two of them has nothing to group by: `a | b & c` could be
+// `(a | b) & c` or `a | (b & c)`, and the two give different answers.
+// Rather than pick one silently — C picks the second, and a reader coming
+// from C would read it that way — the parser refuses the chain and asks
+// for the parentheses.
+//
+// This is what keeps the level's flatness unobservable, and it is why
+// QUESTION#5 can be left open: no program can depend on how a mixed chain
+// groups today, so moving `<<` `>>` `&` down to the multiplicative level
+// later would not change the meaning of anything that compiles now.
+//
+// Same-kind chains stay legal and are checked in precedence.modest:
+// `a ^ b ^ c`, `a | b | c`, `x >> 1 >> 2` — `<<` and `>>` count as one
+// kind.  Arithmetic is not part of the rule: `+` never meets a WordX, so
+// `a + b | c` is a type error and says so.
+
+include "libc/ctypes64"
+
+func main () -> Int {
+	var a: Word32 = 0x01
+	var b: Word32 = 0x06
+	var c: Word32 = 0x02
+	var x: Word32 = 0x10
+
+	// The three bitwise operators against each other.
+	var m1 = a | b & c
+	var m2 = a ^ b & c
+	var m3 = a & b | c
+
+	// A shift meeting one of them, on either side.
+	var m4 = x >> 1 ^ a
+	var m5 = a | x >> 4
+
+	return 0
+}

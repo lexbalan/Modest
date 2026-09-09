@@ -19,12 +19,13 @@
 //
 // Two things are not where a C habit puts them.  The bitwise operators bind
 // *tighter* than `==`, so `w & mask == 0` needs no parentheses and means
-// what it looks like; in C the same line is `w & (mask == 0)`.  And they
-// share one flat level with each other and with the shifts, so `a | b & c`
-// is `(a | b) & c` and `lo | high >> 4` is `(lo | high) >> 4` — C reads
-// both the other way round.  Every level is left-associative, so a chain
-// meets one literal at a time — a literal pair on its own would not compile
-// today (BUG#28).
+// what it looks like; in C the same line is `w & (mask == 0)`.  And `&`,
+// `|`, `^` and the shifts share one level with no order among them, so a
+// chain that mixes two of them is refused rather than grouped — those cases
+// live in reject_bitwise_mix.modest, and what is checked here is that a
+// chain of one of them still works.  Every level is left-associative, so a
+// chain meets one literal at a time — a literal pair on its own would not
+// compile today (BUG#28).
 //
 // Precedence decides how an unparenthesised expression groups; what happens
 // when the parentheses are written down is parens.modest.
@@ -100,37 +101,39 @@ func testBitwiseAgainstEquality () -> Bool {
 }
 
 
-// Among themselves: one flat level, taken from the left.  None of `&`, `^`
-// and `|` binds tighter than the others, which is where C differs.
+// Among themselves: one level with no order inside it.  A chain of one
+// operator groups from the left like everything else; a chain of two
+// different ones has no answer to group by and is refused, so the only
+// thing that can be written unparenthesised is a single-operator chain.
 func testBitwiseLevels () -> Bool {
 	var a: Word8 = 0x01
 	var b: Word8 = 0x06
 	var c: Word8 = 0x02
+	var s: Word8 = 0x33
 
-	// (a | b) & c = 0x07 & 0x02 = 0x02.  C would read a | (b & c) = 0x03.
-	if a | b & c != 0x02 {
-		printf("0x01 | 0x06 & 0x02 = 0x%02x, expected 0x02\n", Word32(a | b & c))
+	// Left to right, and the reason it matters: right-associative, the two
+	// literals would meet each other first and a literal pair does not
+	// compile (BUG#28).  (0x33 ^ 0x0F) ^ 0x30 = 0x3C ^ 0x30 = 0x0C.
+	if s ^ 0x0F ^ 0x30 != 0x0C {
+		printf("0x33 ^ 0x0F ^ 0x30 = 0x%02x, expected 0x0C\n",
+			Word32(s ^ 0x0F ^ 0x30))
 		return false
 	}
 
-	// (a ^ b) & c = 0x07 & 0x02 = 0x02.  C would read a ^ (b & c) = 0x03.
-	if a ^ b & c != 0x02 {
-		printf("0x01 ^ 0x06 & 0x02 = 0x%02x, expected 0x02\n", Word32(a ^ b & c))
+	// The same for the other two, where the answer does not depend on the
+	// grouping but the chain still has to be accepted.
+	if a | b | c != 0x07 or a & b & c != 0x00 {
+		printf("0x01 | 0x06 | 0x02 = 0x%02x, 0x01 & 0x06 & 0x02 = 0x%02x\n",
+			Word32(a | b | c), Word32(a & b & c))
 		return false
 	}
 
-	// (a & b) | c = 0x00 | 0x02 = 0x02.  C would read a & (b | c) = 0x00.
-	if a & b | c != 0x02 {
-		printf("0x01 & 0x06 | 0x02 = 0x%02x, expected 0x02\n", Word32(a & b | c))
-		return false
-	}
-
-	// A three-operator chain, still one step at a time from the left:
-	// ((a | b) ^ c) & b = (0x07 ^ 0x02) & 0x06 = 0x05 & 0x06 = 0x04.
-	// C would read a | (b ^ (c & b)) = 0x05.
-	if a | b ^ c & b != 0x04 {
-		printf("0x01 | 0x06 ^ 0x02 & 0x06 = 0x%02x, expected 0x04\n",
-			Word32(a | b ^ c & b))
+	// Mixing needs parentheses, and then they decide: the two groupings of
+	// the same three operands give different answers, which is what the
+	// level cannot pick between on its own.
+	if (a | b) & c != 0x02 or a | (b & c) != 0x03 {
+		printf("(a | b) & c = 0x%02x, a | (b & c) = 0x%02x, expected 0x02/0x03\n",
+			Word32((a | b) & c), Word32(a | (b & c)))
 		return false
 	}
 
@@ -139,41 +142,25 @@ func testBitwiseLevels () -> Bool {
 }
 
 
-// Shifts are on that same flat level, not one of their own: they neither
-// bind tighter than `&` `^` `|` nor looser.  Arithmetic shares the level
-// too, but can never meet a shift in one chain — `+` wants IntX/NatX/FloatX
-// and `<<` produces a WordX, so a mixed chain is a type error rather than a
-// grouping question.
+// `<<` and `>>` are on that same level and count as one kind, so they chain
+// with each other but not with `&` `^` `|`.  Arithmetic shares the level
+// too and is left out of the rule: `+` never meets a WordX, so a mixed
+// chain there is a type error, and the type error is the more useful thing
+// to say than a demand for parentheses that would not help.
 func testShiftLevels () -> Bool {
 	var w: Word8 = 0x03
-	var mask: Word8 = 0x06
+	var x: Word8 = 0x40
 
-	// (mask & w) << 2 = 0x02 << 2 = 0x08.  C would read mask & (w << 2) = 0x04.
-	if mask & w << 2 != 0x08 {
-		printf("0x06 & 0x03 << 2 = 0x%02x, expected 0x08\n", Word32(mask & w << 2))
+	// Two shifts chain, from the left: (0x40 >> 1) >> 2 = 0x20 >> 2 = 0x08.
+	// Right-associative it would be 0x40 >> (1 >> 2) = 0x40 >> 0 = 0x40.
+	if x >> 1 >> 2 != 0x08 {
+		printf("0x40 >> 1 >> 2 = 0x%02x, expected 0x08\n", Word32(x >> 1 >> 2))
 		return false
 	}
 
-	// (mask ^ w) << 2 = 0x05 << 2 = 0x14.  C would read 0x0A.
-	if mask ^ w << 2 != 0x14 {
-		printf("0x06 ^ 0x03 << 2 = 0x%02x, expected 0x14\n", Word32(mask ^ w << 2))
-		return false
-	}
-
-	// (lo | high) >> 4 = 0xF0 >> 4 = 0x0F.  C would read lo | (high >> 4)
-	// = 0x3F.  This is the one shape where the two languages disagree and
-	// the types stay happy, so the parentheses have to be written by hand.
-	var high: Word8 = 0xF0
-	var lo: Word8 = 0x30
-	if lo | high >> 4 != 0x0F {
-		printf("0x30 | 0xF0 >> 4 = 0x%02x, expected 0x0F\n", Word32(lo | high >> 4))
-		return false
-	}
-
-	// A shift written to the *left* of the bitwise operator needs nothing:
-	// (w << 2) | mask reads the same in both languages.
-	if w << 2 | mask != 0x0E {
-		printf("0x03 << 2 | 0x06 = 0x%02x, expected 0x0E\n", Word32(w << 2 | mask))
+	// And in both directions: (0x03 << 2) << 1 = 0x18.
+	if w << 2 << 1 != 0x18 {
+		printf("0x03 << 2 << 1 = 0x%02x, expected 0x18\n", Word32(w << 2 << 1))
 		return false
 	}
 
@@ -189,6 +176,15 @@ func testShiftLevels () -> Bool {
 	// with no parentheses at all.
 	if not (w << 3 == 0x18) {
 		printf("`w << 3 == 0x18` did not group as (w << 3) == 0x18\n")
+		return false
+	}
+
+	// Mixed with a bitwise operator the parentheses are required, and they
+	// are what decides: the two readings of the same operands differ.
+	var mask: Word8 = 0x06
+	if (mask & w) << 2 != 0x08 or mask & (w << 2) != 0x04 {
+		printf("(mask & w) << 2 = 0x%02x, mask & (w << 2) = 0x%02x, expected 0x08/0x04\n",
+			Word32((mask & w) << 2), Word32(mask & (w << 2)))
 		return false
 	}
 

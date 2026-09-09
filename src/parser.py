@@ -20,6 +20,27 @@ def ast_value_bad(ti):
 		'ti': ti
 	}
 
+
+# `&`, `|`, `^` and the shifts share one precedence level, so a chain that
+# mixes two of them has no grouping to fall back on and the parentheses have
+# to be written down.  Operators of the same kind chain freely: `<<` and `>>`
+# count as one kind, the other three as one kind each.
+bitwise_kind_of_op = {
+	HLIR_VALUE_OP_BITWISE_AND: '&',
+	HLIR_VALUE_OP_BITWISE_OR: '|',
+	HLIR_VALUE_OP_BITWISE_XOR: '^',
+	HLIR_VALUE_OP_SHL: 'shift',
+	HLIR_VALUE_OP_SHR: 'shift',
+}
+
+bitwise_kind_of_token = {
+	'&': '&',
+	'|': '|',
+	'^': '^',
+	'<<': 'shift',
+	'>>': 'shift',
+}
+
 def isUpperIdentifierToken(token):
 	# skip _ before letters
 	while len(token) > 0 and token[0] == '_':
@@ -718,6 +739,27 @@ class Parser:
 		v = self.expr_value_5()
 		while True:
 			ti_mid = self.tokenInfo()
+
+			# Two bitwise operators of different kinds, side by side and
+			# unparenthesised.  Arithmetic is not part of this: `+` never
+			# meets a WordX, so a mixed chain there is a type error and the
+			# type error is the more useful thing to say.
+			left_kind = bitwise_kind_of_op.get(v['kind'])
+			if left_kind != None:
+				op_kind = bitwise_kind_of_token.get(self.ctok())
+				if op_kind != None and op_kind != left_kind:
+					ti = self.textInfo()
+					error("required parentheses", ti)
+					# Take the operator and its right operand out of the way
+					# and go on from a bad value: without this the rest of
+					# the chain reports a second time, about types, over an
+					# expression the parser has already refused.
+					self.skip1()
+					self.skipn("\n")
+					self.expr_value_5()
+					v = ast_value_bad(ti)
+					continue
+
 			if self.match("+"):
 				self.skipn("\n")
 				r = self.expr_value_5()

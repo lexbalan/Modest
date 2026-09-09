@@ -1278,3 +1278,41 @@ func f (x: Int32 @inline) -> Int32 {   // modest never returns
   record fields, which take annotations in the same position.
 - No reproducer in the suite; a `reject_` test belongs next to the other
   parameter-parsing tests.
+
+## BUG#67: LLVM backend stores into `None` through a pointer constant
+
+```modest
+pragma unsafe
+
+type GPIO = @layout("packed") {
+	dir: Word8
+	out: Word8
+}
+
+const port = unsafe * @volatile GPIO Word16 0x23
+
+func main () -> Int16 {
+	port.dir = 0xff
+	return 0
+}
+```
+
+```llvm
+store %Word8 %1, %Word8 None
+```
+
+- Assigning to a field reached through a `const` that is a dereferenced
+  pointer built from a literal address — the memory-mapped register idiom —
+  emits the Python `None` where the destination operand belongs. `llc` stops
+  at `expected value token`.
+- The address itself is never computed: there is no `getelementptr` and no
+  `inttoptr` before the store, so the backend loses the destination rather
+  than mis-forming it.
+- Only the LLVM backend. The C backend handles the same source correctly
+  (`PORT->dir = 0xFF;`), and reading the field is fine in both.
+- Found through `examples/m328p_blink`, which is the idiom in real use
+  (`avr.portB.dir = 0xff`) and does not build because of this: `make` there
+  fails at `llc`, and the checked-in `out/llvm/*.ll` predate the breakage.
+- Not a precedence question: the sources involved contain no binary
+  operators at all.
+
