@@ -62,10 +62,19 @@ Because a mixed chain never compiles, no program can depend on how the
 level orders itself — which is what leaves [QUESTION#5](../QUESTIONS.md)
 open at no cost.
 
-On level 3 an equality and an ordering may not be chained without
-parentheses either — `a == b < c` is rejected the same way, since the
-left-associative reading `(a == b) < c` compares two `Bool`s and is never
-what was meant. A chain of `==` / `!=` alone is allowed.
+Level 3 is flat in the same way: two comparisons may not be chained without
+parentheses either.
+
+```modest
+let ok = a == b < c      // error: required parentheses
+let ok = a == b == c     // and so is a chain of equalities
+```
+
+The left-associative reading of such a chain always compares the `Bool` that
+the first comparison produced — `(a == b) < c`, `(a == b) == c` — and that is
+never what the line was meant to say. Ordering a `Bool` would not typecheck
+anyway; comparing two of them would, which is exactly why the chain is
+refused in the parser rather than left to the types.
 
 Binding examples (lower level = binds tighter):
 

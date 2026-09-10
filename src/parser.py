@@ -41,6 +41,14 @@ bitwise_kind_of_token = {
 	'>>': 'shift',
 }
 
+# `==`, `!=`, `<`, `>`, `<=` and `>=` share one precedence level, so a chain of
+# two of them would group from the left, and the left half is always a `Bool`:
+# `a == b < c` is `(a == b) < c` and `a < b == f` is `(a < b) == f`.  Neither is
+# what the line was meant to say, so a chain is refused and the parentheses
+# that would settle it have to be written down.
+comparison_ops = EQ_OPS + RELATIONAL_OPS
+comparison_tokens = ['==', '!=', '<', '>', '<=', '>=']
+
 def isUpperIdentifierToken(token):
 	# skip _ before letters
 	while len(token) > 0 and token[0] == '_':
@@ -655,14 +663,9 @@ class Parser:
 			ti_mid = self.tokenInfo()
 			ti = self.textInfo()
 
-			if v['kind'] in [HLIR_VALUE_OP_EQ, HLIR_VALUE_OP_NE]:
-				if self.ctok() in ['<', '>', '<=', '>=']:
-					error("required parentheses", ti)
-					v = ast_value_bad(ti)
-			if v['kind'] in [HLIR_VALUE_OP_LT, HLIR_VALUE_OP_GT, HLIR_VALUE_OP_LE, HLIR_VALUE_OP_GE]:
-				if self.ctok() in ['==', '!=', '<', '>', '<=', '>=']:
-					error("required parentheses", ti)
-					v = ast_value_bad(ti)
+			if v['kind'] in comparison_ops and self.ctok() in comparison_tokens:
+				error("required parentheses", ti)
+				v = ast_value_bad(ti)
 
 			if self.match("=="):
 				self.skipn("\n")

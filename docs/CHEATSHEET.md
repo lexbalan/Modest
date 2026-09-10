@@ -391,10 +391,9 @@ Every binary level is left-associative: `10 - 3 - 2` is `5`, and a chain of
 > another.** Bitwise sits below (level 4), comparisons above (level 3), so the
 > classic C parenthesis trap is gone: `crc & 1 != 0` means `(crc & 1) != 0`, as
 > it reads. (Ordering never meets a bitwise expression anyway — there is no
-> `<` on `WordX`.) Chaining an equality with an ordering is rejected —
-> `a == b < c` gives `required parentheses`, because `(a == b) < c` compares
-> two `Bool`s and is never what was meant. A chain of `==` / `!=` alone is
-> fine.
+> `<` on `WordX`.) Chaining two comparisons is rejected — `a == b < c` and
+> `a == b == c` both give `required parentheses`, because the left half of
+> such a chain is a `Bool` and comparing *that* is never what was meant.
 
 > **Level 4 is flat, so a chain that mixes two bitwise operators is refused,
 > not grouped.** `a | b & c` gives `required parentheses` — `(a | b) & c` and

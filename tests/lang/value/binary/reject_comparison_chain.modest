@@ -3,17 +3,21 @@
 // EXPECT-ERROR: required parentheses
 // EXPECT-ERROR: required parentheses
 // EXPECT-ERROR: required parentheses
+// EXPECT-ERROR: required parentheses
 //
 // `==` `!=` `<` `>` `<=` `>=` are one level (level 3 in
 // docs/lang/value/README.md), so a chain of them would group from the left
 // like every other level: `a == b < c` is `(a == b) < c`, an ordering over
-// two Bools.  That is never what the line was meant to say, and on Bool it
-// would not even typecheck, so the parser refuses the chain outright and
-// asks for the parentheses that would settle it.
+// two Bools.  That is never what the line was meant to say, so the parser
+// refuses the chain outright and asks for the parentheses that would settle
+// it.
 //
-// A chain of `==` / `!=` alone stays legal — `a == b == c` is a Bool
-// compared with a Bool, which is meaningful — and precedence.modest checks
-// that it still works.
+// Most of these the types would catch on their own, since ordering is
+// numeric-only and the left half of a chain is always a Bool.  The chain of
+// equalities is the one they would not: `a == b == f` is a Bool compared
+// with a Bool and typechecks perfectly.  It is refused all the same — one
+// rule for the whole level, rather than a rule with a hole in it that
+// happens to line up with what the type checker misses.
 
 include "libc/ctypes64"
 
@@ -21,6 +25,7 @@ func main () -> Int {
 	var a: Int32 = 1
 	var b: Int32 = 2
 	var c: Int32 = 3
+	var f: Bool = true
 
 	// An equality followed by an ordering.
 	var x = a == b < c
@@ -33,6 +38,11 @@ func main () -> Int {
 
 	// Two orderings chained: `(a < b) < c` compares a Bool with an Int32.
 	var w = a < b < c
+
+	// And a chain of equalities, the one case where the types would have
+	// been happy: `(a == b) == f` is Bool against Bool.  Which pair was
+	// meant to be compared still has to be written down.
+	var v = a == b == f
 
 	return 0
 }
