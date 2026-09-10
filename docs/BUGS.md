@@ -675,42 +675,6 @@ var x: Fixed32 = Fixed32 h   // c11: 1.5   llvm: 32767.999985
 - Coverage: `tests/lang/type/float/float16/fixed.modest`, marked
   `EXPECTED-FAIL(llvm)`.
 
-## BUG#42: `@layout("packed")` does not change the layout
-
-```modest
-type Header = @layout("packed") {
-	tag: Word8
-	len: Nat32
-}
-
-sizeof(Header)          // 8, expected 5
-offsetof(Header.len)    // 4, expected 1
-```
-
-- The attribute is parsed and validated (`copy_with_atts` accepts
-  `exact`, `packed`, `union` and stores the string in `nt.layout`,
-  `src/hlir/types.py:689`), and then almost nothing reads it back.
-- The layout is decided before either backend is reached, and this is the
-  part to fix first: `calc_record_size_align` aligns every field as it goes,
-  with no layout to consult — it runs from `TypeRecord.__init__`, before
-  `copy_with_atts` has attached one. So `sizeof` and `offsetof` stay padded
-  whatever a backend emits.
-- The C backend has no packing to emit at all: `packed` appears nowhere in
-  `src/backend/c11.py`, and `struct` comes out as written.
-- The LLVM backend does emit the packed form — `str_type_record` used to ask
-  `t.hasAttribute('packed')` while the value lives in `t.layout`, so its test
-  was never true; it now reads the field. Which makes the IR right and the
-  frontend's numbers wrong at the same time: `%Header = type <{ %Word8,
-  %Nat32 }>` is five bytes, while `sizeof(Header)` still answers `8`. Until
-  the layout reaches `calc_record_size_align`, the two disagree on that
-  backend, and anything doing memory arithmetic with `sizeof` on a packed
-  type is wrong. Field access itself is fine: it is a `getelementptr` by
-  index, which follows the IR.
-- `@layout("exact")` is the default layout under another name and is
-  unaffected. `union` is broken differently, see BUG#43.
-- Coverage: `tests/lang/type/record/packed.modest`, marked
-  `EXPECTED-FAIL` on both backends.
-
 ## BUG#43: LLVM backend ignores `@layout("union")`
 
 ```modest
@@ -719,22 +683,33 @@ type Color = @layout("union") {
 	bytes: [4]Word8
 }
 
-offsetof(Color.bytes)   // c11: 0    llvm: 4
-sizeof(Color)           // c11: 4    llvm: 8
+var c: Color = {}
+c.rgba = 5
+c.bytes[0]              // c11: 5    llvm: 0
+```
+
+```llvm
+%Color = type {
+	%Word32,
+	[4 x %Word8]
+};
 ```
 
 - The C backend emits `union` for a record whose `layout` is `union`
   (`isa = 'struct' if not t.layout == 'union' else 'union'`, four places
   in `src/backend/c11.py`). The LLVM backend reads `layout` only to decide
   whether to pack, and emits its ordinary struct either way, so the fields
-  sit side by side instead of on top of each other: the aliasing the type exists for does not happen,
-  and writing one field leaves the others as they were.
+  sit side by side instead of on top of each other: the aliasing the type
+  exists for does not happen, and writing one field leaves the others as
+  they were.
 - LLVM has no union type — the C one is normally modelled as a struct
   holding a single array of bytes the size of the largest member, with
   each access bitcast to the field's type.
-- The offsets come from `calc_record_size_align`, which lays every record
-  out in sequence, so a fix has to reach the layout too (BUG#42 is the same
-  gap seen from the packed side).
+- The frontend is no longer the problem: `calc_record_size_align` lays a
+  `union` record's fields from zero and takes its size from the largest of
+  them, so `sizeof` and `offsetof` answer 4 and 0. What is left is the
+  emission — the IR still says `{ %Word32, [4 x %Word8] }`, and on that
+  backend the type's own layout is what a `getelementptr` follows.
 - Coverage: `tests/lang/type/record/union.modest`, marked
   `EXPECTED-FAIL(llvm)`.
 
@@ -1444,3 +1419,98 @@ const int32_t c = (int32_t)i16;   /* -1 */
   ```
 - `do_cvalue_cons_nat` (`src/backend/c11.py:846`) has the same shape and wants
   the same look.
+
+## BUG#71: `@alignment(N)` on a record type loses its N
+
+```modest
+type Aligned = @alignment(2) {
+	a: Word8
+}
+
+alignof(Aligned)   // c11: 16   llvm: 1   expected 2
+sizeof(Aligned)    // c11: 16   llvm: 1   expected 2
+```
+
+```c
+struct aligned {
+	uint8_t a;
+};
+```
+
+- The argument is dropped in `Type.copy_with_atts`
+  (`src/hlir/types.py:685`), which stores every type attribute as
+  `nt.addAttribute(k, {})` — the fact of the attribute and nothing else.
+  `alignment` is the one type attribute that carries a number, and
+  `str_gcc_attributes` prints an argument only when the stored value is not
+  `{}`, so nothing is left to print but a bare `aligned`.
+- Which is why the C backend drops the attribute instead of emitting it
+  (`record_c_attributes`, `src/backend/c11.py:236`): bare `aligned` does
+  not mean "as written without it" — it asks for the largest alignment the
+  target uses for any type, so a record asking for 2 would come out
+  16-aligned and 16 bytes long, further from what was written than saying
+  nothing. The position is not the problem: a record's attributes are
+  printed after the closing brace, where a compiler reads them for a
+  struct type.
+- The frontend does not read the attribute either: `calc_record_size_align`
+  takes the record's alignment to be the largest of its fields', so
+  `alignof` and `sizeof` answer as if the attribute were not written. It
+  now knows about `@layout`, and `@alignment` is the same kind of thing
+  said about the same record — the layout it computes has to answer for
+  both.
+- `@alignment` on a `var` is unaffected — it goes through a different path
+  (`src/semantic.py:3263`) that keeps the argument, and the LLVM backend
+  reads it back at `src/backend/llvm.py:2857`.
+- No reproducer in the suite. What is pinned there is the blast radius:
+  `tests/lang/type/record/layout.modest` checks that a record asking for 2
+  is never *more* than 2 bytes, which holds while the annotation is dropped
+  and holds once it is honoured, and fails the moment a bare `aligned`
+  reaches the C output again.
+
+## BUG#72: C backend loses a layout added to an already named record
+
+```modest
+type Padded = {
+	tag: Word8
+	len: Nat32
+}
+
+type Packed = @layout("packed") Padded
+
+sizeof(Packed)          // c11: 8    llvm: 5
+offsetof(Packed.len)    // c11: 4    llvm: 1
+```
+
+```c
+struct padded {
+	uint8_t tag;
+	uint32_t len;
+};
+typedef struct padded Packed;   /* the padded one, under another name */
+```
+
+- Writing a layout against a record that already has a name asks for its
+  fields laid out another way — two types over one field list. The frontend
+  reads it that way: `copy_with_atts` makes a copy of the record and lays it
+  out again, and the LLVM backend prints `%Packed = type <{ %Word8, %Nat32
+  }>` from it.
+- The C backend never gets there. `do_def_type` emits a full struct only for
+  an *unnamed* record (`orig_type.is_record() and not is_named(orig_type)`);
+  the copy inherits `Padded`'s `id`, so `is_named` says yes and the alias
+  goes out as a `typedef` to the struct it was copied from. Giving the copy
+  its own struct means giving it a C name of its own first — it has none,
+  and `get_record_tag` answers `padded` for both.
+- `@layout("union")` the same way emits C that does not compile at all:
+  `typedef union pair Overlap;` for a `struct pair` that was defined a few
+  lines above — `error: use of 'pair' with tag type that does not match
+  previous declaration`.
+- The same reading applies to `var v: @layout("packed") Padded`, and it is
+  lost in the same place.
+- Whether the language wants this at all is worth settling first: one
+  record, one layout is a defensible rule, and then this is a diagnostic to
+  write rather than a backend to teach. What it cannot stay is accepted by
+  the frontend and dropped by one backend.
+- Coverage: `tests/lang/type/record/layout_alias.modest`, marked
+  `EXPECTED-FAIL(c11)`. Its other half guards the copy the frontend makes:
+  laying the second record out over a shared field list moves the first
+  one's fields, which nothing else would catch — the offsets change and
+  nothing fails to compile.

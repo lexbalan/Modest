@@ -694,6 +694,16 @@ class Type(Entity):
 				#info("set layout '%s'" % layout, a['ti'])
 				nt.layout = layout
 
+				# раскладку записи считает calc_record_size_align, а она
+				# отработала в TypeRecord.__init__ - до того, как атрибут
+				# вообще стало откуда взять; пересчитываем её здесь.
+				# Поля при этом копируем: copy() поверхностный, а смещение
+				# живёт в самом поле - иначе packed-копия сдвинет поля
+				# исходному типу
+				if isinstance(nt, TypeRecord):
+					nt.fields = [copy.copy(f) for f in nt.fields]
+					nt.size, nt.align = calc_record_size_align(nt.fields, layout)
+
 			if k == 'fraction':
 				nt.fraction = int(a['args'][0]['value']['str'])
 
@@ -1656,9 +1666,18 @@ class TypeArray(Type):
 
 
 
-def calc_record_size_align(fields):
+# Раскладка полей записи. Три вида (@layout):
+#   exact  - как в C: каждое поле по своему выравниванию, запись по наибольшему
+#   packed - без единого байта добивки: поле начинается там, где кончилось
+#            предыдущее, и сама запись ни в чём не нуждается (выравнивание 1)
+#   union  - все поля от нуля, друг поверх друга: размер по наибольшему полю
+def calc_record_size_align(fields, layout='exact'):
+	packed = layout == 'packed'
+	union = layout == 'union'
+
 	field_no = 0
 	offset = 0
+	size = 0
 	record_align = 1
 
 	for field in fields:
@@ -1666,19 +1685,24 @@ def calc_record_size_align(fields):
 		field_no = field_no + 1
 
 		field_size = field.type.get_size()
-		field_align = field.type.get_align()
+		field_align = 1 if packed else field.type.get_align()
 
 		# смещение поля должно быть выровнено
 		# по требуемому для него шагу выравнивания
-		offset = align_to(offset, field_align)
+		offset = 0 if union else align_to(offset, field_align)
 		field.offset = offset
 		offset = offset + field_size
+
+		# конец записи - самое дальнее, куда достаёт поле: у union поля
+		# идут не подряд, и последнее из них не обязательно самое длинное
+		# (в остальных раскладках это ровно offset)
+		size = max(size, offset)
 
 		# выравнивание структуры - макс выравнивание в ней
 		record_align = max(record_align, field_align)
 
 	# Afterall we need to align record_size to record_align (!)
-	record_size = align_to(offset, record_align)
+	record_size = align_to(size, record_align)
 	return record_size, record_align
 
 

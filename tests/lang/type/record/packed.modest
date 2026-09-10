@@ -6,20 +6,20 @@
 // EXPECT-OUT: passed: the fields still read and write
 // EXPECT-OUT: passed: packed elements in an array
 // EXPECT-OUT: passed: packed layout
-// EXPECTED-FAIL: BUG#42 @layout("packed") does not change the layout
 //
 // `@layout("packed")` lays the fields out with no padding: each starts
 // where the one before it ended, and the record is as long as its fields
 // add up to.  This is what a type describing a wire format or an on-disk
 // header is for — the offsets are the format's, not the target's.
 //
-// Neither backend gets that far.  The size and the offsets are settled
-// before either of them runs: `calc_record_size_align` (`src/hlir/types.py`)
-// aligns every field with no layout to consult, so `sizeof` and `offsetof`
-// answer padded whatever is emitted afterwards.  The LLVM backend does emit
-// the `<{ }>` form, which for now only splits the disagreement — its record
-// is five bytes where `sizeof` says eight; the C backend has no packing to
-// emit at all.
+// Three answers have to agree here, which is why the test asks all of them:
+// `calc_record_size_align` decides the layout (`sizeof`, `offsetof`,
+// `alignof` come from it on the LLVM side), and each backend has to emit a
+// record that is laid out the way it was decided — `<{ }>` in LLVM IR,
+// `__attribute__((packed))` in C, where those same three answers are the C
+// compiler's to give.  They used to disagree in every combination.
+//
+// Guards BUG#42 (fixed 2026-09-10).
 
 include "libc/ctypes64"
 include "libc/stdio"

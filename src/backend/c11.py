@@ -228,6 +228,20 @@ def do_ctype_array(t, specs=[]):
 
 
 
+# Атрибуты записи для C: 'layout' - наш ключ, в C-атрибуты он не переводится,
+# зато packed раскладка - это ровно __attribute__((packed)) (union у C свой).
+# 'alignment' до типа доезжает без своего N (BUG#71), а голое aligned - не
+# "как без него", а максимальное выравнивание платформы: печатать его - хуже,
+# чем не печатать вовсе
+def record_c_attributes(t):
+	atts = dict(t.attributes)
+	atts.pop('layout', None)
+	atts.pop('alignment', None)
+	if t.layout == 'packed':
+		atts['packed'] = {}
+	return atts
+
+
 # преобразуем Modest TypeRecord -> CIR TypeStruct
 def do_ctype_struct(t, tag='', specs=[]):
 	assert(isinstance(t, Type))
@@ -239,7 +253,8 @@ def do_ctype_struct(t, tag='', specs=[]):
 	kisa = isa
 	if tag:
 		kisa = kisa + ' ' + tag
-	return CTypeStruct(fields, specifiers=specs, tag=kisa)
+	return CTypeStruct(fields, specifiers=specs, tag=kisa,
+		attributes=record_c_attributes(t))
 
 
 def do_ctype_named(t, specs):
@@ -1963,7 +1978,7 @@ def do_def_type_record(t):
 
 	dt = do_ctype_struct(t, tag=get_record_tag(t), specs=[])
 
-	dv = CStmtDefVar('', dt, storage_class='', attributes=t.attributes)
+	dv = CStmtDefVar('', dt, storage_class='')
 	defs = defs + (dv,)
 	return defs
 

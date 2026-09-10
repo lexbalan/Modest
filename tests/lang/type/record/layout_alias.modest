@@ -1,0 +1,106 @@
+// TEST: run
+// BACKENDS: c11, llvm
+// EXPECT-EXIT: 0
+// EXPECT-OUT: passed: the record it was taken from is untouched
+// EXPECT-OUT: passed: the named record is packed
+// EXPECT-OUT: passed: layout on a named record
+// EXPECTED-FAIL(c11): BUG#72 a layout added to a named record is lost in C
+//
+// A `@layout` may be written against a record that already has a name:
+//
+//     type Packed = @layout("packed") Padded
+//
+// which asks for the fields of `Padded` laid out another way — two types,
+// one field list, two layouts.  The same reading applies wherever a type is
+// named with an annotation on it, `var v: @layout("packed") Padded` included.
+//
+// Two things have to hold, and they pull in opposite directions.  The new
+// type has to be packed, and the one it was taken from has to be exactly
+// what it was: a record's field carries its own offset, so the second layout
+// is computed over a *copy* of the field list.  Sharing it moves `Padded`'s
+// fields silently — the type is never mentioned in the line that breaks it,
+// and only the offsets change, so nothing fails to compile and every
+// `p.len` reads four bytes from the wrong place.
+//
+// The C backend does not carry the layout over: a named record aliased this
+// way comes out `typedef struct padded Packed`, the same struct under
+// another name, so `Packed` is padded there — BUG#72.  Until that is fixed
+// the first half of this test is what guards the copy, under LLVM.
+
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+
+
+type Padded = {
+	tag: Word8
+	len: Nat32
+}
+
+// The same fields, packed.  Nothing about `Padded` may change because of it.
+type Packed = @layout("packed") Padded
+
+
+func testSourceUntouched () -> Bool {
+	if offsetof(Padded.tag) != 0 or offsetof(Padded.len) != 4 {
+		printf("Padded.tag at %zu, Padded.len at %zu, expected 0 and 4\n",
+			offsetof(Padded.tag), offsetof(Padded.len))
+		return false
+	}
+
+	if sizeof(Padded) != 8 or alignof(Padded) != 4 {
+		printf("Padded is %zu bytes aligned %zu, expected 8 and 4\n",
+			sizeof(Padded), alignof(Padded))
+		return false
+	}
+
+	// Reading a field of the record the layout was taken from has to reach
+	// the field, not the offset the other layout would put it at.
+	var p: Padded = {tag = 0x7F, len = 0x11223344}
+	if p.tag != 0x7F or p.len != 0x11223344 {
+		printf("p = {%x, %x}, expected {7F, 11223344}\n", Nat32 p.tag, p.len)
+		return false
+	}
+
+	printf("passed: the record it was taken from is untouched\n")
+	return true
+}
+
+
+func testAliasPacked () -> Bool {
+	if offsetof(Packed.tag) != 0 or offsetof(Packed.len) != 1 {
+		printf("Packed.tag at %zu, Packed.len at %zu, expected 0 and 1\n",
+			offsetof(Packed.tag), offsetof(Packed.len))
+		return false
+	}
+
+	if sizeof(Packed) != 5 or alignof(Packed) != 1 {
+		printf("Packed is %zu bytes aligned %zu, expected 5 and 1\n",
+			sizeof(Packed), alignof(Packed))
+		return false
+	}
+
+	var q: Packed = {tag = 0x7F, len = 0x11223344}
+	if q.tag != 0x7F or q.len != 0x11223344 {
+		printf("q = {%x, %x}, expected {7F, 11223344}\n", Nat32 q.tag, q.len)
+		return false
+	}
+
+	printf("passed: the named record is packed\n")
+	return true
+}
+
+
+func main () -> Int {
+	var result = true
+	result = testSourceUntouched() and result
+	result = testAliasPacked() and result
+
+	if not result {
+		printf("failed: layout on a named record\n")
+		return exitFailure
+	}
+
+	printf("passed: layout on a named record\n")
+	return exitSuccess
+}
