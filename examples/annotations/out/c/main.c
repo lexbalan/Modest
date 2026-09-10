@@ -11,7 +11,7 @@ static volatile int32_t vvb = 1;
 struct protocol_header {
 	uint16_t start;
 	uint16_t len;
-};
+} __attribute__((packed));
 extern bool name2;
 extern bool name22;
 extern int32_t ext;
