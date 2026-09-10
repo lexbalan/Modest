@@ -26,6 +26,9 @@ def cons_can(to, from_type, method, ti):
 	assert(isinstance(from_type, Type))
 	assert(isinstance(ti, TextInfo))
 
+	if id(to) == id(from_type):
+		return True
+
 	if to.is_variant() and not from_type.is_variant():
 		return value_variant_can(to, from_type, method, ti)
 
@@ -37,8 +40,8 @@ def cons_can(to, from_type, method, ti):
 #			if method != 'unsafe':
 #				return False
 
-	if Type.eq(to, from_type):
-		return True
+	#if Type.eq(to, from_type):
+	#	return True
 
 	if method == 'explicit':
 		if from_type.is_va_list():

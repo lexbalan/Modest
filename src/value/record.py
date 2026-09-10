@@ -53,8 +53,8 @@ def value_record_can(to, from_type, method, ti):
 		return False
 
 	# Record can be constructed only from generic record
-	if not from_type.is_generic():
-		return False
+	#if not from_type.is_generic():
+	#	return False
 
 	if to.layout == 'union' and len(from_type.fields) > 1:
 		# 'union' record requires only one field
@@ -71,6 +71,7 @@ def value_record_can(to, from_type, method, ti):
 		if not cons_can(field_dst.type, field_src.type, method=method, ti=field_src.ti):
 			return False  # Field type not equal
 
+	
 	return True
 
 

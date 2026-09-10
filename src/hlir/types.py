@@ -650,7 +650,6 @@ class Type(Entity):
 		self.incomplete = True
 		self.definition = None
 		self.uid = 0
-		self.layout = 'exact'
 		self.fraction = 0  # for Fixed types (here for faster Type.eq(!))
 		#self.id = id
 
@@ -1052,7 +1051,7 @@ class Type(Entity):
 	def eq_simple(a, b, opt):
 		if a.kind == HLIR_TYPE_KIND_STRING and a.kind == b.kind:
 			return True
-		return (a.kind == b.kind) and (a.width == b.width) and (a.generic == b.generic) and (a.fraction == b.fraction) and (a.layout == b.layout)
+		return (a.kind == b.kind) and (a.width == b.width) and (a.generic == b.generic) and (a.fraction == b.fraction)
 
 
 	@staticmethod
@@ -1104,6 +1103,8 @@ class Type(Entity):
 
 	@staticmethod
 	def eq_record(a, b, opt):
+		if a.layout != b.layout:
+			return False
 		if len(a.fields) != len(b.fields):
 			return False
 		return Type.eq_fields(a.fields, b.fields, opt)
@@ -1143,7 +1144,6 @@ class Type(Entity):
 
 		if a.brand != b.brand:
 			return False
-
 
 		# проверять аттрибуты (volatile, const)
 		# использую для C чтобы можно было более строго проверить типы
@@ -1693,7 +1693,7 @@ class TypeRecord(Type):
 		self.fields = fields
 		self.size = record_size
 		self.align = record_align
-		self.layout = 'record'
+		self.layout = 'exact'
 
 		# это структура с открытыми полями -> она идет через typedef в C backend
 		self.is_open_record = False

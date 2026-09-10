@@ -911,7 +911,7 @@ def print_type_enum(t):
 
 def str_type_record(t):
 	sstr = ''
-	packed = t.hasAttribute('packed')
+	packed = t.layout == 'packed'
 
 	if packed:
 		sstr += "<"

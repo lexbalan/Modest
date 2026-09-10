@@ -5,32 +5,9 @@ pragma unsafe
 include "libc/ctypes64"
 include "libc/stdio"
 
+
 func main () -> Int {
 	printf("Hello World!\n")
-	let fx32 = Fixed32 4.067
-	printf("fx32 = %d.%d\n", apart(fx32), bpart(fx32, 100000000))
-
-	let fx322 = fx32 / 2
-	printf("fx322 = %d.%d\n", apart(fx322), bpart(fx322, 100000000))
-
-	let a: Word32 = 0x0000ffff
-	let b: Word32 = 0xffff0000
-	let c: Word32 = 0x00ffff00
-	let x = (a | b) & c
-	printf("x = %08x\n", x)
-
 	return 0
-}
-
-
-func apart (x: Fixed32) -> Int32 {
-  let w16 = unsafe Word16 (Word32 x >> 16)
-  return Int32 Int16 w16
-}
-
-
-func bpart (x: Fixed32, precision: Nat32) -> Int32 {
-  let i64 = Int64 (Word64 (Word32 x & 0xffff))
-  return unsafe Int32 (i64 * Int64 precision / 65536)
 }
 

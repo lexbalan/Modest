@@ -675,7 +675,7 @@ var x: Fixed32 = Fixed32 h   // c11: 1.5   llvm: 32767.999985
 - Coverage: `tests/lang/type/float/float16/fixed.modest`, marked
   `EXPECTED-FAIL(llvm)`.
 
-## BUG#42: `@layout("packed")` is ignored by both backends
+## BUG#42: `@layout("packed")` does not change the layout
 
 ```modest
 type Header = @layout("packed") {
@@ -689,17 +689,23 @@ offsetof(Header.len)    // 4, expected 1
 
 - The attribute is parsed and validated (`copy_with_atts` accepts
   `exact`, `packed`, `union` and stores the string in `nt.layout`,
-  `src/hlir/types.py:687`), and then nothing reads it back for packing.
-- The LLVM backend does look, but under the wrong name:
-  `str_type_record` tests `t.hasAttribute('packed')`
-  (`src/backend/llvm.py:907`) while the attribute was added under the kind
-  `layout`, so the test is never true and the `<{ ... }>` packed form is
-  never emitted. The C backend has no packing to emit at all.
-- The layout is decided before either backend anyway:
-  `calc_record_size_align` aligns every field as it goes, with no layout
-  to consult — it runs from `TypeRecord.__init__`, before
-  `copy_with_atts` has attached one. So `sizeof` and `offsetof` would
-  stay padded even if both backends emitted the packed form.
+  `src/hlir/types.py:689`), and then almost nothing reads it back.
+- The layout is decided before either backend is reached, and this is the
+  part to fix first: `calc_record_size_align` aligns every field as it goes,
+  with no layout to consult — it runs from `TypeRecord.__init__`, before
+  `copy_with_atts` has attached one. So `sizeof` and `offsetof` stay padded
+  whatever a backend emits.
+- The C backend has no packing to emit at all: `packed` appears nowhere in
+  `src/backend/c11.py`, and `struct` comes out as written.
+- The LLVM backend does emit the packed form — `str_type_record` used to ask
+  `t.hasAttribute('packed')` while the value lives in `t.layout`, so its test
+  was never true; it now reads the field. Which makes the IR right and the
+  frontend's numbers wrong at the same time: `%Header = type <{ %Word8,
+  %Nat32 }>` is five bytes, while `sizeof(Header)` still answers `8`. Until
+  the layout reaches `calc_record_size_align`, the two disagree on that
+  backend, and anything doing memory arithmetic with `sizeof` on a packed
+  type is wrong. Field access itself is fine: it is a `getelementptr` by
+  index, which follows the IR.
 - `@layout("exact")` is the default layout under another name and is
   unaffected. `union` is broken differently, see BUG#43.
 - Coverage: `tests/lang/type/record/packed.modest`, marked
@@ -719,9 +725,9 @@ sizeof(Color)           // c11: 4    llvm: 8
 
 - The C backend emits `union` for a record whose `layout` is `union`
   (`isa = 'struct' if not t.layout == 'union' else 'union'`, four places
-  in `src/backend/c11.py`). The LLVM backend never mentions `layout` and
-  emits its ordinary struct, so the fields sit side by side instead of on
-  top of each other: the aliasing the type exists for does not happen,
+  in `src/backend/c11.py`). The LLVM backend reads `layout` only to decide
+  whether to pack, and emits its ordinary struct either way, so the fields
+  sit side by side instead of on top of each other: the aliasing the type exists for does not happen,
   and writing one field leaves the others as they were.
 - LLVM has no union type — the C one is normally modelled as a struct
   holding a single array of bytes the size of the largest member, with
@@ -1345,3 +1351,96 @@ modest -o zzz -mbackend=c11 xxh64.modest
 - So the name a module is known by is the source filename, and `-o` cannot
   change it. Either the module name should follow `-o`, or it should be the
   import path (`misc/crc32`), which is unique by construction.
+
+
+## BUG#69: A shared field type makes two different records compare equal
+
+```modest
+type Point = {x: Int32, y: Int32}
+
+type A = {p: Point, n: Int32}
+type B = {p: Point, n: Float64}
+
+func take (v: A) -> Int32 {
+	return v.n
+}
+
+func main () -> Int {
+	var b: B = {p = {x = 1, y = 2}, n = 3.5}
+	printf("%d\n", take(b))   // accepted; prints 0
+	return 0
+}
+```
+
+- `Type.eq_fields` (`src/hlir/types.py:1096`) protects itself from infinite
+  recursion by comparing field types by identity, but on a hit it returns
+  `True` for the whole field list instead of skipping that one field:
+
+  ```python
+  # (infinity recursion protection)
+  if id(ax.type) == id(bx.type):
+  	return True
+  ```
+
+  So as soon as one pair of fields shares a name and the same `Type` object,
+  every field after it goes unchecked. `A` and `B` agree on `p` — both name
+  the one `Point` type object — and that alone makes them equal types.
+- The check itself is right, only its verdict is too wide: `continue` is what
+  it means. Identical types are equal, which is why the recursion can stop
+  there; it says nothing about the fields that follow.
+- Nothing catches it downstream. The C backend emits
+  `take(RAWCAST(struct a, struct b, b))` and reinterprets a 16-byte `B` as a
+  12-byte `A`, so `v.n` reads the low half of the `Float64` and prints `0`.
+- The same function compares the parameter lists of two function types
+  (`Type.eq_func`), so the hole is not limited to records.
+
+
+## BUG#70: C backend drops a same-width `WordX` → `IntX` construction inside another
+
+```modest
+let w16: Word16 = 0xffff
+let a = Int32 Int16 w16       // -1 expected
+let b = Int32 (Int16 w16)     // parentheses change nothing
+
+let i16 = Int16 w16
+let c = Int32 i16             // the same thing through a name
+```
+
+```c
+const int32_t a = (int32_t)w16;   /* 65535 */
+const int32_t b = (int32_t)w16;   /* 65535 */
+const int16_t i16 = w16;
+const int32_t c = (int32_t)i16;   /* -1 */
+```
+
+- `do_cvalue_cons_int` (`src/backend/c11.py:826`) prints nothing at all for a
+  `WordX` → `IntX` construction of the same width: the two types share a C
+  representation, so it hands the operand over and lets the context convert
+  it.
+
+  ```python
+  if from_type.is_word() and type.width == from_type.width:
+  	cv = do_cvalue(value, ctx=ctx)
+  	return cv
+  ```
+
+  That holds only while there is a context to do it — a declaration of type
+  `int16_t`, an assignment, an argument. Nested inside a second construction
+  there is none: the outer `Int32` sees a `uint16_t` expression and widens it
+  as unsigned. The reinterpretation the inner construction was written for
+  never happens.
+- So the same expression means two different things depending on whether it
+  passes through a name, which is the part that hurts: `c` is `-1` and `a` is
+  `65535`.
+- The LLVM backend is right here — it prints `-1` for all three.
+- Found in `examples/0`, where `apart` is exactly this shape and answers
+  `65531` for `apart(Fixed32 -4.067)`:
+
+  ```modest
+  func apart (x: Fixed32) -> Int32 {
+  	let w16 = unsafe Word16 (Word32 x >> 16)
+  	return Int32 Int16 w16
+  }
+  ```
+- `do_cvalue_cons_nat` (`src/backend/c11.py:846`) has the same shape and wants
+  the same look.

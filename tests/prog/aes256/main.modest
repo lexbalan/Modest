@@ -39,7 +39,6 @@ type TestCase = {
 }
 
 
-@used
 var tests: []TestCase = [
 	TestCase {
 		key = aes.Key [

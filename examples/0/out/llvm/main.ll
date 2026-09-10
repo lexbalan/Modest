@@ -46,75 +46,6 @@ declare i8* @llvm.stacksave()
 declare void @llvm.stackrestore(i8*)
 
 
-
-define internal %Fixed32 @__fixed32_mul(%Fixed32 %a, %Fixed32 %b, i8 %f) {
-	%1 = sext %Fixed32 %a to i64
-	%2 = sext %Fixed32 %b to i64
-	%3 = mul i64 %1, %2
-	%4 = zext i8 %f to i64
-	%5 = shl i64 1, %4
-	%6 = lshr i64 %5, 1
-	%7 = icmp slt i64 %3, 0
-	%8 = sub i64 %3, %6
-	%9 = add i64 %3, %6
-	%10 = select i1 %7, i64 %8, i64 %9
-	%11 = sdiv i64 %10, %5
-	%12 = trunc i64 %11 to %Fixed32
-	ret %Fixed32 %12
-}
-
-define internal %Fixed32 @__fixed32_div(%Fixed32 %a, %Fixed32 %b, i8 %f) {
-	%1 = sext %Fixed32 %a to i64
-	%2 = sext %Fixed32 %b to i64
-	%3 = zext i8 %f to i64
-	%4 = shl i64 1, %3
-	%5 = mul i64 %1, %4
-	%6 = sdiv i64 %2, 2
-	%7 = icmp slt i64 %1, 0
-	%8 = icmp slt i64 %2, 0
-	%9 = icmp eq i1 %7, %8
-	%10 = add i64 %5, %6
-	%11 = sub i64 %5, %6
-	%12 = select i1 %9, i64 %10, i64 %11
-	%13 = sdiv i64 %12, %2
-	%14 = trunc i64 %13 to %Fixed32
-	ret %Fixed32 %14
-}
-
-define internal %Fixed64 @__fixed64_mul(%Fixed64 %a, %Fixed64 %b, i8 %f) {
-	%1 = sext %Fixed64 %a to i128
-	%2 = sext %Fixed64 %b to i128
-	%3 = mul i128 %1, %2
-	%4 = zext i8 %f to i128
-	%5 = shl i128 1, %4
-	%6 = lshr i128 %5, 1
-	%7 = icmp slt i128 %3, 0
-	%8 = sub i128 %3, %6
-	%9 = add i128 %3, %6
-	%10 = select i1 %7, i128 %8, i128 %9
-	%11 = sdiv i128 %10, %5
-	%12 = trunc i128 %11 to %Fixed64
-	ret %Fixed64 %12
-}
-
-define internal %Fixed64 @__fixed64_div(%Fixed64 %a, %Fixed64 %b, i8 %f) {
-	%1 = sext %Fixed64 %a to i128
-	%2 = sext %Fixed64 %b to i128
-	%3 = zext i8 %f to i128
-	%4 = shl i128 1, %3
-	%5 = mul i128 %1, %4
-	%6 = sdiv i128 %2, 2
-	%7 = icmp slt i128 %1, 0
-	%8 = icmp slt i128 %2, 0
-	%9 = icmp eq i1 %7, %8
-	%10 = add i128 %5, %6
-	%11 = sub i128 %5, %6
-	%12 = select i1 %9, i128 %10, i128 %11
-	%13 = sdiv i128 %12, %2
-	%14 = trunc i128 %13 to %Fixed64
-	ret %Fixed64 %14
-}
-
 ; MODULE: main
 
 ; -- print includes --
@@ -206,46 +137,10 @@ declare void @perror(%ConstCharStr* %str)
 ; -- end print imports 'main' --
 ; -- strings --
 @.str1 = private constant [14 x i8] [i8 72, i8 101, i8 108, i8 108, i8 111, i8 32, i8 87, i8 111, i8 114, i8 108, i8 100, i8 33, i8 10, i8 0]
-@.str2 = private constant [14 x i8] [i8 102, i8 120, i8 51, i8 50, i8 32, i8 61, i8 32, i8 37, i8 100, i8 46, i8 37, i8 100, i8 10, i8 0]
-@.str3 = private constant [15 x i8] [i8 102, i8 120, i8 51, i8 50, i8 50, i8 32, i8 61, i8 32, i8 37, i8 100, i8 46, i8 37, i8 100, i8 10, i8 0]
-@.str4 = private constant [10 x i8] [i8 120, i8 32, i8 61, i8 32, i8 37, i8 48, i8 56, i8 120, i8 10, i8 0]
 ; -- endstrings --
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @.str1 to [0 x i8]*))
-	%2 = call %Int32 @apart(%Fixed32 266535)
-	%3 = call %Int32 @bpart(%Fixed32 266535, %Nat32 100000000)
-	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @.str2 to [0 x i8]*), %Int32 %2, %Int32 %3)
-	%5 = call %Int32 @apart(%Fixed32 133268)
-	%6 = call %Int32 @bpart(%Fixed32 133268, %Nat32 100000000)
-	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @.str3 to [0 x i8]*), %Int32 %5, %Int32 %6)
-	%8 = zext i16 65535 to %Word32
-	%9 = bitcast i32 4294901760 to %Word32
-	%10 = bitcast i32 16776960 to %Word32
-	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @.str4 to [0 x i8]*), %Word32 16776960)
 	ret %Int 0
-}
-
-define internal %Int32 @apart(%Fixed32 %x) {
-	%1 = bitcast %Fixed32 %x to %Word32
-	%2 = zext i8 16 to %Word32
-	%3 = lshr %Word32 %1, %2
-	%4 = trunc %Word32 %3 to %Word16
-	%5 = bitcast %Word16 %4 to %Int16
-	%6 = sext %Int16 %5 to %Int32
-	ret %Int32 %6
-}
-
-define internal %Int32 @bpart(%Fixed32 %x, %Nat32 %precision) {
-	%1 = bitcast %Fixed32 %x to %Word32
-	%2 = zext i16 65535 to %Word32
-	%3 = and %Word32 %1, %2
-	%4 = zext %Word32 %3 to %Word64
-	%5 = bitcast %Word64 %4 to %Int64
-	%6 = sext %Nat32 %precision to %Int64
-	%7 = mul %Int64 %5, %6
-	%8 = sdiv %Int64 %7, 65536
-	%9 = trunc %Int64 %8 to %Int32
-	ret %Int32 %9
 }
 
 
