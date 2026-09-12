@@ -28,10 +28,10 @@ type Point = {
 }
 
 // newtype: distinct from Float64, not just an alias
-type Meters = Float64
+type Meters = @branded Float64
 
 // enum idiom — Modest has no `enum` keyword
-type Color = Nat8
+type Color = @branded Nat8
 const colorRed = Color 0
 const colorGreen = Color 1
 const colorBlue = Color 2

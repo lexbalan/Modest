@@ -658,6 +658,7 @@ def do_type_internal(x):
 		# должна отвечать за чужое определение (is_local_entity, getModule)
 		t = t.copy()
 		t.definition = None
+		t.ast_annotations = x['anno']
 
 		layout_anno = pop_anno(anno, 'layout')
 		if layout_anno != None:

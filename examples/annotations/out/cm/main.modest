@@ -6,7 +6,7 @@ include "libc/ctypes64"
 include "libc/stdio"
 
 
-type MyInt32 = Int32
+type MyInt32 = @branded Int32
 
 @extern()
 const myZero = MyInt32 0
@@ -25,7 +25,7 @@ const cvb = @volatile Int32 0
 var vvb = @volatile Int32 1
 
 
-type ProtocolHeader = {
+type ProtocolHeader = @layout("packed") {
 	start: Word16
 	len: Nat16
 }

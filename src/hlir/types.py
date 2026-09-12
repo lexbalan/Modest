@@ -646,6 +646,11 @@ class Type(Entity):
 		self.align = align
 		self.ops = ops
 		self.attributes = {}
+		# аннотации из AST как они написаны в исходнике (список ast_annotation);
+		# нужны бекенду modest чтобы напечатать тип как он был написан -
+		# часть аннотаций (@layout, @branded, @fraction) семантика съедает,
+		# меняя сам тип, и в attributes их уже нет
+		self.ast_annotations = []
 		self.ti = None
 		self.incomplete = True
 		self.definition = None

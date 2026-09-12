@@ -226,14 +226,13 @@ def str_type_func(t):
 
 
 def str_type(t):
-	if t.definition == None:
+	# аннотации печатаем из AST, а не из attributes, поскольку часть из них
+	# семантика съедает (@layout, @branded, @fraction), меняя сам тип
+	if t.definition == None and t.ast_annotations != []:
 		atts = []
-		attributes = t.attributes
-		for a in attributes:
-			atts.append(str_annotation(a, params=attributes[a]))
-		aa = ' '.join(atts)
-		if aa != '':
-			return  aa + ' ' + str_type2(t)
+		for a in t.ast_annotations:
+			atts.append(str_ast_annotation(a))
+		return ' '.join(atts) + ' ' + str_type2(t)
 
 	return str_type2(t)
 
@@ -745,6 +744,28 @@ def str_value(x, ctx=[], parent_expr=None):
 	#	out(")")
 
 
+
+
+def str_ast_value(x):
+	k = x['kind']
+	if k == 'string':
+		return '"' + x['str'] + '"'
+	elif k in ['number', 'id']:
+		return x['str']
+	return '?'
+
+
+def str_ast_annotation(a):
+	s = "@" + a['kind']
+	if a['args'] != []:
+		args = []
+		for arg in a['args']:
+			v = str_ast_value(arg['value'])
+			if arg['key'] != None:
+				v = arg['key']['str'] + "=" + v
+			args.append(v)
+		s += "(" + ", ".join(args) + ")"
+	return s
 
 
 def str_annotation(a, params):
