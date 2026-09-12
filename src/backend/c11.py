@@ -1950,17 +1950,17 @@ def do_def_type(x):
 	id_str = get_id_str(x.type)
 	orig_type = x.original_type
 
-	prtin_right = False
+	print_right = False
 	if orig_type.is_record():
 		if not is_named(orig_type):
-			prtin_right = True
+			print_right = True
 		# elif x.type.layout != orig_type.layout:
 		# 	# named & packeds
-		# 	prtin_right = True
+		# 	print_right = True
 
 	defined.append(x)
 
-	if prtin_right:
+	if print_right:
 		result = do_def_type_record(x.type)
 		return result
 

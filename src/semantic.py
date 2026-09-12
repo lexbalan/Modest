@@ -513,9 +513,9 @@ def do_type_named(x, anno):
 	return t
 
 
-def change_type_layout(t, layout):
+def change_type_layout(t, layout, ti):
 	if not layout in ['exact', 'packed', 'union']:
-		error("unsupported layout", a['ti'])
+		error("unsupported layout", ti)
 
 	# раскладку записи считает calc_record_size_align, а она
 	# отработала в TypeRecord.__init__ - до того, как атрибут
@@ -616,7 +616,7 @@ def do_type_variant(x, anno):
 
 
 
-def do_type_func(x, anno=[], func_id="_"):
+def do_type_func(x, anno, func_id="_"):
 	params = []
 	for _param in x['params']:
 		param = do_field(_param)
@@ -654,16 +654,18 @@ def do_type_internal(x):
 	t.ti = x['ti']
 
 	if anno != []:
+		# аннотированный тип - новый тип, а не имя исходного: копия не
+		# должна отвечать за чужое определение (is_local_entity, getModule)
 		t = t.copy()
+		t.definition = None
 
 		layout_anno = pop_anno(anno, 'layout')
 		if layout_anno != None:
 			layout = layout_anno['args'][0]['value']['str']
-			t = change_type_layout(t, layout)
+			t = change_type_layout(t, layout, ti=layout_anno['ti'])
 
 		branded_anno = pop_anno(anno, 'branded')
 		if branded_anno:
-			t = t.copy()
 			t.brand = get_brand()
 
 		fraction_anno = pop_anno(anno, 'fraction')
@@ -672,7 +674,7 @@ def do_type_internal(x):
 		
 		alignment_anno = pop_anno(anno, 'alignment')
 		if alignment_anno:
-			t.addAttribute("alignment", {'alignmanr': alignment_anno})
+			t.addAttribute("alignment", {'alignment': alignment_anno})
 
 		copy_annotation(t, anno, 'unused')
 		copy_annotation(t, anno, 'public')
@@ -2680,7 +2682,7 @@ def def_func(x):
 	if fn.type.is_incompleted():
 		xt = x['type']
 		if xt['kind'] == 'func':
-			ft = do_type_func(xt)
+			ft = do_type_func(xt, anno=[])
 		else:
 			# experimental: `func name: FuncType { ... }` — signature borrowed
 			# from a named function type instead of spelled out inline
