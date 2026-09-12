@@ -670,59 +670,6 @@ class Type(Entity):
 	def get_align(self):
 		return self.align
 
-	def copy_with_atts(self, atts):
-		if atts == []:
-			return self
-
-		nt = self.copy()
-		nt.definition = None #!
-
-		for a in atts:
-			k = a['kind']
-
-			# сам атрибут ставится всегда (const, restrict, zarray - факт
-			# наличия и есть всё их содержание); ниже - только те, что
-			# несут вдобавок отдельное поле типа
-			nt.addAttribute(k, {})
-
-			# handle record layout attributes
-			if k == 'layout':
-				layout = a['args'][0]['value']['str']
-				from error import info, error
-				if not layout in ['exact', 'packed', 'union']:
-					error("unsupported layout", a['ti'])
-				#info("set layout '%s'" % layout, a['ti'])
-				nt.layout = layout
-
-				# раскладку записи считает calc_record_size_align, а она
-				# отработала в TypeRecord.__init__ - до того, как атрибут
-				# вообще стало откуда взять; пересчитываем её здесь.
-				# Поля при этом копируем: copy() поверхностный, а смещение
-				# живёт в самом поле - иначе packed-копия сдвинет поля
-				# исходному типу
-				if isinstance(nt, TypeRecord):
-					nt.fields = [copy.copy(f) for f in nt.fields]
-					nt.size, nt.align = calc_record_size_align(nt.fields, layout)
-
-			if k == 'fraction':
-				nt.fraction = int(a['args'][0]['value']['str'])
-
-			if k == 'branded':
-				nt.brand = get_brand()
-
-			# Для C некоторые атрибуты типа массива -
-			# это атрибуты типа его элементов
-			if nt.is_array():
-				if k in ['const', 'volatile', 'restrict']:
-					nt.of = nt.of.copy()
-					if k == 'const':
-						nt.of.addAttribute('const', {})
-					if k == 'volatile':
-						nt.of.addAttribute('volatile', {})
-					if k == 'restrict':
-						nt.of.addAttribute('restrict', {})
-		return nt
-
 
 	# Получить список типов от которых данный тип зависит напрямую
 	def get_dir_deps(self, deps):

@@ -319,9 +319,6 @@ def str_type(t, ctx=None):
 	return do_ctype(t).to_str()
 
 
-#def str_type_record(t, tag='', ctx=[]):
-#	return do_ctype_struct(t, tag=tag).to_str()
-
 
 def str_field(t, id_str, ctx=[]):
 	return do_ctype(t).to_str(text=id_str)
@@ -1953,13 +1950,21 @@ def do_def_type(x):
 	id_str = get_id_str(x.type)
 	orig_type = x.original_type
 
-	if orig_type.is_record() and not is_named(orig_type):
+	prtin_right = False
+	if orig_type.is_record():
+		if not is_named(orig_type):
+			prtin_right = True
+		# elif x.type.layout != orig_type.layout:
+		# 	# named & packeds
+		# 	prtin_right = True
+
+	defined.append(x)
+
+	if prtin_right:
 		result = do_def_type_record(x.type)
-		defined.append(x)
 		return result
 
 	dt = CStmtDefType(id_str, do_ctype(orig_type))
-	defined.append(x)
 	return (dt,)
 
 
@@ -1977,7 +1982,6 @@ def do_def_type_record(t):
 		defs = (dt,)
 
 	dt = do_ctype_struct(t, tag=get_record_tag(t), specs=[])
-
 	dv = CStmtDefVar('', dt, storage_class='')
 	defs = defs + (dv,)
 	return defs

@@ -8,7 +8,7 @@ include "libc/stdlib"
 include "libc/stdio"
 
 
-public type Node = @branded {
+public type Node = {
 	next: *Node
 	prev: *Node
 	//data: @layout("union") {ptr: Ptr, nat64: Nat64}
@@ -16,7 +16,7 @@ public type Node = @branded {
 }
 
 
-public type List = @branded {
+public type List = {
 	head: *Node
 	tail: *Node
 	size: Nat32

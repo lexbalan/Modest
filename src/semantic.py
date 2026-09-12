@@ -94,7 +94,6 @@ csymtab = None  # current symtab (symtab)
 cdef = None     # current definition
 cfunc = None	# current function
 
-
 import_stack = []
 
 
@@ -452,7 +451,7 @@ def do_field(x):
 #	return mod
 
 
-def do_type_named(x):
+def do_type_named(x, anno):
 	global cmodule, csymtab
 	id = x['id']
 	id_str = id['str']
@@ -514,15 +513,30 @@ def do_type_named(x):
 	return t
 
 
+def change_type_layout(t, layout):
+	if not layout in ['exact', 'packed', 'union']:
+		error("unsupported layout", a['ti'])
 
-def do_type_pointer(x):
-	#info("%s" % x, x['ti'])
+	# раскладку записи считает calc_record_size_align, а она
+	# отработала в TypeRecord.__init__ - до того, как атрибут
+	# вообще стало откуда взять; пересчитываем её здесь.
+	# Поля при этом копируем: copy() поверхностный, а смещение
+	# живёт в самом поле - иначе packed-копия сдвинет поля
+	# исходному типу
+	if t.is_record():
+		t.fields = [copy.copy(f) for f in t.fields]
+		t.size, t.align = calc_record_size_align(t.fields, layout)
+
+	t.layout = layout
+	return t
+
+
+def do_type_pointer(x, anno):
 	to = do_type_internal(x['to'])
-	nt = TypePointer(to, ti=x['ti'])
-	return nt
+	return TypePointer(to, ti=x['ti'])
 
 
-def do_type_array(x):
+def do_type_array(x, anno):
 	of = do_type_internal(x['of'])
 	volume = do_value(x['size'])
 
@@ -549,7 +563,8 @@ def do_type_array(x):
 # и чтобы отличать копии типа структура от реально другой структуры (C)
 rec_uid = 0
 var_uid = 0
-def do_type_record(x):
+
+def do_type_record(x, anno):
 	global rec_uid
 	fields = []
 
@@ -575,13 +590,21 @@ def do_type_record(x):
 
 		fields.append(field)
 
-	rec = TypeRecord(fields, ti=x['ti'])
-	rec.uid = uid
-	return rec
+	t = TypeRecord(fields, ti=x['ti'])
+
+	t.uid = uid
+
+	return t
 
 
+def pop_anno(alist, anno):
+	for a in alist:
+		if a['kind'] == anno:
+			alist.remove(a)
+			return a
 
-def do_type_variant(x):
+
+def do_type_variant(x, anno):
 	#info("variant type", x['ti'])
 	global var_uid
 	uid = var_uid
@@ -593,7 +616,7 @@ def do_type_variant(x):
 
 
 
-def do_type_func(x, func_id="_"):
+def do_type_func(x, anno=[], func_id="_"):
 	params = []
 	for _param in x['params']:
 		param = do_field(_param)
@@ -610,21 +633,58 @@ def do_type_func(x, func_id="_"):
 	return TypeFunc(params, to, x['arghack'], ti=x['ti'])
 
 
+def copy_annotation(x, annos, anno):
+	a = pop_anno(annos, anno)
+	if a:
+		x.addAttribute(anno, {})
 
 def do_type_internal(x):
 	t = None
+	
+	anno = copy.copy(x['anno'])
+
 	k = x['kind']
-	if k == 'named': t = do_type_named(x)
-	elif k == 'func': t = do_type_func(x)
-	elif k == 'pointer': t = do_type_pointer(x)
-	elif k == 'array': t = do_type_array(x)
-	elif k == 'record': t = do_type_record(x)
-	elif k == 'variant': t = do_type_variant(x)
+	if k == 'named': t = do_type_named(x, anno)
+	elif k == 'func': t = do_type_func(x, anno)
+	elif k == 'pointer': t = do_type_pointer(x, anno)
+	elif k == 'array': t = do_type_array(x, anno)
+	elif k == 'record': t = do_type_record(x, anno)
+	elif k == 'variant': t = do_type_variant(x, anno)
 	else: t = bad_type(x['ti'])
 	t.ti = x['ti']
 
-	if x['anno'] != []:
-		t = t.copy_with_atts(x['anno'])
+	if anno != []:
+		t = t.copy()
+
+		layout_anno = pop_anno(anno, 'layout')
+		if layout_anno != None:
+			layout = layout_anno['args'][0]['value']['str']
+			t = change_type_layout(t, layout)
+
+		branded_anno = pop_anno(anno, 'branded')
+		if branded_anno:
+			t = t.copy()
+			t.brand = get_brand()
+
+		fraction_anno = pop_anno(anno, 'fraction')
+		if fraction_anno:
+			t.fraction = int(fraction_anno['args'][0]['value']['str'])
+		
+		alignment_anno = pop_anno(anno, 'alignment')
+		if alignment_anno:
+			t.addAttribute("alignment", {'alignmanr': alignment_anno})
+
+		copy_annotation(t, anno, 'unused')
+		copy_annotation(t, anno, 'public')
+		copy_annotation(t, anno, 'register')
+		copy_annotation(t, anno, 'restrict')
+		copy_annotation(t, anno, 'volatile')
+	
+
+	if anno != []:
+		for a in anno:
+			error("annotation '%s' not defined\n" % a['kind'], a['ti'])
+
 
 	if k == 'record' and not t.is_unit():
 		# кароч прикол такой:
