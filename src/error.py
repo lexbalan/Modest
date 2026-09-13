@@ -1,4 +1,5 @@
-# error.py
+# src/error.py
+
 import os
 import sys
 from common import features, get_setting

@@ -1,3 +1,4 @@
+# src/main.py
 
 import os
 import sys
@@ -9,13 +10,11 @@ import error
 import semantic
 from common import settings, features, merge_settings, get_setting, set_setting, backend_settings
 
-
-VERSION = "0.7.100"
+from version import *
 
 
 def main():
 	cwd = os.getcwd()
-	#print(cwd)
 
 	path_lib = os.getenv('MODEST_LIB')
 	if path_lib != None:
@@ -24,8 +23,6 @@ def main():
 	# Загружаем default config
 	cfg_path = os.path.expandvars("${MODEST_DIR}/cfg/%s.toml" % 'default')
 	apply_config(cfg_path)
-
-	#print(settings)
 
 	parser = argparse.ArgumentParser(
 		prog = 'ProgramName',

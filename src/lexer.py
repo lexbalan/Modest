@@ -1,3 +1,4 @@
+# src/lexer.py
 
 from error import error, info
 from hlir import TokenInfo, TextInfo
