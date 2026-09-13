@@ -468,7 +468,7 @@ def do_cvalue_literal_char(t, v, ctx):
 
 
 
-def do_array_literal_from_items(items, ctx):
+def do_array_literal_from_citems(items, ctx):
 	initializers = []
 	for item in items:
 		ini = do_cinitializer(item.type, item, ctx=ctx)
@@ -478,7 +478,7 @@ def do_array_literal_from_items(items, ctx):
 
 
 def do_cvalue_literal_array(v, ctx):
-	return do_array_literal_from_items(v.asset, ctx=ctx)
+	return do_array_literal_from_citems(v.asset, ctx=ctx)
 
 
 def do_cvalue_literal_record(v, ctx):
@@ -487,13 +487,13 @@ def do_cvalue_literal_record(v, ctx):
 
 def do_cvalue_literal_record_from_asset_list(asset, ctx, ctype=None):
 	assert(isinstance(asset, list))
-	items = []
+	citems = []
 	for kv in asset:
 		if not kv.value.is_undefined():
 			inititlizer = do_cinitializer(kv.value.type, kv.value, ctx=ctx)
 			kv = KV(get_id_str(kv), inititlizer, nl=kv.nl)
-			items.append(kv)
-	return do_cvalue_literal_struct(items, cast_to_ctype=ctype)
+			citems.append(kv)
+	return do_cvalue_literal_struct_from_citems(citems=citems, cast_to_ctype=ctype)
 
 
 
@@ -1014,18 +1014,26 @@ def do_cvalue_cast_layout(to_type, value, ctx, ti):
 
 def do_cvalue_cons_variant(x, ctx):
 	# Возвращаем литерал структуры с полем __tag = 0 и полем __value = value
-	items = []
+	citems = []
 	tag = x.type.getVariantId(x.value.type)
-	items.append(KV('tag', CValueInteger(tag, as_hex=True), nl=x.nl))
-	items.append(KV('value._%d' % tag, do_cvalue(x.value, ctx=ctx), nl=x.nl))
-	return do_cvalue_literal_struct(items, cast_to_ctype=do_ctype(x.type))
+	citems.append(KV('tag', CValueInteger(tag, as_hex=True), nl=x.nl))
+	citems.append(KV('value._%d' % tag, do_cvalue(x.value, ctx=ctx), nl=x.nl))
+	return do_cvalue_literal_struct_from_citems(citems=citems, cast_to_ctype=do_ctype(x.type))
 
 
-def do_cvalue_literal_struct(items, cast_to_ctype=None):
-	struct = CValueStruct(items)
+
+def do_cvalue_literal_struct_from_citems(citems, cast_to_ctype=None):
+	struct = CValueStruct(citems)
 	if cast_to_ctype is None:
 		return struct
 	return CValueCast(cast_to_ctype, struct)
+
+
+def do_cvalue_literal_array_from_citems(citems, cast_to_ctype=None):
+	array = CValueArray(citems)
+	if cast_to_ctype is None:
+		return array
+	return CValueCast(cast_to_ctype, array)
 
 
 # Наложение масштаба при конструировании FixedX.
@@ -1090,7 +1098,7 @@ def do_cvalue_call(x, ctx, sret=None):
 	# передают явно через sret
 	if x.type.is_sized_array():
 		if sret == None:
-			sret = CValueCast(do_ctype(x.type), CValueArray([]))
+			sret = do_cvalue_literal_array_from_citems(citems=[], cast_to_ctype=do_ctype(x.type))
 		cv.args.append(sret)
 
 	return cv
@@ -1577,7 +1585,7 @@ def do_cvalue_bin_expr(x, ctx):
 	if x.op == HLIR_VALUE_OP_LOGIC_OR: return CValueLogicalOr(left, right)
 	if x.op == HLIR_VALUE_OP_LOGIC_AND: return CValueLogicalAnd(left, right)
 	if x.op == HLIR_VALUE_OP_STRCAT: return CValueStringConcat(left, right)
-	if x.op == HLIR_VALUE_OP_ARRCAT: return do_array_literal_from_items(x.asset, ctx=ctx)
+	if x.op == HLIR_VALUE_OP_ARRCAT: return do_array_literal_from_citems(x.asset, ctx=ctx)
 
 	assert(False)
 
@@ -1602,20 +1610,20 @@ def do_cinitializer_cons(type, value, ctx):
 	if to.is_array():
 		if v.is_array():
 			if value.is_immediate():
-				return do_array_literal_from_items(value.asset[0:len(v.asset)], ctx=ctx)
+				return do_array_literal_from_citems(value.asset[0:len(v.asset)], ctx=ctx)
 			return do_cvalue_literal_with_type(v, to, ctx=ctx)
 
 		elif v.type.is_string():
 			width = 0
 			if to.is_concretic():
 				width = to.of.width
+
 			cv_chars = []
 			for char in v.asset:
 				cv = CValueChar(ord(char), width=width)
 				cv.nl = 0
 				cv_chars.append(cv)
-			cv = CValueArray(cv_chars)
-			return cv
+			return do_cvalue_literal_array_from_citems(citems=cv_chars, cast_to_ctype=None)
 
 	if v.type.is_generic():
 		if to.is_float() and v.type.is_rational():
@@ -2564,7 +2572,6 @@ def do_cvalue_mem(x):
 
 def do_cvalue_ptr_to_x(x, parr_relax=False):
 
-
 	if x.is_deref():
 		return do_cvalue(x.value)  # Если это разыменовывание - просто вернем его аргумент (это указатель)
 
@@ -2576,7 +2583,7 @@ def do_cvalue_ptr_to_x(x, parr_relax=False):
 			item = do_cvalue(x)
 			item.nl = 0
 			ctype = CTypeArray(do_ctype(x.type), CValueInteger(1))
-			return CValueCast(ctype, CValueArray([item]))
+			return do_cvalue_literal_array_from_citems(citems=[item], cast_to_ctype=ctype)
 
 	if x.type.is_array() and parr_relax:
 		root = get_root_value(x)
