@@ -6,9 +6,29 @@ include "libc/ctypes64"
 include "libc/stdio"
 
 
+type Record = {
+	b: Char8
+	a: Int32
+	c: Nat16
+}
+
+type Packed = @layout("packed") Record
+//type Union = @layout("union") Record
+
+type MyInt = @branded Int32
+
+
 @nonstatic
 func main () -> Int {
 	printf("Hello World!\n")
+
+	var r: Record
+	var p: Packed
+
+	r = Record p
+
+	printf("sizeof(Record) = %zu\n", sizeof(Record))
+	printf("sizeof(Packed) = %zu\n", sizeof(Packed))
 	return 0
 }
 

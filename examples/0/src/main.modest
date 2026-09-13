@@ -24,7 +24,7 @@ func main () -> Int {
 	var r: Record
 	var p: Packed
 
-	//r = p
+	r = Record p
 
 	printf("sizeof(Record) = %zu\n", sizeof(Record))
 	printf("sizeof(Packed) = %zu\n", sizeof(Packed))

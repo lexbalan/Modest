@@ -56,7 +56,7 @@ def value_record_can(to, from_type, method, ti):
 	#if not from_type.is_generic():
 	#	return False
 
-	if to.layout == 'union' and len(from_type.fields) > 1:
+	if to.layout == TYPE_RECORD_LAYOUT_UNION and len(from_type.fields) > 1:
 		# 'union' record requires only one field
 		return False
 
@@ -71,6 +71,11 @@ def value_record_can(to, from_type, method, ti):
 		if not cons_can(field_dst.type, field_src.type, method=method, ti=field_src.ti):
 			return False  # Field type not equal
 
+	if method == 'implicit':
+		if to.layout != from_type.layout:
+			if to.layout != TYPE_RECORD_LAYOUT_UNKNOWN and from_type.layout != TYPE_RECORD_LAYOUT_UNKNOWN:
+				print("value_record_can: layouts are different: '%s' != '%s'" % (to.layout, from_type.layout))
+				return False  # Layouts are different
 	
 	return True
 
@@ -82,7 +87,7 @@ def value_record_cons(t, v, method, ti):
 
 	if t.is_unit():
 		nv.set_asset([])
-		stage = HLIR_VALUE_STAGE_COMPILETIME
+		#stage = HLIR_VALUE_STAGE_COMPILETIME
 		return nv
 
 	if not v.type.is_generic(): #and not v.is_immediate():

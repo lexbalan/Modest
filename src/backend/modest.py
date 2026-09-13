@@ -162,9 +162,6 @@ def str_field(x):
 def str_type_record(t):
 	s = ""
 
-	#if t.hasAttribute('packed'):
-	#	s += "@layout("packed") "
-
 	is_public = t.hasAttribute('public')
 
 	s += "{"

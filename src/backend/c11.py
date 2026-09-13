@@ -134,7 +134,7 @@ def get_type_id_str(t):
 
 		tag = get_record_tag(t)
 		if tag != None:
-			isa = 'struct' if not t.layout == 'union' else 'union'
+			isa = 'struct' if not t.layout == TYPE_RECORD_LAYOUT_UNION else 'union'
 			kisa = isa + ' ' + tag
 			return kisa
 
@@ -237,8 +237,8 @@ def record_c_attributes(t):
 	atts = dict(t.attributes)
 	atts.pop('layout', None)
 	atts.pop('alignment', None)
-	if t.layout == 'packed':
-		atts['packed'] = {}
+	if t.layout == TYPE_RECORD_LAYOUT_PACKED:
+		atts[TYPE_RECORD_LAYOUT_PACKED] = {}
 	return atts
 
 
@@ -249,12 +249,11 @@ def do_ctype_struct(t, tag='', specs=[]):
 	for f in t.fields:
 		fields.append(CField(id=get_id_str(f), type=do_ctype(f.type), specifiers=[], nl=f.nl))
 	tag = camel_to_lower_snake(tag)
-	isa = 'struct' if not t.layout == 'union' else 'union'
+	isa = 'struct' if not t.layout == TYPE_RECORD_LAYOUT_UNION else 'union'
 	kisa = isa
 	if tag:
 		kisa = kisa + ' ' + tag
-	return CTypeStruct(fields, specifiers=specs, tag=kisa,
-		attributes=record_c_attributes(t))
+	return CTypeStruct(fields, specifiers=specs, tag=kisa, attributes=record_c_attributes(t))
 
 
 def do_ctype_named(t, specs):
@@ -495,15 +494,15 @@ def do_cvalue_literal_record(v, ctx):
 	return do_cvalue_literal_record_from_asset_list(v.asset, ctx)
 
 
-def do_cvalue_literal_record_from_asset_list(asset, ctx):
+def do_cvalue_literal_record_from_asset_list(asset, ctx, ctype=None):
 	assert(isinstance(asset, list))
 	items = []
 	for kv in asset:
 		if not kv.value.is_undefined():
 			inititlizer = do_cinitializer(kv.value.type, kv.value, ctx=ctx)
-			items.append(KV(get_id_str(kv), inititlizer, kv.nl))
-	nv = CValueStruct(items)
-	return nv
+			kv = KV(get_id_str(kv), inititlizer, nl=kv.nl)
+			items.append(kv)
+	return do_cvalue_literal_struct(items, cast_to_ctype=ctype)
 
 
 
@@ -675,6 +674,7 @@ def do_cvalue_cons_array(x, ctx):
 	return cv
 
 
+
 def do_cvalue_cons_record(x, ctx):
 	to_type = x.type
 	value = x.value
@@ -691,14 +691,16 @@ def do_cvalue_cons_record(x, ctx):
 	# RecordA -> RecordB
 	#if to_type.is_record():
 	if from_type.is_record() and from_type.is_concretic():
+		if from_type.layout != to_type.layout:
+			return do_cvalue_cast_layout(to_type, value, ctx, ti=x.ti)
+
 		if to_type.uid == from_type.uid:
 			# это одна и та же структура и приведение не требуется
 			cv = do_cvalue(value, ctx=ctx)
 			return cv
 
 		# C cannot just cast struct to struct ⚠️
-		cv = do_cvalue_cast_raw(to_type, x.value, ctx)
-		return cv
+		return do_cvalue_cast_raw(to_type, x.value, ctx)
 
 	tt = do_ctype(to_type)
 
@@ -714,7 +716,7 @@ def do_cvalue_cons_record(x, ctx):
 			assert(cons_ini != None)
 			asset.append(cons_ini)
 
-		if x.type.layout != 'union':
+		if x.type.layout != TYPE_RECORD_LAYOUT_UNION:
 			# затем добавим поля, которые имеют default value отличное от zero
 			# add extra non-zero items ⚠️
 			for cons_ini in x.asset:
@@ -723,9 +725,7 @@ def do_cvalue_cons_record(x, ctx):
 				if not cons_ini.value.is_zero():
 					asset.append(cons_ini)
 
-		record = do_cvalue_literal_record_from_asset_list(asset, ctx)
-		cv = CValueCast(tt, record)
-		return cv
+		return do_cvalue_literal_record_from_asset_list(asset, ctx, ctype=tt)
 
 	cv = do_cvalue(value, ctx=ctx)
 	cv = CValueCast(tt, cv)
@@ -1003,6 +1003,22 @@ def do_cvalue_cast_raw(type, value, ctx):
 		]
 	)
 
+# Если layout у двух структур разный, то C-cast недопустим: смещения полей в exact/packed/union не совпадают.
+# Перепаковываем поля по значению - читаем каждое поле из источника и складываем литерал целевого типа,
+# а уже его раскладку посчитает сам C-компилятор
+def do_cvalue_cast_layout(to_type, value, ctx, ti):
+	asset = []
+	for field_to in to_type.fields:
+		field_from = value.type.record_field_get(field_to.id.str)
+		assert(field_from != None)
+		access = ValueAccessRecord(field_from.type, value, field_from, ti=ti)
+		initializer = Initializer(field_to.id, access, ti=ti)
+		initializer.nl = 1
+		asset.append(initializer)
+		
+
+	return do_cvalue_literal_record_from_asset_list(asset, ctx, ctype=do_ctype(to_type))
+	#return CValueCast(do_ctype(to_type), record)
 
 
 def do_cvalue_cons_variant(x, ctx):
@@ -1011,8 +1027,14 @@ def do_cvalue_cons_variant(x, ctx):
 	tag = x.type.getVariantId(x.value.type)
 	items.append(KV('tag', CValueInteger(tag, as_hex=True), nl=x.nl))
 	items.append(KV('value._%d' % tag, do_cvalue(x.value, ctx=ctx), nl=x.nl))
-	variant_struct_literal = CValueStruct(items)
-	return CValueCast(do_ctype(x.type), variant_struct_literal)
+	return do_cvalue_literal_struct(items, cast_to_ctype=do_ctype(x.type))
+
+
+def do_cvalue_literal_struct(items, cast_to_ctype=None):
+	struct = CValueStruct(items)
+	if cast_to_ctype is None:
+		return struct
+	return CValueCast(cast_to_ctype, struct)
 
 
 # Наложение масштаба при конструировании FixedX.
@@ -1981,7 +2003,7 @@ def do_def_type_record(t):
 	# поля остаются закрытыми, но идентификатор "Packed" всё равно нужен)
 	if (not id_str in declared) and t.is_open_access:
 		tag = get_record_tag(t)
-		isa = 'struct' if not t.layout == 'union' else 'union'
+		isa = 'struct' if not t.layout == TYPE_RECORD_LAYOUT_UNION else 'union'
 		kisa = isa + ' ' + tag
 		dt = CStmtDefType(get_id_str(t), CTypeIdentifier(kisa))
 		defs = (dt,)
@@ -2113,7 +2135,7 @@ def do_decl_type_record(x):
 
 	t = x.type
 	tag = get_record_tag(t)
-	isa = 'struct' if not t.layout == 'union' else 'union'
+	isa = 'struct' if not t.layout == TYPE_RECORD_LAYOUT_UNION else 'union'
 	kisa = isa + ' ' + tag
 	dt = CStmtDeclType(CTypeIdentifier(kisa))
 	declared.append(x)

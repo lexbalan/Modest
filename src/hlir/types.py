@@ -147,6 +147,12 @@ HLIR_TYPE_SIGNEDNESS_SIGNED = 1
 HLIR_TYPE_SIGNEDNESS_UNSIGNED = 2
 
 
+TYPE_RECORD_LAYOUT_UNKNOWN = 'unknown'  # layout is not specified (generic record)
+TYPE_RECORD_LAYOUT_EXACT = 'exact'
+TYPE_RECORD_LAYOUT_PACKED = 'packed'
+TYPE_RECORD_LAYOUT_UNION = 'union'
+
+
 class Entity():
 	def __init__(self, ti):
 		assert((ti == None) or isinstance(ti, TextInfo))
@@ -1066,7 +1072,8 @@ class Type(Entity):
 	@staticmethod
 	def eq_record(a, b, opt):
 		if a.layout != b.layout:
-			return False
+			if a.layout != TYPE_RECORD_LAYOUT_UNKNOWN and b.layout != TYPE_RECORD_LAYOUT_UNKNOWN:
+				return False
 		if len(a.fields) != len(b.fields):
 			return False
 		return Type.eq_fields(a.fields, b.fields, opt)
@@ -1104,21 +1111,18 @@ class Type(Entity):
 		if a.__class__.__name__ != b.__class__.__name__:
 			return False
 
-		if a.brand != b.brand:
-			return False
-
 		# проверять аттрибуты (volatile, const)
 		# использую для C чтобы можно было более строго проверить типы
 		# напр для явного приведения в беканде C *volatile uint32_t -> uint32_t
 		if 'att_checking' in opt:
 			if a.attributes != b.attributes:
+				print("Type.EQ: attributes are different: '%s' != '%s'" % (a.attributes, b.attributes))
 				return False
 
 		# дженерик и не дженерик типы не равны
 		# это важно для конструирования записей из джененрков
 		# (в противном случае конструирование будет скипнуто тк они типа уже равны)
 		if a.is_generic() != b.is_generic():
-			#print("%d %d" % (a.is_generic(), b.is_generic()))
 			return False
 
 		# usual checking
@@ -1623,9 +1627,9 @@ class TypeArray(Type):
 #   packed - без единого байта добивки: поле начинается там, где кончилось
 #            предыдущее, и сама запись ни в чём не нуждается (выравнивание 1)
 #   union  - все поля от нуля, друг поверх друга: размер по наибольшему полю
-def calc_record_size_align(fields, layout='exact'):
-	packed = layout == 'packed'
-	union = layout == 'union'
+def calc_record_size_align(fields, layout=TYPE_RECORD_LAYOUT_EXACT):
+	packed = layout == TYPE_RECORD_LAYOUT_PACKED
+	union = layout == TYPE_RECORD_LAYOUT_UNION
 
 	field_no = 0
 	offset = 0
@@ -1669,7 +1673,7 @@ class TypeRecord(Type):
 		self.fields = fields
 		self.size = record_size
 		self.align = record_align
-		self.layout = 'exact'
+		self.layout = TYPE_RECORD_LAYOUT_UNKNOWN
 
 		# это структура с открытыми полями -> она идет через typedef в C backend
 		self.is_open_record = False

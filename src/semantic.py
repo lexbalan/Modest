@@ -514,7 +514,7 @@ def do_type_named(x, anno):
 
 
 def change_type_layout(t, layout, ti):
-	if not layout in ['exact', 'packed', 'union']:
+	if not layout in [TYPE_RECORD_LAYOUT_UNKNOWN, TYPE_RECORD_LAYOUT_EXACT, TYPE_RECORD_LAYOUT_PACKED, TYPE_RECORD_LAYOUT_UNION]:
 		error("unsupported layout", ti)
 
 	# раскладку записи считает calc_record_size_align, а она
@@ -526,6 +526,18 @@ def change_type_layout(t, layout, ti):
 	if t.is_record():
 		t.fields = [copy.copy(f) for f in t.fields]
 		t.size, t.align = calc_record_size_align(t.fields, layout)
+
+		if t.layout != layout:
+			# copy() перед вызовом (do_type_internal) - поверхностный и
+			# сохраняет uid исходной записи, а раскладка - её часть: две
+			# записи с одинаковыми полями, но разными смещениями/размером -
+			# это разные C-структуры, и бэкенды используют uid именно
+			# чтобы это различать (см. rec_uid) - иначе `Packed.uid ==
+			# Record.uid` при разных @layout, и приведение между ними
+			# бэкенд принимает за отождествление одной и той же структуры
+			global rec_uid
+			t.uid = rec_uid
+			rec_uid += 1
 
 	t.layout = layout
 	return t
@@ -2406,6 +2418,7 @@ def def_type_common(x, nt):
 				else:
 					f.access_level = HLIR_ACCESS_LEVEL_PRIVATE
 
+
 	if ty.is_bad():
 		cdef = prev_cdef
 		return None
@@ -2433,6 +2446,9 @@ def def_type_common(x, nt):
 	nt.ti_def = id.ti
 	nt.is_open_record = is_open_record
 	nt.is_open_access = is_open_record or hasattr(ty, 'id')
+
+	if nt.is_record() and nt.layout == TYPE_RECORD_LAYOUT_UNKNOWN:
+		nt.layout = TYPE_RECORD_LAYOUT_EXACT
 
 	# Проверяем если наши прямые зависимости не зависят от нас напрямую
 	# Это ошибочная ситуация, так как сложные типы не могут взаимно напрямую включать друг друга
@@ -2470,7 +2486,6 @@ def def_type_global(x):
 
 def process_field_common(x, allow_cons_default=False):
 	global csymtab
-
 
 	var_type = None
 	if x['type'] != None:
