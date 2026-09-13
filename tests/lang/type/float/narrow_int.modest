@@ -31,7 +31,7 @@ include "libc/stdio"
 include "libc/stdlib"
 
 
-func testNarrowInt () -> Bool {
+func testNarrowInt: () -> Bool {
 	var f: Float64 = 2.75
 
 	// The whole point of the construction: a Float64 result landing in the
@@ -72,7 +72,7 @@ func testNarrowInt () -> Bool {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	if not testNarrowInt() {
 		printf("failed: narrow int from float\n")
 		return exitFailure

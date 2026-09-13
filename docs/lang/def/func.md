@@ -6,7 +6,7 @@ Binds an [identifier](../identifier.md) to a function with the given
 ## Form
 
 ```
-func <#identifier#> (<#parameters#>) -> <#return_type#> {
+func <#identifier#>: (<#parameters#>) -> <#return_type#> {
 	<#statements#>
 }
 ```
@@ -14,6 +14,10 @@ func <#identifier#> (<#parameters#>) -> <#return_type#> {
 The return type is mandatory; use `Unit` for functions returning nothing.
 A definition without a body is a *declaration* — it names an external
 function and is normally combined with `@extern`.
+
+The `:` before the signature is required. Omitting it (`func name (...)  ->
+...`) still compiles for backward compatibility but raises a warning —
+write new code with the colon.
 
 ## Parameters
 
@@ -27,10 +31,10 @@ Parameters are [fields](../fields.md): `name: Type`. Additionally:
   argument list (used for C interop, see [va_arg](../va_arg.md)).
 
 ```modest
-func greet (name: *Str8 = "World") -> Unit { ... }
+func greet: (name: *Str8 = "World") -> Unit { ... }
 
 @extern("C")
-public func printf (format: *Str8, ...) -> @unused Int
+public func printf: (format: *Str8, ...) -> @unused Int
 ```
 
 ## Nested functions
@@ -40,15 +44,15 @@ function whose name is local to the enclosing body — it does **not**
 capture variables (no closures). Local `type` definitions are also allowed.
 
 ```modest
-func main () -> Int {
-	func twice (x: Int32) -> Int32 {
+func main: () -> Int {
+	func twice: (x: Int32) -> Int32 {
 		return x * 2
 	}
 	return twice(21) - 42
 }
 ```
 
-## Experimental: signature from a named function type
+## Signature from a named function type
 
 ```
 func <#identifier#>: <#FuncType#> {
@@ -56,10 +60,10 @@ func <#identifier#>: <#FuncType#> {
 }
 ```
 
-Instead of spelling out `(params) -> Return`, the parameter list and return
-type can be borrowed from a predeclared [function type](../type/func.md).
-Parameter names come from the type, so they don't need to be repeated at
-every definition that shares the same shape:
+Instead of spelling out `(params) -> Return` inline, the parameter list and
+return type can be borrowed from a predeclared [function
+type](../type/func.md). Parameter names come from the type, so they don't
+need to be repeated at every definition that shares the same shape:
 
 ```modest
 type FailHandler = (code: Int32) -> Unit
@@ -74,18 +78,16 @@ func onNetworkFail: FailHandler {
 ```
 
 `<#FuncType#>` must resolve to a function type — not a pointer to one.
-The colon form and the inline `(params) -> Return` form cannot be mixed on
-the same definition.
 
-This syntax is experimental: useful for a handful of definitions that
-repeat the exact same callback shape, but at the cost of hiding the
-parameter list at the definition site — a reader must look up the type to
-see what's being passed in. Prefer the inline form unless several
-definitions genuinely share one signature.
+This form is useful for a handful of definitions that repeat the exact same
+callback shape, but at the cost of hiding the parameter list at the
+definition site — a reader must look up the type to see what's being
+passed in. Prefer the inline form unless several definitions genuinely
+share one signature.
 
 ## Notes
 
-- The program entry point is `func main () -> Int`.
+- The program entry point is `func main: () -> Int`.
 - A function's address is taken with `&name` and stored in a
   [pointer to function](../type/func.md).
 - Inlining is controlled with `@inline` / `@inlinehint` / `@noinline`
@@ -94,11 +96,11 @@ definitions genuinely share one signature.
 ## Example
 
 ```modest
-func sum (a: Int32, b: Int32) -> Int32 {
+func sum: (a: Int32, b: Int32) -> Int32 {
 	return a + b
 }
 
-func main () -> Int {
+func main: () -> Int {
 	printf("%d\n", sum(10, 20))
 	return 0
 }

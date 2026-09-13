@@ -28,7 +28,7 @@ Invokes a function — directly or through a pointer to function.
 ## Examples
 
 ```modest
-func area (w: Int32, h: Int32 = 1) -> Int32 {
+func area: (w: Int32, h: Int32 = 1) -> Int32 {
 	return w * h
 }
 
@@ -37,7 +37,7 @@ let a2 = area(h = 4, w = 3)      // named, any order
 let a3 = area(5)                 // default h = 1
 
 type Op = *(a: Int32, b: Int32) -> Int32
-func add (a: Int32, b: Int32) -> Int32 { return a + b }
+func add: (a: Int32, b: Int32) -> Int32 { return a + b }
 
 var op: Op = &add
 let s = op(1, 2)                 // call through pointer

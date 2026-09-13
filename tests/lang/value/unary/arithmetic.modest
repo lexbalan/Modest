@@ -32,7 +32,7 @@ include "libc/stdio"
 include "libc/stdlib"
 
 
-func testNegation () -> Bool {
+func testNegation: () -> Bool {
 	var a: Int32 = 5
 
 	if -a != -5 {
@@ -76,7 +76,7 @@ func testNegation () -> Bool {
 
 
 // Negation stays inside the operand type, at every signed width.
-func testWidths () -> Bool {
+func testWidths: () -> Bool {
 	var i8: Int8 = 100
 	if -i8 != -100 {
 		printf("Int8 -100 = %d\n", Int32 -i8)
@@ -126,7 +126,7 @@ func testWidths () -> Bool {
 
 // The arithmetic identities that say `-` is the additive inverse and not
 // something that merely looks like one.
-func testIdentities () -> Bool {
+func testIdentities: () -> Bool {
 	var a: Int32 = 5
 	var b: Int32 = 3
 
@@ -173,7 +173,7 @@ func testIdentities () -> Bool {
 // `-` binds at level 12, above every binary operator — so it takes the
 // operand next to it and not the expression around it.  Each case below is
 // one where the two groupings give different answers.
-func testPrecedence () -> Bool {
+func testPrecedence: () -> Bool {
 	var a: Int32 = 3
 	var b: Int32 = 4
 
@@ -218,7 +218,7 @@ func testPrecedence () -> Bool {
 
 // `+` gives back exactly its operand.  It has no effect to check, so what
 // is checked is that it has none.
-func testUnaryPlus () -> Bool {
+func testUnaryPlus: () -> Bool {
 	var a: Int32 = 5
 	var neg: Int32 = -7
 
@@ -264,7 +264,7 @@ func testUnaryPlus () -> Bool {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	var result = true
 	result = testNegation() and result
 	result = testWidths() and result

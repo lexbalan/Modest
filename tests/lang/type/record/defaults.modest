@@ -63,7 +63,7 @@ type Outer = {
 }
 
 
-func testTypeDefault () -> Bool {
+func testTypeDefault: () -> Bool {
 	var p: Plain = {}
 
 	if p.n != 0 or p.f != 0.0 {
@@ -88,7 +88,7 @@ func testTypeDefault () -> Bool {
 }
 
 
-func testDeclaredDefaults () -> Bool {
+func testDeclaredDefaults: () -> Bool {
 	var d: Declared = {}
 
 	if d.n != 42 or d.f != 1.5 {
@@ -116,7 +116,7 @@ func testDeclaredDefaults () -> Bool {
 }
 
 
-func testDefaultIsFallback () -> Bool {
+func testDefaultIsFallback: () -> Bool {
 	// A literal that names the field wins over the declared default.
 	var a: Declared = {n = 7}
 	if a.n != 7 {
@@ -146,7 +146,7 @@ func testDefaultIsFallback () -> Bool {
 }
 
 
-func testCompositeDefaults () -> Bool {
+func testCompositeDefaults: () -> Bool {
 	var d: Declared = {}
 
 	// An array-typed field defaults to a whole array.
@@ -184,7 +184,7 @@ func testCompositeDefaults () -> Bool {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	var result = true
 	result = testTypeDefault() and result
 	result = testDeclaredDefaults() and result

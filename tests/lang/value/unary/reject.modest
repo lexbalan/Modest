@@ -31,13 +31,13 @@ const limit: Int32 = 7
 
 // A parameter is a copy the callee may read and not export, so it is
 // immutable and has no address to take.
-func hold (v: Int32) -> Int32 {
+func hold: (v: Int32) -> Int32 {
 	var pv: *Int32 = &v
 	return v
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	// `-` requires a signed type.  A NatX cannot represent the answer, and
 	// the language says so instead of handing back a large positive number.
 	var n: Nat32 = 5

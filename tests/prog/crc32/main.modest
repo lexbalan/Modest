@@ -45,13 +45,13 @@ var tests: []Test = [
 ]
 
 
-func runTest (test: *Test) -> Bool {
+func runTest: (test: *Test) -> Bool {
 	let crc = crc32.run(*[]Byte &test.data, test.len)
 	return crc == test.hash
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	printf("test CRC32\n")
 
 	// (!)

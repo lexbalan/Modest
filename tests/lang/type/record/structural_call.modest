@@ -32,13 +32,13 @@ type Vec2 = {
 }
 
 
-func makeVec () -> Vec2 {
+func makeVec: () -> Vec2 {
 	var v: Vec2 = {x = 3, y = 4}
 	return v
 }
 
 
-func testCallResult () -> Bool {
+func testCallResult: () -> Bool {
 	// The callee says Vec2, the variable says Point, and they are one type.
 	var p: Point = makeVec()
 	if p.x != 3 or p.y != 4 {
@@ -59,7 +59,7 @@ func testCallResult () -> Bool {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	if not testCallResult() {
 		printf("failed: structural call result\n")
 		return exitFailure

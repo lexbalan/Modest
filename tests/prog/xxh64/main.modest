@@ -56,32 +56,32 @@ const prime64_5 = Word64 0x27D4EB2F165667C5
 // wrapping-арифметика над Word64
 
 @inline
-func add (a: Word64, b: Word64) -> Word64 {
+func add: (a: Word64, b: Word64) -> Word64 {
 	return Word64 (Nat64 a + Nat64 b)
 }
 
 
 @inline
-func sub (a: Word64, b: Word64) -> Word64 {
+func sub: (a: Word64, b: Word64) -> Word64 {
 	return Word64 (Nat64 a - Nat64 b)
 }
 
 
 @inline
-func mul (a: Word64, b: Word64) -> Word64 {
+func mul: (a: Word64, b: Word64) -> Word64 {
 	return Word64 (Nat64 a * Nat64 b)
 }
 
 
 // циклический сдвиг влево на amt бит
 @inline
-func rotl64 (value: Word64, amt: Nat32) -> Word64 {
+func rotl64: (value: Word64, amt: Nat32) -> Word64 {
 	return (value << (amt % 64)) | (value >> (64 - amt % 64))
 }
 
 
 // little-endian чтение 32 бит по смещению offset
-func read32 (data: *[]Word8, offset: SizeT) -> Word64 {
+func read32: (data: *[]Word8, offset: SizeT) -> Word64 {
 	var v = Word64 0
 	var i = SizeT 0
 	while i < 4 {
@@ -93,7 +93,7 @@ func read32 (data: *[]Word8, offset: SizeT) -> Word64 {
 
 
 // little-endian чтение 64 бит по смещению offset
-func read64 (data: *[]Word8, offset: SizeT) -> Word64 {
+func read64: (data: *[]Word8, offset: SizeT) -> Word64 {
 	var v = Word64 0
 	var i = SizeT 0
 	while i < 8 {
@@ -105,7 +105,7 @@ func read64 (data: *[]Word8, offset: SizeT) -> Word64 {
 
 
 // подмешивает input в acc — основной шаг главного цикла
-func round (acc: Word64, input: Word64) -> Word64 {
+func round: (acc: Word64, input: Word64) -> Word64 {
 	var a = add(acc, mul(input, prime64_2))
 	a = rotl64(a, 31)
 	return mul(a, prime64_1)
@@ -113,7 +113,7 @@ func round (acc: Word64, input: Word64) -> Word64 {
 
 
 // вливает аккумулятор acc в hash
-func mergeRound (hash: Word64, acc: Word64) -> Word64 {
+func mergeRound: (hash: Word64, acc: Word64) -> Word64 {
 	var h = hash ^ round(0, acc)
 	h = mul(h, prime64_1)
 	return add(h, prime64_4)
@@ -121,7 +121,7 @@ func mergeRound (hash: Word64, acc: Word64) -> Word64 {
 
 
 // финальное перемешивание всех бит
-func avalanche (hash: Word64) -> Word64 {
+func avalanche: (hash: Word64) -> Word64 {
 	var h = hash
 	h = h ^ (h >> 33)
 	h = mul(h, prime64_2)
@@ -136,7 +136,7 @@ func avalanche (hash: Word64) -> Word64 {
 //   input:  данные (nil — допустим, трактуется как пустой ввод)
 //   length: длина input в байтах
 //   seed:   64-битное зерно
-func xxh64 (input: *[]Word8, length: SizeT, seed: Word64) -> Word64 {
+func xxh64: (input: *[]Word8, length: SizeT, seed: Word64) -> Word64 {
 	var hash = Word64 0
 	var remaining = length
 	var offset = SizeT 0
@@ -224,18 +224,18 @@ var testNum = Int32 0
 
 
 @inline
-func hi32 (w: Word64) -> Nat32 {
+func hi32: (w: Word64) -> Nat32 {
 	return unsafe Nat32 (w >> 32)
 }
 
 
 @inline
-func lo32 (w: Word64) -> Nat32 {
+func lo32: (w: Word64) -> Nat32 {
 	return unsafe Nat32 (w & 0xFFFFFFFF)
 }
 
 
-func testSequence (data: *[]Word8, length: SizeT, seed: Word64, expected: Word64) -> Bool {
+func testSequence: (data: *[]Word8, length: SizeT, seed: Word64, expected: Word64) -> Bool {
 	let result = xxh64(data, length, seed)
 
 	++testNum
@@ -251,7 +251,7 @@ func testSequence (data: *[]Word8, length: SizeT, seed: Word64, expected: Word64
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	printf("test XXH64\n")
 
 	// заполняем буфер «случайными» данными

@@ -42,7 +42,7 @@ type Tail = {
 }
 
 
-func testMiddlePadding () -> Bool {
+func testMiddlePadding: () -> Bool {
 	var a: Sample = {tag = 0x01, value = 7}
 	var b: Sample = {tag = 0x01, value = 7}
 
@@ -65,7 +65,7 @@ func testMiddlePadding () -> Bool {
 }
 
 
-func testTailPadding () -> Bool {
+func testTailPadding: () -> Bool {
 	var a: Tail = {value = 7, flag = true}
 	var b: Tail = {value = 7, flag = true}
 	var c: Tail = {value = 7, flag = false}
@@ -81,7 +81,7 @@ func testTailPadding () -> Bool {
 
 // The same record inside an array and inside another record: whatever the
 // padding does, it does it in every container.
-func testNested () -> Bool {
+func testNested: () -> Bool {
 	var s1: [2]Sample = [{tag = 0x01, value = 7}, {tag = 0x02, value = 8}]
 	var s2: [2]Sample = [{tag = 0x01, value = 7}, {tag = 0x02, value = 8}]
 	var s3: [2]Sample = [{tag = 0x01, value = 7}, {tag = 0x02, value = 9}]
@@ -95,7 +95,7 @@ func testNested () -> Bool {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	var result = true
 	result = testMiddlePadding() and result
 	result = testTailPadding() and result

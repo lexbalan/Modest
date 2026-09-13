@@ -35,7 +35,7 @@ include "libc/stdio"
 include "libc/stdlib"
 
 
-func testArithmeticLevels () -> Bool {
+func testArithmeticLevels: () -> Bool {
 	var a: Int32 = 2
 	var b: Int32 = 3
 	var c: Int32 = 4
@@ -66,7 +66,7 @@ func testArithmeticLevels () -> Bool {
 
 
 // The level that differs from C: `&`, `^` and `|` are tighter than `==`.
-func testBitwiseAgainstEquality () -> Bool {
+func testBitwiseAgainstEquality: () -> Bool {
 	var w: Word8 = 0x0F
 	var mask: Word8 = 0xF0
 
@@ -105,7 +105,7 @@ func testBitwiseAgainstEquality () -> Bool {
 // operator groups from the left like everything else; a chain of two
 // different ones has no answer to group by and is refused, so the only
 // thing that can be written unparenthesised is a single-operator chain.
-func testBitwiseLevels () -> Bool {
+func testBitwiseLevels: () -> Bool {
 	var a: Word8 = 0x01
 	var b: Word8 = 0x06
 	var c: Word8 = 0x02
@@ -147,7 +147,7 @@ func testBitwiseLevels () -> Bool {
 // too and is left out of the rule: `+` never meets a WordX, so a mixed
 // chain there is a type error, and the type error is the more useful thing
 // to say than a demand for parentheses that would not help.
-func testShiftLevels () -> Bool {
+func testShiftLevels: () -> Bool {
 	var w: Word8 = 0x03
 	var x: Word8 = 0x40
 
@@ -194,7 +194,7 @@ func testShiftLevels () -> Bool {
 
 
 // `or` is the loosest thing in an expression, then `and`, then equality.
-func testLogicalLevels () -> Bool {
+func testLogicalLevels: () -> Bool {
 	var a: Int32 = 1
 	var b: Int32 = 2
 
@@ -225,7 +225,7 @@ func testLogicalLevels () -> Bool {
 
 // Below the binary operators: construction, then the unary operators, then
 // the postfix ones — each tighter than the last.
-func testUnaryAndConstruction () -> Bool {
+func testUnaryAndConstruction: () -> Bool {
 	// Construction takes the value next to it, not the expression around
 	// it: `Int32 small * 2` is (Int32 small) * 2.
 	var small: Int8 = 3
@@ -280,12 +280,12 @@ func testUnaryAndConstruction () -> Bool {
 }
 
 
-func twice (n: Int32) -> Int32 {
+func twice: (n: Int32) -> Int32 {
 	return n * 2
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	var result = true
 	result = testArithmeticLevels() and result
 	result = testBitwiseAgainstEquality() and result

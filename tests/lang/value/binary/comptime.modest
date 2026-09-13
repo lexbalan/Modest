@@ -39,7 +39,7 @@ const mask: Word8 = 0xF0
 const low: Word8 = 0x0F
 
 
-func check (name: *ConstCharStr, folded: Int32, computed: Int32) -> Bool {
+func check: (name: *ConstCharStr, folded: Int32, computed: Int32) -> Bool {
 	if folded == computed {
 		return true
 	}
@@ -48,7 +48,7 @@ func check (name: *ConstCharStr, folded: Int32, computed: Int32) -> Bool {
 }
 
 
-func check64 (name: *ConstCharStr, folded: Int64, computed: Int64) -> Bool {
+func check64: (name: *ConstCharStr, folded: Int64, computed: Int64) -> Bool {
 	if folded == computed {
 		return true
 	}
@@ -57,7 +57,7 @@ func check64 (name: *ConstCharStr, folded: Int64, computed: Int64) -> Bool {
 }
 
 
-func checkWord (name: *ConstCharStr, folded: Word32, computed: Word32) -> Bool {
+func checkWord: (name: *ConstCharStr, folded: Word32, computed: Word32) -> Bool {
 	if folded == computed {
 		return true
 	}
@@ -66,7 +66,7 @@ func checkWord (name: *ConstCharStr, folded: Word32, computed: Word32) -> Bool {
 }
 
 
-func testFoldedArithmetic () -> Bool {
+func testFoldedArithmetic: () -> Bool {
 	var ok = true
 
 	// The variables carry the same values, and nothing tells the compiler
@@ -103,7 +103,7 @@ func testFoldedArithmetic () -> Bool {
 
 // Where a fold is easiest to get wrong: the compiler is written in a
 // language whose `//` and `%` round the other way.
-func testFoldedTruncation () -> Bool {
+func testFoldedTruncation: () -> Bool {
 	var ok = true
 
 	var a = opaque(-10)
@@ -147,7 +147,7 @@ const negWide: Int64 = -4611686018427387905
 const oneW: Int64 = 1
 const threeW: Int64 = 3
 
-func testFoldedWidth () -> Bool {
+func testFoldedWidth: () -> Bool {
 	var ok = true
 
 	var w = opaque64(4611686018427387905)
@@ -182,7 +182,7 @@ func testFoldedWidth () -> Bool {
 }
 
 
-func testFoldedBitwise () -> Bool {
+func testFoldedBitwise: () -> Bool {
 	var ok = true
 
 	var m = opaqueWord(0xF0)
@@ -218,7 +218,7 @@ func testFoldedBitwise () -> Bool {
 
 // A comparison over immediates folds to a Bool, and it has to agree with
 // the comparison the backend emits.
-func testFoldedComparison () -> Bool {
+func testFoldedComparison: () -> Bool {
 	var a = opaque(10)
 	var b = opaque(3)
 
@@ -278,7 +278,7 @@ const masked: Word8 = mask & 0x3C
 var global: Int32 = ten * three + 1
 
 
-func testFoldedInitializers () -> Bool {
+func testFoldedInitializers: () -> Bool {
 	var ok = true
 
 	var a = opaque(10)
@@ -308,27 +308,27 @@ func testFoldedInitializers () -> Bool {
 
 // The compiler cannot see through a call, so what comes back is a value it
 // has to compute at run time — which is the whole point of the comparison.
-func opaque (n: Int32) -> Int32 {
+func opaque: (n: Int32) -> Int32 {
 	return n
 }
 
 
-func opaque64 (n: Int64) -> Int64 {
+func opaque64: (n: Int64) -> Int64 {
 	return n
 }
 
 
-func opaqueWord (w: Word32) -> Word32 {
+func opaqueWord: (w: Word32) -> Word32 {
 	return w
 }
 
 
-func identity (n: Int32) -> Int32 {
+func identity: (n: Int32) -> Int32 {
 	return n
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	var result = true
 	result = testFoldedArithmetic() and result
 	result = testFoldedTruncation() and result

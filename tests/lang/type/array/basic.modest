@@ -38,7 +38,7 @@ const primes: [4]Int32 = [2, 3, 5, 7]
 var counters: [3]Int32
 
 
-func testLiteral () -> Bool {
+func testLiteral: () -> Bool {
 	// A generic array literal takes the element type from the declaration.
 	var a: [5]Int32 = [1, 2, 3, 4, 5]
 	if a[0] != 1 or a[4] != 5 {
@@ -67,7 +67,7 @@ func testLiteral () -> Bool {
 }
 
 
-func testIndexing () -> Bool {
+func testIndexing: () -> Bool {
 	var a: [5]Int32 = [10, 20, 30, 40, 50]
 
 	// Indexed from zero.
@@ -106,7 +106,7 @@ func testIndexing () -> Bool {
 }
 
 
-func testZeroFill () -> Bool {
+func testZeroFill: () -> Bool {
 	// `= []` fills the whole array with the element's default value.
 	var a: [4]Int32 = []
 	if a[0] != 0 or a[1] != 0 or a[2] != 0 or a[3] != 0 {
@@ -131,7 +131,7 @@ func testZeroFill () -> Bool {
 }
 
 
-func testLengthAndSize () -> Bool {
+func testLengthAndSize: () -> Bool {
 	var a: [5]Int32 = [1, 2, 3, 4, 5]
 
 	// Both are properties of the type, and both fold at compile time.
@@ -159,7 +159,7 @@ func testLengthAndSize () -> Bool {
 }
 
 
-func testEquality () -> Bool {
+func testEquality: () -> Bool {
 	var a: [4]Int32 = [1, 2, 3, 4]
 	var b: [4]Int32 = [1, 2, 3, 4]
 	var c: [4]Int32 = [1, 9, 3, 4]
@@ -181,7 +181,7 @@ func testEquality () -> Bool {
 }
 
 
-func testElementTypes () -> Bool {
+func testElementTypes: () -> Bool {
 	// An array holds any type, including ones that are not numbers.
 	var flags: [3]Bool = [true, false, true]
 	if not flags[0] or flags[1] or not flags[2] {
@@ -209,7 +209,7 @@ func testElementTypes () -> Bool {
 }
 
 
-func testModuleLevel () -> Bool {
+func testModuleLevel: () -> Bool {
 	if primes[0] != 2 or primes[3] != 7 {
 		printf("primes = [%d ... %d], expected [2 ... 7]\n", primes[0], primes[3])
 		return false
@@ -233,7 +233,7 @@ func testModuleLevel () -> Bool {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	var result = true
 	result = testLiteral() and result
 	result = testIndexing() and result

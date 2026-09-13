@@ -15,7 +15,7 @@ include "libc/stdio"
 include "libc/stdlib"
 
 
-func sumTo (n: Int32) -> Int32 {
+func sumTo: (n: Int32) -> Int32 {
 	var total: Int32 = 0
 	var i: Int32 = 0
 	while i < n {
@@ -26,7 +26,7 @@ func sumTo (n: Int32) -> Int32 {
 }
 
 
-func testWhileSum () -> Bool {
+func testWhileSum: () -> Bool {
 	if sumTo(5) != 10 {
 		printf("sumTo(5) = %d, expected 10\n", sumTo(5))
 		return false
@@ -44,7 +44,7 @@ func testWhileSum () -> Bool {
 
 
 // Smallest i whose square exceeds limit; `break` stops the scan.
-func firstSquareOver (limit: Int32) -> Int32 {
+func firstSquareOver: (limit: Int32) -> Int32 {
 	var i: Int32 = 0
 	while i < 100 {
 		if i * i > limit {
@@ -56,7 +56,7 @@ func firstSquareOver (limit: Int32) -> Int32 {
 }
 
 
-func testBreak () -> Bool {
+func testBreak: () -> Bool {
 	if firstSquareOver(50) != 8 {
 		printf("firstSquareOver(50) = %d, expected 8\n", firstSquareOver(50))
 		return false
@@ -68,7 +68,7 @@ func testBreak () -> Bool {
 
 
 // Sum of the odd numbers below n; `again` skips the even ones.
-func sumOdd (n: Int32) -> Int32 {
+func sumOdd: (n: Int32) -> Int32 {
 	var total: Int32 = 0
 	var i: Int32 = 0
 	while i < n {
@@ -83,7 +83,7 @@ func sumOdd (n: Int32) -> Int32 {
 }
 
 
-func testAgain () -> Bool {
+func testAgain: () -> Bool {
 	if sumOdd(10) != 25 {
 		printf("sumOdd(10) = %d, expected 25\n", sumOdd(10))
 		return false
@@ -94,7 +94,7 @@ func testAgain () -> Bool {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	var result = true
 	result = testWhileSum() and result
 	result = testBreak() and result

@@ -25,7 +25,7 @@ type Context = {
 }
 
 
-func init (key: *[32]Byte, nonce: [3]Word32) -> Context {
+func init: (key: *[32]Byte, nonce: [3]Word32) -> Context {
 	return {
 		key = key
 		nonce = [nonce[0], nonce[1], nonce[2]]
@@ -35,7 +35,7 @@ func init (key: *[32]Byte, nonce: [3]Word32) -> Context {
 }
 
 
-func cipher (ctx: *Context, data: *[]Byte, len: Nat32) -> Unit {
+func cipher: (ctx: *Context, data: *[]Byte, len: Nat32) -> Unit {
 	var i = Nat32 0
 	var bptr = *[]Byte nil
 	while i < len {
@@ -97,7 +97,7 @@ const lorem1024 = [1024]Char8 "Lorem ipsum dolor sit amet, consectetuer adipisci
 var xlorem1024 = lorem1024
 
 
-func main () -> Int {
+func main: () -> Int {
 	printf("test ChaCha20 ")
 	var ctx = init(&testKey, testNonce2)
 	let dptr = unsafe *[]Byte &xlorem1024
@@ -123,7 +123,7 @@ func main () -> Int {
 }
 
 
-func test0 () -> Bool {
+func test0: () -> Bool {
 	var counter: Word32 = 1
 	var state = cc.makeState(unsafe *cc.Key &testKey, counter, unsafe *[3]Word32 &testNonce)
 	var block = cc.chacha20Block(state)

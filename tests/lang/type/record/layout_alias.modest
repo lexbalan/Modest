@@ -38,7 +38,7 @@ type Padded = {
 type Packed = @layout("packed") Padded
 
 
-func testSourceUntouched () -> Bool {
+func testSourceUntouched: () -> Bool {
 	if offsetof(Padded.tag) != 0 or offsetof(Padded.len) != 4 {
 		printf("Padded.tag at %zu, Padded.len at %zu, expected 0 and 4\n",
 			offsetof(Padded.tag), offsetof(Padded.len))
@@ -64,7 +64,7 @@ func testSourceUntouched () -> Bool {
 }
 
 
-func testAliasPacked () -> Bool {
+func testAliasPacked: () -> Bool {
 	if offsetof(Packed.tag) != 0 or offsetof(Packed.len) != 1 {
 		printf("Packed.tag at %zu, Packed.len at %zu, expected 0 and 1\n",
 			offsetof(Packed.tag), offsetof(Packed.len))
@@ -88,7 +88,7 @@ func testAliasPacked () -> Bool {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	var result = true
 	result = testSourceUntouched() and result
 	result = testAliasPacked() and result

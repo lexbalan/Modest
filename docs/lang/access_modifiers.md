@@ -33,8 +33,8 @@ in C). `@extern` suppresses the prefix entirely
 ## Examples
 
 ```modest
-public func api () -> Unit { ... }     // visible to importers, emits m_api
-func helper () -> Unit { ... }         // private by default
+public func api: () -> Unit { ... }     // visible to importers, emits m_api
+func helper: () -> Unit { ... }         // private by default
 
 public type Point = @public {          // type and its fields public
 	x: Float64

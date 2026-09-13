@@ -40,14 +40,14 @@ const half: Fixed32 = 0.5
 
 
 @inline
-func scale (x: Fixed32) -> Fixed32 {
+func scale: (x: Fixed32) -> Fixed32 {
 	return x * half
 }
 
 
 // A rational literal reaches a FixedX variable with its fraction intact —
 // this is the whole point of the type over an Int.
-func testLiteral () -> Bool {
+func testLiteral: () -> Bool {
 	var a: Fixed32 = 1.5
 	if Float64 a != 1.5 {
 		printf("a = %f, expected 1.5\n", Float64 a)
@@ -88,7 +88,7 @@ func testLiteral () -> Bool {
 // Addition and subtraction are the raw ones; multiplication and division are
 // not — they have to correct the scale, or every product comes out 2^16 times
 // too large and every quotient 2^16 times too small.
-func testArithmetic () -> Bool {
+func testArithmetic: () -> Bool {
 	var a: Fixed32 = 1.5
 	var b: Fixed32 = 2.0
 
@@ -143,7 +143,7 @@ func testArithmetic () -> Bool {
 }
 
 
-func testComparison () -> Bool {
+func testComparison: () -> Bool {
 	var a: Fixed32 = 1.5
 	var b: Fixed32 = 2.0
 	var a2: Fixed32 = 1.5
@@ -171,7 +171,7 @@ func testComparison () -> Bool {
 }
 
 
-func testConstruction () -> Bool {
+func testConstruction: () -> Bool {
 	// IntX -> FixedX scales up.
 	var i: Int32 = 7
 	var f: Fixed32 = Fixed32 i
@@ -215,7 +215,7 @@ func testConstruction () -> Bool {
 
 // @fraction(N) moves the binary point: 20.12 instead of the default 16.16.
 // The arithmetic must follow the type's own N, not a fixed 16.
-func testFraction () -> Bool {
+func testFraction: () -> Bool {
 	var a: @fraction(12) Fixed32 = 1.5
 	if Float64 a != 1.5 {
 		printf("a = %f, expected 1.5\n", Float64 a)
@@ -252,7 +252,7 @@ func testFraction () -> Bool {
 }
 
 
-func testFixed64 () -> Bool {
+func testFixed64: () -> Bool {
 	var a: Fixed64 = 100.5
 	if Float64 a != 100.5 {
 		printf("a = %f, expected 100.5\n", Float64 a)
@@ -289,7 +289,7 @@ func testFixed64 () -> Bool {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	var result = true
 	result = testLiteral() and result
 	result = testArithmetic() and result

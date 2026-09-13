@@ -35,7 +35,7 @@ type Outer = {
 }
 
 
-func testOmittedField () -> Bool {
+func testOmittedField: () -> Bool {
 	// For reference: constructed on its own, Inner gets its defaults.
 	var w: Inner = {}
 	if w.a != 3 or w.b != 4 {
@@ -62,7 +62,7 @@ func testOmittedField () -> Bool {
 }
 
 
-func testNestedLiteral () -> Bool {
+func testNestedLiteral: () -> Bool {
 	// The nested literal is a construction of Inner, so what it omits is
 	// Inner's business: `b` is given, `a` falls back to 3.
 	var z: Outer = {in = {b = 9}}
@@ -80,7 +80,7 @@ func testNestedLiteral () -> Bool {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	var result = true
 	result = testOmittedField() and result
 	result = testNestedLiteral() and result

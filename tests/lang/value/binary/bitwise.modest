@@ -22,7 +22,7 @@ include "libc/stdio"
 include "libc/stdlib"
 
 
-func testAndOrXor () -> Bool {
+func testAndOrXor: () -> Bool {
 	var w: Word8 = 0x0F
 	var m: Word8 = 0x33
 
@@ -64,7 +64,7 @@ func testAndOrXor () -> Bool {
 
 // At Word32, where `~` does not run into BUG#30 — the narrow widths
 // are covered in narrow_width.modest.
-func testIdentities () -> Bool {
+func testIdentities: () -> Bool {
 	var w: Word32 = 0x0000A55A
 
 	// The neutral and absorbing elements of each operator.
@@ -117,7 +117,7 @@ func testIdentities () -> Bool {
 
 // The same three operators at every width, including the one where a
 // 32-bit intermediate would lose the top half.
-func testWidths () -> Bool {
+func testWidths: () -> Bool {
 	// `&`, `|` and `^` keep every bit inside the operand width at any
 	// width.  `~` does not, under one backend — it lives in
 	// narrow_width.modest with the shifts that share the defect.
@@ -169,7 +169,7 @@ func testWidths () -> Bool {
 
 
 // What the operators are actually for: reading and writing bits by mask.
-func testMasking () -> Bool {
+func testMasking: () -> Bool {
 	var flags: Word8 = 0x00
 
 	// Set a bit, test it, clear it — the three-move sequence every driver
@@ -228,7 +228,7 @@ func testMasking () -> Bool {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	var result = true
 	result = testAndOrXor() and result
 	result = testIdentities() and result

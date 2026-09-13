@@ -69,17 +69,17 @@ type Op = {
 }
 
 
-func twice (a: Int32) -> Int32 {
+func twice: (a: Int32) -> Int32 {
 	return a * 2
 }
 
 
-func negate (a: Int32) -> Int32 {
+func negate: (a: Int32) -> Int32 {
 	return 0 - a
 }
 
 
-func testRecordsInRecords () -> Bool {
+func testRecordsInRecords: () -> Bool {
 	var s: Segment = {from = {x = 1, y = 2}, to = {x = 3, y = 4}}
 
 	if s.from.x != 1 or s.to.y != 4 {
@@ -118,7 +118,7 @@ func testRecordsInRecords () -> Bool {
 }
 
 
-func testAnonymousField () -> Bool {
+func testAnonymousField: () -> Bool {
 	var w: World = {}
 
 	// The field's type is written where the field is; it is a record type
@@ -142,7 +142,7 @@ func testAnonymousField () -> Bool {
 }
 
 
-func testArraysAndRecords () -> Bool {
+func testArraysAndRecords: () -> Bool {
 	// A record holding arrays, one of them an array of records.
 	var g: Grid = {rows = [[1, 2], [3, 4]], corners = [{x = 0, y = 0}, {x = 9, y = 9}]}
 
@@ -182,7 +182,7 @@ func testArraysAndRecords () -> Bool {
 }
 
 
-func testSelfReference () -> Bool {
+func testSelfReference: () -> Bool {
 	// A record cannot contain itself, but it can point at its own type.
 	var c: Node = {value = 3, next = nil}
 	var b: Node = {value = 2, next = &c}
@@ -222,7 +222,7 @@ func testSelfReference () -> Bool {
 }
 
 
-func testFunctionPointerField () -> Bool {
+func testFunctionPointerField: () -> Bool {
 	var op: Op = {tag = 1, fn = &twice}
 
 	// The call is one more link in the chain.
@@ -251,7 +251,7 @@ func testFunctionPointerField () -> Bool {
 }
 
 
-func testAddressOfNested () -> Bool {
+func testAddressOfNested: () -> Bool {
 	var s: Segment = {from = {x = 1, y = 2}, to = {x = 3, y = 4}}
 
 	// The address of a field that is a record: a pointer to that field's
@@ -282,7 +282,7 @@ func testAddressOfNested () -> Bool {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	var result = true
 	result = testRecordsInRecords() and result
 	result = testAnonymousField() and result

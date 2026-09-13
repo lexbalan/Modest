@@ -17,7 +17,7 @@
 
 include "libc/ctypes64"
 
-func main () -> Int {
+func main: () -> Int {
 	var w: Word32 = 5
 	var negWord = -w
 	var posWord = +w

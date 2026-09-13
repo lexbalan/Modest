@@ -49,7 +49,7 @@ const origin: Point = {x = 0, y = 0}
 var cursor: Point
 
 
-func testConstruction () -> Bool {
+func testConstruction: () -> Bool {
 	// Explicit: the type is named by the literal itself.
 	var a = Point {x = 1, y = 2}
 	if a.x != 1 or a.y != 2 {
@@ -85,7 +85,7 @@ func testConstruction () -> Bool {
 }
 
 
-func testOmittedFields () -> Bool {
+func testOmittedFields: () -> Bool {
 	// A field the literal leaves out takes the default value of its type.
 	var a: Point = {x = 5}
 	if a.x != 5 or a.y != 0 {
@@ -113,7 +113,7 @@ func testOmittedFields () -> Bool {
 }
 
 
-func testFieldAccess () -> Bool {
+func testFieldAccess: () -> Bool {
 	var p: Point = {x = 1, y = 2}
 
 	// A field is a place: it is assigned to, and read back.
@@ -147,7 +147,7 @@ func testFieldAccess () -> Bool {
 }
 
 
-func testAnonymousType () -> Bool {
+func testAnonymousType: () -> Bool {
 	// A record type does not have to be named to be used.
 	var v: {u: Int32, w: Int32} = {u = 8, w = 9}
 	if v.u != 8 or v.w != 9 {
@@ -166,7 +166,7 @@ func testAnonymousType () -> Bool {
 }
 
 
-func testEquality () -> Bool {
+func testEquality: () -> Bool {
 	var a: Point = {x = 1, y = 2}
 	var b: Point = {x = 1, y = 2}
 	var c: Point = {x = 1, y = 9}
@@ -194,7 +194,7 @@ func testEquality () -> Bool {
 }
 
 
-func testModuleLevel () -> Bool {
+func testModuleLevel: () -> Bool {
 	if origin.x != 0 or origin.y != 0 {
 		printf("origin = {%d, %d}, expected {0, 0}\n", origin.x, origin.y)
 		return false
@@ -219,7 +219,7 @@ func testModuleLevel () -> Bool {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	var result = true
 	result = testConstruction() and result
 	result = testOmittedFields() and result

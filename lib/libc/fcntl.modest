@@ -51,8 +51,8 @@ include "libc/stat"
 @extern("C", "F_WRLCK") public const fWrlck = 3  // exclusive or write lock
 
 
-public func open (fname: *[]ConstChar, opt: Word32, ...) -> Int
-public func creat (fname: *[]ConstChar, mode: ModeT) -> Int
-public func fcntl (fd: Int, op: Int, ...) -> Int
+public func open: (fname: *[]ConstChar, opt: Word32, ...) -> Int
+public func creat: (fname: *[]ConstChar, mode: ModeT) -> Int
+public func fcntl: (fd: Int, op: Int, ...) -> Int
 
 

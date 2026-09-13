@@ -22,7 +22,7 @@ include "libc/stdio"
 include "libc/stdlib"
 
 
-func testShiftOutOfWord8 () -> Bool {
+func testShiftOutOfWord8: () -> Bool {
 	var b: Word8 = 0x81
 
 	if b << 1 != 0x02 {
@@ -49,7 +49,7 @@ func testShiftOutOfWord8 () -> Bool {
 }
 
 
-func testShiftOutOfWord16 () -> Bool {
+func testShiftOutOfWord16: () -> Bool {
 	var h: Word16 = 0x8001
 
 	if h << 1 != 0x0002 {
@@ -67,7 +67,7 @@ func testShiftOutOfWord16 () -> Bool {
 }
 
 
-func testComplement () -> Bool {
+func testComplement: () -> Bool {
 	var b: Word8 = 0xF0
 	if ~b != 0x0F {
 		printf("~(Word8 0xF0) = 0x%x, expected 0x0F\n", Word32 ~b)
@@ -90,7 +90,7 @@ func testComplement () -> Bool {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	var result = true
 	result = testShiftOutOfWord8() and result
 	result = testShiftOutOfWord16() and result

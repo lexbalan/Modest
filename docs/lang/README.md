@@ -48,7 +48,7 @@ include "libc/ctypes64"
 include "libc/stdio"
 
 // CRC-32 (IEEE), one bit at a time — no table, no allocation.
-func crc32 (data: *[]Byte, len: Size) -> Word32 {
+func crc32: (data: *[]Byte, len: Size) -> Word32 {
 	var crc: Word32 = 0xFFFFFFFF
 
 	var i = Size 0
@@ -72,7 +72,7 @@ func crc32 (data: *[]Byte, len: Size) -> Word32 {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	var message: [9]Byte = "123456789"
 
 	// An array is a value: `&message` is a pointer to it, nothing decays.

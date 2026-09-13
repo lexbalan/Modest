@@ -34,7 +34,7 @@ include "libc/stdio"          // printf, unqualified
 import "misc/sha256"          // namespace sha256
 import "./engine" as eng      // relative path, renamed
 
-func main () -> Int {
+func main: () -> Int {
 	var h: sha256.Hash
 	sha256.hash(data, len, &h)
 	eng.start()

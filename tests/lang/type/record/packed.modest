@@ -39,7 +39,7 @@ type Triple = @layout("packed") {
 }
 
 
-func testNoPaddingBetween () -> Bool {
+func testNoPaddingBetween: () -> Bool {
 	if offsetof(Header.tag) != 0 {
 		printf("offsetof(Header.tag) = %zu, expected 0\n", offsetof(Header.tag))
 		return false
@@ -62,7 +62,7 @@ func testNoPaddingBetween () -> Bool {
 }
 
 
-func testNoPaddingAtEnd () -> Bool {
+func testNoPaddingAtEnd: () -> Bool {
 	// The size is the sum of the fields: nothing is added to align the
 	// record, because a packed record needs no alignment.
 	if sizeof(Header) != 5 {
@@ -83,7 +83,7 @@ func testNoPaddingAtEnd () -> Bool {
 }
 
 
-func testFieldsWork () -> Bool {
+func testFieldsWork: () -> Bool {
 	// An unaligned field is still a field: it is constructed, read and
 	// assigned like any other.
 	var h: Header = {tag = 0x7F, len = 0x11223344}
@@ -103,7 +103,7 @@ func testFieldsWork () -> Bool {
 }
 
 
-func testInArray () -> Bool {
+func testInArray: () -> Bool {
 	// Packed elements sit 5 bytes apart, which is the reason to pack them.
 	if sizeof([4]Header) != 20 {
 		printf("sizeof([4]Header) = %zu, expected 20\n", sizeof([4]Header))
@@ -126,7 +126,7 @@ func testInArray () -> Bool {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	var result = true
 	result = testNoPaddingBetween() and result
 	result = testNoPaddingAtEnd() and result

@@ -45,7 +45,7 @@ var r, g, b: Nat8              // three variables of one type
 @extern("C")
 var environ: []Ptr             // size comes from outside; only extern may do this
 
-func main () -> Int {
+func main: () -> Int {
 	var local: Int32           // starts at 0, like the global above
 	local = 5                  // and is an ordinary variable afterwards
 

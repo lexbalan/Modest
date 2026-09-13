@@ -30,7 +30,7 @@ pragma prefix ""
 pragma do_not_include
 
 @extern("C")
-public func write (fd: Int, buf: Ptr, n: Size) -> Size
+public func write: (fd: Int, buf: Ptr, n: Size) -> Size
 ```
 
 ```modest

@@ -10,7 +10,7 @@ public type RingWord8 = {
 }
 
 
-public func init (q: *RingWord8, buf: *[]Word8, capacity: Nat32) -> Bool {
+public func init: (q: *RingWord8, buf: *[]Word8, capacity: Nat32) -> Bool {
 	if buf == nil or capacity == 0 {
 		return false
 	}
@@ -19,7 +19,7 @@ public func init (q: *RingWord8, buf: *[]Word8, capacity: Nat32) -> Bool {
 }
 
 
-public func deinit (q: *RingWord8) -> Unit {
+public func deinit: (q: *RingWord8) -> Unit {
 	let pdata = *[queue.capacity(&q.queue)]Word8 q.data
 	*pdata = []
 	queue.deinit(&q.queue)
@@ -27,34 +27,34 @@ public func deinit (q: *RingWord8) -> Unit {
 }
 
 
-public func clear (q: *RingWord8) -> Unit {
+public func clear: (q: *RingWord8) -> Unit {
 	let pdata = *[queue.capacity(&q.queue)]Word8 q.data
 	*pdata = []
 	queue.clear(&q.queue)
 }
 
 
-public func capacity (q: *RingWord8) -> Nat32 {
+public func capacity: (q: *RingWord8) -> Nat32 {
 	return queue.capacity(&q.queue)
 }
 
 
-public func size (q: *RingWord8) -> Nat32 {
+public func size: (q: *RingWord8) -> Nat32 {
 	return queue.size(&q.queue)
 }
 
 
-public func isFull (q: *RingWord8) -> Bool {
+public func isFull: (q: *RingWord8) -> Bool {
 	return queue.isFull(&q.queue)
 }
 
 
-public func isEmpty (q: *RingWord8) -> Bool {
+public func isEmpty: (q: *RingWord8) -> Bool {
 	return queue.isEmpty(&q.queue)
 }
 
 
-public func put (q: *RingWord8, b: Word8) -> @unused Bool {
+public func put: (q: *RingWord8, b: Word8) -> @unused Bool {
 	/*
 	if queue.isFull(&q.queue) {
 		return false
@@ -68,7 +68,7 @@ public func put (q: *RingWord8, b: Word8) -> @unused Bool {
 }
 
 
-public func get (q: *RingWord8, b: *Word8) -> @unused Bool {
+public func get: (q: *RingWord8, b: *Word8) -> @unused Bool {
 	if queue.isEmpty(&q.queue) {
 		return false
 	}

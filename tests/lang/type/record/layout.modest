@@ -63,7 +63,7 @@ type Tight = @alignment(2) {
 }
 
 
-func testExact () -> Bool {
+func testExact: () -> Bool {
 	// The default, and the control for everything below: `Nat32` wants a
 	// four-byte boundary, so three bytes go in front of it and one whole
 	// word is the record's step.
@@ -84,7 +84,7 @@ func testExact () -> Bool {
 }
 
 
-func testPacked () -> Bool {
+func testPacked: () -> Bool {
 	// The same fields with the padding taken out: `len` starts where `tag`
 	// ended, and a record that needs no boundary of its own is 1-aligned.
 	if offsetof(Packed.tag) != 0 or offsetof(Packed.len) != 1 {
@@ -104,7 +104,7 @@ func testPacked () -> Bool {
 }
 
 
-func testUnion () -> Bool {
+func testUnion: () -> Bool {
 	// Every field from zero, so the record is as long as its longest field
 	// rather than as long as all of them.
 	if offsetof(Overlay.word) != 0 or offsetof(Overlay.bytes) != 0 or offsetof(Overlay.half) != 0 {
@@ -126,7 +126,7 @@ func testUnion () -> Bool {
 }
 
 
-func testNested () -> Bool {
+func testNested: () -> Bool {
 	// A layout applies to the record that carries it and stops there: the
 	// packed one puts `inner` at an odd offset, and `inner` is still the
 	// padded eight-byte `Exact` it was declared as.
@@ -154,7 +154,7 @@ func testNested () -> Bool {
 }
 
 
-func testUnhonoured () -> Bool {
+func testUnhonoured: () -> Bool {
 	// `@alignment(2)` is dropped on the way to both backends, so `Tight` is
 	// the bare `Word8` it would have been without it.  What must never
 	// happen is the annotation arriving without its 2 — a C attribute that
@@ -172,7 +172,7 @@ func testUnhonoured () -> Bool {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	var result = true
 	result = testExact() and result
 	result = testPacked() and result

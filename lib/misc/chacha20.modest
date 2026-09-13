@@ -6,12 +6,12 @@ public type State = [16]Word32
 public type Block = [16]Word32
 
 
-func rotl32 (x: Word32, n: Nat32) -> Word32 {
+func rotl32: (x: Word32, n: Nat32) -> Word32 {
 	return (x << n) | (x >> (32 - n))
 }
 
 
-func quarterRound (a: Word32, b: Word32, c: Word32, d: Word32) -> [4]Word32 {
+func quarterRound: (a: Word32, b: Word32, c: Word32, d: Word32) -> [4]Word32 {
 	var a0 = a
 	var b0 = b
 	var c0 = c
@@ -33,7 +33,7 @@ func quarterRound (a: Word32, b: Word32, c: Word32, d: Word32) -> [4]Word32 {
 }
 
 
-public func chacha20Block (state: State) -> Block {
+public func chacha20Block: (state: State) -> Block {
 	var x = state  // working copy
 
 	var i: Int32 = 0
@@ -119,7 +119,7 @@ public func chacha20Block (state: State) -> Block {
 // Итог: Оставь Nonce открытым. Сила ChaCha20 не в секретности Nonce, а в том, что даже зная его, никто не сможет вычислить ключ.
 
 // counter он говорит алгоритму - какой блок keystream генерировать
-public func makeState (key: *Key, counter: Word32, nonce: *[3]Word32) -> State {
+public func makeState: (key: *Key, counter: Word32, nonce: *[3]Word32) -> State {
 	return [
 		0x61707865, 0x3320646e, 0x79622d32, 0x6b206574,
 		key[0],     key[1],     key[2],     key[3],

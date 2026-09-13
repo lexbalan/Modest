@@ -43,7 +43,7 @@ public type Context = @public {
 
 
 //@pure
-func rj_xtime (x: Word8) -> Word8 {
+func rj_xtime: (x: Word8) -> Word8 {
 	let y = 0xff & (x << 1)
 	if x & 0x80 != 0 {
 		return y ^ 0x1b
@@ -125,18 +125,18 @@ const sboxinv: [256]Byte = [
 
 
 @inline
-func rj_sbox (x: Word8) -> Byte {
+func rj_sbox: (x: Word8) -> Byte {
 	return sbox[Nat8 x]
 }
 
 
 @inline
-func rj_sboxInv (x: Word8) -> Byte {
+func rj_sboxInv: (x: Word8) -> Byte {
 	return sboxinv[Nat8 x]
 }
 
 
-func subBytes (block: *Block) -> {} {
+func subBytes: (block: *Block) -> {} {
 	var i = Nat8 0
 	while i < lengthof(Block) {
 		block[i] = rj_sbox(block[i])
@@ -145,7 +145,7 @@ func subBytes (block: *Block) -> {} {
 }
 
 
-func subBytesInv (block: *Block) -> {} {
+func subBytesInv: (block: *Block) -> {} {
 	var i = Nat8 0
 	while i < lengthof(Block) {
 		block[i] = rj_sboxInv(block[i])
@@ -154,7 +154,7 @@ func subBytesInv (block: *Block) -> {} {
 }
 
 
-func addRoundKey (block: *Block, k: *[16]Byte) -> {} {
+func addRoundKey: (block: *Block, k: *[16]Byte) -> {} {
 	var i = Nat8 0
 	while i < lengthof(Block) {
 		block[i] = block[i] ^ k[i]
@@ -163,7 +163,7 @@ func addRoundKey (block: *Block, k: *[16]Byte) -> {} {
 }
 
 
-func addRoundKeyCpy (block: *Block, key: *Key, cpk: *Key) -> {} {
+func addRoundKeyCpy: (block: *Block, key: *Key, cpk: *Key) -> {} {
 	var i = Nat8 0
 	while i < lengthof(Block) {
 		let yy = key[i]
@@ -175,7 +175,7 @@ func addRoundKeyCpy (block: *Block, key: *Key, cpk: *Key) -> {} {
 }
 
 
-func shiftRows (block: *Block) -> {} {
+func shiftRows: (block: *Block) -> {} {
 	var i, j: Word8  // to make it potentially parallelable :)
 
 	i = block[1]
@@ -200,7 +200,7 @@ func shiftRows (block: *Block) -> {} {
 }
 
 
-func shiftRowsInv (block: *Block) -> {} {
+func shiftRowsInv: (block: *Block) -> {} {
 	var i, j: Word8  // similar to shiftRows :)
 
 	i = block[1]
@@ -225,7 +225,7 @@ func shiftRowsInv (block: *Block) -> {} {
 }
 
 
-func mixColumns (block: *Block) -> {} {
+func mixColumns: (block: *Block) -> {} {
 	var a, b, c, d, e: @register Word8
 
 	var i: Nat8 = 0
@@ -244,7 +244,7 @@ func mixColumns (block: *Block) -> {} {
 }
 
 
-func mixColumnsInv (block: *Block) -> {} {
+func mixColumnsInv: (block: *Block) -> {} {
 	var a, b, c, d, e, x, y, z: @register Word8
 
 	var i: Nat8 = 0
@@ -266,7 +266,7 @@ func mixColumnsInv (block: *Block) -> {} {
 }
 
 
-func expandEncKey (k: *Key, rc: *Byte) -> {} {
+func expandEncKey: (k: *Key, rc: *Byte) -> {} {
 	var i: Nat8
 
 	k[0] = k[0] ^ rj_sbox(k[29]) ^ *rc
@@ -300,7 +300,7 @@ func expandEncKey (k: *Key, rc: *Byte) -> {} {
 }
 
 
-func expandDecKey (k: *Key, rc: *Byte) -> {} {
+func expandDecKey: (k: *Key, rc: *Byte) -> {} {
 	var i: Nat8
 
 	i = 28
@@ -340,7 +340,7 @@ func expandDecKey (k: *Key, rc: *Byte) -> {} {
 }
 
 
-public func init (ctx: *Context, key: *Key) -> @unused Result {
+public func init: (ctx: *Context, key: *Key) -> @unused Result {
 	if ctx == nil or key == nil {
 		return resultError
 	}
@@ -359,7 +359,7 @@ public func init (ctx: *Context, key: *Key) -> @unused Result {
 }
 
 
-public func encrypt_ecb (ctx: *Context, block: *Block) -> @unused Result {
+public func encrypt_ecb: (ctx: *Context, block: *Block) -> @unused Result {
 	if ctx == nil or block == nil {
 		return resultError
 	}
@@ -390,7 +390,7 @@ public func encrypt_ecb (ctx: *Context, block: *Block) -> @unused Result {
 }
 
 
-public func decrypt_ecb (ctx: *Context, block: *Block) -> @unused Result {
+public func decrypt_ecb: (ctx: *Context, block: *Block) -> @unused Result {
 	if ctx == nil or block == nil {
 		return resultError
 	}
@@ -421,7 +421,7 @@ public func decrypt_ecb (ctx: *Context, block: *Block) -> @unused Result {
 }
 
 
-public func deinit (ctx: *Context) -> @unused Result {
+public func deinit: (ctx: *Context) -> @unused Result {
 	if ctx == nil {
 		return resultError
 	}

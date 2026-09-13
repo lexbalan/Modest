@@ -65,14 +65,14 @@ let c = s[0]              // Char8 'H'
 ## Examples
 
 ```modest
-func sum (v: *[]Int32, n: Nat32) -> Int32 {   // explicit by-reference
+func sum: (v: *[]Int32, n: Nat32) -> Int32 {   // explicit by-reference
 	var s: Int32 = 0
 	var k: Nat32 = 0
 	while k < n { s = s + v[k]; ++k }
 	return s
 }
 
-func maxOf (v: [5]Int32) -> Int32 {           // parameter by value
+func maxOf: (v: [5]Int32) -> Int32 {           // parameter by value
 	var m: Int32 = v[0]
 	var k: Nat32 = 1
 	while k < lengthof(v) {
@@ -82,12 +82,12 @@ func maxOf (v: [5]Int32) -> Int32 {           // parameter by value
 	return m
 }
 
-func makeTriple (x: Int32) -> [3]Int32 {      // returned by value
+func makeTriple: (x: Int32) -> [3]Int32 {      // returned by value
 	var r: [3]Int32 = [x, x + 1, x + 2]
 	return r
 }
 
-func main () -> Int {
+func main: () -> Int {
 	var a: [5]Int32 = [1, 2, 3, 4, 5]
 	a[0] = 10
 	printf("sum = %d\n", sum(&a, lengthof(a)))

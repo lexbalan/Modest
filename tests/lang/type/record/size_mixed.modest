@@ -48,7 +48,7 @@ type Pair = {
 }
 
 
-func testPadding () -> Bool {
+func testPadding: () -> Bool {
 	// 1 + 4 + 2 bytes of fields, spread over 12 bytes of record.
 	if sizeof(Tagged) != 12 {
 		printf("sizeof(Tagged) = %zu, expected 12\n", sizeof(Tagged))
@@ -76,7 +76,7 @@ func testPadding () -> Bool {
 }
 
 
-func testWidestField () -> Bool {
+func testWidestField: () -> Bool {
 	// `val` needs 8, so it starts at 8 and the record is aligned to 8.
 	// `trail` is one byte at 16, and the record is rounded from 17 to 24.
 	if sizeof(Wide) != 24 {
@@ -106,7 +106,7 @@ func testWidestField () -> Bool {
 }
 
 
-func testNested () -> Bool {
+func testNested: () -> Bool {
 	// A record field is placed as a whole: `second` starts where `first`
 	// ends, and the pair costs exactly the two of them.
 	if offsetof(Pair.second) != sizeof(Tagged) {
@@ -124,7 +124,7 @@ func testNested () -> Bool {
 }
 
 
-func testArrayStride () -> Bool {
+func testArrayStride: () -> Bool {
 	// Nothing is inserted between elements: the tail padding of the record
 	// is what keeps the next one aligned, and it is already counted.
 	if sizeof([3]Tagged) != 36 {
@@ -146,7 +146,7 @@ func testArrayStride () -> Bool {
 }
 
 
-func testStrideAtRuntime () -> Bool {
+func testStrideAtRuntime: () -> Bool {
 	// The size is not only reported, it is used: `= []` fills sizeof bytes
 	// per element, and a size that is too big runs off the end.
 	var before: Nat32 = 111
@@ -190,7 +190,7 @@ func testStrideAtRuntime () -> Bool {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	var result = true
 	result = testPadding() and result
 	result = testWidestField() and result

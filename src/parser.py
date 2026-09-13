@@ -11,6 +11,11 @@ from unicode import utf32cc_to_utf8_str
 top_level_stoppers = ['type', 'let', 'const', 'var', 'func']
 func_stoppers = ['let', 'var', 'if', 'while', 'return', 'type']
 
+# 'func name: (...) -> Ret' is the recommended form; 'func name (...) -> Ret'
+# still parses. Set to False to accept the colon-less form silently again,
+# with no warning, while this syntax change is still being decided.
+WARN_MISSING_FUNC_COLON = True
+
 
 def ast_value_bad(ti):
 	return {
@@ -320,10 +325,11 @@ class Parser:
 		self.parse_access_modifier()
 		if self.is_identifier():
 			self.skip1()
-			if not self.match(':'):
-				return False
+			if self.match(':'):
+				return True
 
-			return True
+			# still a field; parse_stmt_field() warns and recovers
+			return self.missing_colon_type_follows()
 
 
 	def is_annotation(self):
@@ -405,6 +411,7 @@ class Parser:
 					self.skip1()
 					if self.match(":"):
 						return True
+					return self.missing_colon_type_follows()
 
 
 			return False
@@ -428,6 +435,12 @@ class Parser:
 
 	def is_type_expr(self):
 		return self.check(self.check_is_type)
+
+	# a ':' was expected but is missing; true if a type clearly follows
+	# anyway (same line) — caller should warn and parse it as if the ':'
+	# were there, instead of erroring out
+	def missing_colon_type_follows(self):
+		return not self.look_nl() and self.is_type_expr()
 
 	def is_expr(self):
 		return not self.is_type_expr()
@@ -2037,14 +2050,13 @@ class Parser:
 		self.skip("func")
 		id = self.parse_identifier()
 
-		if self.look(":"):
-			# experimental: signature borrowed from a named function type
-			self.skip(":")
-			ftyp = self.expr_type()
-		else:
-			if not self.look("("):
-				error("expected '(' token", self.textInfo())
-			ftyp = self.expr_type()
+		if not self.match(":"):
+			if not self.missing_colon_type_follows():
+				error("expected ':' token", self.textInfo())
+			elif WARN_MISSING_FUNC_COLON:
+				warning("function signature should be preceded by ':' — write 'func %s: (...) -> ...'" % id['str'], self.textInfo())
+
+		ftyp = self.expr_type()
 
 		if self.is_comment():
 			self.skip1()
@@ -2086,6 +2098,12 @@ class Parser:
 		if self.look(":"):
 			ti_mid = self.textInfo()
 			self.skip(":")
+			t = self.expr_type()
+			if t != None:
+				ti_end = t['ti'].end
+		elif self.missing_colon_type_follows():
+			warning("missing ':' before type", self.textInfo())
+			ti_mid = self.textInfo()
 			t = self.expr_type()
 			if t != None:
 				ti_end = t['ti'].end

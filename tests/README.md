@@ -71,7 +71,7 @@ include "libc/ctypes64"
 include "libc/stdio"
 include "libc/stdlib"
 
-func main () -> Int {
+func main: () -> Int {
 	printf("passed: while\n")
 	return exitSuccess
 }
@@ -139,7 +139,7 @@ source:
 
 include "libc/ctypes64"
 
-func main () -> Int {
+func main: () -> Int {
 	var over: Float16 = 70000.0
 	return 0
 }

@@ -27,12 +27,12 @@ const negTen: Int32 = -10
 const negThree: Int32 = -3
 
 
-func opaque (n: Int32) -> Int32 {
+func opaque: (n: Int32) -> Int32 {
 	return n
 }
 
 
-func check (name: *ConstCharStr, folded: Int32, computed: Int32) -> Bool {
+func check: (name: *ConstCharStr, folded: Int32, computed: Int32) -> Bool {
 	if folded == computed {
 		return true
 	}
@@ -41,7 +41,7 @@ func check (name: *ConstCharStr, folded: Int32, computed: Int32) -> Bool {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	var a = opaque(10)
 	var b = opaque(3)
 	var negA = opaque(-10)

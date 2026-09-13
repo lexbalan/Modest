@@ -37,17 +37,17 @@ type Ref = {
 var n: Int32 = 5
 
 
-func twice (a: Int32) -> Int32 {
+func twice: (a: Int32) -> Int32 {
 	return a * 2
 }
 
 
-func negate (a: Int32) -> Int32 {
+func negate: (a: Int32) -> Int32 {
 	return 0 - a
 }
 
 
-func testArrayLiteral () -> Bool {
+func testArrayLiteral: () -> Bool {
 	// A dispatch table: the shape the pointer-to-function field is for.
 	var ops: [2]Op = [{tag = 1, fn = &twice}, {tag = 2, fn = &negate}]
 	if ops[0].tag != 1 or ops[1].tag != 2 {
@@ -75,7 +75,7 @@ func testArrayLiteral () -> Bool {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	if not testArrayLiteral() {
 		printf("failed: pointer field in an array literal\n")
 		return exitFailure

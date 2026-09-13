@@ -108,20 +108,20 @@ type Name = @branded Type          // branded type (newtype pattern)
 
 ### Functions
 ```modest
-func add (a: Int32, b: Int32) -> Int32 {
+func add: (a: Int32, b: Int32) -> Int32 {
     return a + b
 }
 
-func main () -> Int {
+func main: () -> Int {
     return 0
 }
 
-func no_return () -> Unit {
+func no_return: () -> Unit {
     printf("hello\n")
 }
 
-// EXPERIMENTAL: signature borrowed from a named function type, params come
-// from the type; can't mix with inline (params) -> Return on the same def
+// signature can also be borrowed from a named function type; params come
+// from the type
 type FailHandler = (code: Int32) -> Unit
 func onDiskFail: FailHandler {
     printf("disk failed with code %d\n", code)
@@ -133,7 +133,7 @@ func onDiskFail: FailHandler {
 > callee may read but not edit. Copy it into a local `var` to modify.
 >
 > ```modest
-> func f (n: Int32, p: Point, a: [2]Int32) -> Int32 {
+> func f: (n: Int32, p: Point, a: [2]Int32) -> Int32 {
 >     n = 1        // error: expected lvalue
 >     p.x = 1      // error: expected mutable value
 >     a[0] = 1     // error: expected mutable value
@@ -526,25 +526,25 @@ Unit value                         // discard a value (suppress warnings)
 ### Examples
 ```modest
 @inline
-func min (a: Int32, b: Int32) -> Int32 {
+func min: (a: Int32, b: Int32) -> Int32 {
     if a < b { return a }
     return b
 }
 
 @noinline
-func expensive (x: Int32) -> Int32 {
+func expensive: (x: Int32) -> Int32 {
     // ...
     return x
 }
 
 @extern("C", "malloc")
-func my_alloc (size: Nat64) -> *Unit
+func my_alloc: (size: Nat64) -> *Unit
 
 @used
 var table: [256]Word8              // kept even if never referenced
 
 @deprecated
-func old_api () -> Unit
+func old_api: () -> Unit
 
 @immutable
 var maxItems: Int32 = 100
@@ -583,13 +583,13 @@ type Point = {x: Float64, y: Float64}
 const maxSize = 100
 
 
-func init (p: *Point) -> Unit {
+func init: (p: *Point) -> Unit {
     p.x = 0.0  // set x to origin
     p.y = 0.0  // set y to origin
 }
 
 
-func distance (a: Point, b: Point) -> Float64 {
+func distance: (a: Point, b: Point) -> Float64 {
     let dx = a.x - b.x  // x delta
     let dy = a.y - b.y  // y delta
     return sqrt(dx*dx + dy*dy)
@@ -604,7 +604,7 @@ func distance (a: Point, b: Point) -> Float64 {
 include "libc/ctypes64"
 include "libc/stdio"
 
-func main () -> Int {
+func main: () -> Int {
     printf("Hello World!\n")
     return 0
 }
@@ -622,13 +622,13 @@ type Point = {
 }
 
 @inline
-func distance (a: Point, b: Point) -> Float {
+func distance: (a: Point, b: Point) -> Float {
     let dx = a.x - b.x
     let dy = a.y - b.y
     return sqrt(dx*dx + dy*dy)
 }
 
-func main () -> Int {
+func main: () -> Int {
     let a = Point {x = 0.0, y = 0.0}
     let b = Point {x = 3.0, y = 4.0}
     printf("distance = %f\n", distance(a, b))
@@ -647,7 +647,7 @@ type Node = {
     next:  *Node
 }
 
-func main () -> Int {
+func main: () -> Int {
     let n = *Node malloc(sizeof(Node))
     n.value = 42
     n.next = nil
@@ -672,7 +672,7 @@ while i < 5 {
 
 ### Loop with While
 ```modest
-func sum (n: Int32) -> Int32 {
+func sum: (n: Int32) -> Int32 {
     var total: Int32 = 0
     var i: Int32 = 0
     while i < n {
@@ -687,7 +687,7 @@ func sum (n: Int32) -> Int32 {
 ```modest
 type Handler = *(payload: *Unit) -> Unit
 
-func on_event (payload: *Unit) -> Unit {
+func on_event: (payload: *Unit) -> Unit {
     printf("event!\n")
 }
 
@@ -716,7 +716,7 @@ include "libc/ctypes64"
 include "libc/stdio"
 import "utils"
 
-func main () -> Int {
+func main: () -> Int {
     utils.greet()
     return 0
 }
@@ -724,7 +724,7 @@ func main () -> Int {
 // utils.modest
 include "libc/stdio"
 
-func greet () -> Unit {
+func greet: () -> Unit {
     printf("hello from utils\n")
 }
 ```
@@ -748,11 +748,11 @@ By default, symbol names are emitted as-is. Module imports add a prefix for publ
 ```modest
 // module: utils
 
-public func greet () -> Unit { ... }   // emitted as: utils_greet
-private func helper () -> Unit { ... } // emitted as: helper  (private, no prefix)
+public func greet: () -> Unit { ... }   // emitted as: utils_greet
+private func helper: () -> Unit { ... } // emitted as: helper  (private, no prefix)
 
 @extern("C", "printf")
-public func myPrint (s: Str8) -> Unit  // emitted as: printf
+public func myPrint: (s: Str8) -> Unit  // emitted as: printf
 ```
 
 > `public` marks a symbol as public (visible to importers). The module name becomes a prefix in the output.
@@ -770,14 +770,14 @@ public func myPrint (s: Str8) -> Unit  // emitted as: printf
 
 | Feature          | C                              | Modest                                    |
 |------------------|--------------------------------|-------------------------------------------|
-| Function sig     | `int add(int a, int b)`        | `func add (a: Int32, b: Int32) -> Int32`  |
+| Function sig     | `int add(int a, int b)`        | `func add: (a: Int32, b: Int32) -> Int32` |
 | Variable decl    | `int x = 10;`                  | `var x: Int32 = 10`                       |
 | Struct           | `struct Point { int x; int y; }` | `type Point = {x: Int32, y: Int32}`     |
 | Field via ptr    | `ptr->field`                   | `ptr.field` (auto-deref)                  |
 | Arrays           | `int arr[10]`                  | `var arr: [10]Int32`                      |
 | Array semantics  | decays to pointer              | ordinary value type: passed, returned, assigned **by value** (no decay) |
-| Return type      | `int func()`                   | `func name () -> Int32`                   |
-| Void             | `void func()`                  | `func name () -> Unit`                    |
+| Return type      | `int func()`                   | `func name: () -> Int32`                  |
+| Void             | `void func()`                  | `func name: () -> Unit`                   |
 | Logical ops      | `&&`, `\|\|`, `!`              | `and`, `or`, `not`                        |
 | Bitwise ops      | any integer type               | only `Word*` types (`&` `\|` `^` `~` `<<` `>>`) |
 | Continue         | `continue`                     | `again`                                   |

@@ -8,7 +8,7 @@ inside function bodies and are executed sequentially.
 | Variable definition | `var x: T = v` | [var](./var.md) |
 | Immutable binding | `let x = v` | [let](./let.md) |
 | Local type definition | `type T = ...` | [def/type](../def/type.md) |
-| Nested function | `func f (...) -> T {}` | [def/func](../def/func.md) |
+| Nested function | `func f: (...) -> T {}` | [def/func](../def/func.md) |
 | Assignment | `lvalue = v` | [assign](./assign.md) |
 | Increment / decrement | `++x`, `--x` | [assign](./assign.md) |
 | Conditional | `if c {} else {}` | [if](./if.md) |

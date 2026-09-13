@@ -13,7 +13,7 @@ const c = 1.5
 
 var arr: [10]Fixed64 = [1.5, 2.5]
 
-func main () -> Int {
+func main: () -> Int {
 	printf("Hello World!\n")
 
 	f32 = 1.0

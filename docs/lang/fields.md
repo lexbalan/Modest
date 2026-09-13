@@ -35,7 +35,7 @@ var counter: Int32 = 0                     // initializer
 
 type P = {x: Float64 = 1.5, y: Float64}    // default for x
 
-func scale (v: Float64, k: Float64 = 2.0) -> Float64 {
+func scale: (v: Float64, k: Float64 = 2.0) -> Float64 {
 	return v * k                           // k defaults to 2.0
 }
 ```

@@ -19,7 +19,7 @@ a [function](../def/func.md), [`if`](./if.md) branch or
 ## Example
 
 ```modest
-func main () -> Int {
+func main: () -> Int {
 	var x: Int32 = 1          // visible to end of function
 	if x > 0 {
 		let y = x * 2         // visible to end of this branch

@@ -28,7 +28,7 @@ include "libc/stdio"
 include "libc/stdlib"
 
 
-func testNegation () -> Bool {
+func testNegation: () -> Bool {
 	var t = true
 	var f = false
 
@@ -63,7 +63,7 @@ func testNegation () -> Bool {
 
 // Two negations give the original back, which is the property that makes
 // `not` a permutation of Bool rather than a projection onto one value.
-func testInvolution () -> Bool {
+func testInvolution: () -> Bool {
 	var t = true
 	var f = false
 
@@ -85,7 +85,7 @@ func testInvolution () -> Bool {
 
 // Where `not` sits in the precedence table, stated by cases in which the
 // two groupings disagree.
-func testPrecedence () -> Bool {
+func testPrecedence: () -> Bool {
 	var t = true
 	var f = false
 
@@ -126,7 +126,7 @@ func testPrecedence () -> Bool {
 // operand once the left one decides — the backends disagree, see
 // QUESTION#4 — so nothing here has a side effect and the
 // answer cannot depend on it.
-func testDeMorgan () -> Bool {
+func testDeMorgan: () -> Bool {
 	var t = true
 	var f = false
 
@@ -159,7 +159,7 @@ func testDeMorgan () -> Bool {
 
 // `not` in the places a Bool is actually consumed: the conditions of `if`
 // and `while`, where it is the ordinary way to write "until".
-func testConditions () -> Bool {
+func testConditions: () -> Bool {
 	var done = false
 	var n: Int32 = 0
 
@@ -200,7 +200,7 @@ func testConditions () -> Bool {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	var result = true
 	result = testNegation() and result
 	result = testInvolution() and result

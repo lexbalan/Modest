@@ -32,7 +32,7 @@ type Header = {
 }
 
 
-func testSizeof () -> Bool {
+func testSizeof: () -> Bool {
 	var bytes: Size = sizeof(Buf)
 	if bytes != 16 {
 		printf("sizeof(Buf) = %zu, expected 16\n", bytes)
@@ -55,17 +55,17 @@ func testSizeof () -> Bool {
 // the array, as a slice, as an argument passed by value - so a backend that
 // asks the emitted value for its size would answer with the size of one item
 // or of a pointer.  The size of an array value is the size of its type.
-func arraySize (a: [10]Int32) -> Size {
+func arraySize: (a: [10]Int32) -> Size {
 	return sizeof(a)
 }
 
 
-func derefSize (p: *[10]Int32) -> Size {
+func derefSize: (p: *[10]Int32) -> Size {
 	return sizeof(*p)
 }
 
 
-func testSizeofArrayValue () -> Bool {
+func testSizeofArrayValue: () -> Bool {
 	var arr: [10]Int32 = []
 
 	if sizeof(arr) != 40 {
@@ -98,7 +98,7 @@ func testSizeofArrayValue () -> Bool {
 }
 
 
-func testAlignof () -> Bool {
+func testAlignof: () -> Bool {
 	// alignment of a base type equals its size
 	var a: Size = alignof(Nat32)
 	if a != 4 {
@@ -111,7 +111,7 @@ func testAlignof () -> Bool {
 }
 
 
-func testLengthof () -> Bool {
+func testLengthof: () -> Bool {
 	var arr: [5]Int32 = []
 	var len: Size = lengthof(arr)
 	if len != 5 {
@@ -129,7 +129,7 @@ func testLengthof () -> Bool {
 }
 
 
-func testOffsetof () -> Bool {
+func testOffsetof: () -> Bool {
 	// with the default layout `len` sits behind a padded `tag`
 	var off: Size = offsetof(Header.len)
 	if off != 4 {
@@ -149,7 +149,7 @@ func testOffsetof () -> Bool {
 
 // The width of a compile-time size is the width the value needs, so a
 // narrow Nat accepts it as it is
-func testNarrowing () -> Bool {
+func testNarrowing: () -> Bool {
 	var size: Nat8 = sizeof(Buf)
 	if size != 16 {
 		printf("Nat8 sizeof(Buf) = %u, expected 16\n", Word32 size)
@@ -171,7 +171,7 @@ func testNarrowing () -> Bool {
 
 
 // ...and it mixes with a variable of any numeric type, taking that type
-func testMixing () -> Bool {
+func testMixing: () -> Bool {
 	var arr: [5]Int32 = []
 	var i: Nat32 = 0
 	var sum: Int32 = 0
@@ -204,12 +204,12 @@ func testMixing () -> Bool {
 // or C regroups it into `(sizeof(item) * n) / m`.  `opaque` keeps the two
 // numbers out of the fold, and the division deliberately does not divide
 // evenly - with an even division both groupings agree and prove nothing.
-func opaque (n: Size) -> Size {
+func opaque: (n: Size) -> Size {
 	return n
 }
 
 
-func testRuntimeVolume () -> Bool {
+func testRuntimeVolume: () -> Bool {
 	var n: Size = opaque(9)
 	var m: Size = opaque(4)
 
@@ -229,7 +229,7 @@ func testRuntimeVolume () -> Bool {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	var result = true
 	result = testSizeof() and result
 	result = testSizeofArrayValue() and result

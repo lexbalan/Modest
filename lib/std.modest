@@ -21,7 +21,7 @@ public type Nat = Nat32
 //$endif
 
 
-public func assert (cond: Bool, msg: *Str8) -> Unit {
+public func assert: (cond: Bool, msg: *Str8) -> Unit {
 	if not cond {
 		printf("assert: %s", msg)
 		exit(1)

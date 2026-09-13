@@ -37,7 +37,7 @@ include "libc/stdlib"
 
 // Inversion is its own inverse — the property that separates it from a
 // clear or a set.
-func testInvolution () -> Bool {
+func testInvolution: () -> Bool {
 	var w: Word32 = 0x0000A55A
 
 	// Chained and parenthesised: the parser takes any number of prefix
@@ -66,7 +66,7 @@ func testInvolution () -> Bool {
 
 // What the complement actually is, in terms the other operators can state:
 // every bit flipped, so the operand and its complement partition the type.
-func testComplement () -> Bool {
+func testComplement: () -> Bool {
 	var w: Word32 = 0x0000A55A
 
 	// The two have no bit in common and cover every bit between them.
@@ -113,7 +113,7 @@ func testComplement () -> Bool {
 
 // De Morgan ties the unary operator to the binary ones, in both spellings,
 // so a `not` that quietly did something else to a Word would show here.
-func testDeMorgan () -> Bool {
+func testDeMorgan: () -> Bool {
 	var w: Word32 = 0x0000A55A
 	var key: Word32 = 0x00001234
 
@@ -144,7 +144,7 @@ func testDeMorgan () -> Bool {
 
 // What the operator is for: `& ~mask` is how a bit is cleared, and it is
 // the one place unary `~` appears in ordinary code.
-func testMasking () -> Bool {
+func testMasking: () -> Bool {
 	var flags: Word32 = 0x00000000
 	var bit: Word32 = 0x00000004
 
@@ -203,7 +203,7 @@ func testMasking () -> Bool {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	var result = true
 	result = testInvolution() and result
 	result = testComplement() and result

@@ -49,12 +49,12 @@ type Error = @branded Nat32
 const errorNone = Error 0
 const errorSome = Error 1
 
-func divide (a: Int, b: Int) -> Int or Error {
+func divide: (a: Int, b: Int) -> Int or Error {
     if b == 0 { return errorSome }   // Error wraps implicitly
     return Int a / b                 // Int wraps implicitly
 }
 
-func main () -> Int {
+func main: () -> Int {
     var r = divide(10, 2)   // r : Int or Error
     // inspection via `when` is not yet available
     return 0

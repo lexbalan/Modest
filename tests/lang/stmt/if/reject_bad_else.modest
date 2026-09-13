@@ -15,7 +15,7 @@
 
 include "libc/ctypes64"
 
-func main () -> Int {
+func main: () -> Int {
 	var m: Int32 = 0
 
 	if m == 1 {

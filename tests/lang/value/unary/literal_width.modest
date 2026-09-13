@@ -30,7 +30,7 @@ include "libc/stdio"
 include "libc/stdlib"
 
 
-func main () -> Int {
+func main: () -> Int {
 	// A literal that fits a byte, inverted into a 32-bit type.
 	var a: Word32 = ~0x0F
 	if a != 0xFFFFFFF0 {

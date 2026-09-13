@@ -77,7 +77,7 @@ public type Stat = @public {
 
 // 01_stat for MACOS
 @alias("llvm", "\\01_stat")
-public func stat (path: *[]ConstChar, stat: *Stat) -> Int
+public func stat: (path: *[]ConstChar, stat: *Stat) -> Int
 
 
 /*
@@ -132,26 +132,26 @@ struct stat {
 
 
 /* is directory */
-@extern("C", "S_ISDIR") public func sIsdir (m: ModeT) -> Bool { return m & sIfmt == sIfdir }
+@extern("C", "S_ISDIR") public func sIsdir: (m: ModeT) -> Bool { return m & sIfmt == sIfdir }
 
 /* is char special */
-@extern("C", "S_ISCHR") public func sIschr (m: ModeT) -> Bool { return m & sIfmt == sIfchr }
+@extern("C", "S_ISCHR") public func sIschr: (m: ModeT) -> Bool { return m & sIfmt == sIfchr }
 
 /* is block special */
-@extern("C", "S_ISBLK") public func sIsblk (m: ModeT) -> Bool { return m & sIfmt == sIfblk }
+@extern("C", "S_ISBLK") public func sIsblk: (m: ModeT) -> Bool { return m & sIfmt == sIfblk }
 
 /* is regular file */
-@extern("C", "S_ISREG") public func sIsreg (m: ModeT) -> Bool { return m & sIfmt == sIfreg }
+@extern("C", "S_ISREG") public func sIsreg: (m: ModeT) -> Bool { return m & sIfmt == sIfreg }
 
 /* is fifo or socket */
-@extern("C", "S_ISFIFO") public func sIsfifo (m: ModeT) -> Bool { return m & sIfmt == sIfifo }
+@extern("C", "S_ISFIFO") public func sIsfifo: (m: ModeT) -> Bool { return m & sIfmt == sIfifo }
 
 /* is symbolic link */
-@extern("C", "S_ISLNK") public func sIslnk (m: ModeT) -> Bool { return m & sIfmt == sIflnk }
+@extern("C", "S_ISLNK") public func sIslnk: (m: ModeT) -> Bool { return m & sIfmt == sIflnk }
 
 /* is socket */
-@extern("C", "S_ISSOCK") public func sIssock (m: ModeT) -> Bool { return m & sIfmt == sIfsock }
+@extern("C", "S_ISSOCK") public func sIssock: (m: ModeT) -> Bool { return m & sIfmt == sIfsock }
 
 /* is whiteout */
-@extern("C", "S_ISWHT") public func sIswht (m: ModeT) -> Bool { return m & sIfmt == sIfwht }
+@extern("C", "S_ISWHT") public func sIswht: (m: ModeT) -> Bool { return m & sIfmt == sIfwht }
 

@@ -15,7 +15,7 @@ include "libc/stdio"
 include "libc/stdlib"
 
 
-func testBreakExits () -> Bool {
+func testBreakExits: () -> Bool {
 	// `while true` is only escapable by `break`.
 	var i: Int32 = 0
 	while true {
@@ -52,7 +52,7 @@ func testBreakExits () -> Bool {
 }
 
 
-func testAgainRestarts () -> Bool {
+func testAgainRestarts: () -> Bool {
 	// `again` jumps back to the condition, skipping the rest of the body.
 	var i: Int32 = 0
 	var skipped: Int32 = 0
@@ -84,7 +84,7 @@ func testAgainRestarts () -> Bool {
 
 // Counts pairs (i, j) visited in a nested loop where the inner one is cut
 // short. If `break` reached the outer loop, the total would be 1.
-func testInnermost () -> Bool {
+func testInnermost: () -> Bool {
 	var visits: Int32 = 0
 	var outerRounds: Int32 = 0
 
@@ -142,7 +142,7 @@ func testInnermost () -> Bool {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	var result = true
 	result = testBreakExits() and result
 	result = testAgainRestarts() and result

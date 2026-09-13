@@ -46,12 +46,12 @@ type HVec = {
 }
 
 
-func take (h: Float16) -> Float16 {
+func take: (h: Float16) -> Float16 {
 	return h
 }
 
 
-func testLayout () -> Bool {
+func testLayout: () -> Bool {
 	if sizeof(Float16) != 2 or alignof(Float16) != 2 {
 		printf("sizeof/alignof Float16 = %d/%d, expected 2/2\n",
 			Int32 sizeof(Float16), Int32 alignof(Float16))
@@ -78,7 +78,7 @@ func testLayout () -> Bool {
 
 // The two ends of the range that fits in those two bytes: 65504 is the
 // largest finite binary16, 6.103515625e-5 the smallest normal one.
-func testStorage () -> Bool {
+func testStorage: () -> Bool {
 	var max: Float16 = 65504.0
 	if Float64 max != 65504.0 {
 		printf("max = %f, expected 65504.0\n", Float64 max)
@@ -114,7 +114,7 @@ func testStorage () -> Bool {
 // this width the result of that rounding is something you can write down.
 // 0.1 is 0.0999755859375 in binary16, 1/3 is 0.333251953125, and both are
 // exact in a Float64, so the comparison below is not itself approximate.
-func testRounding () -> Bool {
+func testRounding: () -> Bool {
 	var tenth: Float16 = 0.1
 	if Float64 tenth != 0.0999755859375 {
 		printf("0.1 = %.16f, expected 0.0999755859375\n", Float64 tenth)
@@ -148,7 +148,7 @@ func testRounding () -> Bool {
 // `FloatX <- FloatY` in both directions.  Widening is exact by
 // construction: every binary16 is a binary32 and a binary64.  Narrowing is
 // the rounding above, reached from a value that was not a literal.
-func testWidthChange () -> Bool {
+func testWidthChange: () -> Bool {
 	var h: Float16 = 0.5
 	var f: Float32 = Float32 h
 	var d: Float64 = Float64 h
@@ -187,7 +187,7 @@ func testWidthChange () -> Bool {
 // `IntY` and `NatY` are explicit sources here as at any other width.  2048
 // is where the integers stop being consecutive: above 2^11 the spacing is
 // 2, so 2049 has nowhere to land and becomes 2048.
-func testFromInteger () -> Bool {
+func testFromInteger: () -> Bool {
 	var n8: Nat8 = 255
 	if Float64(Float16 n8) != 255.0 {
 		printf("Nat8 255 -> Float16 = %f, expected 255.0\n", Float64(Float16 n8))
@@ -222,7 +222,7 @@ func testFromInteger () -> Bool {
 // Float16 is also the one width where an `Int32` target works: the check
 // that refuses `Int32 <- Float64` (BUG#37) compares the two widths,
 // and here the float is the narrower of the two.
-func testToInteger () -> Bool {
+func testToInteger: () -> Bool {
 	var f: Float16 = 2.75
 	var g: Float16 = -2.75
 
@@ -255,7 +255,7 @@ func testToInteger () -> Bool {
 
 // Arithmetic and ordering, at the width of the type.  A Float16 is a
 // complete numeric type, not a storage format that promotes on use.
-func testArithmetic () -> Bool {
+func testArithmetic: () -> Bool {
 	var a: Float16 = 1.5
 	var b: Float16 = 2.25
 
@@ -301,7 +301,7 @@ func testArithmetic () -> Bool {
 // The range is small enough that ordinary arithmetic reaches its edges,
 // which is where the difference from a wider float shows at run time
 // rather than in the rounding of a constant.
-func testSpecials () -> Bool {
+func testSpecials: () -> Bool {
 	var max: Float16 = 65504.0
 	var two: Float16 = 2.0
 
@@ -341,7 +341,7 @@ func testSpecials () -> Bool {
 
 // Two bytes each, packed with no padding between them, and passed by value
 // through a call like any other number.
-func testAggregates () -> Bool {
+func testAggregates: () -> Bool {
 	var v: HVec = {x = 3.0, y = 4.0}
 	if sizeof(HVec) != 4 {
 		printf("sizeof(HVec) = %d, expected 4\n", Int32 sizeof(HVec))
@@ -389,7 +389,7 @@ func testAggregates () -> Bool {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	var result = true
 	result = testLayout() and result
 	result = testStorage() and result

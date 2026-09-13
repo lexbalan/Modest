@@ -35,7 +35,7 @@ include "libc/stdio"
 include "libc/stdlib"
 
 
-func check32 (name: *ConstCharStr, got: Word32, expected: Word32) -> Bool {
+func check32: (name: *ConstCharStr, got: Word32, expected: Word32) -> Bool {
 	if got == expected {
 		return true
 	}
@@ -44,7 +44,7 @@ func check32 (name: *ConstCharStr, got: Word32, expected: Word32) -> Bool {
 }
 
 
-func check64 (name: *ConstCharStr, got: Word64, expected: Word64) -> Bool {
+func check64: (name: *ConstCharStr, got: Word64, expected: Word64) -> Bool {
 	if got == expected {
 		return true
 	}
@@ -54,7 +54,7 @@ func check64 (name: *ConstCharStr, got: Word64, expected: Word64) -> Bool {
 
 
 // Float32: 1 sign bit, 8 exponent bits, 23 significand bits.
-func testFloat32 () -> Bool {
+func testFloat32: () -> Bool {
 	var ok = true
 
 	// 1.0 = +1.0 * 2^0: exponent 127, significand all zero.
@@ -90,7 +90,7 @@ func testFloat32 () -> Bool {
 
 
 // Float64: 1 sign bit, 11 exponent bits, 52 significand bits.
-func testFloat64 () -> Bool {
+func testFloat64: () -> Bool {
 	var ok = true
 
 	var one: Float64 = 1.0
@@ -125,7 +125,7 @@ func testFloat64 () -> Bool {
 
 // The other direction, which is the only way to write the values IEEE 754
 // has and the language has no literal for.
-func testFromBits () -> Bool {
+func testFromBits: () -> Bool {
 	var one: Float32 = unsafe Float32 Word32 0x3F800000
 	if Float64 one != 1.0 {
 		printf("0x3F800000 = %f, expected 1.0\n", Float64 one)
@@ -169,7 +169,7 @@ func testFromBits () -> Bool {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	var result = true
 	result = testFloat32() and result
 	result = testFloat64() and result

@@ -42,7 +42,7 @@ const one: Fixed32 = 1.0
 const three: Fixed32 = 3.0
 
 
-func check (name: *ConstCharStr, got: Word32, expected: Word32) -> Bool {
+func check: (name: *ConstCharStr, got: Word32, expected: Word32) -> Bool {
 	if got == expected {
 		return true
 	}
@@ -51,7 +51,7 @@ func check (name: *ConstCharStr, got: Word32, expected: Word32) -> Bool {
 }
 
 
-func check64 (name: *ConstCharStr, got: Word64, expected: Word64) -> Bool {
+func check64: (name: *ConstCharStr, got: Word64, expected: Word64) -> Bool {
 	if got == expected {
 		return true
 	}
@@ -60,7 +60,7 @@ func check64 (name: *ConstCharStr, got: Word64, expected: Word64) -> Bool {
 }
 
 
-func testLiterals () -> Bool {
+func testLiterals: () -> Bool {
 	var ok = true
 	ok = check("half", unsafe Word32 half, 0x00008000) and ok
 	ok = check("quarter", unsafe Word32 quarter, 0x00004000) and ok
@@ -89,7 +89,7 @@ func testLiterals () -> Bool {
 // Addition and subtraction are the raw ones; multiplication and division
 // are not — the scale squares itself in a product and cancels in a quotient,
 // so both have to be corrected or the result is 2^16 out.
-func testArithmetic () -> Bool {
+func testArithmetic: () -> Bool {
 	var ok = true
 
 	const sum = half + quarter               // 0.75
@@ -142,7 +142,7 @@ func testArithmetic () -> Bool {
 // nearest one, with a half step going away from zero — the same rule the
 // run-time helpers use, so that folding a constant and computing it cannot
 // disagree.
-func testRounding () -> Bool {
+func testRounding: () -> Bool {
 	var ok = true
 
 	// 0.1 * 65536 = 6553.6 -> 6554, not 6553
@@ -169,7 +169,7 @@ func testRounding () -> Bool {
 }
 
 
-func testConstruction () -> Bool {
+func testConstruction: () -> Bool {
 	var ok = true
 
 	// IntX -> FixedX scales up.
@@ -212,7 +212,7 @@ func testConstruction () -> Bool {
 
 // @fraction(N) moves the binary point, and the fold follows the type's own
 // N rather than a fixed 16.
-func testFraction () -> Bool {
+func testFraction: () -> Bool {
 	var ok = true
 
 	const a: @fraction(12) Fixed32 = 1.5
@@ -249,7 +249,7 @@ func testFraction () -> Bool {
 const arr: [3]Fixed32 = [1.5, 2.5, -0.5]
 
 
-func testArray () -> Bool {
+func testArray: () -> Bool {
 	var ok = true
 	ok = check("arr[0]", unsafe Word32 arr[0], 0x00018000) and ok
 	ok = check("arr[1]", unsafe Word32 arr[1], 0x00028000) and ok
@@ -285,7 +285,7 @@ var box: Box = {corners = [{x = 1.5, y = 0.5}, {x = 0.25, y = 3}], edge = [0.5, 
 var margin: Margin = {near = 1.0}
 
 
-func testRecord () -> Bool {
+func testRecord: () -> Bool {
 	var ok = true
 
 	ok = check("flat.x", unsafe Word32 flat.x, 0x00018000) and ok
@@ -327,7 +327,7 @@ func testRecord () -> Bool {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	var result = true
 	result = testLiterals() and result
 	result = testArithmetic() and result

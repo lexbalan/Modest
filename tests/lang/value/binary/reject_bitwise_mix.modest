@@ -25,7 +25,7 @@
 
 include "libc/ctypes64"
 
-func main () -> Int {
+func main: () -> Int {
 	var a: Word32 = 0x01
 	var b: Word32 = 0x06
 	var c: Word32 = 0x02

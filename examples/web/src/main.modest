@@ -28,12 +28,12 @@ var pageCounter: Nat32
 
 //@extern
 //@c_no_print
-//func htons(x: Word16) -> Word16 {
+//func htons: (x: Word16) -> Word16 {
 //	return (x << 8) | (x >> 8)
 //}
 
 
-func handleRequest (clientSocket: Int32) -> Unit {
+func handleRequest: (clientSocket: Int32) -> Unit {
 	var buffer: [receiveBufferSize]Word8
     let bytesReceived = read(clientSocket, &buffer, lengthof(buffer) - 1)
     if bytesReceived < 0 {
@@ -57,7 +57,7 @@ func handleRequest (clientSocket: Int32) -> Unit {
 }
 
 
-func main () -> Int32 {
+func main: () -> Int32 {
     let serverSocket = socket(afInet, sockStream, 0)
     if serverSocket < 0 {
         perror("cannot create socket")

@@ -24,7 +24,7 @@ include "libc/stdio"
 include "libc/stdlib"
 
 
-func testLeft () -> Bool {
+func testLeft: () -> Bool {
 	var w: Word32 = 1
 
 	if w << 0 != 1 or w << 1 != 2 or w << 4 != 0x10 or w << 31 != 0x80000000 {
@@ -56,7 +56,7 @@ func testLeft () -> Bool {
 }
 
 
-func testRight () -> Bool {
+func testRight: () -> Bool {
 	var w: Word32 = 0xF0
 
 	if w >> 0 != 0xF0 or w >> 4 != 0x0F or w >> 8 != 0 {
@@ -95,7 +95,7 @@ func testRight () -> Bool {
 
 // The count is a value of its own type, and the result never takes it: a
 // Word8 shifted by a Nat64 is still a Word8.
-func testCountTypes () -> Bool {
+func testCountTypes: () -> Bool {
 	var w: Word32 = 1
 
 	var n8: Nat8 = 4
@@ -138,7 +138,7 @@ func testCountTypes () -> Bool {
 
 // Every width shifts within itself: what leaves the top of a Word8 is gone
 // even if the same pattern would still fit in a Word16.
-func testWidths () -> Bool {
+func testWidths: () -> Bool {
 	// Shifts that keep every bit inside the width behave at every width;
 	// the ones that push a bit out of a Word8 or a Word16 are in
 	// narrow_width.modest, where the backends disagree.
@@ -188,7 +188,7 @@ func testWidths () -> Bool {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	var result = true
 	result = testLeft() and result
 	result = testRight() and result

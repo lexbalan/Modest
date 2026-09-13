@@ -30,7 +30,7 @@ include "libc/stdio"
 include "libc/stdlib"
 
 
-func testInt () -> Bool {
+func testInt: () -> Bool {
 	var a: Int32 = 10
 	var b: Int32 = 3
 
@@ -73,7 +73,7 @@ func testInt () -> Bool {
 // Integer division truncates toward zero, and `%` is the remainder that
 // truncation leaves — so the remainder takes the dividend's sign, and
 // `(a / b) * b + a % b == a` holds for every combination of signs.
-func testTruncation () -> Bool {
+func testTruncation: () -> Bool {
 	var a: Int32 = 10
 	var b: Int32 = 3
 	var negA: Int32 = -10
@@ -115,7 +115,7 @@ func testTruncation () -> Bool {
 
 // Nat is the same arithmetic without the sign — and without the sign
 // question in `%`, since neither operand can be negative.
-func testNat () -> Bool {
+func testNat: () -> Bool {
 	var a: Nat32 = 10
 	var b: Nat32 = 4
 
@@ -147,7 +147,7 @@ func testNat () -> Bool {
 // Arithmetic stays inside the operand type: an Int8 sum is an Int8, and a
 // Int64 product is an Int64 — no operand is widened on the way in, and no
 // result is widened on the way out.
-func testWidths () -> Bool {
+func testWidths: () -> Bool {
 	var a8: Int8 = 100
 	var b8: Int8 = 27
 	if a8 + b8 != 127 or a8 - b8 != 73 {
@@ -192,7 +192,7 @@ func testWidths () -> Bool {
 // Float divides without truncating, and it is the one arithmetic type
 // without `%`.  The values are halves and quarters, exact in binary, so an
 // equality check on the result is honest.
-func testFloat () -> Bool {
+func testFloat: () -> Bool {
 	var a: Float64 = 10.0
 	var b: Float64 = 4.0
 
@@ -231,7 +231,7 @@ func testFloat () -> Bool {
 // A literal has no type of its own: it takes the other operand's, which is
 // the only way the two sides of an operation are ever spelled differently.
 // This is what lets one expression serve every width.
-func testLiteralOperand () -> Bool {
+func testLiteralOperand: () -> Bool {
 	var i8: Int8 = 100
 	if i8 + 1 != 101 or i8 / 2 != 50 or i8 % 7 != 2 {
 		printf("Int8 100 + 1 / 2 %% 7 = %d/%d/%d, expected 101/50/2\n",
@@ -276,7 +276,7 @@ func testLiteralOperand () -> Bool {
 // `+ - * / %` are left-associative: 10 - 3 - 2 is (10 - 3) - 2.  Written
 // without parentheses, the two groupings give different answers, so this is
 // a real check and not a restatement.
-func testAssociativity () -> Bool {
+func testAssociativity: () -> Bool {
 	var a: Int32 = 10
 	var b: Int32 = 3
 	var c: Int32 = 2
@@ -314,7 +314,7 @@ func testAssociativity () -> Bool {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	var result = true
 	result = testInt() and result
 	result = testTruncation() and result

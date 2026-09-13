@@ -42,27 +42,27 @@ type Frame = {
 var counter: Int32 = 100
 
 
-func addTwo (a: Int32, b: Int32) -> Int32 {
+func addTwo: (a: Int32, b: Int32) -> Int32 {
 	return a + b
 }
 
-func negate (v: Int32) -> Int32 {
+func negate: (v: Int32) -> Int32 {
 	return -v
 }
 
 // The reason `&` exists: a callee that writes back through a pointer.
-func bump (p: *Int32) -> Unit {
+func bump: (p: *Int32) -> Unit {
 	*p = *p + 1
 }
 
-func swap (a: *Int32, b: *Int32) -> Unit {
+func swap: (a: *Int32, b: *Int32) -> Unit {
 	var tmp: Int32 = *a
 	*a = *b
 	*b = tmp
 }
 
 
-func testAddressAndDeref () -> Bool {
+func testAddressAndDeref: () -> Bool {
 	var v: Int32 = 7
 	var p: *Int32 = &v
 
@@ -116,7 +116,7 @@ func testAddressAndDeref () -> Bool {
 
 // Every kind of place `&` accepts, each written to through the pointer so
 // that the address is proved to be the real one and not a copy's.
-func testPlaces () -> Bool {
+func testPlaces: () -> Bool {
 	// A local variable.
 	var local: Int32 = 1
 	var pl: *Int32 = &local
@@ -177,7 +177,7 @@ func testPlaces () -> Bool {
 
 
 // `&` and `*` undo each other, in both orders.
-func testRoundTrip () -> Bool {
+func testRoundTrip: () -> Bool {
 	var v: Int32 = 5
 
 	// `*&v` is v, as a place: it reads and it assigns.
@@ -234,7 +234,7 @@ func testRoundTrip () -> Bool {
 
 // What `&` is for in practice: giving a callee something to write back to,
 // since a parameter is a copy the callee may read but not export.
-func testOutParameter () -> Bool {
+func testOutParameter: () -> Bool {
 	var v: Int32 = 1
 
 	bump(&v)
@@ -277,7 +277,7 @@ func testOutParameter () -> Bool {
 
 // A record or an array behind a pointer is reached without an explicit
 // `*` — the difference from C that costs the most to discover by accident.
-func testThroughPointer () -> Bool {
+func testThroughPointer: () -> Bool {
 	var pt: Point = {x = 1, y = 2}
 	var pp: *Point = &pt
 
@@ -333,7 +333,7 @@ func testThroughPointer () -> Bool {
 // A function is the one immutable thing `&` accepts, and the `&` is not
 // optional: `var f: *(...) -> T = name` is a type mismatch, so the address
 // operator is the only way in.  reject.modest states that half.
-func testFunctionPointer () -> Bool {
+func testFunctionPointer: () -> Bool {
 	var f: *(a: Int32, b: Int32) -> Int32 = &addTwo
 
 	if f(3, 4) != 7 {
@@ -369,7 +369,7 @@ func testFunctionPointer () -> Bool {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	var result = true
 	result = testAddressAndDeref() and result
 	result = testPlaces() and result

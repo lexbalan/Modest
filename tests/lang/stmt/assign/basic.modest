@@ -24,7 +24,7 @@ type Point = {
 }
 
 
-func testVariable () -> Bool {
+func testVariable: () -> Bool {
 	var x: Int32 = 1
 	x = 10
 	if x != 10 {
@@ -52,7 +52,7 @@ func testVariable () -> Bool {
 }
 
 
-func testArrayElement () -> Bool {
+func testArrayElement: () -> Bool {
 	var arr: [5]Int32 = [1, 2, 3, 4, 5]
 
 	arr[0] = 100
@@ -80,7 +80,7 @@ func testArrayElement () -> Bool {
 }
 
 
-func testSlice () -> Bool {
+func testSlice: () -> Bool {
 	var arr: [5]Int32 = [1, 2, 3, 4, 5]
 
 	arr[1:4] = [3]Int32 [7, 8, 9]
@@ -103,7 +103,7 @@ func testSlice () -> Bool {
 }
 
 
-func testField () -> Bool {
+func testField: () -> Bool {
 	var pt = Point {x = 1, y = 2}
 
 	pt.x = 30
@@ -125,7 +125,7 @@ func testField () -> Bool {
 }
 
 
-func testDeref () -> Bool {
+func testDeref: () -> Bool {
 	var n: Int32 = 1
 	let p = &n
 
@@ -140,7 +140,7 @@ func testDeref () -> Bool {
 }
 
 
-func testIncrement () -> Bool {
+func testIncrement: () -> Bool {
 	var i: Int32 = 5
 
 	++i
@@ -161,7 +161,7 @@ func testIncrement () -> Bool {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	var result = true
 	result = testVariable() and result
 	result = testArrayElement() and result

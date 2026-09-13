@@ -28,7 +28,7 @@
 include "libc/ctypes64"
 
 
-func main () -> Int {
+func main: () -> Int {
 	// The first value that rounds up rather than down, and one well past it.
 	var just: Float16 = 65520.0
 	var over: Float16 = 70000.0

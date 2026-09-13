@@ -3,7 +3,7 @@
 
 
 
-public func ms (x: Nat32) -> Unit {
+public func ms: (x: Nat32) -> Unit {
 	var t: @volatile Nat32 = x
 	while t > 0 {
 		var delayCounter: @volatile Nat32 =  0

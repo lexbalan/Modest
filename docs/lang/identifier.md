@@ -33,7 +33,7 @@ value identifier that happens to be a **C keyword** produces C that does
 not compile:
 
 ```modest
-func double (n: Int32) -> Int32 {     // -> int32_t double(int32_t n)
+func double: (n: Int32) -> Int32 {     // -> int32_t double(int32_t n)
 	return n * 2
 }
 ```
@@ -69,7 +69,7 @@ type Point = {x: Float64, y: Float64}
 const maxSize = 100
 var counter: Int32
 
-func doWork () -> Unit {
+func doWork: () -> Unit {
 }
 
 type _Handle = Int32     // underscores skipped: H decides the class

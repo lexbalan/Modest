@@ -77,13 +77,13 @@ Annotations are written before a definition, or inside a type expression
 
 ```modest
 @inline
-func min (a: Int32, b: Int32) -> Int32 {
+func min: (a: Int32, b: Int32) -> Int32 {
 	if a < b { return a }
 	return b
 }
 
 @extern("C", "malloc")
-func myAlloc (size: Nat64) -> Ptr
+func myAlloc: (size: Nat64) -> Ptr
 
 @used @section("__DATA,.table")
 var table: [256]Word8 = []

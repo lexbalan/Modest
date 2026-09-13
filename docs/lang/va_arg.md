@@ -7,7 +7,7 @@ The extra arguments are read through a `__VA_List` value and the
 ## Form
 
 ```
-func <#name#> (<#params#>, ...) -> <#type#>
+func <#name#>: (<#params#>, ...) -> <#type#>
 
 var <#va#>: __VA_List
 __va_start(<#va#>, <#last_named_param#>)
@@ -37,7 +37,7 @@ __va_end(<#va#>)
 include "libc/stdio"
 
 // consume arguments in Modest
-func sum (count: Int32, ...) -> Int32 {
+func sum: (count: Int32, ...) -> Int32 {
 	var va: __VA_List
 	__va_start(va, count)
 
@@ -53,14 +53,14 @@ func sum (count: Int32, ...) -> Int32 {
 }
 
 // forward to a C v-function
-func log (format: *Str8, ...) -> Unit {
+func log: (format: *Str8, ...) -> Unit {
 	var va: __VA_List
 	__va_start(va, format)
 	vprintf(format, va)
 	__va_end(va)
 }
 
-func main () -> Int {
+func main: () -> Int {
 	printf("%d\n", sum(3, 10, 20, 30))   // 60
 	log("k = %d, s = %s\n", 42, "hi")
 	return 0

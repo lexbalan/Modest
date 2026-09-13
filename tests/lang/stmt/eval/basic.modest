@@ -19,13 +19,13 @@ var calls: Int32
 
 
 // Returns a value that callers are free to ignore.
-func bump (by: Int32) -> Int32 {
+func bump: (by: Int32) -> Int32 {
 	calls = calls + by
 	return calls
 }
 
 
-func testDiscardedResult () -> Bool {
+func testDiscardedResult: () -> Bool {
 	calls = 0
 
 	// Called as a statement: the returned Int32 goes nowhere, but the
@@ -52,12 +52,12 @@ func testDiscardedResult () -> Bool {
 
 
 // A parameter this function has no use for.
-func handler (payload: Ptr) -> Unit {
+func handler: (payload: Ptr) -> Unit {
 	Unit payload        // explicit discard
 }
 
 
-func testExplicitDiscard () -> Bool {
+func testExplicitDiscard: () -> Bool {
 	calls = 0
 
 	handler(nil)
@@ -78,7 +78,7 @@ func testExplicitDiscard () -> Bool {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	var result = true
 	result = testDiscardedResult() and result
 	result = testExplicitDiscard() and result

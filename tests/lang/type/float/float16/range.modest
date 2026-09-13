@@ -21,7 +21,7 @@ include "libc/stdlib"
 
 
 // Right up against the edge, everything is an ordinary finite number.
-func testEdge () -> Bool {
+func testEdge: () -> Bool {
 	var max: Float16 = 65504.0
 	var below: Float16 = 65472.0        // the next representable one down
 
@@ -53,7 +53,7 @@ func testEdge () -> Bool {
 
 // Past the edge the compiler refuses the literal, so getting there at all
 // takes `unsafe` — and then the answer is the one IEEE 754 gives.
-func testOverflow () -> Bool {
+func testOverflow: () -> Bool {
 	var max: Float16 = 65504.0
 
 	// 65520 is the first value that rounds up rather than down — halfway
@@ -87,7 +87,7 @@ func testOverflow () -> Bool {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	var result = true
 	result = testEdge() and result
 	result = testOverflow() and result

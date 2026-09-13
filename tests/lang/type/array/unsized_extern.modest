@@ -22,6 +22,6 @@ include "libc/ctypes64"
 var externTable: []Int32
 
 
-func main () -> Int {
+func main: () -> Int {
 	return 0
 }

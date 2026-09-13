@@ -62,19 +62,19 @@ var vb: @volatile [32]Bool
 
 
 @inline
-func staticInlineFunc (x: Int32) -> Int32 {
+func staticInlineFunc: (x: Int32) -> Int32 {
 	return x + 1
 }
 
 
 @noinline
-func staticNoinlineFunc (x: Int32) -> Int32 {
+func staticNoinlineFunc: (x: Int32) -> Int32 {
 	return x + 1
 }
 
 
 @inlinehint
-func staticInlineHintFunc (x: Int32) -> Int32 {
+func staticInlineHintFunc: (x: Int32) -> Int32 {
 	return x + 1
 }
 
@@ -87,14 +87,14 @@ type Point2D = {
 
 
 // переопределение f не вызвало ошибку!
-func hello () -> Unit {
+func hello: () -> Unit {
 	printf("hi!\n")
 }
 
 
 
 
-func main () -> Int32 {
+func main: () -> Int32 {
 	@static
 	var staticCounter: Nat32 = 0
 

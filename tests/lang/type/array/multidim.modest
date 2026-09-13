@@ -28,12 +28,12 @@ include "libc/stdio"
 include "libc/stdlib"
 
 
-func rowOf (m: [2][3]Int32, i: Nat32) -> [3]Int32 {
+func rowOf: (m: [2][3]Int32, i: Nat32) -> [3]Int32 {
 	return m[i]
 }
 
 
-func sumOf (m: [2][3]Int32) -> Int32 {
+func sumOf: (m: [2][3]Int32) -> Int32 {
 	var s: Int32 = 0
 	var i: Nat32 = 0
 	while i < lengthof(m) {
@@ -48,7 +48,7 @@ func sumOf (m: [2][3]Int32) -> Int32 {
 }
 
 
-func testLiteral () -> Bool {
+func testLiteral: () -> Bool {
 	var m: [2][3]Int32 = [[1, 2, 3], [4, 5, 6]]
 	if m[0][0] != 1 or m[1][2] != 6 {
 		printf("m = [[%d ...], [... %d]], expected [[1 ...], [... 6]]\n", m[0][0], m[1][2])
@@ -67,7 +67,7 @@ func testLiteral () -> Bool {
 }
 
 
-func testIndexing () -> Bool {
+func testIndexing: () -> Bool {
 	var m: [2][3]Int32 = [[1, 2, 3], [4, 5, 6]]
 
 	// Row first, then column — `m[1][2]` is the third element of the second
@@ -102,7 +102,7 @@ func testIndexing () -> Bool {
 }
 
 
-func testRowIsValue () -> Bool {
+func testRowIsValue: () -> Bool {
 	var m: [2][3]Int32 = [[1, 2, 3], [4, 5, 6]]
 
 	// A row assigns out as a value — and copies.
@@ -143,7 +143,7 @@ func testRowIsValue () -> Bool {
 }
 
 
-func testLengthAndSize () -> Bool {
+func testLengthAndSize: () -> Bool {
 	var m: [2][3]Int32 = [[1, 2, 3], [4, 5, 6]]
 
 	// The outer length counts rows; the inner one counts their elements.
@@ -172,7 +172,7 @@ func testLengthAndSize () -> Bool {
 }
 
 
-func testByValue () -> Bool {
+func testByValue: () -> Bool {
 	var m: [2][3]Int32 = [[1, 2, 3], [4, 5, 6]]
 
 	if sumOf(m) != 21 {
@@ -197,7 +197,7 @@ func testByValue () -> Bool {
 }
 
 
-func testThreeDimensions () -> Bool {
+func testThreeDimensions: () -> Bool {
 	var c: [2][2][2]Int32 = [[[1, 2], [3, 4]], [[5, 6], [7, 8]]]
 
 	if c[0][0][0] != 1 or c[1][1][1] != 8 {
@@ -233,7 +233,7 @@ func testThreeDimensions () -> Bool {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	var result = true
 	result = testLiteral() and result
 	result = testIndexing() and result

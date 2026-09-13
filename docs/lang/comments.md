@@ -26,7 +26,7 @@ Comments are for the reader — they do not affect compilation.
 
 ```modest
 // about main
-func main () -> Int {
+func main: () -> Int {
 	/* block
 	   comment */
 	return 0  // inline comment — two spaces before //

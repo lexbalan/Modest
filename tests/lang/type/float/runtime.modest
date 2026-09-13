@@ -49,18 +49,18 @@ type Vec = {
 }
 
 
-func lenSq (v: Vec) -> Float32 {
+func lenSq: (v: Vec) -> Float32 {
 	return v.x * v.x + v.y * v.y
 }
 
 
-func scaled (f: Float64, by: Float64) -> Float64 {
+func scaled: (f: Float64, by: Float64) -> Float64 {
 	return f * by
 }
 
 
 // IEEE 754 single and double: 4 and 8 bytes, each aligned to its own size.
-func testLayout () -> Bool {
+func testLayout: () -> Bool {
 	if sizeof(Float32) != 4 or sizeof(Float64) != 8 {
 		printf("sizeof Float32/Float64 = %zu/%zu, expected 4/8\n",
 			sizeof(Float32), sizeof(Float64))
@@ -88,7 +88,7 @@ func testLayout () -> Bool {
 
 // A rational literal keeps its fraction on the way into a FloatX variable,
 // and an integer literal keeps its magnitude.
-func testValues () -> Bool {
+func testValues: () -> Bool {
 	var half: Float64 = 0.5
 	if half != 0.5 {
 		printf("half = %f, expected 0.5\n", half)
@@ -129,7 +129,7 @@ func testValues () -> Bool {
 
 // The `math` class: `+ - * /` and unary `-`.  Division is the operation
 // that separates a float from an integer — it keeps the fraction.
-func testArithmetic () -> Bool {
+func testArithmetic: () -> Bool {
 	var a: Float64 = 1.5
 	var b: Float64 = 0.5
 
@@ -183,7 +183,7 @@ func testArithmetic () -> Bool {
 
 
 // The `equ` and `ord` classes.
-func testOrdering () -> Bool {
+func testOrdering: () -> Bool {
 	var a: Float64 = 1.5
 	var b: Float64 = 2.5
 	var a2: Float64 = 1.5
@@ -233,7 +233,7 @@ func testOrdering () -> Bool {
 // What each width can and cannot hold.  A significand of 24 bits stops
 // Float32 at 2^24, one of 53 bits stops Float64 at 2^53: the first integer
 // that does not fit is the one just above, and it rounds onto its neighbour.
-func testPrecision () -> Bool {
+func testPrecision: () -> Bool {
 	var f32a: Float32 = 16777216.0        // 2^24
 	var f32b: Float32 = 16777217.0        // 2^24 + 1, not representable
 	if f32a != f32b {
@@ -292,7 +292,7 @@ func testPrecision () -> Bool {
 //
 // NaN is not here: the two backends disagree about `!=` on it
 // (BUG#35), so it has its own file, nan.modest.
-func testSpecials () -> Bool {
+func testSpecials: () -> Bool {
 	var one: Float64 = 1.0
 	var zero: Float64 = 0.0
 
@@ -337,7 +337,7 @@ func testSpecials () -> Bool {
 
 // A float is a value like any other: it goes into an array, into a record
 // field, through a parameter and back out of a return.
-func testAggregates () -> Bool {
+func testAggregates: () -> Bool {
 	var arr: [4]Float64 = [1.5, 2.5, 0.5, 3.0]
 	if arr[0] + arr[1] + arr[2] + arr[3] != 7.5 {
 		printf("array sum = %f, expected 7.5\n", arr[0] + arr[1] + arr[2] + arr[3])
@@ -380,7 +380,7 @@ func testAggregates () -> Bool {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	var result = true
 	result = testLayout() and result
 	result = testValues() and result

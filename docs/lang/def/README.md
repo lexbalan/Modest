@@ -7,7 +7,7 @@ A *definition* binds an identifier to an entity. There are four kinds:
 | Type — alias / named type | `type Name = T` | [type](./type.md) |
 | Constant — compile-time value | `const name = v` | [const](./const.md) |
 | Variable — mutable storage | `var name: T = v` | [var](./var.md) |
-| Function | `func name (params) -> T { }` | [func](./func.md) |
+| Function | `func name: (params) -> T { }` | [func](./func.md) |
 
 Every module-level definition may carry an access modifier (`public` /
 `private`, see [access modifiers](../access_modifiers.md)) and
@@ -25,7 +25,7 @@ const origin = Point {x = 0, y = 0}
 
 var current: Point
 
-func reset () -> Unit {
+func reset: () -> Unit {
 	current = origin
 }
 ```

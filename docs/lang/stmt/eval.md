@@ -20,7 +20,7 @@ Evaluates an expression for its side effects; the result is discarded.
 ```modest
 printf("Hi there!\n")     // result of printf discarded
 
-func handler (payload: Ptr) -> Unit {
+func handler: (payload: Ptr) -> Unit {
 	Unit payload          // explicitly discard unused parameter
 }
 ```

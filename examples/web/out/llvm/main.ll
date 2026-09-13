@@ -300,7 +300,7 @@ declare %Word16 @htons(%Word16 %x)
 
 ;@extern
 ;@c_no_print
-;func htons(x: Word16) -> Word16 {
+;func htons: (x: Word16) -> Word16 {
 ;	return (x << 8) | (x >> 8)
 ;}
 define internal void @handleRequest(%Int32 %clientSocket) {

@@ -36,13 +36,13 @@ type Wide = {
 }
 
 
-func mid (a: Int32, b: Int32) -> Int32 {
+func mid: (a: Int32, b: Int32) -> Int32 {
 	return (a + b) / 2
 }
 
 
 // Every path returns; the early one wins.
-func abs32 (n: Int32) -> Int32 {
+func abs32: (n: Int32) -> Int32 {
 	if n < 0 {
 		return -n
 	}
@@ -50,7 +50,7 @@ func abs32 (n: Int32) -> Int32 {
 }
 
 
-func testValue () -> Bool {
+func testValue: () -> Bool {
 	if mid(10, 20) != 15 {
 		printf("mid(10, 20) = %d, expected 15\n", mid(10, 20))
 		return false
@@ -72,19 +72,19 @@ func testValue () -> Bool {
 
 
 // The returned literal is a compile-time Integer, constructed to Nat8 here.
-func smallConstant () -> Nat8 {
+func smallConstant: () -> Nat8 {
 	return 200
 }
 
 
 // Widening is not implicit either: even Int32 -> Int64 is written out.
-func widened () -> Int64 {
+func widened: () -> Int64 {
 	var n: Int32 = 1000
 	return Int64 n
 }
 
 
-func testConstruction () -> Bool {
+func testConstruction: () -> Bool {
 	if smallConstant() != 200 {
 		printf("smallConstant() = %d, expected 200\n", Int32 smallConstant())
 		return false
@@ -104,22 +104,22 @@ var sharedPoint: Point
 var sharedTable: [3]Int32
 
 
-func makePoint (x: Int32, y: Int32) -> Point {
+func makePoint: (x: Int32, y: Int32) -> Point {
 	return Point {x = x, y = y}
 }
 
 
-func makeWide () -> Wide {
+func makeWide: () -> Wide {
 	return Wide {a = 1, b = 2, c = 3, d = 4}
 }
 
 
-func getSharedPoint () -> Point {
+func getSharedPoint: () -> Point {
 	return sharedPoint
 }
 
 
-func testRecord () -> Bool {
+func testRecord: () -> Bool {
 	let p = makePoint(3, 4)
 	if p.x != 3 or p.y != 4 {
 		printf("makePoint(3, 4) = {%d, %d}, expected {3, 4}\n", p.x, p.y)
@@ -157,24 +157,24 @@ func testRecord () -> Bool {
 }
 
 
-func makeArray () -> [4]Int32 {
+func makeArray: () -> [4]Int32 {
 	return [4]Int32 [10, 20, 30, 40]
 }
 
 
 // The array is built in this frame and must outlive it.
-func localArray () -> [3]Int32 {
+func localArray: () -> [3]Int32 {
 	var tmp: [3]Int32 = [7, 8, 9]
 	return tmp
 }
 
 
-func getSharedTable () -> [3]Int32 {
+func getSharedTable: () -> [3]Int32 {
 	return sharedTable
 }
 
 
-func testArray () -> Bool {
+func testArray: () -> Bool {
 	// Arrays are values in Modest — no decay to a pointer on the way out.
 	let a = makeArray()
 	if a[0] != 10 or a[3] != 40 {
@@ -212,7 +212,7 @@ var sideEffects: Int32
 
 
 // Bare `return` as an early exit from a Unit function.
-func record (enabled: Bool) -> Unit {
+func record: (enabled: Bool) -> Unit {
 	if not enabled {
 		return
 	}
@@ -221,13 +221,13 @@ func record (enabled: Bool) -> Unit {
 
 
 // A Unit function needs no `return` at the end at all.
-func recordTwice () -> Unit {
+func recordTwice: () -> Unit {
 	record(true)
 	record(true)
 }
 
 
-func testUnit () -> Bool {
+func testUnit: () -> Bool {
 	sideEffects = 0
 
 	record(false)
@@ -256,28 +256,28 @@ func testUnit () -> Bool {
 // A body that falls off its end warns (`expected return operator at end`)
 // and returns the default value of its type — which is what every backend
 // has to agree on, since nothing in the source says what comes back.
-func fellOffScalar (a: Int32) -> Int32 {
+func fellOffScalar: (a: Int32) -> Int32 {
 	if a > 0 {
 		return 111
 	}
 }
 
 
-func fellOffFloat (a: Int32) -> Float32 {
+func fellOffFloat: (a: Int32) -> Float32 {
 	if a > 0 {
 		return 1.5
 	}
 }
 
 
-func fellOffBool (a: Int32) -> Bool {
+func fellOffBool: (a: Int32) -> Bool {
 	if a > 0 {
 		return true
 	}
 }
 
 
-func fellOffPointer (a: Int32) -> *Int32 {
+func fellOffPointer: (a: Int32) -> *Int32 {
 	if a > 0 {
 		return &sharedPoint.x
 	}
@@ -293,14 +293,14 @@ type Marked = {
 }
 
 
-func fellOffRecord (a: Int32) -> Marked {
+func fellOffRecord: (a: Int32) -> Marked {
 	if a > 0 {
 		return Marked {tag = 1, n = 2}
 	}
 }
 
 
-func fellOffArray (a: Int32) -> [3]Int32 {
+func fellOffArray: (a: Int32) -> [3]Int32 {
 	if a > 0 {
 		return [3]Int32 [1, 2, 3]
 	}
@@ -315,14 +315,14 @@ type Tag = @branded {
 }
 
 
-func fellOffBranded (a: Int32) -> Tag {
+func fellOffBranded: (a: Int32) -> Tag {
 	if a > 0 {
 		return Tag {id = 1, n = 2}
 	}
 }
 
 
-func testMissingReturn () -> Bool {
+func testMissingReturn: () -> Bool {
 	// The path that does return is untouched by the added one.
 	if fellOffScalar(1) != 111 {
 		printf("fellOffScalar(1) = %d, expected 111\n", fellOffScalar(1))
@@ -373,7 +373,7 @@ func testMissingReturn () -> Bool {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	var result = true
 	result = testValue() and result
 	result = testConstruction() and result

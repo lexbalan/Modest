@@ -59,7 +59,7 @@ public const soReuseaddr = 2
 
 // from "sys/socket.h"
 
-public func setsockopt (
+public func setsockopt: (
 	socket: Int, level: Int,
 	option_name: Int, option_value: Ptr,
 	option_len: SocklenT
@@ -127,25 +127,25 @@ public func setsockopt (
 @extern("C", "AF_MAX") public const afMax = 36
 
 
-public func inet_addr (cp: *[]ConstChar) -> InAddrT
+public func inet_addr: (cp: *[]ConstChar) -> InAddrT
 
 /*
-func inet_lnaof(in: Struct_in_addr) -> InAddrT
-func inet_makeaddr(net: InAddrT, lna: InAddrT) -> Struct_in_addr
-func inet_netof(in: Struct_in_addr) -> InAddrT
-func inet_network(cp: *ConstChar) -> InAddrT
-func inet_ntoa(in: Struct_in_addr) -> *Char
+func inet_lnaof: (in: Struct_in_addr) -> InAddrT
+func inet_makeaddr: (net: InAddrT, lna: InAddrT) -> Struct_in_addr
+func inet_netof: (in: Struct_in_addr) -> InAddrT
+func inet_network: (cp: *ConstChar) -> InAddrT
+func inet_ntoa: (in: Struct_in_addr) -> *Char
 */
 
-public func socket (domain: Int, _type: Int, protocol: Int) -> Int
-public func bind (socket: Int, addr: *SockAddr, addrlen: SocklenT) -> Int
-public func listen (socket: Int, backlog: Int) -> Int
-public func connect (socket: Int, addr: *SockAddr, addrlen: SocklenT) -> Int
+public func socket: (domain: Int, _type: Int, protocol: Int) -> Int
+public func bind: (socket: Int, addr: *SockAddr, addrlen: SocklenT) -> Int
+public func listen: (socket: Int, backlog: Int) -> Int
+public func connect: (socket: Int, addr: *SockAddr, addrlen: SocklenT) -> Int
 
-public func send (socket: Int, buf: Ptr, len: SizeT, flags: Int) -> @unused SSizeT
-public func recv (socket: Int, buf: Ptr, len: SizeT, flags: Int) -> @unused SSizeT
+public func send: (socket: Int, buf: Ptr, len: SizeT, flags: Int) -> @unused SSizeT
+public func recv: (socket: Int, buf: Ptr, len: SizeT, flags: Int) -> @unused SSizeT
 
 // вообще syscall, разберись
-public func accept (socket: Int, addr: *SockAddr, addrlen: *SocklenT) -> Int
+public func accept: (socket: Int, addr: *SockAddr, addrlen: *SocklenT) -> Int
 
 

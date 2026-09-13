@@ -33,7 +33,7 @@ include "libc/stdio"
 include "libc/stdlib"
 
 
-func testWord8 () -> Bool {
+func testWord8: () -> Bool {
 	var b: Word8 = 0xF0
 
 	if ~b != 0x0F {
@@ -79,7 +79,7 @@ func testWord8 () -> Bool {
 }
 
 
-func testWord16 () -> Bool {
+func testWord16: () -> Bool {
 	var h: Word16 = 0xFF00
 
 	if ~h != 0x00FF {
@@ -122,7 +122,7 @@ func testWord16 () -> Bool {
 // right under both backends: C truncates on the assignment.  The type is
 // what narrows the value, which is precisely why the operator not doing it
 // goes unnoticed.
-func testStored () -> Bool {
+func testStored: () -> Bool {
 	var b: Word8 = 0xF0
 	var storedB: Word8 = ~b
 	if storedB != 0x0F {
@@ -142,7 +142,7 @@ func testStored () -> Bool {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	var result = true
 	result = testWord8() and result
 	result = testWord16() and result

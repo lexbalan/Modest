@@ -55,7 +55,7 @@ type Segment = {
 }
 
 
-func testScalarEquality () -> Bool {
+func testScalarEquality: () -> Bool {
 	var t = true
 	var f = false
 	if not (t == true) or not (f == false) or t == f or not (t != f) {
@@ -122,18 +122,18 @@ func testScalarEquality () -> Bool {
 var pointCalls: Int32 = 0
 
 
-func makePoint () -> Point {
+func makePoint: () -> Point {
 	pointCalls = pointCalls + 1
 	return Point {x = 1, y = 2}
 }
 
 
-func makeOtherPoint () -> Point {
+func makeOtherPoint: () -> Point {
 	return Point {x = 1, y = 3}
 }
 
 
-func testRecordEquality () -> Bool {
+func testRecordEquality: () -> Bool {
 	var p: Point = {x = 1, y = 2}
 	var q: Point = {x = 1, y = 2}
 
@@ -180,7 +180,7 @@ func testRecordEquality () -> Bool {
 // C backend calls memcmp, and in C the result of a call has no address at
 // all.  So the backend has to put it somewhere — exactly once, because a
 // call evaluated twice would be a different bug wearing the same result.
-func testRecordFromCall () -> Bool {
+func testRecordFromCall: () -> Bool {
 	var p: Point = {x = 1, y = 2}
 
 	// On the left.
@@ -235,7 +235,7 @@ func testRecordFromCall () -> Bool {
 
 // An array compares element by element — which is what makes `==` the way
 // to check a hash or a key, with no loop and no memcmp.
-func testArrayEquality () -> Bool {
+func testArrayEquality: () -> Bool {
 	var h1: [4]Word8 = [1, 2, 3, 4]
 	var h2: [4]Word8 = [1, 2, 3, 4]
 
@@ -297,14 +297,14 @@ func testArrayEquality () -> Bool {
 var hashCalls: Int32 = 0
 
 
-func makeHash () -> [4]Word8 {
+func makeHash: () -> [4]Word8 {
 	hashCalls = hashCalls + 1
 	return [1, 2, 3, 4]
 }
 
 
 // Differs from makeHash() in the last element and nowhere else.
-func makeOtherHash () -> [4]Word8 {
+func makeOtherHash: () -> [4]Word8 {
 	return [1, 2, 3, 5]
 }
 
@@ -314,7 +314,7 @@ func makeOtherHash () -> [4]Word8 {
 // through storage the caller lends the callee.  In a comparison there is no
 // storage to lend — and, as with the record, the value must be fetched
 // exactly once.
-func testArrayFromCall () -> Bool {
+func testArrayFromCall: () -> Bool {
 	var h: [4]Word8 = [1, 2, 3, 4]
 
 	// On the left.
@@ -369,7 +369,7 @@ func testArrayFromCall () -> Bool {
 
 // Pointers compare as addresses: what they point at is not looked at, and
 // `nil` is just the address no object has.
-func testPointerEquality () -> Bool {
+func testPointerEquality: () -> Bool {
 	var p: Point = {x = 1, y = 2}
 	var q: Point = {x = 1, y = 2}
 
@@ -422,7 +422,7 @@ func testPointerEquality () -> Bool {
 }
 
 
-func testOrdering () -> Bool {
+func testOrdering: () -> Bool {
 	var a: Int32 = 1
 	var b: Int32 = 2
 	var a2: Int32 = 1
@@ -468,7 +468,7 @@ func testOrdering () -> Bool {
 
 // Ordering has to survive the places where a sign or a width could be lost
 // on the way into the comparison.
-func testOrderingEdges () -> Bool {
+func testOrderingEdges: () -> Bool {
 	// Negative against positive: an Int that is quietly read as a Nat
 	// would come out the largest value there is instead of the smallest.
 	var neg: Int32 = -1
@@ -531,7 +531,7 @@ func testOrderingEdges () -> Bool {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	var result = true
 	result = testScalarEquality() and result
 	result = testRecordEquality() and result

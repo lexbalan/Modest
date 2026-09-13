@@ -15,7 +15,7 @@ const port = 8080
 const bufSize = 1024
 
 
-func writeFile (sockFd: Int) -> Bool {
+func writeFile: (sockFd: Int) -> Bool {
 	var buffer: [bufSize]Char8
 
 	let fp = fopen(filename, "w")
@@ -37,7 +37,7 @@ func writeFile (sockFd: Int) -> Bool {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	let sockFd = socket(afInet, sockStream, 0)
 	if sockFd < 0 {
 		perror("[-] Error in socket")

@@ -41,18 +41,18 @@ type Buffer = {
 }
 
 
-func opaque (n: Nat32) -> Nat32 {
+func opaque: (n: Nat32) -> Nat32 {
 	return n
 }
 
 
 // A pointer to the element, not to the array: what `&a[i]` produces.
-func bump (p: *Int32) -> Unit {
+func bump: (p: *Int32) -> Unit {
 	*p = *p + 100
 }
 
 
-func sum (v: *[]Int32, n: Nat32) -> Int32 {
+func sum: (v: *[]Int32, n: Nat32) -> Int32 {
 	var total: Int32 = 0
 	var i: Nat32 = 0
 	while i < n {
@@ -63,7 +63,7 @@ func sum (v: *[]Int32, n: Nat32) -> Int32 {
 }
 
 
-func testPlace () -> Bool {
+func testPlace: () -> Bool {
 	var a: [5]Int32 = [10, 20, 30, 40, 50]
 	let i = opaque(2)
 
@@ -125,7 +125,7 @@ func testPlace () -> Bool {
 }
 
 
-func testIndexExpression () -> Bool {
+func testIndexExpression: () -> Bool {
 	var a: [8]Int32 = [0, 1, 2, 3, 4, 5, 6, 7]
 
 	// Any integer expression, not just a name or a literal.
@@ -173,7 +173,7 @@ func testIndexExpression () -> Bool {
 }
 
 
-func testAddressOf () -> Bool {
+func testAddressOf: () -> Bool {
 	var a: [5]Int32 = [10, 20, 30, 40, 50]
 
 	// `&a[i]` points at the element, so writing through the pointer is
@@ -215,7 +215,7 @@ func testAddressOf () -> Bool {
 }
 
 
-func testThroughPointer () -> Bool {
+func testThroughPointer: () -> Bool {
 	var a: [4]Int32 = [1, 2, 3, 4]
 
 	// A pointer to array derefs itself on indexing: `p[i]`, never `(*p)[i]`.
@@ -250,7 +250,7 @@ func testThroughPointer () -> Bool {
 }
 
 
-func testStepByStep () -> Bool {
+func testStepByStep: () -> Bool {
 	var m: [2][3]Int32 = [[1, 2, 3], [4, 5, 6]]
 	let i = opaque(1)
 	let j = opaque(2)
@@ -297,7 +297,7 @@ func testStepByStep () -> Bool {
 }
 
 
-func testString () -> Bool {
+func testString: () -> Bool {
 	// A string is an array of characters, so indexing it yields a character.
 	let s: *Str8 = "Hello"
 	if s[opaque(1)] != Char8 'e' {
@@ -335,7 +335,7 @@ func testString () -> Bool {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	var result = true
 	result = testPlace() and result
 	result = testIndexExpression() and result

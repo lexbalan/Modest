@@ -37,7 +37,7 @@ type World = {
 }
 
 
-func testAnonymousOverNamed () -> Bool {
+func testAnonymousOverNamed: () -> Bool {
 	var w: World = {name = 1, body = {pos = {x = 5, y = 6}, speed = 7}}
 
 	if w.body.pos.x != 5 or w.body.speed != 7 {
@@ -64,7 +64,7 @@ func testAnonymousOverNamed () -> Bool {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	if not testAnonymousOverNamed() {
 		printf("failed: anonymous field dependencies\n")
 		return exitFailure

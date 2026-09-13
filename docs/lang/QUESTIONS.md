@@ -42,7 +42,7 @@ and the frontend then appends a `return` of the **default value** of the
 return type, so every backend gives the same answer:
 
 ```modest
-func maybe (a: Int32) -> Int32 {
+func maybe: (a: Int32) -> Int32 {
 	if a > 0 {
 		return 111
 	}
@@ -63,7 +63,7 @@ decided:
   unreachable `return` appended after it:
 
   ```modest
-  func sign (a: Int32) -> Int32 {
+  func sign: (a: Int32) -> Int32 {
       if a > 0 {
           return 1
       } else {
@@ -71,7 +71,7 @@ decided:
       }
   }                          // warning, though no path falls through
 
-  func spin () -> Int32 {
+  func spin: () -> Int32 {
       while true {
           return 1
       }
@@ -89,7 +89,7 @@ decided:
       n: Int32
   }
 
-  func makeMarked (a: Int32) -> Marked {
+  func makeMarked: (a: Int32) -> Marked {
       if a > 0 {
           return Marked {tag = 1, n = 2}
       }
@@ -154,7 +154,7 @@ named arguments are used out of order.
 Every combination tried evaluates left to right, and nothing disagrees:
 
 ```modest
-func mark (id: Int32) -> Int32 {        // records that it ran, returns id
+func mark: (id: Int32) -> Int32 {        // records that it ran, returns id
 	...
 }
 
@@ -257,7 +257,7 @@ Reading a code unit as a number takes two constructions:
 const zero: Char8 = '0'
 const nine: Char8 = '9'
 
-func isDigit (c: Char8) -> Bool {
+func isDigit: (c: Char8) -> Bool {
 	return Nat8 Word8 c >= Nat8 Word8 zero and Nat8 Word8 c <= Nat8 Word8 nine
 }
 ```
@@ -348,7 +348,7 @@ The backends disagree, and the program can tell:
 ```modest
 var calls: Int32 = 0
 
-func mark (v: Bool) -> Bool {
+func mark: (v: Bool) -> Bool {
 	calls = calls + 1
 	return v
 }

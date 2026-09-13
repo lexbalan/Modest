@@ -25,7 +25,7 @@ include "libc/stdio"
 include "libc/stdlib"
 
 
-func testAnd () -> Bool {
+func testAnd: () -> Bool {
 	var t = true
 	var f = false
 
@@ -51,7 +51,7 @@ func testAnd () -> Bool {
 }
 
 
-func testOr () -> Bool {
+func testOr: () -> Bool {
 	var t = true
 	var f = false
 
@@ -79,7 +79,7 @@ func testOr () -> Bool {
 // `and` binds tighter than `or`, so a mixed chain reads as a disjunction of
 // conjunctions — the grouping every language with both operators has, and
 // the one worth pinning down because it is never written with parentheses.
-func testMixed () -> Bool {
+func testMixed: () -> Bool {
 	var t = true
 	var f = false
 
@@ -122,7 +122,7 @@ func testMixed () -> Bool {
 // Where a Bool actually comes from in a program: a comparison.  Both
 // operators sit looser than `==` and than the ordering operators, so a
 // range test needs no parentheses at all.
-func testFromComparisons () -> Bool {
+func testFromComparisons: () -> Bool {
 	var x: Int32 = 5
 	var lo: Int32 = 0
 	var hi: Int32 = 10
@@ -167,7 +167,7 @@ func testFromComparisons () -> Bool {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	var result = true
 	result = testAnd() and result
 	result = testOr() and result

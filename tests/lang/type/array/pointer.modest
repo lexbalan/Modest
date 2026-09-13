@@ -28,7 +28,7 @@ include "libc/stdlib"
 
 
 // The length is not in the type, so the caller has to say how long it is.
-func fill (v: *[]Int32, n: Nat32, x: Int32) -> Unit {
+func fill: (v: *[]Int32, n: Nat32, x: Int32) -> Unit {
 	var k: Nat32 = 0
 	while k < n {
 		v[k] = x
@@ -37,7 +37,7 @@ func fill (v: *[]Int32, n: Nat32, x: Int32) -> Unit {
 }
 
 
-func sum (v: *[]Int32, n: Nat32) -> Int32 {
+func sum: (v: *[]Int32, n: Nat32) -> Int32 {
 	var s: Int32 = 0
 	var k: Nat32 = 0
 	while k < n {
@@ -49,7 +49,7 @@ func sum (v: *[]Int32, n: Nat32) -> Int32 {
 
 
 // The length is in the type here, so it does not need an argument.
-func doubleAll (v: *[4]Int32) -> Unit {
+func doubleAll: (v: *[4]Int32) -> Unit {
 	var k: Nat32 = 0
 	while k < 4 {
 		v[k] = v[k] * 2
@@ -58,7 +58,7 @@ func doubleAll (v: *[4]Int32) -> Unit {
 }
 
 
-func sumMatrix (m: *[2][3]Int32) -> Int32 {
+func sumMatrix: (m: *[2][3]Int32) -> Int32 {
 	var s: Int32 = 0
 	var i: Nat32 = 0
 	while i < 2 {
@@ -73,7 +73,7 @@ func sumMatrix (m: *[2][3]Int32) -> Int32 {
 }
 
 
-func testIndexing () -> Bool {
+func testIndexing: () -> Bool {
 	var a: [4]Int32 = [10, 20, 30, 40]
 	let p = &a
 
@@ -103,7 +103,7 @@ func testIndexing () -> Bool {
 }
 
 
-func testWholeArray () -> Bool {
+func testWholeArray: () -> Bool {
 	var a: [4]Int32 = [1, 2, 3, 4]
 	var b: [4]Int32 = [9, 9, 9, 9]
 	let p = &b
@@ -128,7 +128,7 @@ func testWholeArray () -> Bool {
 }
 
 
-func testUnsized () -> Bool {
+func testUnsized: () -> Bool {
 	var a: [4]Int32 = [1, 2, 3, 4]
 
 	// *[4]Int32 converts to *[]Int32: the length is dropped, so it goes on
@@ -166,7 +166,7 @@ func testUnsized () -> Bool {
 }
 
 
-func testMatrix () -> Bool {
+func testMatrix: () -> Bool {
 	var m: [2][3]Int32 = [[1, 2, 3], [4, 5, 6]]
 
 	if sumMatrix(&m) != 21 {
@@ -199,7 +199,7 @@ func testMatrix () -> Bool {
 }
 
 
-func testSharing () -> Bool {
+func testSharing: () -> Bool {
 	var a: [4]Int32 = [1, 2, 3, 4]
 
 	// The whole reason to write `*[N]T` in a signature: the callee edits
@@ -232,7 +232,7 @@ func testSharing () -> Bool {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	var result = true
 	result = testIndexing() and result
 	result = testWholeArray() and result

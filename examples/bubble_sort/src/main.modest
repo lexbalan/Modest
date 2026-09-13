@@ -8,7 +8,7 @@ var testArray: []Int32 = [-3, -5, 2, -11, 1, -1, 0, -2, 3, -4, 4, 11, -10, 9, 6,
 
 
 // returns true if was swap
-func bubble_sort32_iter (array: *[]Int32, len: Nat32) -> Bool {
+func bubble_sort32_iter: (array: *[]Int32, len: Nat32) -> Bool {
 	var wasSwap = false
 
 	var i: Nat32 = 0
@@ -28,14 +28,14 @@ func bubble_sort32_iter (array: *[]Int32, len: Nat32) -> Bool {
 }
 
 
-func bubble_sort32 (array: *[]Int32, len: Nat32) -> Unit {
+func bubble_sort32: (array: *[]Int32, len: Nat32) -> Unit {
 	while bubble_sort32_iter(array, len) {
 		// continue iterations while is's necessary
 	}
 }
 
 
-func main () -> Int32 {
+func main: () -> Int32 {
 	printf("array before:\n")
 	print_array(&testArray, lengthof(testArray))
 	printf("\n")
@@ -51,7 +51,7 @@ func main () -> Int32 {
 }
 
 
-func print_array (array: *[]Int32, len: Nat32) -> Unit {
+func print_array: (array: *[]Int32, len: Nat32) -> Unit {
 	printf("\n")
 	var i: Nat32 = 0
 	while i < len {

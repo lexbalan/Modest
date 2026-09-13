@@ -45,14 +45,14 @@ type Action = () -> Unit
 // --- Functions ----------------------------------------------------------------
 
 @inline
-func distance (a: Point, b: Point) -> Float64 {
+func distance: (a: Point, b: Point) -> Float64 {
 	let dx = a.x - b.x
 	let dy = a.y - b.y
 	return sqrt(dx*dx + dy*dy)
 }
 
 
-func sum (n: Int32) -> Int32 {
+func sum: (n: Int32) -> Int32 {
 	var total: Int32 = 0
 	var i: Int32 = 0
 	while i < n {
@@ -68,7 +68,7 @@ func announce: Action {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	// literals carry a compile-time type, resolved at the use site
 	let n = 42       // Integer  -> converts to IntX / NatX / WordX / FloatX / CharX
 	let pi = 3.14159  // Rational -> converts to FloatX

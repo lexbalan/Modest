@@ -15,7 +15,7 @@ type _Handle = Int32
 
 var _tmp: _Handle = 7
 
-func main () -> Int {
+func main: () -> Int {
 	if _tmp != 7 {
 		printf("_tmp = %d, expected 7\n", _tmp)
 		printf("failed: underscore\n")

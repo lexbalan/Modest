@@ -21,7 +21,7 @@
 
 include "libc/ctypes64"
 
-func main () -> Int {
+func main: () -> Int {
 	// The spelling this rule retires.  `~w` is the one that survives, and
 	// bitwise.modest uses it throughout.
 	var w: Word32 = 0xA5

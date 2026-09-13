@@ -15,7 +15,7 @@ include "libc/stdio"
 include "libc/stdlib"
 
 
-func testOrder () -> Bool {
+func testOrder: () -> Bool {
 	var log: [4]Int32 = []
 	var n: Int32 = 0
 
@@ -46,7 +46,7 @@ func testOrder () -> Bool {
 }
 
 
-func testScope () -> Bool {
+func testScope: () -> Bool {
 	var total: Int32 = 0        // visible to the end of the function
 
 	if total == 0 {
@@ -72,14 +72,14 @@ func testScope () -> Bool {
 }
 
 
-func testLocalDefinitions () -> Bool {
+func testLocalDefinitions: () -> Bool {
 	// A block may define types and functions, not just values.
 	type Pair = {
 		a: Int32
 		b: Int32
 	}
 
-	func twice (n: Int32) -> Int32 {
+	func twice: (n: Int32) -> Int32 {
 		return n * 2
 	}
 
@@ -101,7 +101,7 @@ func testLocalDefinitions () -> Bool {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	var result = true
 	result = testOrder() and result
 	result = testScope() and result

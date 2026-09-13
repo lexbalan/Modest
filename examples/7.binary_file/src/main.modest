@@ -14,7 +14,7 @@ type Chunk = {
 }
 
 
-func writeExample () -> Unit {
+func writeExample: () -> Unit {
 	printf("run writeExample()\n")
 
 	let fp = fopen(filename, "wb")
@@ -35,7 +35,7 @@ func writeExample () -> Unit {
 }
 
 
-func readExample () -> Unit {
+func readExample: () -> Unit {
 	printf("run readExample()\n")
 
 	let fp = fopen(filename, "rb")
@@ -55,7 +55,7 @@ func readExample () -> Unit {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	printf("binary file example\n")
 	writeExample()
 	readExample()

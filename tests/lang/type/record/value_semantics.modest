@@ -42,26 +42,26 @@ type Body = {
 // The parameter is a copy the callee owns.  Parameters are immutable, so
 // writing to it needs a `var` of its own — a second copy, leaving the
 // caller's record two removes from anything that happens here.
-func clobber (p: Point) -> Int32 {
+func clobber: (p: Point) -> Int32 {
 	var q = p
 	q.x = 999
 	return q.x + p.x
 }
 
 
-func makePoint (n: Int32) -> Point {
+func makePoint: (n: Int32) -> Point {
 	var p: Point = {x = n, y = n + 1}
 	return p
 }
 
 
 // The pointer is the other choice: the callee reaches the caller's record.
-func bump (p: *Point) -> Unit {
+func bump: (p: *Point) -> Unit {
 	p.x = p.x + 100
 }
 
 
-func testAssignment () -> Bool {
+func testAssignment: () -> Bool {
 	var a: Point = {x = 1, y = 2}
 	var b: Point = {}
 
@@ -90,7 +90,7 @@ func testAssignment () -> Bool {
 }
 
 
-func testArgument () -> Bool {
+func testArgument: () -> Bool {
 	var a: Point = {x = 1, y = 2}
 
 	// The callee writes 999 over its own copy and returns that plus the
@@ -111,7 +111,7 @@ func testArgument () -> Bool {
 }
 
 
-func testReturn () -> Bool {
+func testReturn: () -> Bool {
 	var p = makePoint(10)
 	if p.x != 10 or p.y != 11 {
 		printf("makePoint(10) = {%d, %d}, expected {10, 11}\n", p.x, p.y)
@@ -138,7 +138,7 @@ func testReturn () -> Bool {
 }
 
 
-func testNested () -> Bool {
+func testNested: () -> Bool {
 	var a: Body = {pos = {x = 1, y = 2}, tag = 7, marks = [1, 2, 3]}
 	var b = a
 
@@ -181,7 +181,7 @@ func testNested () -> Bool {
 }
 
 
-func testInArray () -> Bool {
+func testInArray: () -> Bool {
 	var ps: [3]Point = [{x = 1, y = 1}, {x = 2, y = 2}, {x = 3, y = 3}]
 
 	// An element is a record value: reading it out gives a copy.
@@ -213,7 +213,7 @@ func testInArray () -> Bool {
 }
 
 
-func testPointerShares () -> Bool {
+func testPointerShares: () -> Bool {
 	var a: Point = {x = 1, y = 2}
 	var pp: *Point = &a
 
@@ -252,7 +252,7 @@ func testPointerShares () -> Bool {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	var result = true
 	result = testAssignment() and result
 	result = testArgument() and result

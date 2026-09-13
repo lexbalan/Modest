@@ -24,7 +24,7 @@ var line: Line = {
 
 
 @inline
-func max (a: Double, b: Double) -> Double {
+func max: (a: Double, b: Double) -> Double {
 	if a > b {
 		return a
 	}
@@ -32,7 +32,7 @@ func max (a: Double, b: Double) -> Double {
 }
 
 @inline
-func min (a: Double, b: Double) -> Double {
+func min: (a: Double, b: Double) -> Double {
 	if a < b {
 		return a
 	}
@@ -41,7 +41,7 @@ func min (a: Double, b: Double) -> Double {
 
 
 // Pythagorean theorem
-func distance (a: Point, b: Point) -> Double {
+func distance: (a: Point, b: Point) -> Double {
 	let dx = max(a.x, b.x) - min(a.x, b.x)
 	let dy = max(a.y, b.y) - min(a.y, b.y)
 	let dx2 = pow(dx, 2)
@@ -50,12 +50,12 @@ func distance (a: Point, b: Point) -> Double {
 }
 
 
-func lineLength (line: Line) -> Double {
+func lineLength: (line: Line) -> Double {
 	return distance(line.a, line.b)
 }
 
 
-func ptr_example () -> Unit {
+func ptr_example: () -> Unit {
 	let ptr_p = *Point malloc(sizeof(Point))
 
 	// access by pointer
@@ -66,7 +66,7 @@ func ptr_example () -> Unit {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	// by value
 	let len = lineLength(line)
 	printf("line length = %f\n", len)

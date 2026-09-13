@@ -46,37 +46,37 @@ type Boxed = {
 
 // The parentheses only matter for a value the compiler cannot see through,
 // so every operand enters through one of these.
-func opaque (n: Int32) -> Int32 {
+func opaque: (n: Int32) -> Int32 {
 	return n
 }
 
 
-func opaqueWord (w: Word32) -> Word32 {
+func opaqueWord: (w: Word32) -> Word32 {
 	return w
 }
 
 
-func opaqueNat (n: Nat8) -> Nat8 {
+func opaqueNat: (n: Nat8) -> Nat8 {
 	return n
 }
 
 
-func opaqueNat32 (n: Nat32) -> Nat32 {
+func opaqueNat32: (n: Nat32) -> Nat32 {
 	return n
 }
 
 
-func opaqueBool (b: Bool) -> Bool {
+func opaqueBool: (b: Bool) -> Bool {
 	return b
 }
 
 
-func opaqueFloat (f: Float64) -> Float64 {
+func opaqueFloat: (f: Float64) -> Float64 {
 	return f
 }
 
 
-func twice (n: Int32) -> Int32 {
+func twice: (n: Int32) -> Int32 {
 	return n * 2
 }
 
@@ -84,7 +84,7 @@ func twice (n: Int32) -> Int32 {
 // `-` `/` `%` are the operators where the grouping of two operands of the
 // same level is visible in the answer; `+` and `*` give the same value
 // either way and would prove nothing.
-func testArithmeticGrouping () -> Bool {
+func testArithmeticGrouping: () -> Bool {
 	var a = opaque(1)
 	var b = opaque(2)
 	var c = opaque(3)
@@ -169,7 +169,7 @@ func testArithmeticGrouping () -> Bool {
 // The same two shapes on Float64, which reaches the backend as a different
 // value kind.  The operands are powers of two, exact in binary, so the
 // equality checks are honest.
-func testFloatGrouping () -> Bool {
+func testFloatGrouping: () -> Bool {
 	var x = opaqueFloat(1.0)
 	var y = opaqueFloat(2.0)
 	var z = opaqueFloat(4.0)
@@ -205,7 +205,7 @@ func testFloatGrouping () -> Bool {
 // The operands are Word32 rather than Word8 so that `~` has room for its
 // answer: on a narrow Word the C backend widens before complementing, which
 // is a width bug and not a grouping one (narrow_width.modest owns it).
-func testBitwiseGrouping () -> Bool {
+func testBitwiseGrouping: () -> Bool {
 	var a = opaqueWord(0x06)
 	var b = opaqueWord(0x03)
 	var c = opaqueWord(0x0C)
@@ -268,7 +268,7 @@ func testBitwiseGrouping () -> Bool {
 // Shifts bind tighter than `&`, `^` and `|`, so a bitwise group on the left
 // of a shift needs its parentheses — in C too, which is what makes losing
 // them a silent wrong answer rather than a compile error.
-func testShiftGrouping () -> Bool {
+func testShiftGrouping: () -> Bool {
 	var w = opaqueWord(0x06)
 	var m = opaqueWord(0x03)
 	var c = opaqueWord(0x0C)
@@ -311,7 +311,7 @@ func testShiftGrouping () -> Bool {
 }
 
 
-func testLogicalGrouping () -> Bool {
+func testLogicalGrouping: () -> Bool {
 	var t = opaqueBool(true)
 	var f = opaqueBool(false)
 	var a = opaque(1)
@@ -366,7 +366,7 @@ func testLogicalGrouping () -> Bool {
 // Unary operators and construction both bind tighter than every binary
 // operator, so a binary expression under either of them lives entirely
 // inside its parentheses.
-func testUnaryAndConstructionGrouping () -> Bool {
+func testUnaryAndConstructionGrouping: () -> Bool {
 	var a = opaque(1)
 	var b = opaque(2)
 
@@ -407,7 +407,7 @@ func testUnaryAndConstructionGrouping () -> Bool {
 // Groups inside groups, and groups that change nothing: a backend that
 // emits parentheses has to be right about both, since a dropped pair and a
 // pair too many are equally wrong.
-func testNesting () -> Bool {
+func testNesting: () -> Bool {
 	var a = opaque(1)
 	var b = opaque(2)
 	var c = opaque(3)
@@ -458,7 +458,7 @@ func testNesting () -> Bool {
 // One shape — `a - (b - c)`, which is 2 where the flat form is -4 — in
 // every place an expression can stand.  Each of these reaches the backend
 // through a different path, and the group has to survive all of them.
-func testGroupingInContexts () -> Bool {
+func testGroupingInContexts: () -> Bool {
 	var a = opaque(1)
 	var b = opaque(2)
 	var c = opaque(3)
@@ -526,12 +526,12 @@ func testGroupingInContexts () -> Bool {
 }
 
 
-func regrouped (a: Int32, b: Int32, c: Int32) -> Int32 {
+func regrouped: (a: Int32, b: Int32, c: Int32) -> Int32 {
 	return a - (b - c)
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	var result = true
 	result = testArithmeticGrouping() and result
 	result = testFloatGrouping() and result

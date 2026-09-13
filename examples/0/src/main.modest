@@ -18,7 +18,7 @@ type Packed = @layout("packed") Record
 type MyInt = @branded Int32
 
 
-func main () -> Int {
+func main: () -> Int {
 	printf("Hello World!\n")
 
 	var r: Record

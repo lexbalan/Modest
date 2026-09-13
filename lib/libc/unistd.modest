@@ -302,249 +302,249 @@ public const _unistd_CS_LFS_LINTFLAGS = 24
 
 
 // access - determine accessibility of a file
-public func access (path: *[]ConstChar, amode: Int) -> Int
+public func access: (path: *[]ConstChar, amode: Int) -> Int
 
 // alarm - schedule an alarm signal
-public func alarm (seconds: UnsignedInt) -> UnsignedInt
+public func alarm: (seconds: UnsignedInt) -> UnsignedInt
 
 // brk, sbrk - change data segment size
-public func brk (end_data_segment: Ptr) -> Int
+public func brk: (end_data_segment: Ptr) -> Int
 
 // chdir - change working directory
-public func chdir (path: *[]ConstChar) -> Int
+public func chdir: (path: *[]ConstChar) -> Int
 
 // chroot - change root directory (LEGACY)
-public func chroot (path: *[]ConstChar) -> Int
+public func chroot: (path: *[]ConstChar) -> Int
 
 // chown — change the owner or group of a file or directory
-public func chown (pathname: *[]ConstChar, owner: UIDT, group: GIDT) -> Int
+public func chown: (pathname: *[]ConstChar, owner: UIDT, group: GIDT) -> Int
 
 // close - close a file descriptor
-public func close (fildes: Int) -> @unused Int
+public func close: (fildes: Int) -> @unused Int
 
 // confstr - get configurable variables
-public func confstr (name: Int, buf: *[]Char, len: SizeT) -> SizeT
+public func confstr: (name: Int, buf: *[]Char, len: SizeT) -> SizeT
 
 // crypt - string encoding function
-public func crypt (key: *[]ConstChar, salt: *[]ConstChar) -> *[]Char
+public func crypt: (key: *[]ConstChar, salt: *[]ConstChar) -> *[]Char
 
 // ctermid - generate a pathname for the controlling terminal
-public func ctermid (s: *[]Char) -> @unused *[]Char
+public func ctermid: (s: *[]Char) -> @unused *[]Char
 
 // cuserid - character login name of the user (LEGACY)
 // not implemented on MacOS!
-public func cuserid (s: *[]Char) -> *[]Char
+public func cuserid: (s: *[]Char) -> *[]Char
 
 // dup, dup2 - duplicate an open file descriptor
-public func dup (fildes: Int) -> Int
+public func dup: (fildes: Int) -> Int
 
 // dup, dup2 - duplicate an open file descriptor
-public func dup2 (fildes: Int, fildes2: Int) -> Int
+public func dup2: (fildes: Int, fildes2: Int) -> Int
 
 // encrypt - encoding function
-public func encrypt (block: *[64]Char, edflag: Int) -> Unit
+public func encrypt: (block: *[64]Char, edflag: Int) -> Unit
 
 //
-public func execl (path: *[]ConstChar, arg0: *[]ConstChar, ...) -> Int
-public func execle (path: *[]ConstChar, arg0: *[]ConstChar, ...) -> Int
-public func execlp (file: *[]ConstChar, arg0: *[]ConstChar, ...) -> Int
-public func execv (path: *[]ConstChar, argv: *[]*[]ConstChar) -> Int
-public func execve (path: *[]ConstChar, argv: *[]*[]ConstChar, envp: *[]ConstChar) -> Int
-public func execvp (file: *[]ConstChar, argv: *[]*[]ConstChar) -> Int
+public func execl: (path: *[]ConstChar, arg0: *[]ConstChar, ...) -> Int
+public func execle: (path: *[]ConstChar, arg0: *[]ConstChar, ...) -> Int
+public func execlp: (file: *[]ConstChar, arg0: *[]ConstChar, ...) -> Int
+public func execv: (path: *[]ConstChar, argv: *[]*[]ConstChar) -> Int
+public func execve: (path: *[]ConstChar, argv: *[]*[]ConstChar, envp: *[]ConstChar) -> Int
+public func execvp: (file: *[]ConstChar, argv: *[]*[]ConstChar) -> Int
 
 // _exit - terminate a process
-public func _exit (status: Int) -> Unit
+public func _exit: (status: Int) -> Unit
 
 // fchown - change owner and group of a file
-public func fchown (fildes: Int, owner: UIDT, group: GIDT) -> Int
+public func fchown: (fildes: Int, owner: UIDT, group: GIDT) -> Int
 
 // fchdir - change working directory
-public func fchdir (fildes: Int) -> Int
+public func fchdir: (fildes: Int) -> Int
 
 // fdatasync - synchronise the data of a file (REALTIME)
-public func fdatasync (fildes: Int) -> Int
+public func fdatasync: (fildes: Int) -> Int
 
 // fork - create a new process
-public func fork () -> PIDT
+public func fork: () -> PIDT
 
 // fpathconf, pathconf - get configurable pathname variables
-public func fpathconf (fildes: Int, name: Int) -> LongInt
+public func fpathconf: (fildes: Int, name: Int) -> LongInt
 
 // fsync - synchronise changes to a file
-public func fsync (fildes: Int) -> Int
+public func fsync: (fildes: Int) -> Int
 
 // ftruncate, truncate - truncate a file to a specified length
-public func ftruncate (fildes: Int, length: OffT) -> Int
+public func ftruncate: (fildes: Int, length: OffT) -> Int
 
 // getcwd - get the pathname of the current working directory
-public func getcwd (buf: *[]Char, size: SizeT) -> @unused *[]Char
+public func getcwd: (buf: *[]Char, size: SizeT) -> @unused *[]Char
 
 // getdtablesize - get the file descriptor table size (LEGACY)
-public func getdtablesize () -> Int
+public func getdtablesize: () -> Int
 
 // getegid - get the effective group ID
-public func getegid () -> GIDT
+public func getegid: () -> GIDT
 
 // geteuid - get the effective user ID
-public func geteuid () -> UIDT
+public func geteuid: () -> UIDT
 
 // getgid - get the real group ID
-public func getgid () -> GIDT
+public func getgid: () -> GIDT
 
 // getgroups - get supplementary group IDs
-public func getgroups (gidsetsize: Int, grouplist: *[]GIDT) -> Int
+public func getgroups: (gidsetsize: Int, grouplist: *[]GIDT) -> Int
 
 // gethostid - get an identifier for the current host
-public func gethostid () -> Long
+public func gethostid: () -> Long
 
 // getlogin - get login name
-public func getlogin () -> *[]Char
+public func getlogin: () -> *[]Char
 
 // getlogin_r - get login name
-public func getlogin_r (name: *[]Char, namesize: SizeT) -> Int
+public func getlogin_r: (name: *[]Char, namesize: SizeT) -> Int
 
 // getopt, optarg, optind, opterr, optopt - command option parsing
-public func getopt (argc: Int, argv: *[]ConstChar, optstring: *[]ConstChar) -> Int
+public func getopt: (argc: Int, argv: *[]ConstChar, optstring: *[]ConstChar) -> Int
 
 // getpagesize - get the current page size (LEGACY)
-public func getpagesize () -> Int
+public func getpagesize: () -> Int
 
 // getpass - read a string of characters without echo (LEGACY)
-public func getpass (prompt: *[]ConstChar) -> *[]Char
+public func getpass: (prompt: *[]ConstChar) -> *[]Char
 
 // getpgid - get the process group ID for a process
-public func getpgid (pid: PIDT) -> PIDT
+public func getpgid: (pid: PIDT) -> PIDT
 
 // getpgrp - get the process group ID of the calling process
-public func getpgrp () -> PIDT
+public func getpgrp: () -> PIDT
 
 // getpid - get the process ID
-public func getpid () -> PIDT
+public func getpid: () -> PIDT
 
 // getppid - get the parent process ID
-public func getppid () -> PIDT
+public func getppid: () -> PIDT
 
 // getsid - get the process group ID of session leader
-public func getsid (pid: PIDT) -> PIDT
+public func getsid: (pid: PIDT) -> PIDT
 
 // getuid - get a real user ID
-public func getuid () -> UIDT
+public func getuid: () -> UIDT
 
 // getwd - get the current working directory pathname
-public func getwd (path_name: *[]Char) -> *[]Char
+public func getwd: (path_name: *[]Char) -> *[]Char
 
 // isatty - test for a terminal device
-public func isatty (fildes: Int) -> Int
+public func isatty: (fildes: Int) -> Int
 
 // lchown - change the owner and group of a symbolic link
-public func lchown (path: *[]ConstChar, owner: UIDT, group: GIDT) -> Int
+public func lchown: (path: *[]ConstChar, owner: UIDT, group: GIDT) -> Int
 
 // link - link to a file
-public func link (path1: *[]ConstChar, path2: *[]ConstChar) -> Int
+public func link: (path1: *[]ConstChar, path2: *[]ConstChar) -> Int
 
 // lockf - record locking on files
-public func lockf (fildes: Int, function: Int, size: OffT) -> Int
+public func lockf: (fildes: Int, function: Int, size: OffT) -> Int
 
 // lseek - move the read/write file offset
-public func lseek (fildes: Int, offset: OffT, whence: Int) -> OffT
+public func lseek: (fildes: Int, offset: OffT, whence: Int) -> OffT
 
 // nice - change nice value of a process
-public func nice (incr: Int) -> Int
+public func nice: (incr: Int) -> Int
 
 // pathconf - get configurable pathname variables
-public func pathconf (path: *[]ConstChar, name: Int) -> LongInt
+public func pathconf: (path: *[]ConstChar, name: Int) -> LongInt
 
 // pause - suspend the thread until signal is received
-public func pause () -> Int
+public func pause: () -> Int
 
 // pipe - create an interprocess channel
-public func pipe (fildes: *[2]Int) -> Int
+public func pipe: (fildes: *[2]Int) -> Int
 
 // pread - read from a file
-public func pread (fildes: Int, buf: Ptr, nbyte: SizeT, offset: OffT) -> SSizeT
+public func pread: (fildes: Int, buf: Ptr, nbyte: SizeT, offset: OffT) -> SSizeT
 
 // pthread_atfork - register fork handlers
-//public func pthread_atfork (prepare: *()->Unit, parent: *()->Unit, child: *()->Unit) -> Int
+//public func pthread_atfork: (prepare: *()->Unit, parent: *()->Unit, child: *()->Unit) -> Int
 
 // pwrite - write on a file
-public func pwrite (fildes: Int, buf: Ptr, nbyte: SizeT, offset: OffT) -> SSizeT
+public func pwrite: (fildes: Int, buf: Ptr, nbyte: SizeT, offset: OffT) -> SSizeT
 
 // read, readv, pread - read from a file
-public func read (fildes: Int, buf: Ptr, nbyte: SizeT) -> SSizeT
+public func read: (fildes: Int, buf: Ptr, nbyte: SizeT) -> SSizeT
 
 // readlink - read the contents of a symbolic link
-public func readlink (path: *[]ConstChar, buf: *[]Char, bufsize: SizeT) -> Int
+public func readlink: (path: *[]ConstChar, buf: *[]Char, bufsize: SizeT) -> Int
 
 // rmdir - remove a directory
-public func rmdir (path: *[]ConstChar) -> Int
+public func rmdir: (path: *[]ConstChar) -> Int
 
 // sbrk - change space allocation
-public func sbrk (incr: IntPtrT) -> Ptr
+public func sbrk: (incr: IntPtrT) -> Ptr
 
 // setgid - set-group-ID
-public func setgid (gid: GIDT) -> Int
+public func setgid: (gid: GIDT) -> Int
 
 // setpgid - set process group ID for job control
-public func setpgid (pid: PIDT, pgid: PIDT) -> Int
+public func setpgid: (pid: PIDT, pgid: PIDT) -> Int
 
 // setpgrp - set process group ID
-public func setpgrp () -> PIDT
+public func setpgrp: () -> PIDT
 
 // setregid - set real and effective group IDs
-public func setregid (rgid: GIDT, egid: GIDT) -> Int
+public func setregid: (rgid: GIDT, egid: GIDT) -> Int
 
 // setreuid - set real and effective user IDs
-public func setreuid (ruid: UIDT, euid: UIDT) -> Int
+public func setreuid: (ruid: UIDT, euid: UIDT) -> Int
 
 // setsid - create session and set process group ID
-public func setsid () -> PIDT
+public func setsid: () -> PIDT
 
 // setuid - set-user-ID
-public func setuid (uid: UIDT) -> Int
+public func setuid: (uid: UIDT) -> Int
 
 // sleep - suspend execution for an interval of time
-public func sleep (seconds: UnsignedInt) -> @unused UnsignedInt
+public func sleep: (seconds: UnsignedInt) -> @unused UnsignedInt
 
 // swab - swap bytes
-public func swab (src: Ptr, dst: Ptr, nbytes: SSizeT) -> Unit
+public func swab: (src: Ptr, dst: Ptr, nbytes: SSizeT) -> Unit
 
 // symlink - make symbolic link to a file
-public func symlink (path1: *[]ConstChar, path2: *[]ConstChar) -> Int
+public func symlink: (path1: *[]ConstChar, path2: *[]ConstChar) -> Int
 
 // sync - schedule filesystem updates
-public func sync () -> Unit
+public func sync: () -> Unit
 
 // sysconf - get configurable system variables
-public func sysconf (name: Int) -> LongInt
+public func sysconf: (name: Int) -> LongInt
 
 // tcgetpgrp - get the foreground process group ID
-public func tcgetpgrp (fildes: Int) -> PIDT
+public func tcgetpgrp: (fildes: Int) -> PIDT
 
 // tcsetpgrp - set the foreground process group ID
-public func tcsetpgrp (fildes: Int, pgid_id: PIDT) -> Int
+public func tcsetpgrp: (fildes: Int, pgid_id: PIDT) -> Int
 
 // truncate - truncate a file to a specified length
-public func truncate (path: *[]ConstChar, length: OffT) -> Int
+public func truncate: (path: *[]ConstChar, length: OffT) -> Int
 
 // ttyname - find pathname of a terminal
-public func ttyname (fildes: Int) -> *[]Char
+public func ttyname: (fildes: Int) -> *[]Char
 
 // ttyname_r - find pathname of a terminal
-public func ttyname_r (fildes: Int, name: *[]Char, namesize: SizeT) -> Int
+public func ttyname_r: (fildes: Int, name: *[]Char, namesize: SizeT) -> Int
 
 // ualarm - set the interval timer
-public func ualarm (useconds: USecondsT, interval: USecondsT) -> USecondsT
+public func ualarm: (useconds: USecondsT, interval: USecondsT) -> USecondsT
 
 // unlink - remove a directory entry
-public func unlink (path: *[]ConstChar) -> Int
+public func unlink: (path: *[]ConstChar) -> Int
 
 // usleep - suspend execution for an interval
-public func usleep (useconds: USecondsT) -> @unused Int
+public func usleep: (useconds: USecondsT) -> @unused Int
 
 // vfork - create new process; share virtual memory
-public func vfork () -> PIDT
+public func vfork: () -> PIDT
 
 // write, writev, pwrite - write on a file
-public func write (fildes: Int, buf: Ptr, nbyte: SizeT) -> @unused SSizeT
+public func write: (fildes: Int, buf: Ptr, nbyte: SizeT) -> @unused SSizeT
 
 

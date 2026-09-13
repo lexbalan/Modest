@@ -51,7 +51,7 @@ type Slot = @layout("union") {
 var globalSlot: Slot = {word = 0x11223344}
 
 
-func testOffsets () -> Bool {
+func testOffsets: () -> Bool {
 	if offsetof(Color.rgba) != 0 {
 		printf("offsetof(Color.rgba) = %zu, expected 0\n", offsetof(Color.rgba))
 		return false
@@ -70,7 +70,7 @@ func testOffsets () -> Bool {
 }
 
 
-func testSize () -> Bool {
+func testSize: () -> Bool {
 	// As wide as its widest field, not as wide as all of them together.
 	if sizeof(Color) != 4 {
 		printf("sizeof(Color) = %zu, expected 4\n", sizeof(Color))
@@ -82,7 +82,7 @@ func testSize () -> Bool {
 }
 
 
-func testAliasing () -> Bool {
+func testAliasing: () -> Bool {
 	var c: Color = {}
 
 	// Same width, same storage: what goes in as a Word32 comes out as the
@@ -123,7 +123,7 @@ func testAliasing () -> Bool {
 }
 
 
-func testInsideRecord () -> Bool {
+func testInsideRecord: () -> Bool {
 	// A union is a record: it is a field of another record like any other.
 	var p: Pixel = {}
 
@@ -149,7 +149,7 @@ func testInsideRecord () -> Bool {
 }
 
 
-func testFieldDefault () -> Bool {
+func testFieldDefault: () -> Bool {
 	// The literal names `word` and nothing else, so `word` is what the
 	// storage holds — `bytes` and its default are not part of this value.
 	var local: Slot = {word = 0x11223344}
@@ -176,7 +176,7 @@ func testFieldDefault () -> Bool {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	var result = true
 	result = testOffsets() and result
 	result = testSize() and result

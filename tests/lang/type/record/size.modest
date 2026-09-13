@@ -33,7 +33,7 @@ type Point3 = {
 }
 
 
-func testSizeof () -> Bool {
+func testSizeof: () -> Bool {
 	if sizeof(Point3) != 12 {
 		printf("sizeof(Point3) = %zu, expected 12\n", sizeof(Point3))
 		return false
@@ -60,7 +60,7 @@ func testSizeof () -> Bool {
 }
 
 
-func testEquality () -> Bool {
+func testEquality: () -> Bool {
 	// No padding anywhere in this type: every byte belongs to a field, and
 	// the two records hold the same values in all three.
 	var a: Point3 = {x = 1, y = 2, z = 3}
@@ -80,7 +80,7 @@ func testEquality () -> Bool {
 }
 
 
-func testZeroFill () -> Bool {
+func testZeroFill: () -> Bool {
 	var before: Int32 = 111
 	var ps: [2]Point3 = []
 	var after: Int32 = 222
@@ -102,7 +102,7 @@ func testZeroFill () -> Bool {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	var result = true
 	result = testSizeof() and result
 	result = testEquality() and result

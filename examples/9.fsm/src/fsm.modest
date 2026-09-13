@@ -32,7 +32,7 @@ public type FSM = {
 }
 
 
-public func init (self: *FSM, id: *Str8, initState: *StateDesc, payload: *Unit) -> Unit {
+public func init: (self: *FSM, id: *Str8, initState: *StateDesc, payload: *Unit) -> Unit {
     self.id = id
 	self.state = {state=initState, stage=StageId 0}
 	self.next_state = {state=initState, stage=StageId 0}
@@ -44,7 +44,7 @@ public func init (self: *FSM, id: *Str8, initState: *StateDesc, payload: *Unit) 
 
 
 
-public func task (self: *FSM) -> Unit {
+public func task: (self: *FSM) -> Unit {
 	// Сработал таймер-ограничитель времени нахождения в стадии?
 	if self.timer_expired {
 		// Clear timer & Switch to next stage
@@ -68,7 +68,7 @@ public func task (self: *FSM) -> Unit {
 }
 
 
-public func tick (self: *FSM) -> Unit {
+public func tick: (self: *FSM) -> Unit {
 	if self.timer > 0 {
 		--self.timer
 		if self.timer == 0 {
@@ -80,14 +80,14 @@ public func tick (self: *FSM) -> Unit {
 
 
 
-public func cmdSwitchState (self: *FSM, state: *StateDesc) -> ComplexState {
+public func cmdSwitchState: (self: *FSM, state: *StateDesc) -> ComplexState {
 	self.timer = 0
 	self.timer_expired = false
     return ComplexState {state=state, stage=StageId 0}
 }
 
 
-public func cmdSwitchStage (self: *FSM, stage: Word16) -> ComplexState {
+public func cmdSwitchStage: (self: *FSM, stage: Word16) -> ComplexState {
 	self.timer = 0
 	self.timer_expired = false
 	var newState = self.state
@@ -96,7 +96,7 @@ public func cmdSwitchStage (self: *FSM, stage: Word16) -> ComplexState {
 }
 
 
-public func cmdNextStage (self: *FSM) -> ComplexState {
+public func cmdNextStage: (self: *FSM) -> ComplexState {
 	self.timer = 0
 	self.timer_expired = false
 	let state: ComplexState = self.state
@@ -108,7 +108,7 @@ public func cmdNextStage (self: *FSM) -> ComplexState {
 }
 
 
-public func cmdNextStageLimited (self: *FSM, t: Nat32) -> ComplexState {
+public func cmdNextStageLimited: (self: *FSM, t: Nat32) -> ComplexState {
 	self.timer = t
 	let state: ComplexState = self.state
 	let nextStageIndex = Nat16(state.stage) + 1
@@ -121,22 +121,22 @@ public func cmdNextStageLimited (self: *FSM, t: Nat32) -> ComplexState {
 
 
 
-public func getComplexState (fsm: FSM) -> ComplexState {
+public func getComplexState: (fsm: FSM) -> ComplexState {
 	return fsm.state
 }
 
 
-public func getState (fsm: FSM) -> *StateDesc {
+public func getState: (fsm: FSM) -> *StateDesc {
 	return fsm.state.state
 }
 
 
-public func getStage (fsm: FSM) -> StageId {
+public func getStage: (fsm: FSM) -> StageId {
 	return fsm.state.stage
 }
 
 
-public func getStateName (fsm: *FSM) -> *Str8 {
+public func getStateName: (fsm: *FSM) -> *Str8 {
 	if fsm.state.state == nil {
 		return "<null>"
 	}

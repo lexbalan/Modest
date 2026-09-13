@@ -59,26 +59,26 @@ type Color = {
 }
 
 
-func makePoint (x: Int32, y: Int32) -> Point {
+func makePoint: (x: Int32, y: Int32) -> Point {
 	return Point {x = x, y = y}
 }
 
 
 // Takes a pointer to the field, not to the record.
-func bump (p: *Int32) -> Unit {
+func bump: (p: *Int32) -> Unit {
 	*p = *p + 100
 }
 
 
 // Auto-deref again, this time on a parameter: the caller's record is what
 // gets written.
-func moveTo (p: *Point, x: Int32, y: Int32) -> Unit {
+func moveTo: (p: *Point, x: Int32, y: Int32) -> Unit {
 	p.x = x
 	p.y = y
 }
 
 
-func testPlace () -> Bool {
+func testPlace: () -> Bool {
 	var pt: Point = {x = 1, y = 2}
 
 	// Read.
@@ -124,7 +124,7 @@ func testPlace () -> Bool {
 }
 
 
-func testNested () -> Bool {
+func testNested: () -> Bool {
 	var s: Segment = {from = {x = 1, y = 2}, to = {x = 3, y = 4}}
 
 	// The chain is applied left to right: `s.from` is a Point, `.x` is its
@@ -165,7 +165,7 @@ func testNested () -> Bool {
 }
 
 
-func testThroughPointer () -> Bool {
+func testThroughPointer: () -> Bool {
 	var pt: Point = {x = 1, y = 2}
 	var p: *Point = &pt
 
@@ -218,7 +218,7 @@ func testThroughPointer () -> Bool {
 }
 
 
-func testAddressOf () -> Bool {
+func testAddressOf: () -> Bool {
 	var pt: Point = {x = 1, y = 2}
 
 	// `&pt.x` points at the field, so writing through the pointer is
@@ -264,7 +264,7 @@ func testAddressOf () -> Bool {
 }
 
 
-func testPostfixChain () -> Bool {
+func testPostfixChain: () -> Bool {
 	var sh: Shape = {name = Char8 'T', corners = [{x = 1, y = 2}, {x = 3, y = 4}, {x = 5, y = 6}]}
 
 	// Access and index are the same level of the grammar, so they alternate
@@ -307,7 +307,7 @@ func testPostfixChain () -> Bool {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	var result = true
 	result = testPlace() and result
 	result = testNested() and result

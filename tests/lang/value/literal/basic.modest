@@ -32,7 +32,7 @@ type Point = {
 }
 
 
-func testBoolean () -> Bool {
+func testBoolean: () -> Bool {
 	var t = true
 	var f = false
 
@@ -46,7 +46,7 @@ func testBoolean () -> Bool {
 }
 
 
-func testInteger () -> Bool {
+func testInteger: () -> Bool {
 	var n: Int32 = 42
 	if n != 42 {
 		printf("n = %d, expected 42\n", n)
@@ -72,7 +72,7 @@ func testInteger () -> Bool {
 }
 
 
-func testHex () -> Bool {
+func testHex: () -> Bool {
 	var b: Nat32 = 0xFF
 	if b != 255 {
 		printf("b = %u, expected 255\n", b)
@@ -105,7 +105,7 @@ func testHex () -> Bool {
 
 // A literal is an arbitrary-precision compile-time value, so it must reach
 // the target intact — no clamping to 32 bits, no detour through a float.
-func testLarge () -> Bool {
+func testLarge: () -> Bool {
 	var imax: Int64 = 9_223_372_036_854_775_807
 	if imax - 1 != 9_223_372_036_854_775_806 {
 		printf("imax = %lld, expected 9223372036854775807\n", imax)
@@ -150,7 +150,7 @@ func testLarge () -> Bool {
 }
 
 
-func testRational () -> Bool {
+func testRational: () -> Bool {
 	var half: Float64 = 0.5
 	if half != 0.5 {
 		printf("half = %f, expected 0.5\n", half)
@@ -228,7 +228,7 @@ func testRational () -> Bool {
 }
 
 
-func testString () -> Bool {
+func testString: () -> Bool {
 	// Both quotes are the same literal.
 	var dq: *Str8 = "abc"
 	var sq: *Str8 = 'abc'
@@ -270,7 +270,7 @@ func testString () -> Bool {
 }
 
 
-func testArray () -> Bool {
+func testArray: () -> Bool {
 	var a: [3]Int32 = [1, 2, 3]
 	if a[0] != 1 or a[1] != 2 or a[2] != 3 {
 		printf("a = [%d, %d, %d], expected [1, 2, 3]\n", a[0], a[1], a[2])
@@ -295,7 +295,7 @@ func testArray () -> Bool {
 }
 
 
-func testRecord () -> Bool {
+func testRecord: () -> Bool {
 	var p: Point = {x = 10, y = 20}
 	if p.x != 10 or p.y != 20 {
 		printf("p = {%d, %d}, expected {10, 20}\n", p.x, p.y)
@@ -314,7 +314,7 @@ func testRecord () -> Bool {
 }
 
 
-func testNil () -> Bool {
+func testNil: () -> Bool {
 	var p: *Int32 = nil
 	if p != nil {
 		printf("p is not nil\n")
@@ -333,7 +333,7 @@ func testNil () -> Bool {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	var result = true
 	result = testBoolean() and result
 	result = testInteger() and result

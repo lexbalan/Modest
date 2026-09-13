@@ -21,7 +21,7 @@
 
 include "libc/ctypes64"
 
-func main () -> Int {
+func main: () -> Int {
 	var a: Int32 = 1
 	var b: Int32 = 2
 	var c: Int32 = 3

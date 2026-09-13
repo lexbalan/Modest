@@ -32,7 +32,7 @@ type Inner = {b: Int32}
 type Point = {x: Int32, y: Int32, inner: Inner}
 
 
-func testScalars () -> Bool {
+func testScalars: () -> Bool {
 	var n: Int32
 	var u: Nat16
 	var w: Word32
@@ -71,7 +71,7 @@ func testScalars () -> Bool {
 }
 
 
-func testAggregates () -> Bool {
+func testAggregates: () -> Bool {
 	var arr: [4]Int32
 	var buf: [8]Char
 	var pt: Point
@@ -107,7 +107,7 @@ func testAggregates () -> Bool {
 // The four shapes that used to be the ways to read garbage silently:
 // each one reaches the variable through a path, and each one now sees
 // the default.
-func testPaths () -> Bool {
+func testPaths: () -> Bool {
 	// Reading an element.
 	var arr: [4]Int32
 	if arr[0] != 0 {
@@ -152,7 +152,7 @@ func testPaths () -> Bool {
 
 // Leaving the initializer out and writing the zero out by hand mean the
 // same thing — the compiler writes what you would have written.
-func testSameAsExplicit () -> Bool {
+func testSameAsExplicit: () -> Bool {
 	var implicitN: Int32
 	var explicitN: Int32 = 0
 	var implicitArr: [3]Int32
@@ -180,7 +180,7 @@ func testSameAsExplicit () -> Bool {
 
 // The default is a starting value, not a constraint: the variable is an
 // ordinary one afterwards.
-func testWritable () -> Bool {
+func testWritable: () -> Bool {
 	var n: Int32
 	n = n + 7
 
@@ -201,7 +201,7 @@ func testWritable () -> Bool {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	var result = true
 	result = testScalars() and result
 	result = testAggregates() and result

@@ -23,7 +23,7 @@
 
 include "libc/ctypes64"
 
-func Foo () -> Int32 {
+func Foo: () -> Int32 {
 	return 1
 }
 
@@ -31,7 +31,7 @@ var Xx: Int32 = 1
 const Mask: Word8 = 0x0F
 type myInt = Int32
 
-func main () -> Int {
+func main: () -> Int {
 	var Y: Int32 = 2
 	return 0
 }

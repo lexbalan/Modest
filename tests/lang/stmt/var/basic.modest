@@ -32,7 +32,7 @@ var globalFlag: Bool
 var globalPtr: *Int32
 
 
-func testForms () -> Bool {
+func testForms: () -> Bool {
 	// Declared, then assigned before first use.
 	var a: Int32
 	a = 1
@@ -58,7 +58,7 @@ func testForms () -> Bool {
 }
 
 
-func testInference () -> Bool {
+func testInference: () -> Bool {
 	// The type comes from the initializer.
 	var flag = true
 	var f = 1.5
@@ -90,7 +90,7 @@ func testInference () -> Bool {
 }
 
 
-func testGlobalZeroInit () -> Bool {
+func testGlobalZeroInit: () -> Bool {
 	if globalCounter != 0 {
 		printf("globalCounter = %d, expected 0\n", globalCounter)
 		return false
@@ -125,7 +125,7 @@ func testGlobalZeroInit () -> Bool {
 }
 
 
-func testExplicitZeroing () -> Bool {
+func testExplicitZeroing: () -> Bool {
 	// The explicit forms of what a declaration without an initializer
 	// now does by itself.
 	var n: Int32 = 0
@@ -150,7 +150,7 @@ func testExplicitZeroing () -> Bool {
 }
 
 
-func testPartialInit () -> Bool {
+func testPartialInit: () -> Bool {
 	// Writing one element leaves the rest at the default, and the
 	// variable is an ordinary one either way.
 	var arr: [3]Int32
@@ -188,7 +188,7 @@ func testPartialInit () -> Bool {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	var result = true
 	result = testForms() and result
 	result = testInference() and result

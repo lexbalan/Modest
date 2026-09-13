@@ -29,7 +29,7 @@ include "libc/ctypes64"
 var table: []Int32
 
 
-func main () -> Int {
+func main: () -> Int {
 	// A local has no other source for a size either.
 	var local: []Int32
 

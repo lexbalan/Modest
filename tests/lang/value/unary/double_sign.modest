@@ -32,7 +32,7 @@ include "libc/stdio"
 include "libc/stdlib"
 
 
-func main () -> Int {
+func main: () -> Int {
 	var i: Int32 = 5
 
 	if - -i != 5 {

@@ -33,12 +33,12 @@ include "libc/stdio"
 include "libc/stdlib"
 
 
-func takesFloat (f: Float64) -> Float64 {
+func takesFloat: (f: Float64) -> Float64 {
 	return f
 }
 
 
-func givesFloat () -> Float64 {
+func givesFloat: () -> Float64 {
 	return 1.5           // Rational literal, constructed at the return
 }
 
@@ -46,7 +46,7 @@ func givesFloat () -> Float64 {
 // `Rational` and `Integer` are compile-time types: they have no width of
 // their own and take the one the target asks for.  Nothing is written in
 // the source to make that happen.
-func testFromLiteral () -> Bool {
+func testFromLiteral: () -> Bool {
 	var a: Float64 = 0.25
 	var b: Float32 = 0.25
 	if a != 0.25 or Float64 b != 0.25 {
@@ -89,7 +89,7 @@ func testFromLiteral () -> Bool {
 // `IntY` and `NatY` are explicit sources, at any width — a float has room
 // for every integer the language has, give or take the rounding that
 // runtime.modest pins down.
-func testFromInteger () -> Bool {
+func testFromInteger: () -> Bool {
 	var i8: Int8 = -128
 	var i16: Int16 = -32768
 	var i32: Int32 = -7
@@ -131,7 +131,7 @@ func testFromInteger () -> Bool {
 // `FloatY -> FloatX` goes both ways implicitly.  Widening is exact by
 // construction; narrowing rounds to what the target holds, which is a real
 // conversion and not a truncation of bits.
-func testWidthChange () -> Bool {
+func testWidthChange: () -> Bool {
 	var narrow: Float32 = 1.5
 	var wide: Float64 = Float64 narrow
 	if wide != 1.5 {
@@ -170,7 +170,7 @@ func testWidthChange () -> Bool {
 
 // `FloatY -> IntX` and `FloatY -> NatX` truncate the fraction — toward
 // zero, so a negative rounds up rather than down.
-func testToInteger () -> Bool {
+func testToInteger: () -> Bool {
 	var pos: Float64 = 2.75
 	var neg: Float64 = -2.75
 
@@ -220,7 +220,7 @@ func testToInteger () -> Bool {
 
 // `FixedX` is the other fractional type, and the two convert into each
 // other: the construction removes or applies the fixed point's scale.
-func testFixed () -> Bool {
+func testFixed: () -> Bool {
 	var f: Float64 = 1.5
 	var x: Fixed32 = Fixed32 f
 	if Float64 x != 1.5 {
@@ -248,7 +248,7 @@ func testFixed () -> Bool {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	var result = true
 	result = testFromLiteral() and result
 	result = testFromInteger() and result

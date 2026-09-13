@@ -108,7 +108,7 @@ var tests: []TestCase = [
 
 
 
-func runTest (test: *TestCase) -> Bool {
+func runTest: (test: *TestCase) -> Bool {
 	var ctx: aes.Context
 	aes.init(&ctx, &test.key)
 
@@ -135,7 +135,7 @@ func runTest (test: *TestCase) -> Bool {
 }
 
 
-func main () -> Int32 {
+func main: () -> Int32 {
 	printf("run AES-256 test\n")
 
 	var success = true

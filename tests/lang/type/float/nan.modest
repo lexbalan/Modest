@@ -29,13 +29,13 @@ include "libc/stdlib"
 
 
 @inline
-func makeNaN () -> Float64 {
+func makeNaN: () -> Float64 {
 	var zero: Float64 = 0.0
 	return zero / zero
 }
 
 
-func testEquality () -> Bool {
+func testEquality: () -> Bool {
 	var nan = makeNaN()
 
 	// The defining property: not equal to itself, in both spellings.
@@ -63,7 +63,7 @@ func testEquality () -> Bool {
 
 // NaN is unordered: every one of the four ordering operators is false
 // against it, including the two that hold for equal operands.
-func testOrdering () -> Bool {
+func testOrdering: () -> Bool {
 	var nan = makeNaN()
 	var one: Float64 = 1.0
 
@@ -90,7 +90,7 @@ func testOrdering () -> Bool {
 
 
 // Arithmetic carries NaN through: once it is in, every result is one.
-func testPropagation () -> Bool {
+func testPropagation: () -> Bool {
 	var nan = makeNaN()
 	var one: Float64 = 1.0
 
@@ -124,7 +124,7 @@ func testPropagation () -> Bool {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	var result = true
 	result = testEquality() and result
 	result = testOrdering() and result

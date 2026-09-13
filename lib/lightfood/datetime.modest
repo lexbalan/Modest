@@ -26,7 +26,7 @@ public type DateTime = @public {
 }
 
 
-func localTimeNow () -> StructTM {
+func localTimeNow: () -> StructTM {
 	var t: TimeT
 	time(&t)
 	var tm: StructTM
@@ -35,7 +35,7 @@ func localTimeNow () -> StructTM {
 }
 
 
-public func timeNow () -> Time {
+public func timeNow: () -> Time {
 	let tm = localTimeNow()
 	return Time {
 		hour = unsafe Nat8 tm.tm_hour
@@ -47,7 +47,7 @@ public func timeNow () -> Time {
 
 const baseYear = 1900
 
-public func dateNow () -> Date {
+public func dateNow: () -> Date {
 	let tm = localTimeNow()
 	return Date {
 		year = unsafe Nat32 tm.tm_year + baseYear
@@ -57,7 +57,7 @@ public func dateNow () -> Date {
 }
 
 
-public func dateTimeNow () -> DateTime {
+public func dateTimeNow: () -> DateTime {
 	let tm = localTimeNow()
 	return DateTime {
 		date = {
@@ -74,13 +74,13 @@ public func dateTimeNow () -> DateTime {
 }
 
 
-public func dayOfYear () -> Nat32 {
+public func dayOfYear: () -> Nat32 {
 	let tm = localTimeNow()
 	return unsafe Nat32 tm.tm_yday + 1
 }
 
 
-public func dayOfWeek () -> Nat8 {
+public func dayOfWeek: () -> Nat8 {
 	let tm = localTimeNow()
 	let cwday = unsafe Nat8 tm.tm_wday
 	if cwday > 0 {
@@ -92,7 +92,7 @@ public func dayOfWeek () -> Nat8 {
 
 
 
-public func sprintDate (s: *[]Char8) -> Int32 {
+public func sprintDate: (s: *[]Char8) -> Int32 {
 	let dt = dateTimeNow()
 	return sprintf(
 		s
@@ -104,7 +104,7 @@ public func sprintDate (s: *[]Char8) -> Int32 {
 }
 
 
-public func sprintTime (s: *[]Char8) -> Int32 {
+public func sprintTime: (s: *[]Char8) -> Int32 {
 	let dt = dateTimeNow()
 	return sprintf(
 		s
@@ -116,7 +116,7 @@ public func sprintTime (s: *[]Char8) -> Int32 {
 }
 
 
-public func sprintDateTime (s: *[]Char8) -> @unused Int32 {
+public func sprintDateTime: (s: *[]Char8) -> @unused Int32 {
 	let delimiter = Char8 ' '
 	let x0 = sprintDate(&s[0:])
 	s[x0] = delimiter

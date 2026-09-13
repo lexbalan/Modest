@@ -20,7 +20,7 @@ const tableSize = 256
 var table: [tableSize]Word32
 
 // initialize table
-public func init () -> Unit {
+public func init: () -> Unit {
 	var i = Nat32 0
 	while i < tableSize {
 		var crc = Word32 i
@@ -41,7 +41,7 @@ public func init () -> Unit {
 
 
 // calculate CRC32
-public func run (buf: *[]Word8, len: Nat32) -> Word32 {
+public func run: (buf: *[]Word8, len: Nat32) -> Word32 {
 	var crc: Word32 = 0xFFFFFFFF
 	var i = Nat32 0
 	while i < len {

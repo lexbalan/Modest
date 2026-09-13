@@ -53,7 +53,7 @@ var n: Node = {next = nil, data = 1}
 var pn: *Node = &n
 pn.data = 2                   // auto-deref, no (*pn).data
 
-func handler (payload: Ptr) -> Unit {
+func handler: (payload: Ptr) -> Unit {
 	let ctx = *Node payload   // typed view of a free pointer
 	printf("%d\n", ctx.data)
 }

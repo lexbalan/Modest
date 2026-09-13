@@ -8,7 +8,7 @@
 include "libc/stdio"
 
 
-func main () -> Int {
+func main: () -> Int {
     printf("Hello World!\n")
     return 0
 }
@@ -22,7 +22,7 @@ func main () -> Int {
 include "libc/stdio"
 
 
-func mtab (n: Nat32) -> Unit {
+func mtab: (n: Nat32) -> Unit {
     var m: Nat32 = 1
     while m < 10 {
         let nm = n * m
@@ -34,7 +34,7 @@ func mtab (n: Nat32) -> Unit {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
     let n = 2 * 2
     printf("multiply table for %d\n", n)
     mtab(n)
@@ -73,7 +73,7 @@ var line: Line = {
 
 
 @inline
-func max (a: Float, b: Float) -> Float {
+func max: (a: Float, b: Float) -> Float {
     if a > b {
         return a
     }
@@ -81,7 +81,7 @@ func max (a: Float, b: Float) -> Float {
 }
 
 @inline
-func min (a: Float, b: Float) -> Float {
+func min: (a: Float, b: Float) -> Float {
     if a < b {
         return a
     }
@@ -90,7 +90,7 @@ func min (a: Float, b: Float) -> Float {
 
 
 // Pythagorean theorem
-func distance (a: Point, b: Point) -> Float {
+func distance: (a: Point, b: Point) -> Float {
     let dx = max(a.x, b.x) - min(a.x, b.x)
     let dy = max(a.y, b.y) - min(a.y, b.y)
     let dx2 = pow(dx, 2)
@@ -99,12 +99,12 @@ func distance (a: Point, b: Point) -> Float {
 }
 
 
-func lineLength (line: Line) -> Float {
+func lineLength: (line: Line) -> Float {
     return distance(line.a, line.b)
 }
 
 
-func ptr_example () -> Unit {
+func ptr_example: () -> Unit {
     let ptr_p = *Point malloc(sizeof(Point))
 
     // access by pointer
@@ -115,7 +115,7 @@ func ptr_example () -> Unit {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
     // by value
     let len = lineLength(line)
     printf("line length = %f\n", len)
@@ -140,7 +140,7 @@ include "libc/stdio"
 const filename = *Str8 "file.txt"
 
 
-func write_example () -> Unit {
+func write_example: () -> Unit {
     printf("run write_example\n")
 
     let fp = fopen(filename, "w")
@@ -156,7 +156,7 @@ func write_example () -> Unit {
 }
 
 
-func read_example () -> Unit {
+func read_example: () -> Unit {
     printf("run read_example\n")
 
     let fp = fopen(filename, "r")
@@ -179,7 +179,7 @@ func read_example () -> Unit {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
     printf("text_file example\n")
     write_example()
     read_example()

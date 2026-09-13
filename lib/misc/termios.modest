@@ -138,16 +138,16 @@ public const c_TCIOFF = 3
 public const c_TCION = 4
 
 
-public func cfgetispeed(termios: *Termios) -> SpeedT
-public func cfgetospeed(termios: *Termios) -> SpeedT
-public func cfsetispeed(termios: *Termios, speed: SpeedT) -> Int
-public func cfsetospeed(termios: *Termios, speed: SpeedT) -> Int
-public func tcgetattr(fd: Int, termios: *Termios) -> Int
-public func tcsetattr(fd: Int, opt_act: Int, termios: *Termios) -> Int
-public func tcdrain(fd: Int) -> Int
-public func tcflow(fd: Int, act: Int) -> Int
-public func tcflush(fd: Int, queue_selector: Int) -> Int
-public func tcsendbreak(fd: Int, duration: Int) -> Int
-//public func tcgetsid(fd: Int) -> PidT
+public func cfgetispeed: (termios: *Termios) -> SpeedT
+public func cfgetospeed: (termios: *Termios) -> SpeedT
+public func cfsetispeed: (termios: *Termios, speed: SpeedT) -> Int
+public func cfsetospeed: (termios: *Termios, speed: SpeedT) -> Int
+public func tcgetattr: (fd: Int, termios: *Termios) -> Int
+public func tcsetattr: (fd: Int, opt_act: Int, termios: *Termios) -> Int
+public func tcdrain: (fd: Int) -> Int
+public func tcflow: (fd: Int, act: Int) -> Int
+public func tcflush: (fd: Int, queue_selector: Int) -> Int
+public func tcsendbreak: (fd: Int, duration: Int) -> Int
+//public func tcgetsid: (fd: Int) -> PidT
 
 

@@ -26,12 +26,12 @@ include "libc/stdlib"
 include "libc/string"
 
 
-func firstChar (s: *Str8) -> Char8 {
+func firstChar: (s: *Str8) -> Char8 {
 	return s[0]
 }
 
 
-func testStringIsArray () -> Bool {
+func testStringIsArray: () -> Bool {
 	let s: *Str8 = "Hello"
 
 	// Indexing a string is indexing an array of characters.
@@ -57,7 +57,7 @@ func testStringIsArray () -> Bool {
 }
 
 
-func testLiteralAsArray () -> Bool {
+func testLiteralAsArray: () -> Bool {
 	// Exactly as long as the literal: the array holds the characters and
 	// nothing else.
 	var exact: [5]Char8 = "Hello"
@@ -99,7 +99,7 @@ func testLiteralAsArray () -> Bool {
 }
 
 
-func testThroughPointer () -> Bool {
+func testThroughPointer: () -> Bool {
 	let s: *Str8 = "Hello"
 
 	// A string value is zero-terminated where it is constructed, so the
@@ -120,7 +120,7 @@ func testThroughPointer () -> Bool {
 }
 
 
-func testBuffer () -> Bool {
+func testBuffer: () -> Bool {
 	// A writable string is a sized character array, addressed as a string
 	// when something wants one.
 	var buf: [8]Char8 = []
@@ -160,7 +160,7 @@ func testBuffer () -> Bool {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	var result = true
 	result = testStringIsArray() and result
 	result = testLiteralAsArray() and result

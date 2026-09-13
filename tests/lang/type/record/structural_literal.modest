@@ -33,12 +33,12 @@ type Vec2 = {
 }
 
 
-func sumVec (v: Vec2) -> Int32 {
+func sumVec: (v: Vec2) -> Int32 {
 	return v.x + v.y
 }
 
 
-func testNamedLiteral () -> Bool {
+func testNamedLiteral: () -> Bool {
 	// A literal for the one name, into a variable of the other.
 	var w: Vec2 = Point {x = 5, y = 6}
 	if w.x != 5 or w.y != 6 {
@@ -64,7 +64,7 @@ func testNamedLiteral () -> Bool {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	if not testNamedLiteral() {
 		printf("failed: structural literal\n")
 		return exitFailure

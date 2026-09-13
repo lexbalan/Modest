@@ -34,25 +34,25 @@ type Buffer = {
 // The parameter is a copy the callee owns.  Parameters are immutable, so
 // writing to it needs a `var` of its own — which is a second copy, and the
 // caller's array is two removes away from anything that happens here.
-func clobber (v: [3]Int32) -> Int32 {
+func clobber: (v: [3]Int32) -> Int32 {
 	var w = v
 	w[0] = 999
 	return w[0] + v[0]
 }
 
 
-func firstOf (v: [3]Int32) -> Int32 {
+func firstOf: (v: [3]Int32) -> Int32 {
 	return v[0]
 }
 
 
-func makeTriple (x: Int32) -> [3]Int32 {
+func makeTriple: (x: Int32) -> [3]Int32 {
 	var r: [3]Int32 = [x, x + 1, x + 2]
 	return r
 }
 
 
-func testAssignment () -> Bool {
+func testAssignment: () -> Bool {
 	var a: [4]Int32 = [1, 2, 3, 4]
 	var b: [4]Int32 = []
 
@@ -81,7 +81,7 @@ func testAssignment () -> Bool {
 }
 
 
-func testArgument () -> Bool {
+func testArgument: () -> Bool {
 	var a: [3]Int32 = [1, 2, 3]
 
 	// The callee writes 999 over element 0 of its own copy, and returns that
@@ -102,7 +102,7 @@ func testArgument () -> Bool {
 }
 
 
-func testReturn () -> Bool {
+func testReturn: () -> Bool {
 	var t: [3]Int32 = makeTriple(10)
 	if t[0] != 10 or t[1] != 11 or t[2] != 12 {
 		printf("makeTriple(10) = [%d, %d, %d], expected [10, 11, 12]\n", t[0], t[1], t[2])
@@ -122,7 +122,7 @@ func testReturn () -> Bool {
 }
 
 
-func testInsideRecord () -> Bool {
+func testInsideRecord: () -> Bool {
 	var x = Buffer {tag = 1, data = [1, 2, 3]}
 	var y = x
 
@@ -155,7 +155,7 @@ func testInsideRecord () -> Bool {
 }
 
 
-func testCallResult () -> Bool {
+func testCallResult: () -> Bool {
 	// A returned array is a value like any other, so it can be indexed
 	// where it stands, without a variable to hold it first.
 	if makeTriple(5)[0] != 5 {
@@ -178,7 +178,7 @@ func testCallResult () -> Bool {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	var result = true
 	result = testAssignment() and result
 	result = testArgument() and result

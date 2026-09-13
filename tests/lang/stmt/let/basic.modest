@@ -15,14 +15,14 @@ include "libc/stdio"
 include "libc/stdlib"
 
 
-func mid (a: Int32, b: Int32) -> Int32 {
+func mid: (a: Int32, b: Int32) -> Int32 {
 	let sum = a + b        // runtime value, type Int32
 	let half: Int32 = sum / 2
 	return half
 }
 
 
-func testForms () -> Bool {
+func testForms: () -> Bool {
 	// Type taken from the initializer.
 	let n = mid(10, 20)
 	if n != 15 {
@@ -50,7 +50,7 @@ func testForms () -> Bool {
 }
 
 
-func testGeneric () -> Bool {
+func testGeneric: () -> Bool {
 	// Without an annotation this stays a compile-time Integer, so it can
 	// serve as Int32 in one place and Float64 in another.
 	let count = 42
@@ -79,7 +79,7 @@ func testGeneric () -> Bool {
 }
 
 
-func testReference () -> Bool {
+func testReference: () -> Bool {
 	// The binding is immutable, but what it points at need not be.
 	var n: Int32 = 1
 	let p = &n
@@ -98,7 +98,7 @@ func testReference () -> Bool {
 }
 
 
-func main () -> Int {
+func main: () -> Int {
 	var result = true
 	result = testForms() and result
 	result = testGeneric() and result

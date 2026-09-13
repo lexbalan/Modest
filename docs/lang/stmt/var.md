@@ -23,7 +23,7 @@ var <#id1#>, <#id2#>, ... : <#type_expression#>
 ## Example
 
 ```modest
-func main () -> Int {
+func main: () -> Int {
 	var flag: Bool = false
 	var counter: Int32 = 0
 	var x, y: Float64           // both start at 0.0
