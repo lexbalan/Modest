@@ -1,5 +1,6 @@
 
 import os
+import sys
 import argparse
 import importlib
 import tomllib
@@ -8,6 +9,8 @@ import error
 import semantic
 from common import settings, features, merge_settings, get_setting, set_setting, backend_settings
 
+
+VERSION = "0.7.100"
 
 
 def main():
@@ -43,6 +46,10 @@ def main():
 	#args = parser.parse_args()
 	args, files = parser.parse_known_args()
 
+	if len(files) == 0:
+		script_name = sys.argv[0]
+		print("modest v%s  (%s)" % (VERSION, script_name), flush=True)
+		error.fatal("no input files\n")
 
 	fdg = args.config
 	if fdg != None:
