@@ -161,8 +161,6 @@ func update: (ctx: *Context, msg: *[]Word8, msgLen: Nat32) -> Unit {
 
 
 func final: (ctx: *Context) -> Hash {
-	var hash: Hash
-
 	var i: Nat32 = ctx.datalen
 
 	// Pad whatever data is left in the buffer.
@@ -202,6 +200,8 @@ func final: (ctx: *Context) -> Hash {
 	// Since this implementation uses little endian byte ordering
 	// and SHA uses big endian, reverse all the bytes
 	// when copying the final state to the output hash.
+
+	var hash: Hash
 
 	i = 0
 	while i < 4 {
