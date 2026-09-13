@@ -5,7 +5,11 @@ A test is a single .modest file whose leading comment block declares what is
 expected of it.  The runner compiles it with each requested backend, links
 the result with clang, runs the binary and checks the outcome.
 
-Everything is built in a temporary directory: the source tree stays clean.
+Everything a case produces lands next to its test, in
+<leaf>/out/<backend>/<test>/, and stays there: the generated .c/.ll is at
+hand after a failure, and a binary that came out byte-identical to last
+time's is not replaced - macOS validates every new executable on its first
+run, and this way the runner only ever hands it an executable it has seen.
 
     ./run.py                    run everything
     ./run.py while              run tests whose path contains "while"
@@ -17,12 +21,12 @@ See README.md for the directive reference.
 """
 
 import argparse
+import filecmp
 import os
 import re
 import shutil
 import subprocess
 import sys
-import tempfile
 import threading
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
@@ -31,6 +35,10 @@ from dataclasses import dataclass, field
 TESTS_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT_DIR = os.path.dirname(TESTS_DIR)
 MODEST = os.path.join(ROOT_DIR, 'modest')
+
+# Where a case builds: <leaf>/OUT_DIR/<backend>/<test>/.  Skipped by discovery,
+# since the `modest` backend leaves .modest files there.
+OUT_DIR = 'out'
 
 # Where a library-relative LINK is looked up.  The compiler reads MODEST_LIB
 # for the same purpose; run.py falls back to the lib of the tree it lives in,
@@ -77,6 +85,11 @@ class Test:
 	def xfail_reason(self, backend):
 		"""Why this test is expected to fail under `backend`, or None."""
 		return self.xfail.get(backend) or self.xfail.get('*')
+
+	def out_dir(self, backend):
+		"""Where this test builds under `backend`: <leaf>/out/<backend>/<test>/."""
+		leaf, fn = os.path.split(self.path)
+		return os.path.join(leaf, OUT_DIR, backend, os.path.splitext(fn)[0])
 
 
 @dataclass
@@ -215,16 +228,31 @@ def run(cmd, cwd, timeout):
 		return -1, 'TIMEOUT after %ds: %s' % (timeout, ' '.join(cmd))
 
 
-def run_case(t, backend, keep=False):
+def run_case(t, backend):
 	"""Compile / link / run one test under one backend."""
-	workdir = tempfile.mkdtemp(prefix='modest-test-')
-	try:
-		return do_case(t, backend, workdir)
-	finally:
-		if keep:
-			print('  kept: %s' % workdir)
-		else:
-			shutil.rmtree(workdir, ignore_errors=True)
+	workdir = t.out_dir(backend)
+	os.makedirs(workdir, exist_ok=True)
+	# The directory is tracked, its contents are not: a .gitkeep is what
+	# makes git hold on to it.
+	open(os.path.join(workdir, '.gitkeep'), 'a').close()
+	return do_case(t, backend, workdir)
+
+
+def install(new, binary):
+	"""Put a freshly linked executable in place - unless it is already there.
+
+	clang is deterministic, so most runs relink exactly the bytes that are
+	already in `binary`.  Keeping that file rather than replacing it with its
+	twin matters on macOS, which checks every executable it has not run
+	before: a suite of ~200 fresh binaries spends longer on those checks
+	than on modest and clang together, while re-running a known file is
+	free.  Which of the two the kernel keys on - content or file - does not
+	matter here: the untouched file satisfies both.
+	"""
+	if os.path.isfile(binary) and filecmp.cmp(new, binary, shallow=False):
+		os.remove(new)
+	else:
+		os.replace(new, binary)
 
 
 def output_names(sources):
@@ -316,10 +344,11 @@ def do_case(t, backend, workdir):
 
 	binary = os.path.join(workdir, 'a.out')
 	flags = CLANG_C_FLAGS if backend == 'c11' else []
-	code, out = run(['clang'] + flags + generated + ['-o', binary],
+	code, out = run(['clang'] + flags + generated + ['-o', binary + '.new'],
 	                workdir, TIMEOUT_LINK)
 	if code != 0:
 		return compiler_failed('clang', code, out)
+	install(binary + '.new', binary)
 
 	if t.mode == 'build':
 		return result(PASS)
@@ -397,6 +426,9 @@ def report(results, verbose, tty):
 		# only that something broke, not what.
 		for w in r.where:
 			print('      %s' % color(w, 90, tty))
+		if r.status == FAIL:
+			# The generated .c/.ll a diagnostic points at is here.
+			print('      %s' % color('in ' + os.path.relpath(r.test.out_dir(r.backend), TESTS_DIR), 90, tty))
 
 		if r.status == XPASS:
 			print('      passes now; drop EXPECTED-FAIL (%s)'
@@ -412,10 +444,7 @@ def report(results, verbose, tty):
 	print(color(summary, 32 if ok else 91, tty))
 
 	if not ok and not verbose:
-		# The generated .c/.ll a diagnostic points at lives in a build
-		# directory that is gone by now, unless asked for.
-		print(color('  -v for full output, --keep to keep the generated sources',
-		            90, tty))
+		print(color('  -v for full output', 90, tty))
 	return ok
 
 
@@ -434,7 +463,8 @@ def fatal(msg):
 def discover(filt):
 	tests = []
 	for dirpath, dirnames, filenames in os.walk(TESTS_DIR):
-		dirnames[:] = sorted(d for d in dirnames if not d.startswith(('_', '.')))
+		dirnames[:] = sorted(d for d in dirnames
+		                     if not d.startswith(('_', '.')) and d != OUT_DIR)
 		for fn in sorted(filenames):
 			if not fn.endswith('.modest'):
 				continue
@@ -463,7 +493,6 @@ def main():
 	ap.add_argument('-j', '--jobs', type=int, default=os.cpu_count() or 4)
 	ap.add_argument('-v', '--verbose', action='store_true',
 	                help='show compiler/program output for failures')
-	ap.add_argument('--keep', action='store_true', help='keep build directories')
 	ap.add_argument('--list', action='store_true', help='list tests and exit')
 	args = ap.parse_args()
 
@@ -490,7 +519,7 @@ def main():
 	progress = Progress(len(cases), tty)
 
 	def one(case):
-		r = resolve(run_case(case[0], case[1], args.keep))
+		r = resolve(run_case(case[0], case[1]))
 		progress.finish(r)
 		return r
 

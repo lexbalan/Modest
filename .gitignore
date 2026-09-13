@@ -6,3 +6,8 @@ a.out
 */__pycache__
 .vscode
 .obsidian
+# tests build into <leaf>/out/<backend>/<test>/; the directories are kept
+# (see tests/README.md), what they hold is not
+tests/**/out/**
+!tests/**/out/**/
+!tests/**/out/**/.gitkeep

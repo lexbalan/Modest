@@ -9,7 +9,6 @@ so the default is to actually execute the result.
 ./run.py while          # only tests whose path contains "while"
 ./run.py -b c11         # only the C11 backend
 ./run.py -v             # full compiler/program output for failures
-./run.py --keep         # keep the generated .c/.ll and print their path
 ./run.py --list         # what would run
 ```
 
@@ -30,13 +29,32 @@ FAIL  lang/stmt/if.modest [llvm] — clang failed (exit 1)
       if.ll:188: expected instruction opcode
 ```
 
-Use `-v` when that is not enough, and `--keep` when the generated `.c` or
-`.ll` is what you need to look at.
+Use `-v` when that is not enough; the generated `.c` or `.ll` itself is
+where the failure line says it is.
 
-Nothing is built inside `tests/`.  Every case gets a fresh temporary
-directory that is removed afterwards (`--keep` keeps it and prints the
-path), so there is no generated output to gitignore, stage by accident, or
-mistake for a source file.
+## Build output
+
+Every case builds next to its test, in `<leaf>/out/<backend>/<test>/`:
+
+```
+tests/lang/stmt/if/out/c11/basic/     basic.c  basic.h  a.out
+tests/lang/stmt/if/out/llvm/basic/    basic.ll         a.out
+```
+
+The output stays after the run.  That is what makes the suite fast on
+macOS: the kernel validates every executable it has not run before, and
+with ~200 fresh binaries per run those checks cost more than modest and
+clang together.  clang is deterministic, so a case whose sources did not
+change relinks the same bytes — and the runner then keeps the file it
+already has instead of replacing it with its twin, so the kernel only
+ever sees executables it has already checked.
+
+The directories are tracked (each holds a `.gitkeep`, which the runner
+creates), their contents are ignored.  A test that is deleted or renamed
+leaves its `out/` directory behind — remove it by hand.
+
+Directories named `out` are skipped by discovery, so the `.modest` files
+the `modest` backend leaves there are never mistaken for tests.
 
 ## Writing a test
 
@@ -183,4 +201,4 @@ it, named after what it exercises (`value/unary/narrow_width.modest`).  So
 a construct that grows a second test does not have to move first.
 
 Directories whose name starts with `_` are skipped by discovery — use them
-for fixtures that are not tests themselves.
+for fixtures that are not tests themselves.  So is `out/`, see above.
