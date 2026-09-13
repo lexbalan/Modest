@@ -468,22 +468,13 @@ def do_cvalue_literal_char(t, v, ctx):
 
 
 
-# nmax - максимальное количество элементов, которое можно напечатать
-def do_array_literal_from_nitems(items, nmax, ctx):
+def do_array_literal_from_items(items, ctx):
 	initializers = []
-	i = 0
 	for item in items:
-		if i >= nmax:
-			break
 		ini = do_cinitializer(item.type, item, ctx=ctx)
 		ini.nl = item.nl
 		initializers.append(ini)
-		i += 1
 	return CValueArray(initializers)
-
-
-def do_array_literal_from_items(items, ctx):
-	return do_array_literal_from_nitems(items, nmax=len(items), ctx=ctx)
 
 
 def do_cvalue_literal_array(v, ctx):
@@ -1611,7 +1602,7 @@ def do_cinitializer_cons(type, value, ctx):
 	if to.is_array():
 		if v.is_array():
 			if value.is_immediate():
-				return do_array_literal_from_nitems(value.asset, nmax=len(v.asset), ctx=ctx)
+				return do_array_literal_from_items(value.asset[0:len(v.asset)], ctx=ctx)
 			return do_cvalue_literal_with_type(v, to, ctx=ctx)
 
 		elif v.type.is_string():
