@@ -8,12 +8,20 @@ struct record {
 	int32_t a;
 	uint16_t c;
 };
-typedef struct record Packed;
+typedef struct packed Packed;
+struct packed {
+	char b;
+	int32_t a;
+	uint16_t c;
+} __attribute__((packed));
 //type Union = @layout("union") Record
 typedef int32_t MyInt;
 
 int main(void) {
 	printf("Hello World!\n");
+	struct record r = {0};
+	Packed p = {0};
+	r = p;
 	printf("sizeof(Record) = %zu\n", sizeof(struct record));
 	printf("sizeof(Packed) = %zu\n", sizeof(Packed));
 	return 0;

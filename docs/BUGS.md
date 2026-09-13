@@ -1466,7 +1466,10 @@ struct aligned {
   and holds once it is honoured, and fails the moment a bare `aligned`
   reaches the C output again.
 
-## BUG#72: C backend loses a layout added to an already named record
+## BUG#72: C backend loses a layout added to an already named record, outside a `type` alias
+
+The `type Packed = @layout("packed") Padded` form is fixed (2026-09-13,
+`tests/lang/type/record/layout_alias.modest`) — see below for what remains.
 
 ```modest
 type Padded = {
@@ -1474,10 +1477,10 @@ type Padded = {
 	len: Nat32
 }
 
-type Packed = @layout("packed") Padded
-
-sizeof(Packed)          // c11: 8    llvm: 5
-offsetof(Packed.len)    // c11: 4    llvm: 1
+func f (v: @layout("packed") Padded) {
+	sizeof(v)          // c11: 8    llvm: 5
+	offsetof(v.len)     // c11: 4    llvm: 1
+}
 ```
 
 ```c
@@ -1485,32 +1488,32 @@ struct padded {
 	uint8_t tag;
 	uint32_t len;
 };
-typedef struct padded Packed;   /* the padded one, under another name */
+
+void f(struct padded v) { ... }   /* the padded one, unpacked */
 ```
 
 - Writing a layout against a record that already has a name asks for its
   fields laid out another way — two types over one field list. The frontend
   reads it that way: `copy_with_atts` makes a copy of the record and lays it
-  out again, and the LLVM backend prints `%Packed = type <{ %Word8, %Nat32
-  }>` from it.
-- The C backend never gets there. `do_def_type` emits a full struct only for
-  an *unnamed* record (`orig_type.is_record() and not is_named(orig_type)`);
-  the copy inherits `Padded`'s `id`, so `is_named` says yes and the alias
-  goes out as a `typedef` to the struct it was copied from. Giving the copy
-  its own struct means giving it a C name of its own first — it has none,
-  and `get_record_tag` answers `padded` for both.
-- `@layout("union")` the same way emits C that does not compile at all:
-  `typedef union pair Overlap;` for a `struct pair` that was defined a few
-  lines above — `error: use of 'pair' with tag type that does not match
-  previous declaration`.
-- The same reading applies to `var v: @layout("packed") Padded`, and it is
-  lost in the same place.
-- Whether the language wants this at all is worth settling first: one
-  record, one layout is a defensible rule, and then this is a diagnostic to
-  write rather than a backend to teach. What it cannot stay is accepted by
-  the frontend and dropped by one backend.
-- Coverage: `tests/lang/type/record/layout_alias.modest`, marked
-  `EXPECTED-FAIL(c11)`. Its other half guards the copy the frontend makes:
-  laying the second record out over a shared field list moves the first
-  one's fields, which nothing else would catch — the offsets change and
-  nothing fails to compile.
+  out again, and the LLVM backend prints the packed type from it correctly
+  wherever it appears.
+- `do_def_type` (the `type X = ...` alias declaration) now special-cases
+  this: whenever the aliased type is named *and* carries its own
+  `ast_annotations` (`@layout`, `@alignment`, ...), it prints a full struct
+  literal tagged with the alias's own name instead of a `typedef` to the
+  original tag — `do_def_type_record` emits both the forward `typedef` and
+  the tagged definition, gated on `is_open_access` (not `is_open_record`:
+  an alias needs the C name even when every field stays private).
+- What is still lost is any *other* position that carries such an
+  annotation directly on a named type reference — a `var` type, a function
+  parameter or return type, a field type — since those go straight through
+  `do_ctype`/`do_ctype_named`, which only ever prints the plain tag
+  (`struct padded`) and drops the annotation. There is no declaration site
+  there to hang a second struct off, unlike a `type` alias.
+- Whether the language wants this at all outside a named alias is worth
+  settling first: one record, one layout is a defensible rule, and then
+  this is a diagnostic to write rather than a backend to teach.
+- Coverage: `tests/lang/type/record/layout_alias.modest` covers the fixed
+  `type` alias form (both `packed` and, per `src/backend/c11.py`'s
+  `do_def_type`, `union`). No reproducer yet for the remaining `var`/field/
+  parameter case.

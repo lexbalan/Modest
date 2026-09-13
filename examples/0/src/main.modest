@@ -21,6 +21,11 @@ type MyInt = @branded Int32
 func main () -> Int {
 	printf("Hello World!\n")
 
+	var r: Record
+	var p: Packed
+
+	//r = p
+
 	printf("sizeof(Record) = %zu\n", sizeof(Record))
 	printf("sizeof(Packed) = %zu\n", sizeof(Packed))
 	return 0

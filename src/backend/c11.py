@@ -1954,9 +1954,11 @@ def do_def_type(x):
 	if orig_type.is_record():
 		if not is_named(orig_type):
 			print_right = True
-		# elif x.type.layout != orig_type.layout:
-		# 	# named & packeds
-		# 	print_right = True
+		elif orig_type.ast_annotations != []:
+			# именной тип, но со своей аннотацией (@layout/@alignment/...):
+			# переиспользовать тег исходной структуры нельзя, т.к. раскладка/выравнивание
+			# у неё уже другие - нужен собственный struct-литерал с C-атрибутами
+			print_right = True
 
 	defined.append(x)
 
@@ -1973,8 +1975,11 @@ def do_def_type_record(t):
 
 	defs = ()
 
-	# Если структура open & не задекларирована ранее - печатаем для нее typedef
-	if (not id_str in declared) and t.is_open_record:
+	# Печатаем typedef, если у типа есть собственное имя, которым он может
+	# быть упомянут в C (is_open_record - публичные поля; is_open_access -
+	# ещё и alias'ы вроде `type Packed = @layout("packed") Record`, где
+	# поля остаются закрытыми, но идентификатор "Packed" всё равно нужен)
+	if (not id_str in declared) and t.is_open_access:
 		tag = get_record_tag(t)
 		isa = 'struct' if not t.layout == 'union' else 'union'
 		kisa = isa + ' ' + tag

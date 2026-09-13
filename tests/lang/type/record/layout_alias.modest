@@ -4,7 +4,9 @@
 // EXPECT-OUT: passed: the record it was taken from is untouched
 // EXPECT-OUT: passed: the named record is packed
 // EXPECT-OUT: passed: layout on a named record
-// EXPECTED-FAIL(c11): BUG#72 a layout added to a named record is lost in C
+// Guards the `type X = @layout(...) Y` half of BUG#72 (fixed 2026-09-13).
+// The other half - the same annotation directly on a `var`/field/parameter
+// type - is still open; see docs/BUGS.md.
 //
 // A `@layout` may be written against a record that already has a name:
 //
@@ -21,11 +23,6 @@
 // fields silently — the type is never mentioned in the line that breaks it,
 // and only the offsets change, so nothing fails to compile and every
 // `p.len` reads four bytes from the wrong place.
-//
-// The C backend does not carry the layout over: a named record aliased this
-// way comes out `typedef struct padded Packed`, the same struct under
-// another name, so `Packed` is padded there — BUG#72.  Until that is fixed
-// the first half of this test is what guards the copy, under LLVM.
 
 include "libc/ctypes64"
 include "libc/stdio"
