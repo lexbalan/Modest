@@ -160,7 +160,9 @@ func update: (ctx: *Context, msg: *[]Word8, msgLen: Nat32) -> Unit {
 }
 
 
-func final: (ctx: *Context, outHash: *Hash) -> Unit {
+func final: (ctx: *Context) -> Hash {
+	var hash: Hash
+
 	var i: Nat32 = ctx.datalen
 
 	// Pad whatever data is left in the buffer.
@@ -204,23 +206,25 @@ func final: (ctx: *Context, outHash: *Hash) -> Unit {
 	i = 0
 	while i < 4 {
 		let sh = 24 - i * 8
-		outHash[i + 00] = unsafe Word8 (ctx.state[0] >> sh)
-		outHash[i + 04] = unsafe Word8 (ctx.state[1] >> sh)
-		outHash[i + 08] = unsafe Word8 (ctx.state[2] >> sh)
-		outHash[i + 12] = unsafe Word8 (ctx.state[3] >> sh)
-		outHash[i + 16] = unsafe Word8 (ctx.state[4] >> sh)
-		outHash[i + 20] = unsafe Word8 (ctx.state[5] >> sh)
-		outHash[i + 24] = unsafe Word8 (ctx.state[6] >> sh)
-		outHash[i + 28] = unsafe Word8 (ctx.state[7] >> sh)
+		hash[i + 00] = unsafe Word8 (ctx.state[0] >> sh)
+		hash[i + 04] = unsafe Word8 (ctx.state[1] >> sh)
+		hash[i + 08] = unsafe Word8 (ctx.state[2] >> sh)
+		hash[i + 12] = unsafe Word8 (ctx.state[3] >> sh)
+		hash[i + 16] = unsafe Word8 (ctx.state[4] >> sh)
+		hash[i + 20] = unsafe Word8 (ctx.state[5] >> sh)
+		hash[i + 24] = unsafe Word8 (ctx.state[6] >> sh)
+		hash[i + 28] = unsafe Word8 (ctx.state[7] >> sh)
 		++i
 	}
+
+	return hash
 }
 
 
-public func hash: (msg: *[]Word8, msgLen: Nat32, outHash: *Hash) -> Unit {
+public func hash: (msg: *[]Word8, msgLen: Nat32) -> Hash {
 	var ctx = Context {}
 	contextInit(&ctx)
 	update(&ctx, msg, msgLen)
-	final(&ctx, outHash)
+	return final(&ctx)
 }
 

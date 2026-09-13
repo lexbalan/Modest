@@ -62,24 +62,23 @@ const tests: [2]*SHA256_TestCase = [&test0, &test1]
 
 
 func doTest: (test: *SHA256_TestCase) -> Bool {
-	var test_hash: sha256.Hash
 	let msg = unsafe *[]Word8 &test.inputData
 	let msgLen = test.inputDataLen
 
-	sha256.hash(msg, msgLen, &test_hash)
+	let testHash = sha256.hash(msg, msgLen)
 
 	printf("'%s'", &test.inputData)
 	printf(" -> ")
 
 	var i: Nat32 = 0
 	while i < sha256.hashSize {
-		printf("%02X", test_hash[i])
+		printf("%02X", testHash[i])
 		++i
 	}
 
 	printf("\n")
 
-	return test_hash == test.expectedResult
+	return testHash == test.expectedResult
 }
 
 
