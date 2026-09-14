@@ -1925,8 +1925,8 @@ def do_value_immediate_string(x):
 
 
 def do_value_unsafe(x):
-	if not cmodule.hasAttribute('unsafe'):
-		error("for use 'unsafe' operator required -funsafe option", x['ti'])
+	#if not cmodule.hasAttribute('unsafe'):
+	#	error("for use 'unsafe' operator required -funsafe option", x['ti'])
 
 	global unsafe_mode
 	prev_unsafe_mode = unsafe_mode
