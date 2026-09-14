@@ -145,6 +145,11 @@ declare void @perror(%ConstCharStr* %str)
 	%Nat32
 };
 
+%Unionx = type {
+	%Word8,
+	%Nat32
+};
+
 %Packed = type <{
 	%Word8,
 	%Nat32

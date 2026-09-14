@@ -5,6 +5,8 @@
 #include <stdio.h>
 #define RAWCAST(type_dst, type_src, value) (((union { type_src src; type_dst dst; }){ .src = (value) }).dst)
 struct exact {uint8_t tag; uint32_t len;};
+typedef union unionx Unionx;
+union unionx {uint8_t tag; uint32_t len;};
 typedef struct packed Packed;
 struct packed {uint8_t tag; uint32_t len;} __attribute__((packed));
 

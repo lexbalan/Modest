@@ -7,6 +7,7 @@ include "libc/stdio"
 
 
 type Exact = {tag: Word8, len: Nat32}
+type Unionx = @layout("union") Exact
 type Packed = @layout("packed") Exact
 
 
