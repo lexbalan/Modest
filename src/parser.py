@@ -12,7 +12,7 @@ func_stoppers = ['let', 'var', 'if', 'while', 'return', 'type']
 # 'func name: (...) -> Ret' is the recommended form; 'func name (...) -> Ret'
 # still parses. Set to False to accept the colon-less form silently again,
 # with no warning, while this syntax change is still being decided.
-WARN_MISSING_FUNC_COLON = True
+WARN_MISSING_FUNC_COLON = False
 
 
 def ast_value_bad(ti):

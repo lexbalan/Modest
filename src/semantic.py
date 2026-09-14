@@ -663,7 +663,7 @@ def do_type_internal(x):
 	elif k == 'array': t = do_type_array(x, anno)
 	elif k == 'record': t = do_type_record(x, anno)
 	elif k == 'variant': t = do_type_variant(x, anno)
-	else: t = bad_type(x['ti'])
+	else: t = TypeBad(x['ti'])
 	t.ti = x['ti']
 
 	if anno != []:

@@ -6,30 +6,22 @@ include "libc/ctypes64"
 include "libc/stdio"
 
 
-type Record = {
-	b: Char8
-	a: Int32
-	c: Nat16
+type Exact = {tag: Word8, len: Nat32}
+type Packed = @layout("packed") {tag: Word8, len: Nat32}
+
+func makePacked () -> Packed {
+	printf("called\n")
+	return {tag = 1, len = 2}
 }
-
-type Packed = @layout("packed") Record
-//type Union = @layout("union") Record
-
-type MyInt = @branded Int32
 
 
 @nonstatic
 func main () -> Int {
 	printf("Hello World!\n")
 
-	var r: Record
-	var p: Packed
+	var e = Exact makePacked()
+	printf("%x %u\n", Nat32 e.tag, e.len)
 
-	r = Record p
-	p = Packed r
-
-	printf("sizeof(Record) = %zu\n", sizeof(Record))
-	printf("sizeof(Packed) = %zu\n", sizeof(Packed))
 	return 0
 }
 

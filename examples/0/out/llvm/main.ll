@@ -136,42 +136,44 @@ declare void @perror(%ConstCharStr* %str)
 ; end from import "builtin"
 ; -- end print imports 'main' --
 ; -- strings --
-@.str1 = private constant [14 x i8] [i8 72, i8 101, i8 108, i8 108, i8 111, i8 32, i8 87, i8 111, i8 114, i8 108, i8 100, i8 33, i8 10, i8 0]
-@.str2 = private constant [22 x i8] [i8 115, i8 105, i8 122, i8 101, i8 111, i8 102, i8 40, i8 82, i8 101, i8 99, i8 111, i8 114, i8 100, i8 41, i8 32, i8 61, i8 32, i8 37, i8 122, i8 117, i8 10, i8 0]
-@.str3 = private constant [22 x i8] [i8 115, i8 105, i8 122, i8 101, i8 111, i8 102, i8 40, i8 80, i8 97, i8 99, i8 107, i8 101, i8 100, i8 41, i8 32, i8 61, i8 32, i8 37, i8 122, i8 117, i8 10, i8 0]
+@.str1 = private constant [8 x i8] [i8 99, i8 97, i8 108, i8 108, i8 101, i8 100, i8 10, i8 0]
+@.str2 = private constant [14 x i8] [i8 72, i8 101, i8 108, i8 108, i8 111, i8 32, i8 87, i8 111, i8 114, i8 108, i8 100, i8 33, i8 10, i8 0]
+@.str3 = private constant [7 x i8] [i8 37, i8 120, i8 32, i8 37, i8 117, i8 10, i8 0]
 ; -- endstrings --
-%Record = type {
-	%Char8,
-	%Int32,
-	%Nat16
+%Exact = type {
+	%Word8,
+	%Nat32
 };
 
 %Packed = type <{
-	%Char8,
-	%Int32,
-	%Nat16
+	%Word8,
+	%Nat32
 }>;
 
-;type Union = @layout("union") Record
-%MyInt = type %Int32;
+define internal %Packed @makePacked() {
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @.str1 to [0 x i8]*))
+	%2 = bitcast i8 1 to %Word8
+	%3 = insertvalue %Packed zeroinitializer, %Word8 %2, 0
+	%4 = insertvalue %Packed %3, %Nat32 2, 1
+	ret %Packed %4
+}
+
 define %Int @main() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @.str1 to [0 x i8]*))
-	%2 = alloca %Record, align 4
-	store %Record zeroinitializer, %Record* %2
-	%3 = alloca %Packed, align 1
-	store %Packed zeroinitializer, %Packed* %3
-; -- cons_composite_from_composite_by_adr --
-	%4 = bitcast %Packed* %3 to %Record*
-	%5 = load %Record, %Record* %4
-; -- end cons_composite_from_composite_by_adr --
-	store %Record %5, %Record* %2
-; -- cons_composite_from_composite_by_adr --
-	%6 = bitcast %Record* %2 to %Packed*
-	%7 = load %Packed, %Packed* %6
-; -- end cons_composite_from_composite_by_adr --
-	store %Packed %7, %Packed* %3
-	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @.str2 to [0 x i8]*), %Size 12)
-	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @.str3 to [0 x i8]*), %Size 7)
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @.str2 to [0 x i8]*))
+	%2 = alloca %Exact, align 4
+	%3 = call %Packed @makePacked()
+	%4 = extractvalue %Packed %3, 0
+	%5 = insertvalue %Exact zeroinitializer, %Word8 %4, 0
+	%6 = call %Packed @makePacked()
+	%7 = extractvalue %Packed %6, 1
+	%8 = insertvalue %Exact %5, %Nat32 %7, 1
+	store %Exact %8, %Exact* %2
+	%9 = getelementptr %Exact, %Exact* %2, %Int32 0, %Int32 0
+	%10 = load %Word8, %Word8* %9
+	%11 = zext %Word8 %10 to %Nat32
+	%12 = getelementptr %Exact, %Exact* %2, %Int32 0, %Int32 1
+	%13 = load %Nat32, %Nat32* %12
+	%14 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([7 x i8]* @.str3 to [0 x i8]*), %Nat32 %11, %Nat32 %13)
 	ret %Int 0
 }
 
