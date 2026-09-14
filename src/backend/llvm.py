@@ -1567,6 +1567,24 @@ def cons_composite_from_composite(to_type, value, ti):
 
 
 
+# Записи с одинаковыми полями, но разной раскладкой (@layout) - разные
+# LLVM-структуры (не совпадают побайтово), так что bitcast+load
+# (cons_composite_from_composite, ниже) читал бы поля не по тем смещениям
+# - см. BUG#73 и do_cvalue_cast_layout в backend/c11.py. Перекладываем
+# поля по значению: читаем каждое поле источника по имени и складываем
+# литерал целевого типа, а его раскладку в регистре посчитает do_eval_record
+def cons_record_repack_layout(to_type, value, ti):
+	items = []
+	for field_to in to_type.fields:
+		field_from = TypeRecord.record_field_get(value.type, field_to.id.str)
+		assert(field_from != None)
+		access = ValueAccessRecord(field_from.type, value, field_from, ti=ti)
+		items.append(Initializer(field_to.id, access, ti=ti))
+
+	nv = ValueRecord(to_type, items, ti=ti)
+	return do_eval_record(nv)
+
+
 def eval_cons_record(x):
 	value = x.value
 	from_type = value.type
@@ -1579,6 +1597,10 @@ def eval_cons_record(x):
 
 	if x.asset != None:
 		return do_eval_literal(x)
+
+	if from_type.is_record() and from_type.is_concretic():
+		if from_type.layout != to_type.layout:
+			return cons_record_repack_layout(to_type, value, x.ti)
 
 	# Cm имеет структурную систему типов, тогда как llvm - номинативную
 	# приведение структуры к структуре по значению не поддерживается LLVM

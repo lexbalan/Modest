@@ -1,0 +1,126 @@
+// TEST: run
+// BACKENDS: c11, llvm
+// EXPECT-EXIT: 0
+// EXPECT-OUT: passed: exact to packed
+// EXPECT-OUT: passed: packed to exact
+// EXPECT-OUT: passed: the source is untouched by converting it
+// EXPECT-OUT: passed: a round trip returns the original
+// EXPECT-OUT: passed: layout conversion
+//
+// `layout_eq.modest` covers the half of this that refuses: two records
+// with the same fields but a different `@layout` are different types, so
+// nothing implicit bridges them. This is the other half — explicit
+// construction still can, precisely because "same fields" is exactly what
+// it promises to preserve. `TargetType sourceValue` copies each field by
+// name and lets the target lay them out at its own offsets; it is never a
+// reinterpretation of the source's bytes, so it works between any two
+// layouts as long as both records agree on the field list.
+//
+// `tag` sits at offset 0 in both layouts here, which is what makes the
+// bug this guards easy to miss: it is `len`, moved from offset 4 to
+// offset 1, that a byte-for-byte reinterpretation gets wrong.
+//
+// Guards BUG#73 (fixed 2026-09-14).
+
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+
+
+// Word8 then Nat32 is the shape that tells the layouts apart: Nat32 wants
+// four-byte alignment, so `len` sits at a different offset in each.
+type Exact = {
+	tag: Word8
+	len: Nat32
+}
+
+type Packed = @layout("packed") {
+	tag: Word8
+	len: Nat32
+}
+
+
+func testExactToPacked: () -> Bool {
+	var e: Exact = {tag = 0x7F, len = 0x11223344}
+	var p = Packed e
+
+	if p.tag != 0x7F or p.len != 0x11223344 {
+		printf("p = {%x, %x}, expected {7F, 11223344}\n", Nat32 p.tag, p.len)
+		return false
+	}
+
+	// The two types still disagree about where `len` lives, so a value
+	// that reads right also has to be the right size.
+	if sizeof(Exact) != 8 or sizeof(Packed) != 5 {
+		printf("sizeof(Exact) = %zu, sizeof(Packed) = %zu, expected 8 and 5\n",
+			sizeof(Exact), sizeof(Packed))
+		return false
+	}
+
+	printf("passed: exact to packed\n")
+	return true
+}
+
+
+func testPackedToExact: () -> Bool {
+	var p: Packed = {tag = 0x11, len = 99}
+	var e = Exact p
+
+	if e.tag != 0x11 or e.len != 99 {
+		printf("e = {%x, %u}, expected {11, 99}\n", Nat32 e.tag, e.len)
+		return false
+	}
+
+	printf("passed: packed to exact\n")
+	return true
+}
+
+
+func testSourceUntouched: () -> Bool {
+	// Construction copies field values; it does not alias the source's
+	// storage the way reinterpreting its bytes would.
+	var e: Exact = {tag = 1, len = 1000}
+	var p = Packed e
+
+	p.tag = 2
+	p.len = 2000
+	if e.tag != 1 or e.len != 1000 {
+		printf("e = {%x, %u} after mutating p, expected {1, 1000}\n", Nat32 e.tag, e.len)
+		return false
+	}
+
+	printf("passed: the source is untouched by converting it\n")
+	return true
+}
+
+
+func testRoundTrip: () -> Bool {
+	var e: Exact = {tag = 0xAB, len = 0xCAFEBABE}
+	var back = Exact (Packed e)
+
+	if back.tag != e.tag or back.len != e.len {
+		printf("back = {%x, %x}, expected {%x, %x}\n",
+			Nat32 back.tag, back.len, Nat32 e.tag, e.len)
+		return false
+	}
+
+	printf("passed: a round trip returns the original\n")
+	return true
+}
+
+
+func main: () -> Int {
+	var result = true
+	result = testExactToPacked() and result
+	result = testPackedToExact() and result
+	result = testSourceUntouched() and result
+	result = testRoundTrip() and result
+
+	if not result {
+		printf("failed: layout conversion\n")
+		return exitFailure
+	}
+
+	printf("passed: layout conversion\n")
+	return exitSuccess
+}

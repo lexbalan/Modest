@@ -1006,10 +1006,8 @@ def do_cvalue_cast_layout(to_type, value, ctx, ti):
 		initializer = Initializer(field_to.id, access, ti=ti)
 		initializer.nl = 1
 		asset.append(initializer)
-		
 
 	return do_cvalue_literal_record_from_asset_list(asset, ctx, ctype=do_ctype(to_type))
-	#return CValueCast(do_ctype(to_type), record)
 
 
 def do_cvalue_cons_variant(x, ctx):

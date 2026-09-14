@@ -1517,3 +1517,55 @@ void f(struct padded v) { ... }   /* the padded one, unpacked */
   `type` alias form (both `packed` and, per `src/backend/c11.py`'s
   `do_def_type`, `union`). No reproducer yet for the remaining `var`/field/
   parameter case.
+
+## BUG#74: constructing across differing `@layout` evaluates the source once per field
+
+```modest
+type Exact = {tag: Word8, len: Nat32}
+type Packed = @layout("packed") {tag: Word8, len: Nat32}
+
+func makePacked: () -> Packed {
+	printf("called\n")
+	return {tag = 1, len = 2}
+}
+
+func main: () -> Int {
+	var e = Exact makePacked()
+	printf("%x %u\n", Nat32 e.tag, e.len)
+	return 0
+}
+// expected: one "called"
+// c11, llvm: two "called" - the second overwrites nothing visible here,
+// but the call itself runs twice
+```
+
+- Both backends repack a layout-mismatched record field by field: for each
+  field of the target type they build a `ValueAccessRecord` reading that
+  field off the *same* source `Value` node and evaluate it on the spot -
+  `do_cvalue_cast_layout` (`src/backend/c11.py:1000`) and
+  `cons_record_repack_layout` (`src/backend/llvm.py:1576`, added fixing
+  BUG#73) are the same shape by design, one mirroring the other.
+- Neither hoists the source into a temporary first. When the source is a
+  plain `var` or `const`, referencing it N times (once per field) is free -
+  a name, not a computation - which is the case every existing test
+  exercises. When it is anything with a side effect (a call, `new`, an
+  assignment-yielding expression), that expression's *tree* is what gets
+  referenced N times, and each field access re-evaluates it: the C backend
+  prints the call once per field access it emits into the struct literal;
+  the LLVM backend re-runs the whole nested construction (its own
+  `eval_cons_record`) once per field, discarding every result but the one
+  field it needed.
+- Only the side effect count is wrong - each individual field value is
+  still read correctly off its own (correct) evaluation, so nothing here
+  corrupts a result the way BUG#73 did. Also unaffected: record *literals*
+  (`{tag = .., len = ..}`) go through `value_record_cons`
+  (`src/value/record.py:107`) instead, which resolves each field's value
+  once at HLIR level and only ever emits it once.
+- Fix belongs above the backend split, in `value/record.py` or wherever the
+  `ValueCons` for a layout-mismatched record is built: bind the source to a
+  temporary once (a `let`-like synthetic local, or a compiler-internal
+  `ValueVar`) and have every field's `ValueAccessRecord` read off that
+  instead of the raw source expression - one evaluation, N reads, in both
+  backends at once.
+- No reproducer in the suite yet - `layout_convert.modest` (BUG#73) only
+  exercises `var` sources, which this does not affect.

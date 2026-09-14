@@ -1,0 +1,53 @@
+// TEST: reject
+// EXPECT-ERROR: type mismatch Packed & Exact
+// EXPECT-ERROR: different types 'Exact' & 'Packed' in operation
+// EXPECT-ERROR: cannot implicitly construct `Packed` from `Exact`
+//
+// `@layout` is part of a record type's identity, not just a hint to the
+// backends: two records with the same fields but a different layout are
+// two different types (`Type.eq_record`, `src/hlir/types.py`), the same way
+// `@branded` makes two records with the same fields nominally different
+// (see `branded.md`). Nothing implicit bridges them — not a `var`
+// initializer, not `==`, not passing one where the other is expected —
+// because the fields sit at different offsets and no bit pattern is valid
+// under both layouts at once.
+//
+// What *does* bridge them is explicit construction, since that only
+// promises to copy field values, not bits — see `layout_convert.modest`.
+
+include "libc/ctypes64"
+
+
+type Exact = {
+	tag: Word8
+	len: Nat32
+}
+
+type Packed = @layout("packed") {
+	tag: Word8
+	len: Nat32
+}
+
+
+func take: (p: Packed) -> Unit {
+}
+
+
+func main: () -> Int {
+	var e: Exact = {tag = 1, len = 2}
+
+	// Same fields, different layout: not the same type, so not an implicit
+	// initializer either.
+	var p: Packed = e
+
+	// `==` needs both sides to already be one type (see
+	// docs/lang/value/README.md) — the layouts split them before the
+	// comparison itself is even considered.
+	if e == p {
+	}
+
+	// A function parameter is just another implicit-construction site.
+	take(e)
+
+	return 0
+}

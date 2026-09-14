@@ -1,6 +1,6 @@
 
 target datalayout = "e-m:o-i64:64-i128:128-n32:64-S128"
-target triple = "arm64-apple-macosx12.0.0"
+target triple = "arm64-apple-macosx26.0.0"
 
 
 %Unit = type i1
@@ -137,9 +137,41 @@ declare void @perror(%ConstCharStr* %str)
 ; -- end print imports 'main' --
 ; -- strings --
 @.str1 = private constant [14 x i8] [i8 72, i8 101, i8 108, i8 108, i8 111, i8 32, i8 87, i8 111, i8 114, i8 108, i8 100, i8 33, i8 10, i8 0]
+@.str2 = private constant [22 x i8] [i8 115, i8 105, i8 122, i8 101, i8 111, i8 102, i8 40, i8 82, i8 101, i8 99, i8 111, i8 114, i8 100, i8 41, i8 32, i8 61, i8 32, i8 37, i8 122, i8 117, i8 10, i8 0]
+@.str3 = private constant [22 x i8] [i8 115, i8 105, i8 122, i8 101, i8 111, i8 102, i8 40, i8 80, i8 97, i8 99, i8 107, i8 101, i8 100, i8 41, i8 32, i8 61, i8 32, i8 37, i8 122, i8 117, i8 10, i8 0]
 ; -- endstrings --
+%Record = type {
+	%Char8,
+	%Int32,
+	%Nat16
+};
+
+%Packed = type <{
+	%Char8,
+	%Int32,
+	%Nat16
+}>;
+
+;type Union = @layout("union") Record
+%MyInt = type %Int32;
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @.str1 to [0 x i8]*))
+	%2 = alloca %Record, align 4
+	store %Record zeroinitializer, %Record* %2
+	%3 = alloca %Packed, align 1
+	store %Packed zeroinitializer, %Packed* %3
+; -- cons_composite_from_composite_by_adr --
+	%4 = bitcast %Packed* %3 to %Record*
+	%5 = load %Record, %Record* %4
+; -- end cons_composite_from_composite_by_adr --
+	store %Record %5, %Record* %2
+; -- cons_composite_from_composite_by_adr --
+	%6 = bitcast %Record* %2 to %Packed*
+	%7 = load %Packed, %Packed* %6
+; -- end cons_composite_from_composite_by_adr --
+	store %Packed %7, %Packed* %3
+	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @.str2 to [0 x i8]*), %Size 12)
+	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @.str3 to [0 x i8]*), %Size 7)
 	ret %Int 0
 }
 

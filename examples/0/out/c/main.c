@@ -4,31 +4,21 @@
 #include <stdbool.h>
 #include <stdio.h>
 #define RAWCAST(type_dst, type_src, value) (((union { type_src src; type_dst dst; }){ .src = (value) }).dst)
-struct record {
-	char b;
-	int32_t a;
-	uint16_t c;
-};
-typedef struct packed Packed;
-struct packed {
-	char b;
-	int32_t a;
-	uint16_t c;
-} __attribute__((packed));
-//type Union = @layout("union") Record
-typedef int32_t MyInt;
+struct exact {uint8_t tag; uint32_t len;};
+struct packed {uint8_t tag; uint32_t len;} __attribute__((packed));
+
+static struct packed makePacked(void) {
+	printf("called\n");
+	return (struct packed){.tag = 1, .len = 2};
+}
 
 int main(void) {
 	printf("Hello World!\n");
-	struct record r = {0};
-	Packed p = {0};
-	r = (struct record){
-		.b = p.b,
-		.a = p.a,
-		.c = p.c
+	struct exact e = (struct exact){
+		.tag = makePacked().tag,
+		.len = makePacked().len
 	};
-	printf("sizeof(Record) = %zu\n", sizeof(struct record));
-	printf("sizeof(Packed) = %zu\n", sizeof(Packed));
+	printf("%x %u\n", (uint32_t)e.tag, e.len);
 	return 0;
 }
 
