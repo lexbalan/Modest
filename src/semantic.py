@@ -654,51 +654,51 @@ def copy_annotation(x, annos, anno):
 def do_type_internal(x):
 	t = None
 	
-	anno = copy.copy(x['anno'])
+	annos = copy.copy(x['anno'])
 
 	k = x['kind']
-	if k == 'named': t = do_type_named(x, anno)
-	elif k == 'func': t = do_type_func(x, anno)
-	elif k == 'pointer': t = do_type_pointer(x, anno)
-	elif k == 'array': t = do_type_array(x, anno)
-	elif k == 'record': t = do_type_record(x, anno)
-	elif k == 'variant': t = do_type_variant(x, anno)
+	if k == 'named': t = do_type_named(x, annos)
+	elif k == 'func': t = do_type_func(x, annos)
+	elif k == 'pointer': t = do_type_pointer(x, annos)
+	elif k == 'array': t = do_type_array(x, annos)
+	elif k == 'record': t = do_type_record(x, annos)
+	elif k == 'variant': t = do_type_variant(x, annos)
 	else: t = TypeBad(x['ti'])
 	t.ti = x['ti']
 
-	if anno != []:
+	if annos != []:
 		# аннотированный тип - новый тип, а не имя исходного: копия не
 		# должна отвечать за чужое определение (is_local_entity, getModule)
 		t = t.copy()
 		t.definition = None
 		t.ast_annotations = x['anno']
 
-		layout_anno = pop_anno(anno, 'layout')
+		layout_anno = pop_anno(annos, 'layout')
 		if layout_anno != None:
 			layout = layout_anno['args'][0]['value']['str']
 			t = change_type_layout(t, layout, ti=layout_anno['ti'])
 
-		branded_anno = pop_anno(anno, 'branded')
+		branded_anno = pop_anno(annos, 'branded')
 		if branded_anno:
 			t.brand = get_brand()
 
-		fraction_anno = pop_anno(anno, 'fraction')
+		fraction_anno = pop_anno(annos, 'fraction')
 		if fraction_anno:
 			t.fraction = int(fraction_anno['args'][0]['value']['str'])
 		
-		alignment_anno = pop_anno(anno, 'alignment')
+		alignment_anno = pop_anno(annos, 'alignment')
 		if alignment_anno:
 			t.addAttribute("alignment", {'alignment': alignment_anno})
 
-		copy_annotation(t, anno, 'unused')
-		copy_annotation(t, anno, 'public')
-		copy_annotation(t, anno, 'register')
-		copy_annotation(t, anno, 'restrict')
-		copy_annotation(t, anno, 'volatile')
+		copy_annotation(t, annos, 'unused')
+		copy_annotation(t, annos, 'public')
+		copy_annotation(t, annos, 'register')
+		copy_annotation(t, annos, 'restrict')
+		copy_annotation(t, annos, 'volatile')
 	
 
-	if anno != []:
-		for a in anno:
+	if annos != []:
+		for a in annos:
 			error("annotation '%s' not defined\n" % a['kind'], a['ti'])
 
 
@@ -2052,7 +2052,7 @@ def do_stmt_var(x):
 	if id_already_used(x['id']['str'], shallow=True):
 		error("redefinition of '%s'" % x['id']['str'], x['id']['ti'])
 
-	df = def_var_common(x)
+	df = def_var_common(x, annos=x['anno'].copy())
 
 	if df.is_stmt_bad():
 		return df
@@ -2159,7 +2159,7 @@ def do_stmt_func(x):
 	global csymtab
 	symtab_before = csymtab
 	csymtab = cmodule.symtab
-	df = def_func(x)
+	df = def_func(x, annos=[])
 	csymtab = symtab_before
 	cfunc.funcs.append(df)
 	return df
@@ -2471,7 +2471,7 @@ def def_type_common(x, nt):
 
 
 
-def def_type_global(x):
+def def_type_global(x, annos):
 	# глобальный тип уже был задекларирован при первом проходе,
 	# теперь доопределяем его
 	nt = csymtab.type_get(x['id']['str'])
@@ -2481,7 +2481,6 @@ def def_type_global(x):
 	df = def_type_common(x, nt)
 	if df == None:
 		return None
-	df = def_add_annotations(df, x['anno'])
 	return df
 
 
@@ -2568,7 +2567,7 @@ def def_const_common(x):
 
 
 
-def def_var_common(x):
+def def_var_common(x, annos):
 	global csymtab, cdef
 
 	id = do_id(x['id'])
@@ -2614,16 +2613,27 @@ def def_var_common(x):
 	var_value.definition = definition
 
 	cdef = prev_cdef
+
+	alignment_anno = pop_anno(annos, 'alignment')
+	if alignment_anno != None:
+		definition.addAttribute("alignment", do_value(alignment_anno['args'][0]['value']))
+
+	section_anno = pop_anno(annos, 'section')
+	if section_anno != None:
+		definition.addAttribute("section", do_value(section_anno['args'][0]['value']))
+
+	nonstatic_anno = pop_anno(annos, 'nonstatic')
+	if nonstatic_anno != None:
+		definition.addAttribute('nonstatic')
+
 	return definition
-
-
 
 
 
 # TODO: centity -> instead cmodule/cfunc;
 # rm Value#module -> tree instead
 
-def def_const_global(x):
+def def_const_global(x, annos):
 	global cmodule
 
 	if id_already_used(x['id']['str']):
@@ -2639,30 +2649,25 @@ def def_const_global(x):
 	iv = df.init_value
 	if not iv.is_undefined():
 		if iv.is_runtime():
-			#print(iv.stage)
-			print(iv)
 			error("expected immediate value", iv.ti)
-
-	df = def_add_annotations(df, x['anno'])
+	
 	return df
 
 
 
-def def_var_global(x):
+def def_var_global(x, annos):
 	global cmodule
 
 	if id_already_used(x['id']['str']):
 		error("redefinition of '%s'" % x['id']['str'], x['id']['ti'])
 
-	df = def_var_common(x)
+	df = def_var_common(x, annos)
 	if df.is_stmt_bad():
 		return df
 
 	df.parent = cmodule
 	df.value.storage_class = HLIR_VALUE_STORAGE_CLASS_GLOBAL
 	df.value.is_initialized = True
-
-	df = def_add_annotations(df, x['anno'])
 	return df
 
 
@@ -2682,7 +2687,7 @@ def create_params(fn):
 		i += 1
 
 
-def def_func(x):
+def def_func(x, annos):
 	global cmodule, cdef, cfunc, csymtab
 
 	if is_local_context():
@@ -2694,7 +2699,8 @@ def def_func(x):
 	fn = csymtab.value_get(x['id']['str'])
 
 	prev_cdef = cdef
-	cdef = fn.definition
+	df = fn.definition
+	cdef = df
 
 	if fn.type.is_incompleted():
 		xt = x['type']
@@ -2712,8 +2718,29 @@ def def_func(x):
 			cdef = prev_cdef
 			return None
 
+	
+	noinline_anno = pop_anno(annos, 'noinline')
+	if noinline_anno != None:
+		df.addAttribute('noinline')
+	
+	inlinehint_anno = pop_anno(annos, 'inlinehint')
+	if inlinehint_anno != None:
+		df.addAttribute('inlinehint')
+
+	inline_anno = pop_anno(annos, 'inline')
+	if inline_anno != None:
+		df.addAttribute('inline')
+	
+	alignment_anno = pop_anno(annos, 'alignment')
+	if alignment_anno != None:
+		df.addAttribute("alignment", do_value(alignment_anno['args'][0]['value']))
+
+	section_anno = pop_anno(annos, 'section')
+	if section_anno != None:
+		df.addAttribute("section", do_value(section_anno['args'][0]['value']))
+
+
 	if fn.type.is_bad():
-		df = def_add_annotations(fn.definition, x['anno'])
 		cdef = prev_cdef
 		return df
 
@@ -2724,7 +2751,6 @@ def def_func(x):
 		fn.id.addAttribute('entrypoint')
 
 	if x['stmt'] == None:
-		df = def_add_annotations(fn.definition, x['anno'])
 		cdef = prev_cdef
 		return df
 
@@ -2766,7 +2792,7 @@ def def_func(x):
 				retval = create_default_value(fn.type.to, ti=stmt.ti)
 				stmts.append(StmtReturn(retval, ti=stmt.ti))
 
-	fn.definition.stmt = stmt
+	df.stmt = stmt
 
 	csymtab = csymtab.parent_get()  # remove params symtab
 
@@ -2776,7 +2802,6 @@ def def_func(x):
 #	if fn.is_pure:
 #		info("pure function", x['ti'])
 
-	df = def_add_annotations(fn.definition, x['anno'])
 	return df
 
 
@@ -3200,17 +3225,44 @@ def def_phase2(ast):
 		# for verbose mode
 		if not x['isa'] in ['ast_comment', 'ast_directive', 'ast_import', 'ast_include']:
 			log("define %s %s" % (x['kind'], x['id']['str']))
+		
+		annos = []
+		if 'anno' in x and x['anno'] != None:
+			annos = x['anno'].copy()
 
 		if isa == 'ast_definition':
 			df = None
-			if kind == 'type': df = def_type_global(x)
-			elif kind == 'const': df = def_const_global(x)
-			elif kind == 'func': df = def_func(x)
-			elif kind == 'var': df = def_var_global(x)
+			if kind == 'type': df = def_type_global(x, annos)
+			elif kind == 'const': df = def_const_global(x, annos)
+			elif kind == 'func': df = def_func(x, annos)
+			elif kind == 'var': df = def_var_global(x, annos)
 
 			assert(df != None)
 			if df.is_stmt_bad():
 				continue
+
+			# handle common annotations for all definitions
+
+			extern_anno = pop_anno(annos, 'extern')
+			if extern_anno != None:
+				def_add_annotation_extern(df, extern_anno)
+
+			alias_anno = pop_anno(annos, 'alias')
+			if alias_anno != None:
+				def_add_annotation_alias(df, alias_anno)
+
+			used_anno = pop_anno(annos, 'used')
+			if used_anno != None:
+				df.addAttribute('used')
+
+			unused_anno = pop_anno(annos, 'unused')
+			if unused_anno != None:
+				df.addAttribute('unused')
+
+			if annos != []:
+				for a in annos:
+					error("annotation '%s' not defined\n" % a['kind'], a['ti'])
+
 
 			if get_access_level(x) == HLIR_ACCESS_LEVEL_PUBLIC:
 				df.id.prefix = global_prefix
@@ -3319,63 +3371,6 @@ def def_add_annotation_extern(x, a):
 		alias = args[1]['value']['str']
 		x.id.c_alias = alias
 
-
-def def_add_annotations(x, ast_atts):
-	for a in ast_atts:
-		kind = a['kind']
-		#print(kind)
-		annotation = {}
-
-		if len(a['args']) == 1:
-			annotation = do_value(a['args'][0]['value'])
-		else:
-			for arg in a['args']:
-				k = None
-				if arg['key'] != None:
-					k = arg['key']['str']
-				v = do_value(arg['value'])
-				annotation[k] = v
-
-		x.attributes.update({kind: annotation})
-
-		# ['inline', 'used', 'unused', 'inlinehint', 'noinline', 'nonstatic']
-		if kind in ['alignment', 'section', 'inline', 'used', 'unused', 'inlinehint', 'noinline', 'nonstatic']:
-			pass
-
-		elif kind == 'alias':
-			def_add_annotation_alias(x, a)
-
-		elif kind == 'extern':
-			def_add_annotation_extern(x, a)
-
-		#elif kind == 'nodecorate':
-		#	add_att(x, 'id:nodecorate')
-
-		elif kind == 'c_no_print':
-			add_att(x, "c_no_print")
-
-		elif kind == 'deprecated':
-			add_att(x, "deprecated")
-
-		elif kind == 'cbyvalue':
-			add_att(x, "cbyvalue")
-			x.value.addAttribute("cbyvalue")
-
-		elif kind == 'inline':
-			#add_att(x, "inline")
-			pass
-
-		elif kind == 'immutable':
-			add_att(x, "immutable")
-			x.value.addAttribute("immutable")
-
-		else:
-			warning("unsupported annotation", a['ti'])
-#			exit(1)
-#			key = a['args'][0]['value']['str']
-#			print(key)
-#			add_att(x, key)
-	return x
 
 
 def add_att(x, att):

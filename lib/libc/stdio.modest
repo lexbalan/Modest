@@ -20,11 +20,11 @@ public type CharStr = Str
 public type ConstCharStr = CharStr
 
 @extern("C", "stdin")
-@extern public const stdin: *File = nil
+public const stdin: *File = nil
 @extern("C", "stdout")
-@extern public const stdout: *File = nil
+public const stdout: *File = nil
 @extern("C", "stderr")
-@extern public const stderr: *File = nil
+public const stderr: *File = nil
 
 
 @extern("C", "EOF")
