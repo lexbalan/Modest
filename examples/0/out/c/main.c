@@ -5,11 +5,12 @@
 #include <stdio.h>
 #define RAWCAST(type_dst, type_src, value) (((union { type_src src; type_dst dst; }){ .src = (value) }).dst)
 struct exact {uint8_t tag; uint32_t len;};
+typedef struct packed Packed;
 struct packed {uint8_t tag; uint32_t len;} __attribute__((packed));
 
-static struct packed makePacked(void) {
+static Packed makePacked(void) {
 	printf("called\n");
-	return (struct packed){.tag = 1, .len = 2};
+	return (Packed){.tag = 1, .len = 2};
 }
 
 int main(void) {
