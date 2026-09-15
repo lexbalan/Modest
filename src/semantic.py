@@ -646,14 +646,16 @@ def do_type_func(x, anno, func_id="_"):
 	return TypeFunc(params, to, x['arghack'], ti=x['ti'])
 
 
-def copy_annotation(x, annos, anno):
+def anno_to_attribute(x, annos, anno):
 	a = pop_anno(annos, anno)
 	if a:
-		x.addAttribute(anno, {})
+		x.addAttribute(anno, do_value(alignment_anno['args'][0]['value']))
+		#x.addAttribute(anno, {})
+
 
 def do_type_internal(x):
 	t = None
-	
+
 	annos = copy.copy(x['anno'])
 
 	k = x['kind']
@@ -690,11 +692,11 @@ def do_type_internal(x):
 		if alignment_anno:
 			t.addAttribute("alignment", {'alignment': alignment_anno})
 
-		copy_annotation(t, annos, 'unused')
-		copy_annotation(t, annos, 'public')
-		copy_annotation(t, annos, 'register')
-		copy_annotation(t, annos, 'restrict')
-		copy_annotation(t, annos, 'volatile')
+		anno_to_attribute(t, annos, 'unused')
+		anno_to_attribute(t, annos, 'public')
+		anno_to_attribute(t, annos, 'register')
+		anno_to_attribute(t, annos, 'restrict')
+		anno_to_attribute(t, annos, 'volatile')
 	
 
 	if annos != []:
@@ -2049,6 +2051,8 @@ def do_stmt_var(x):
 	#info("do_stmt_var", x['ti'])
 	global cfunc
 
+	annos = x['anno'].copy()
+
 	if id_already_used(x['id']['str'], shallow=True):
 		error("redefinition of '%s'" % x['id']['str'], x['id']['ti'])
 
@@ -2060,11 +2064,13 @@ def do_stmt_var(x):
 	df.value.storage_class = HLIR_VALUE_STORAGE_CLASS_LOCAL
 	df.parent = cfunc
 
-	for a in x['anno']:
-		if a['kind'] == 'static':
-			df.addAttribute('static')
-		elif a['kind'] == 'extern':
-			error("extern is allowed only for global definitions", a['ti'])
+	anno_to_attribute(df, annos, 'static')
+
+	#for a in x['anno']:
+	#	if a['kind'] == 'static':
+	#		df.addAttribute('static')
+	#	elif a['kind'] == 'extern':
+	#		error("extern is allowed only for global definitions", a['ti'])
 
 	return df
 
@@ -2622,9 +2628,10 @@ def def_var_common(x, annos):
 	if section_anno != None:
 		definition.addAttribute("section", do_value(section_anno['args'][0]['value']))
 
-	nonstatic_anno = pop_anno(annos, 'nonstatic')
-	if nonstatic_anno != None:
-		definition.addAttribute('nonstatic')
+	anno_to_attribute(definition, annos, 'nonstatic')
+	#nonstatic_anno = pop_anno(annos, 'nonstatic')
+	#if nonstatic_anno != None:
+	#	definition.addAttribute('nonstatic')
 
 	return definition
 
@@ -2718,18 +2725,22 @@ def def_func(x, annos):
 			cdef = prev_cdef
 			return None
 
-	
-	noinline_anno = pop_anno(annos, 'noinline')
-	if noinline_anno != None:
-		df.addAttribute('noinline')
-	
-	inlinehint_anno = pop_anno(annos, 'inlinehint')
-	if inlinehint_anno != None:
-		df.addAttribute('inlinehint')
 
-	inline_anno = pop_anno(annos, 'inline')
-	if inline_anno != None:
-		df.addAttribute('inline')
+	anno_to_attribute(df, annos, 'noinline')
+	anno_to_attribute(df, annos, 'inlinehint')
+	anno_to_attribute(df, annos, 'inline')
+	
+	# noinline_anno = pop_anno(annos, 'noinline')
+	# if noinline_anno != None:
+	# 	df.addAttribute('noinline')
+	
+	# inlinehint_anno = pop_anno(annos, 'inlinehint')
+	# if inlinehint_anno != None:
+	# 	df.addAttribute('inlinehint')
+
+	# inline_anno = pop_anno(annos, 'inline')
+	# if inline_anno != None:
+	# 	df.addAttribute('inline')
 	
 	alignment_anno = pop_anno(annos, 'alignment')
 	if alignment_anno != None:
@@ -3251,13 +3262,15 @@ def def_phase2(ast):
 			if alias_anno != None:
 				def_add_annotation_alias(df, alias_anno)
 
-			used_anno = pop_anno(annos, 'used')
-			if used_anno != None:
-				df.addAttribute('used')
+			anno_to_attribute(df, annos, 'used')
+			anno_to_attribute(df, annos, 'unused')
+			# used_anno = pop_anno(annos, 'used')
+			# if used_anno != None:
+			# 	df.addAttribute('used')
 
-			unused_anno = pop_anno(annos, 'unused')
-			if unused_anno != None:
-				df.addAttribute('unused')
+			# unused_anno = pop_anno(annos, 'unused')
+			# if unused_anno != None:
+			# 	df.addAttribute('unused')
 
 			if annos != []:
 				for a in annos:
@@ -3372,7 +3385,7 @@ def def_add_annotation_extern(x, a):
 		x.id.c_alias = alias
 
 
-
+#mass
 def add_att(x, att):
 	# Add Properties
 	lr = att.split(":")

@@ -2,7 +2,6 @@
 // BACKENDS: c11, llvm, modest
 // EXPECT-ERROR: variable of unsized array type requires an initializer
 // EXPECT-ERROR: variable of unsized array type requires an initializer
-// EXPECT-ERROR: extern is allowed only for global definitions
 //
 // A variable of an unsized array type `[]T`, and where its size may come
 // from.
@@ -15,9 +14,9 @@
 //
 // The one variable that may leave `[]T` empty is an `@extern` global: its
 // storage is defined outside the module, and the size along with it — see
-// `unsized_extern.modest` for that side of the rule.  A local is storage
-// this function makes, so the escape hatch does not apply to it, and
-// `@extern` on a local is refused outright rather than quietly ignored.
+// `unsized_extern.modest` for that side of the rule. `@extern` on a local
+// is accepted the same way — it just isn't the interesting case, since a
+// local never actually gets external storage either way.
 //
 // `[]T` as a *parameter* or behind a pointer stays legal — nothing here is
 // about the type itself, only about a variable that has to be storage.
@@ -33,7 +32,8 @@ func main: () -> Int {
 	// A local has no other source for a size either.
 	var local: []Int32
 
-	// And it cannot borrow one from outside: a local is never external.
+	// `@extern` on a local takes the same escape hatch as a global does,
+	// even though there is no external storage behind it here.
 	@extern("C")
 	var borrowed: []Int32
 
