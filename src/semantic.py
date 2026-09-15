@@ -649,8 +649,20 @@ def do_type_func(x, anno, func_id="_"):
 def anno_to_attribute(x, annos, anno):
 	a = pop_anno(annos, anno)
 	if a:
-		x.addAttribute(anno, do_value(alignment_anno['args'][0]['value']))
-		#x.addAttribute(anno, {})
+		# v = None
+		# if len(a['args']) > 0:
+
+		# 	print(a['args'][0])
+		# 	v = None
+		# 	if len(a['args']) == 1:
+		# 		v = do_value(a['args'][0]['value'])
+		# 	else:
+		# 		v = {}
+		# 		for arg in a['args']:
+		# 			v[arg['id']['str']] = do_value(arg['value'])
+		# print(v)
+		# x.addAttribute(anno, v)
+		x.addAttribute(anno, {})
 
 
 def do_type_internal(x):
@@ -688,9 +700,7 @@ def do_type_internal(x):
 		if fraction_anno:
 			t.fraction = int(fraction_anno['args'][0]['value']['str'])
 		
-		alignment_anno = pop_anno(annos, 'alignment')
-		if alignment_anno:
-			t.addAttribute("alignment", {'alignment': alignment_anno})
+		anno_to_attribute(t, annos, 'alignment')
 
 		anno_to_attribute(t, annos, 'unused')
 		anno_to_attribute(t, annos, 'public')
